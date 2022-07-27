@@ -32,7 +32,12 @@ These test vectors use these fixed seed values, from which other key pairs are d
 * Alice's Seed: `82f32c855d3d542256180810797e0073`
 * Bob's Seed: `187a5973c64d359c836eba466a44db7b`
 * Carol's Seed: `8574afab18e229651c1be8f76ffee523`
-* Symmetric Key: `38900719dea655e9a1bc1682aaccf0bfcd79a7239db672d39216e4acdd660dc0`
+
+These objects are normally random, but they are fixed for these test vectors:
+
+* Symmetric key used for encryption: `526afd95b2229c5381baec4a1788507a3c4a566ca5cce64543b46ad12aff0035`
+* Nonce for encryption: `4d785658f36c22fb5aed3ac0`
+* Random generator for signing returns repeating sequence: `dca8cfe8e67d03fab4177279d5498e7a`
 
 ## INDEX
 
@@ -276,13 +281,13 @@ EncryptedMessage
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:crypto-envelope/tpdylrflytcwjpmspfiogmgsgtkshfhdwfjzcpzohtweftrtgdtnjlkpidntttbayldptirpzoldwekolyhddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlpfgclge
+ur:crypto-envelope/tpdylrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdmsuecktbdivotduentfrspgmastegdtshddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwieclaaen
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d831d8308447f91b7297b067524c4d785658f36c22fb5aed3ac050da6f75629dd10ef72dd0b6fb89ed76815824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
+d831d8308447b70caef69558aa4c4d785658f36c22fb5aed3ac05097de1ed627e2d2de9d3bc85209d350d75824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -291,9 +296,9 @@ d831d8308447f91b7297b067524c4d785658f36c22fb5aed3ac050da6f75629dd10ef72dd0b6fb89
 49(   ; crypto-envelope
    48(   ; crypto-msg
       [
-         h'f91b7297b06752',
+         h'b70caef69558aa',
          h'4d785658f36c22fb5aed3ac0',
-         h'da6f75629dd10ef72dd0b6fb89ed7681',
+         h'97de1ed627e2d2de9d3bc85209d350d7',
          h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
       ]
    )
@@ -307,11 +312,11 @@ d8 31                                    # tag(49)   ; crypto-envelope
    d8 30                                 # tag(48)   ; crypto-msg
       84                                 # array(4)
          47                              # bytes(7)
-            f91b7297b06752
+            b70caef69558aa
          4c                              # bytes(12)
             4d785658f36c22fb5aed3ac0
          50                              # bytes(16)
-            da6f75629dd10ef72dd0b6fb89ed7681
+            97de1ed627e2d2de9d3bc85209d350d7
          5824                            # bytes(36)
             d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
 ```
@@ -333,13 +338,13 @@ EncryptedMessage
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:crypto-envelope/tpdylrhdhhflidmdcnvtjteeaectiskssknygscpasswamnszmuemeestpgavteykpehgdureyvecmfnnyskkbpsmuaxflssntykksdnayinmugrlyrogsamimvthkolpmaanyoslosfgylptlfwsodmhnrfmevomkswbzuefwftttflhkchuejetnamrlaxqzgsgtkshfhdwfjzcpzohtweftrtgdtnlthtchsejpbkwmctpdahayynutbzfzhddktpethdcxlfrhdwrhkbqdiymerkhhidpldpmessmsidcxaxnnsatlweteglldsriojkuywynyjlfndkat
+ur:crypto-envelope/tpdylrhdhhaskpgafwskgysfsrghkofptihsstrnihpfwpgwkptpsbkgutynlgdihhwtgeytbbotrlmdtpetnthdpsfnfddppkdagaldctgywdhnmwhshtnlzmmutpwdiyrkrepyrezcfxqdlupyhdhtpkveroeerkjpdscltdksenrphnfrcsonnyynyafhhtgsgtkshfhdwfjzcpzohtweftrtgdutlektlfbemnnnntadmsluiasggdfncxhddktpethdcxlfrhdwrhkbqdiymerkhhidpldpmessmsidcxaxnnsatlweteglldsriojkuywynygttdinpm
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d831d83084585c47629523e06e34001f6878c59a4c2209c6069cffde9139d849e032753150df32e4163c9ac57eac930347c49df5782b0869934b81b84c066ae059a6ad049aa788cc5185d542c92e60bc91e298c615de423ad1475917de6bda06b703b44c4d785658f36c22fb5aed3ac050da875a17c1720aeb1fa80508f6dd15405824d838582082b92cb97eb36691bb5c62ae2d91c4976220039ec2d5edd34e89c36773dbee9a
+d831d83084585c09754942c551ccc3547641d061c7be65b0ec4f75d8cb7bddf68d275cf04af914a3b795d8389d58ac3c482daa2549891f51ea6094615a99ff93d8ea66bbb5abb5fd43b38bab585aaae4b834bb722621d27836b6603b18a59af6f83f5a4c4d785658f36c22fb5aed3ac050dd8a7782108e9e9d01978b63ca503c205824d838582082b92cb97eb36691bb5c62ae2d91c4976220039ec2d5edd34e89c36773dbee9a
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -348,9 +353,9 @@ d831d83084585c47629523e06e34001f6878c59a4c2209c6069cffde9139d849e032753150df32e4
 49(   ; crypto-envelope
    48(   ; crypto-msg
       [
-         h'47629523e06e34001f6878c59a4c2209c6069cffde9139d849e032753150df32e4163c9ac57eac930347c49df5782b0869934b81b84c066ae059a6ad049aa788cc5185d542c92e60bc91e298c615de423ad1475917de6bda06b703b4',
+         h'09754942c551ccc3547641d061c7be65b0ec4f75d8cb7bddf68d275cf04af914a3b795d8389d58ac3c482daa2549891f51ea6094615a99ff93d8ea66bbb5abb5fd43b38bab585aaae4b834bb722621d27836b6603b18a59af6f83f5a',
          h'4d785658f36c22fb5aed3ac0',
-         h'da875a17c1720aeb1fa80508f6dd1540',
+         h'dd8a7782108e9e9d01978b63ca503c20',
          h'd838582082b92cb97eb36691bb5c62ae2d91c4976220039ec2d5edd34e89c36773dbee9a'
       ]
    )
@@ -364,11 +369,11 @@ d8 31                                    # tag(49)   ; crypto-envelope
    d8 30                                 # tag(48)   ; crypto-msg
       84                                 # array(4)
          585c                            # bytes(92)
-            47629523e06e34001f6878c59a4c2209c6069cffde9139d849e032753150df32e4163c9ac57eac930347c49df5782b0869934b81b84c066ae059a6ad049aa788cc5185d542c92e60bc91e298c615de423ad1475917de6bda06b703b4
+            09754942c551ccc3547641d061c7be65b0ec4f75d8cb7bddf68d275cf04af914a3b795d8389d58ac3c482daa2549891f51ea6094615a99ff93d8ea66bbb5abb5fd43b38bab585aaae4b834bb722621d27836b6603b18a59af6f83f5a
          4c                              # bytes(12)
             4d785658f36c22fb5aed3ac0
          50                              # bytes(16)
-            da875a17c1720aeb1fa80508f6dd1540
+            dd8a7782108e9e9d01978b63ca503c20
          5824                            # bytes(36)
             d838582082b92cb97eb36691bb5c62ae2d91c4976220039ec2d5edd34e89c36773dbee9a
 ```
@@ -392,13 +397,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:crypto-envelope/lftpdylrfliedtskimwdtssogslnknyntlgojkmsqzkttdnbldgddsprythteshskockssieasempyhlfhoyhddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfraxtpehtpfntpfshdfzsoloeogmtagylaplenrokodpoelbaojosebechvoldlylddwjtjnjnmktdjlolcsfrltcpdeatwphkbgkblghhcmfyoxhnolcmveuydlbkluetzcfrwtbsgelfrprypfoslulerf
+ur:crypto-envelope/lftpdylrflwzzcsooyredpbbgsjkrofwcmaainjoiodsylfrmkgdztmyrtcpsannkizegyatfdislrtpnbsfhddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfraxtpehtpfntpfshdfzseaspkehrfbyhlbzssrfntjsetosmwzoutbwdwhtfhfxvdpdlovtiodrqdiytetpgtchplgyfljslkgdayktjpbtrkrfvyeoloztgtcmfzfxonjnjkqdrdhdhfeyhyecjpjkclct
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d83182d83084476429c56aead7c94c867af6d5557397b477d2a0895026b2f95a3961761ec4640937ab5d3fa15824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b03d831d83cd83d5840c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0
+d83182d8308447f2fdc9a1b52d144c73b842160469706726f73b9850fc8fc022c29e7dfe5107486884d8a0cc5824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b03d831d83cd83d5840c109aa31bc115d15c4bc9d7138a794fbdd132c5a3f43e7a888e0672ab366d3d84d17ae5147718c500877720dbbbce13388fc4d164043a56d73b3ba5856325e35
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -408,9 +413,9 @@ d83182d83084476429c56aead7c94c867af6d5557397b477d2a0895026b2f95a3961761ec4640937
    [
       48(   ; crypto-msg
          [
-            h'6429c56aead7c9',
-            h'867af6d5557397b477d2a089',
-            h'26b2f95a3961761ec4640937ab5d3fa1',
+            h'f2fdc9a1b52d14',
+            h'73b842160469706726f73b98',
+            h'fc8fc022c29e7dfe5107486884d8a0cc',
             h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
          ]
       ),
@@ -423,7 +428,7 @@ d83182d83084476429c56aead7c94c867af6d5557397b477d2a0895026b2f95a3961761ec4640937
          49(   ; crypto-envelope
             60(   ; plaintext
                61(   ; signature
-                  h'c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0'
+                  h'c109aa31bc115d15c4bc9d7138a794fbdd132c5a3f43e7a888e0672ab366d3d84d17ae5147718c500877720dbbbce13388fc4d164043a56d73b3ba5856325e35'
                )
             )
          )
@@ -440,11 +445,11 @@ d8 31                                    # tag(49)   ; crypto-envelope
       d8 30                              # tag(48)   ; crypto-msg
          84                              # array(4)
             47                           # bytes(7)
-               6429c56aead7c9
+               f2fdc9a1b52d14
             4c                           # bytes(12)
-               867af6d5557397b477d2a089
+               73b842160469706726f73b98
             50                           # bytes(16)
-               26b2f95a3961761ec4640937ab5d3fa1
+               fc8fc022c29e7dfe5107486884d8a0cc
             5824                         # bytes(36)
                d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       82                                 # array(2)
@@ -456,7 +461,7 @@ d8 31                                    # tag(49)   ; crypto-envelope
             d8 3c                        # tag(60)   ; plaintext
                d8 3d                     # tag(61)   ; signature
                   5840                   # bytes(64)
-                     c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0
+                     c109aa31bc115d15c4bc9d7138a794fbdd132c5a3f43e7a888e0672ab366d3d84d17ae5147718c500877720dbbbce13388fc4d164043a56d73b3ba5856325e35
 ```
 
 ---
@@ -479,13 +484,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:crypto-envelope/lstpdylrflwfcfknlrprtaflgslusebeplbtdlpfgdlydmlbfzgdckmumwotdwtamkndfenbglwtuecwdpechddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkqdhpytgacstnknhdghgwgrftftldeefgtndezemdingwttlbwpfncsgwtispuyhlvdjsnytygslbaorlhnlywfhhfsoebzvwolgdkksrtovahkpynepkvotppedwtotkflfltpfmhdcxdmsfpeselefxdlnsrfntpffphesafwaxurcpdwlyamwkkndkgsnbloknrhtyidcslftpehtpfntpfrahtpehtpfntpemlftpdylshddkhyrnfxhkyllafettnyinrdztpafwimkipmcyotfnetuteykoidlshklnpaoxlshnbywdgrhlgsksislkoyiaisjecsdsgretvwgdgalekgidjnuodlamldtlyaoxfnfyfzwltpfmhdcxhejllfykweylfhgesgpdpmvlhekewkgywsmewpfzlojelfmdgywymwlrykvosoadtbfxjldr
+ur:crypto-envelope/lstpdylrflahhycnlyjevwiagspkamrhhgrfwfcxoswygsmwcngdmutklramdnzersbgbbnndrfzcwzckipehddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkmwreuovdjywytkoltlsnuotildktfgtkhflrpdplrtdymubyeeclwleejzwtckzspmrtfehhgspfcncaptroztgllbplbamkhegdktfxdspskikojejzdlpapdcetsesrnvotpfmhdcxglbaptwdaxcpgmlrmodpgepezsyafxpdimglhktydycegawmcxaaveckrtltbzadlftpehtpfntpfrahtpehtpfntpemlftpdylshddkjtenetfpsrcszslnbghebwehtitkrpktsojyjnhgtpgmnyfemtntpdgentykeyntbdvapfpkgsytvwiottjklkswhfplfyidvwgdnycalpprhpltcwetdsmhtnsossgawpsetpfmhdcxzmeebsfrlutsswkkbdttflihfewntposdstovsylgufwntimtiskmeynzthfnsdeurfwmsfl
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d83183d8308447f3197a84b2d9474c8bc110ae0d2fb050812e7f40501e9394a32cd9989b45a04ef0de1b2d355824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d830835824b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad44c7f02b76081f35c3da215e5a65079c3cee659ab9faae2d8af2ccecf4747d83e58202eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d4621882d831d83cd83b05d831d83cd83782d8308358245ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d4c78688ca163686b18264b38e550498a7b626ddc2f0689d5f8a43c4440e9d83e58205f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901
+d83183d8308447055e23816be5634caa06b957bcf320a7ee4c94235093cf84062bfebf12149e2a401bfd7daf5824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d83083582494b5dce774eecfa6d5cddcd0897746cf5684a8aec03093113421e9346cf01efaadc0455c4cb0231da9b8fc4e7fae0e985f50774326ac7d766b6c2fb1a81cd739bee2d83e58204e0ea9ea03225284922d4aaffaf843a86a4e59d4301c49eb2004e41ec087150182d831d83cd83b05d831d83cd83782d8308358246e363841c318fa86125f1331d0cfb677c9746d57d8529a45969da84a9df5329d0be6b0aa4cf9e567d1738cc656ae4462e5509a1d85b25b871b382690dac9c449ecc1d83e5820ff340f3b8bd7c6790bd1476545f1d8a726cee8f753429d6ad0c591f6fc569c28
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -495,9 +500,9 @@ d83183d8308447f3197a84b2d9474c8bc110ae0d2fb050812e7f40501e9394a32cd9989b45a04ef0
    [
       48(   ; crypto-msg
          [
-            h'f3197a84b2d947',
-            h'8bc110ae0d2fb050812e7f40',
-            h'1e9394a32cd9989b45a04ef0de1b2d35',
+            h'055e23816be563',
+            h'aa06b957bcf320a7ee4c9423',
+            h'93cf84062bfebf12149e2a401bfd7daf',
             h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
          ]
       ),
@@ -513,13 +518,13 @@ d83183d8308447f3197a84b2d9474c8bc110ae0d2fb050812e7f40501e9394a32cd9989b45a04ef0
                   [
                      48(   ; crypto-msg
                         [
-                           h'b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad4',
-                           h'7f02b76081f35c3da215e5a6',
-                           h'79c3cee659ab9faae2d8af2ccecf4747'
+                           h'94b5dce774eecfa6d5cddcd0897746cf5684a8aec03093113421e9346cf01efaadc0455c',
+                           h'b0231da9b8fc4e7fae0e985f',
+                           h'774326ac7d766b6c2fb1a81cd739bee2'
                         ]
                      ),
                      62(   ; agreement-public-key
-                        h'2eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d46218'
+                        h'4e0ea9ea03225284922d4aaffaf843a86a4e59d4301c49eb2004e41ec0871501'
                      )
                   ]
                )
@@ -538,13 +543,13 @@ d83183d8308447f3197a84b2d9474c8bc110ae0d2fb050812e7f40501e9394a32cd9989b45a04ef0
                   [
                      48(   ; crypto-msg
                         [
-                           h'5ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d',
-                           h'78688ca163686b18264b38e5',
-                           h'498a7b626ddc2f0689d5f8a43c4440e9'
+                           h'6e363841c318fa86125f1331d0cfb677c9746d57d8529a45969da84a9df5329d0be6b0aa',
+                           h'f9e567d1738cc656ae4462e5',
+                           h'9a1d85b25b871b382690dac9c449ecc1'
                         ]
                      ),
                      62(   ; agreement-public-key
-                        h'5f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901'
+                        h'ff340f3b8bd7c6790bd1476545f1d8a726cee8f753429d6ad0c591f6fc569c28'
                      )
                   ]
                )
@@ -563,11 +568,11 @@ d8 31                                    # tag(49)   ; crypto-envelope
       d8 30                              # tag(48)   ; crypto-msg
          84                              # array(4)
             47                           # bytes(7)
-               f3197a84b2d947
+               055e23816be563
             4c                           # bytes(12)
-               8bc110ae0d2fb050812e7f40
+               aa06b957bcf320a7ee4c9423
             50                           # bytes(16)
-               1e9394a32cd9989b45a04ef0de1b2d35
+               93cf84062bfebf12149e2a401bfd7daf
             5824                         # bytes(36)
                d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       82                                 # array(2)
@@ -582,14 +587,14 @@ d8 31                                    # tag(49)   ; crypto-envelope
                      d8 30               # tag(48)   ; crypto-msg
                         83               # array(3)
                            5824          # bytes(36)
-                              b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad4
+                              94b5dce774eecfa6d5cddcd0897746cf5684a8aec03093113421e9346cf01efaadc0455c
                            4c            # bytes(12)
-                              7f02b76081f35c3da215e5a6
+                              b0231da9b8fc4e7fae0e985f
                            50            # bytes(16)
-                              79c3cee659ab9faae2d8af2ccecf4747
+                              774326ac7d766b6c2fb1a81cd739bee2
                      d8 3e               # tag(62)   ; agreement-public-key
                         5820             # bytes(32)
-                           2eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d46218
+                           4e0ea9ea03225284922d4aaffaf843a86a4e59d4301c49eb2004e41ec0871501
       82                                 # array(2)
          d8 31                           # tag(49)   ; crypto-envelope
             d8 3c                        # tag(60)   ; plaintext
@@ -602,14 +607,14 @@ d8 31                                    # tag(49)   ; crypto-envelope
                      d8 30               # tag(48)   ; crypto-msg
                         83               # array(3)
                            5824          # bytes(36)
-                              5ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d
+                              6e363841c318fa86125f1331d0cfb677c9746d57d8529a45969da84a9df5329d0be6b0aa
                            4c            # bytes(12)
-                              78688ca163686b18264b38e5
+                              f9e567d1738cc656ae4462e5
                            50            # bytes(16)
-                              498a7b626ddc2f0689d5f8a43c4440e9
+                              9a1d85b25b871b382690dac9c449ecc1
                      d8 3e               # tag(62)   ; agreement-public-key
                         5820             # bytes(32)
-                           5f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901
+                           ff340f3b8bd7c6790bd1476545f1d8a726cee8f753429d6ad0c591f6fc569c28
 ```
 
 ---
@@ -633,13 +638,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:crypto-envelope/lrtpdylrfleochfzaxcnlgiegsmobbpfpfzmvopkqzflgorsongdwdwthhmwmwspldgssgpmeyingyaxaeechddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkbtktsbtblofdsrzsjzknsoleltaeecstldsbbbiobdhfswtdvlinfxrtfelswkdpbklyluatgsswdejkzmdabtceolwpspiylugdecntihvypkoygafdlkoejsfzvemtmdsftpfmhdcxnsbztavlzmyaleostpbsmkwnsfsoaxqdfdbwbgkppfglenvtwnfnamcsgrjpwpgmlftpehtpfntpfraxtpehtpfntpfshdfzjlahjnimmyfnfslukktidwswntwnwdsnfrtlbywlntiegmhyvooshnhnwpcnbkpykpvlferpmhfenybybsotproytytbknbeheuyvwrtwkctbdytiedwmknerycybdwllftpehtpfntpfrahtpehtpfntpemlftpdylshddkmtclwdgtjlzsoltnzolutndwldpyjncplujoiacerkoxvttbkovsbyrtwyhgfeltrdrpctgogsspgmsordhkwkeyaoaesayardgdswhhinkefndycnaasopmbdgdtlrtaorttpfmhdcxsopfpadyfsaautbadtvavdfhwpdicphploaeplclaeweoxzcvdltbnhsdivdfhdwghvyoyfd
+ur:crypto-envelope/lrtpdylrflataomtyamykgjpgstpamrstlihrebttiaaehbafdgdderojsmsgsmsvahllgwkrtmdqzbzfyeohddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkiamsaekehncfnytddkcwuyhhwfvdtsvejpemuyrdtydthluoeozechwsdyuyjnfxtajodyingsotftenwtcahhmniasshkhliogdlsetckzctldwiatigoecfepmoxndvlbytpfmhdcxzmplaonngskicwchpepaeyidjntnzmdsgebkgtamtleonywzzslrdawltntajldalftpehtpfntpfraxtpehtpfntpfshdfzttcyehgrotascsurosfljzchvswyqzadfhdadkyktkytjyfejlbeesdwbkmklbzerhaycngtfzfphfbejzmsmoplaoonfdiylkpkdlhlnstivteymuhhsphsykldbachlftpehtpfntpfrahtpehtpfntpemlftpdylshddknschhgjedklksnurrohhdyjegasfoywzemgsldmnferozsnsinbdfmkilahkuecxhtskktmegsjkhpgmhfmezeksutnljnveaogduocxtemdtsbboletnyperkcemumelabdtpfmhdcxbtdiadkgrhmkletpurpkqzlosabzknbwdibardvsvldlvyykpewkvaecylurylfdpkytgsiy
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269510300355824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d8308358240d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b074cc62873ff250d1ca6ecc8668b50359d65e1aaa149488ca27140e49695ccd83e58209c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec5282d831d83cd83b03d831d83cd83d58406f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be982d831d83cd83b05d831d83cd83782d8308358249621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f554cc852c9ba59f4320200c2f8ba50c65c697c3c302304c9ad0b50d5c002c0d83e5820c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c
+d83184d8308447070296f88f7b724cd806bfd565b50dd004310e485028b871974c97e65d8df4c095b41544335824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d8308358246397007c60199ad2241bdb5cf3e7d7e47237dbbad4295ddc33fe17ef30db6d43d97030694ca33a36f01d5c8e63c4595d675083381efdd52c63d0553545ada49be311d83e5820ffae029e4c7d1b17afb132626ddaff264a0a4d06d5339af2fa8425e9dad96f2582d831d83cd83b03d831d83cd83d5840d11a314ba30918dfa7476c17e8eeb4013f2524f5cff974456f10392c0a987ffeb908234d404156106c9792ae02a548668caa2f5d9cd0e032935cc861f5890e1782d831d83cd83b05d831d83cd83782d8308358249c17576b248ccddfb85c306b49cca1f2374c898e45b8fa9c690b3e7d8059de205ac577914c735b525691fe78dd996de40250dc20d395d714a6389aafbb1c9391800bd83e58200d27017bb9988ad8dfaab488c2157a13270ebae8e32fe1f5aff4e635f7dff748
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -649,9 +654,9 @@ d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269
    [
       48(   ; crypto-msg
          [
-            h'33174003238d64',
-            h'9214b0b0ffe2aab44755bfa5',
-            h'eaf05c9494c8894ccaad326951030035',
+            h'070296f88f7b72',
+            h'd806bfd565b50dd004310e48',
+            h'28b871974c97e65d8df4c095b4154433',
             h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
          ]
       ),
@@ -667,13 +672,13 @@ d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269
                   [
                      48(   ; crypto-msg
                         [
-                           h'0d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b07',
-                           h'c62873ff250d1ca6ecc8668b',
-                           h'359d65e1aaa149488ca27140e49695cc'
+                           h'6397007c60199ad2241bdb5cf3e7d7e47237dbbad4295ddc33fe17ef30db6d43d9703069',
+                           h'a33a36f01d5c8e63c4595d67',
+                           h'83381efdd52c63d0553545ada49be311'
                         ]
                      ),
                      62(   ; agreement-public-key
-                        h'9c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec52'
+                        h'ffae029e4c7d1b17afb132626ddaff264a0a4d06d5339af2fa8425e9dad96f25'
                      )
                   ]
                )
@@ -689,7 +694,7 @@ d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269
          49(   ; crypto-envelope
             60(   ; plaintext
                61(   ; signature
-                  h'6f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be9'
+                  h'd11a314ba30918dfa7476c17e8eeb4013f2524f5cff974456f10392c0a987ffeb908234d404156106c9792ae02a548668caa2f5d9cd0e032935cc861f5890e17'
                )
             )
          )
@@ -706,13 +711,13 @@ d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269
                   [
                      48(   ; crypto-msg
                         [
-                           h'9621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f55',
-                           h'c852c9ba59f4320200c2f8ba',
-                           h'c65c697c3c302304c9ad0b50d5c002c0'
+                           h'9c17576b248ccddfb85c306b49cca1f2374c898e45b8fa9c690b3e7d8059de205ac57791',
+                           h'735b525691fe78dd996de402',
+                           h'dc20d395d714a6389aafbb1c9391800b'
                         ]
                      ),
                      62(   ; agreement-public-key
-                        h'c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c'
+                        h'0d27017bb9988ad8dfaab488c2157a13270ebae8e32fe1f5aff4e635f7dff748'
                      )
                   ]
                )
@@ -731,11 +736,11 @@ d8 31                                    # tag(49)   ; crypto-envelope
       d8 30                              # tag(48)   ; crypto-msg
          84                              # array(4)
             47                           # bytes(7)
-               33174003238d64
+               070296f88f7b72
             4c                           # bytes(12)
-               9214b0b0ffe2aab44755bfa5
+               d806bfd565b50dd004310e48
             50                           # bytes(16)
-               eaf05c9494c8894ccaad326951030035
+               28b871974c97e65d8df4c095b4154433
             5824                         # bytes(36)
                d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       82                                 # array(2)
@@ -750,14 +755,14 @@ d8 31                                    # tag(49)   ; crypto-envelope
                      d8 30               # tag(48)   ; crypto-msg
                         83               # array(3)
                            5824          # bytes(36)
-                              0d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b07
+                              6397007c60199ad2241bdb5cf3e7d7e47237dbbad4295ddc33fe17ef30db6d43d9703069
                            4c            # bytes(12)
-                              c62873ff250d1ca6ecc8668b
+                              a33a36f01d5c8e63c4595d67
                            50            # bytes(16)
-                              359d65e1aaa149488ca27140e49695cc
+                              83381efdd52c63d0553545ada49be311
                      d8 3e               # tag(62)   ; agreement-public-key
                         5820             # bytes(32)
-                           9c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec52
+                           ffae029e4c7d1b17afb132626ddaff264a0a4d06d5339af2fa8425e9dad96f25
       82                                 # array(2)
          d8 31                           # tag(49)   ; crypto-envelope
             d8 3c                        # tag(60)   ; plaintext
@@ -767,7 +772,7 @@ d8 31                                    # tag(49)   ; crypto-envelope
             d8 3c                        # tag(60)   ; plaintext
                d8 3d                     # tag(61)   ; signature
                   5840                   # bytes(64)
-                     6f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be9
+                     d11a314ba30918dfa7476c17e8eeb4013f2524f5cff974456f10392c0a987ffeb908234d404156106c9792ae02a548668caa2f5d9cd0e032935cc861f5890e17
       82                                 # array(2)
          d8 31                           # tag(49)   ; crypto-envelope
             d8 3c                        # tag(60)   ; plaintext
@@ -780,14 +785,14 @@ d8 31                                    # tag(49)   ; crypto-envelope
                      d8 30               # tag(48)   ; crypto-msg
                         83               # array(3)
                            5824          # bytes(36)
-                              9621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f55
+                              9c17576b248ccddfb85c306b49cca1f2374c898e45b8fa9c690b3e7d8059de205ac57791
                            4c            # bytes(12)
-                              c852c9ba59f4320200c2f8ba
+                              735b525691fe78dd996de402
                            50            # bytes(16)
-                              c65c697c3c302304c9ad0b50d5c002c0
+                              dc20d395d714a6389aafbb1c9391800b
                      d8 3e               # tag(62)   ; agreement-public-key
                         5820             # bytes(32)
-                           c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c
+                           0d27017bb9988ad8dfaab488c2157a13270ebae8e32fe1f5aff4e635f7dff748
 ```
 
 ---

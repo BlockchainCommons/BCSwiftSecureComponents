@@ -30,7 +30,7 @@ final class EnvelopeTestVectors: XCTestCase {
             name: "Symmetric Encryption",
             explanation: "Alice and Bob have agreed to use a symmetric key.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: symmetricKey, nonce: fakeNonce)
+                .encrypt(with: fakeContentKey, nonce: fakeNonce)
         )
         
         let signThenEncrypt = TestCase(
@@ -39,14 +39,14 @@ final class EnvelopeTestVectors: XCTestCase {
             envelope: try Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
                 .enclose()
-                .encrypt(with: symmetricKey, nonce: fakeNonce)
+                .encrypt(with: fakeContentKey, nonce: fakeNonce)
         )
         
         let encryptThenSign = TestCase(
             name: "Encrypt Then Sign",
             explanation: "A message is first encrypted, then signed. Its signature may be checked before the envelope is decrypted.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: symmetricKey)
+                .encrypt(with: fakeContentKey)
                 .sign(with: alicePrivateKeys)
         )
         
@@ -54,9 +54,9 @@ final class EnvelopeTestVectors: XCTestCase {
             name: "Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: symmetricKey)
-                .addRecipient(bobPublicKeys, contentKey: symmetricKey)
-                .addRecipient(carolPublicKeys, contentKey: symmetricKey)
+                .encrypt(with: fakeContentKey)
+                .addRecipient(bobPublicKeys, contentKey: fakeContentKey)
+                .addRecipient(carolPublicKeys, contentKey: fakeContentKey)
         )
         
         let visibleSignatureMultiRecipient = TestCase(
@@ -64,9 +64,9 @@ final class EnvelopeTestVectors: XCTestCase {
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload. Alice then signs the envelope so her signature may be verified by anyone with her public key.",
             envelope: try Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys)
-                .encrypt(with: symmetricKey)
-                .addRecipient(bobPublicKeys, contentKey: symmetricKey)
-                .addRecipient(carolPublicKeys, contentKey: symmetricKey)
+                .encrypt(with: fakeContentKey)
+                .addRecipient(bobPublicKeys, contentKey: fakeContentKey)
+                .addRecipient(carolPublicKeys, contentKey: fakeContentKey)
         )
         
         let verifiableCredential = TestCase(
@@ -120,12 +120,17 @@ final class EnvelopeTestVectors: XCTestCase {
         divider()
         
         paragraph("These test vectors use these fixed seed values, from which other key pairs are derived:")
-        
         list([
             "Alice's Seed: `\(aliceSeed.data.hex)`",
             "Bob's Seed: `\(bobSeed.data.hex)`",
             "Carol's Seed: `\(carolSeed.data.hex)`",
-            "Symmetric Key: `\(symmetricKey.data.hex)`",
+        ])
+        
+        paragraph("These objects are normally random, but they are fixed for these test vectors:")
+        list([
+            "Symmetric key used for encryption: `\(fakeContentKey.data.hex)`",
+            "Nonce for encryption: `\(fakeNonce.data.hex)`",
+            "Random generator for signing returns repeating sequence: `\(fakeRandomGeneratorSeed.hex)`"
         ])
 
         formatIndex(testCases)
