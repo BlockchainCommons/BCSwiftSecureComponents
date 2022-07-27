@@ -41,6 +41,11 @@ These test vectors use these fixed seed values, from which other key pairs are d
 3. [Multisigned Plaintext](#TEST-VECTOR-3-Multisigned-Plaintext)
 4. [Symmetric Encryption](#TEST-VECTOR-4-Symmetric-Encryption)
 5. [Sign Then Encrypt](#TEST-VECTOR-5-Sign-Then-Encrypt)
+6. [Encrypt Then Sign](#TEST-VECTOR-6-Encrypt-Then-Sign)
+7. [Multi-Recipient](#TEST-VECTOR-7-MultiRecipient)
+8. [Visible Signature Multi-Recipient](#TEST-VECTOR-8-Visible-Signature-MultiRecipient)
+9. [Verifiable Credential](#TEST-VECTOR-9-Verifiable-Credential)
+10. [Redacted Verifiable Credential](#TEST-VECTOR-10-Redacted-Verifiable-Credential)
 
 ---
 
@@ -48,9 +53,7 @@ These test vectors use these fixed seed values, from which other key pairs are d
 
 The simplest case: encoding a plaintext string as the envelope's `subject`. The `subject` can be any CBOR-encodable structure.
 
-### Payload
-
-👉 _In Envelope Notation._
+### Payload in Envelope Notation
 
 ```
 "Hello."
@@ -93,9 +96,7 @@ d8 31                 # tag(49)   ; crypto-envelope
 
 A string has been signed by Alice.
 
-### Payload
-
-👉 _In Envelope Notation._
+### Payload in Envelope Notation
 
 ```
 "Hello." [
@@ -167,9 +168,7 @@ d8 31                                    # tag(49)   ; crypto-envelope
 
 Alice and Carol jointly send a signed plaintext message to Bob.
 
-### Payload
-
-👉 _In Envelope Notation._
+### Payload in Envelope Notation
 
 ```
 "Hello." [
@@ -266,9 +265,7 @@ d8 31                                    # tag(49)   ; crypto-envelope
 
 Alice and Bob have agreed to use a symmetric key.
 
-### Payload
-
-👉 _In Envelope Notation._
+### Payload in Envelope Notation
 
 ```
 EncryptedMessage
@@ -325,9 +322,7 @@ d8 31                                    # tag(49)   ; crypto-envelope
 
 A message is first signed, then encrypted. Its signature can only be checked once the envelope is decrypted.
 
-### Payload
-
-👉 _In Envelope Notation._
+### Payload in Envelope Notation
 
 ```
 EncryptedMessage
@@ -376,6 +371,1546 @@ d8 31                                    # tag(49)   ; crypto-envelope
             da875a17c1720aeb1fa80508f6dd1540
          5824                            # bytes(36)
             d838582082b92cb97eb36691bb5c62ae2d91c4976220039ec2d5edd34e89c36773dbee9a
+```
+
+---
+
+## TEST VECTOR 6: Encrypt Then Sign
+
+A message is first encrypted, then signed. Its signature may be checked before the envelope is decrypted.
+
+### Payload in Envelope Notation
+
+```
+EncryptedMessage [
+    verifiedBy: Signature
+]
+```
+
+### UR
+
+👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
+
+```
+ur:crypto-envelope/lftpdylrfliedtskimwdtssogslnknyntlgojkmsqzkttdnbldgddsprythteshskockssieasempyhlfhoyhddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfraxtpehtpfntpfshdfzsoloeogmtagylaplenrokodpoelbaojosebechvoldlylddwjtjnjnmktdjlolcsfrltcpdeatwphkbgkblghhcmfyoxhnolcmveuydlbkluetzcfrwtbsgelfrprypfoslulerf
+```
+
+### Tagged CBOR Binary
+
+```
+d83182d83084476429c56aead7c94c867af6d5557397b477d2a0895026b2f95a3961761ec4640937ab5d3fa15824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b03d831d83cd83d5840c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0
+```
+
+### Tagged CBOR Diagnostic Notation
+
+```
+49(   ; crypto-envelope
+   [
+      48(   ; crypto-msg
+         [
+            h'6429c56aead7c9',
+            h'867af6d5557397b477d2a089',
+            h'26b2f95a3961761ec4640937ab5d3fa1',
+            h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
+         ]
+      ),
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(3)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               61(   ; signature
+                  h'c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0'
+               )
+            )
+         )
+      ]
+   ]
+)
+```
+
+### Tagged CBOR Annotated Binary
+
+```
+d8 31                                    # tag(49)   ; crypto-envelope
+   82                                    # array(2)
+      d8 30                              # tag(48)   ; crypto-msg
+         84                              # array(4)
+            47                           # bytes(7)
+               6429c56aead7c9
+            4c                           # bytes(12)
+               867af6d5557397b477d2a089
+            50                           # bytes(16)
+               26b2f95a3961761ec4640937ab5d3fa1
+            5824                         # bytes(36)
+               d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  03                     # unsigned(3)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3d                     # tag(61)   ; signature
+                  5840                   # bytes(64)
+                     c9883352d95180ae36b8762da27f0270c11017e28981892c6e6d6d98d26fa6183b87222807ec59127e8d5c1644a460a616e4db2f0a8b38fd3bf00f4a82b6bdb0
+```
+
+---
+
+## TEST VECTOR 7: Multi-Recipient
+
+Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload.
+
+### Payload in Envelope Notation
+
+```
+EncryptedMessage [
+    hasRecipient: SealedMessage
+    hasRecipient: SealedMessage
+]
+```
+
+### UR
+
+👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
+
+```
+ur:crypto-envelope/lstpdylrflwfcfknlrprtaflgslusebeplbtdlpfgdlydmlbfzgdckmumwotdwtamkndfenbglwtuecwdpechddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkqdhpytgacstnknhdghgwgrftftldeefgtndezemdingwttlbwpfncsgwtispuyhlvdjsnytygslbaorlhnlywfhhfsoebzvwolgdkksrtovahkpynepkvotppedwtotkflfltpfmhdcxdmsfpeselefxdlnsrfntpffphesafwaxurcpdwlyamwkkndkgsnbloknrhtyidcslftpehtpfntpfrahtpehtpfntpemlftpdylshddkhyrnfxhkyllafettnyinrdztpafwimkipmcyotfnetuteykoidlshklnpaoxlshnbywdgrhlgsksislkoyiaisjecsdsgretvwgdgalekgidjnuodlamldtlyaoxfnfyfzwltpfmhdcxhejllfykweylfhgesgpdpmvlhekewkgywsmewpfzlojelfmdgywymwlrykvosoadtbfxjldr
+```
+
+### Tagged CBOR Binary
+
+```
+d83183d8308447f3197a84b2d9474c8bc110ae0d2fb050812e7f40501e9394a32cd9989b45a04ef0de1b2d355824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d830835824b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad44c7f02b76081f35c3da215e5a65079c3cee659ab9faae2d8af2ccecf4747d83e58202eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d4621882d831d83cd83b05d831d83cd83782d8308358245ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d4c78688ca163686b18264b38e550498a7b626ddc2f0689d5f8a43c4440e9d83e58205f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901
+```
+
+### Tagged CBOR Diagnostic Notation
+
+```
+49(   ; crypto-envelope
+   [
+      48(   ; crypto-msg
+         [
+            h'f3197a84b2d947',
+            h'8bc110ae0d2fb050812e7f40',
+            h'1e9394a32cd9989b45a04ef0de1b2d35',
+            h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
+         ]
+      ),
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(5)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               55(   ; crypto-sealed
+                  [
+                     48(   ; crypto-msg
+                        [
+                           h'b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad4',
+                           h'7f02b76081f35c3da215e5a6',
+                           h'79c3cee659ab9faae2d8af2ccecf4747'
+                        ]
+                     ),
+                     62(   ; agreement-public-key
+                        h'2eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d46218'
+                     )
+                  ]
+               )
+            )
+         )
+      ],
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(5)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               55(   ; crypto-sealed
+                  [
+                     48(   ; crypto-msg
+                        [
+                           h'5ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d',
+                           h'78688ca163686b18264b38e5',
+                           h'498a7b626ddc2f0689d5f8a43c4440e9'
+                        ]
+                     ),
+                     62(   ; agreement-public-key
+                        h'5f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901'
+                     )
+                  ]
+               )
+            )
+         )
+      ]
+   ]
+)
+```
+
+### Tagged CBOR Annotated Binary
+
+```
+d8 31                                    # tag(49)   ; crypto-envelope
+   83                                    # array(3)
+      d8 30                              # tag(48)   ; crypto-msg
+         84                              # array(4)
+            47                           # bytes(7)
+               f3197a84b2d947
+            4c                           # bytes(12)
+               8bc110ae0d2fb050812e7f40
+            50                           # bytes(16)
+               1e9394a32cd9989b45a04ef0de1b2d35
+            5824                         # bytes(36)
+               d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  05                     # unsigned(5)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 37                     # tag(55)   ; crypto-sealed
+                  82                     # array(2)
+                     d8 30               # tag(48)   ; crypto-msg
+                        83               # array(3)
+                           5824          # bytes(36)
+                              b35bf94918da7a58544f4b3a3a893446da28fe95694fd17fec3c184fd0c8db5de7719ad4
+                           4c            # bytes(12)
+                              7f02b76081f35c3da215e5a6
+                           50            # bytes(16)
+                              79c3cee659ab9faae2d8af2ccecf4747
+                     d8 3e               # tag(62)   ; agreement-public-key
+                        5820             # bytes(32)
+                           2eccafc18a432f9cbc9db0415fc24203df222c8106f47a244ca0887ab9d46218
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  05                     # unsigned(5)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 37                     # tag(55)   ; crypto-sealed
+                  82                     # array(2)
+                     d8 30               # tag(48)   ; crypto-msg
+                        83               # array(3)
+                           5824          # bytes(36)
+                              5ebe4359f78045d19a69bafcb1426a7dad1aa33c38dd327662835986b1a4836011ea4b5d
+                           4c            # bytes(12)
+                              78688ca163686b18264b38e5
+                           50            # bytes(16)
+                              498a7b626ddc2f0689d5f8a43c4440e9
+                     d8 3e               # tag(62)   ; agreement-public-key
+                        5820             # bytes(32)
+                           5f6f82f5edf73f4acaa8ade35f7cf451ef91ec40886b829551ee9484f5e2c901
+```
+
+---
+
+## TEST VECTOR 8: Visible Signature Multi-Recipient
+
+Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload. Alice then signs the envelope so her signature may be verified by anyone with her public key.
+
+### Payload in Envelope Notation
+
+```
+EncryptedMessage [
+    hasRecipient: SealedMessage
+    hasRecipient: SealedMessage
+    verifiedBy: Signature
+]
+```
+
+### UR
+
+👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
+
+```
+ur:crypto-envelope/lrtpdylrfleochfzaxcnlgiegsmobbpfpfzmvopkqzflgorsongdwdwthhmwmwspldgssgpmeyingyaxaeechddktpethdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwlftpehtpfntpfrahtpehtpfntpemlftpdylshddkbtktsbtblofdsrzsjzknsoleltaeecstldsbbbiobdhfswtdvlinfxrtfelswkdpbklyluatgsswdejkzmdabtceolwpspiylugdecntihvypkoygafdlkoejsfzvemtmdsftpfmhdcxnsbztavlzmyaleostpbsmkwnsfsoaxqdfdbwbgkppfglenvtwnfnamcsgrjpwpgmlftpehtpfntpfraxtpehtpfntpfshdfzjlahjnimmyfnfslukktidwswntwnwdsnfrtlbywlntiegmhyvooshnhnwpcnbkpykpvlferpmhfenybybsotproytytbknbeheuyvwrtwkctbdytiedwmknerycybdwllftpehtpfntpfrahtpehtpfntpemlftpdylshddkmtclwdgtjlzsoltnzolutndwldpyjncplujoiacerkoxvttbkovsbyrtwyhgfeltrdrpctgogsspgmsordhkwkeyaoaesayardgdswhhinkefndycnaasopmbdgdtlrtaorttpfmhdcxsopfpadyfsaautbadtvavdfhwpdicphploaeplclaeweoxzcvdltbnhsdivdfhdwghvyoyfd
+```
+
+### Tagged CBOR Binary
+
+```
+d83184d830844733174003238d644c9214b0b0ffe2aab44755bfa550eaf05c9494c8894ccaad3269510300355824d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e582d831d83cd83b05d831d83cd83782d8308358240d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b074cc62873ff250d1ca6ecc8668b50359d65e1aaa149488ca27140e49695ccd83e58209c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec5282d831d83cd83b03d831d83cd83d58406f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be982d831d83cd83b05d831d83cd83782d8308358249621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f554cc852c9ba59f4320200c2f8ba50c65c697c3c302304c9ad0b50d5c002c0d83e5820c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c
+```
+
+### Tagged CBOR Diagnostic Notation
+
+```
+49(   ; crypto-envelope
+   [
+      48(   ; crypto-msg
+         [
+            h'33174003238d64',
+            h'9214b0b0ffe2aab44755bfa5',
+            h'eaf05c9494c8894ccaad326951030035',
+            h'd8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
+         ]
+      ),
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(5)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               55(   ; crypto-sealed
+                  [
+                     48(   ; crypto-msg
+                        [
+                           h'0d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b07',
+                           h'c62873ff250d1ca6ecc8668b',
+                           h'359d65e1aaa149488ca27140e49695cc'
+                        ]
+                     ),
+                     62(   ; agreement-public-key
+                        h'9c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec52'
+                     )
+                  ]
+               )
+            )
+         )
+      ],
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(3)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               61(   ; signature
+                  h'6f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be9'
+               )
+            )
+         )
+      ],
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(5)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               55(   ; crypto-sealed
+                  [
+                     48(   ; crypto-msg
+                        [
+                           h'9621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f55',
+                           h'c852c9ba59f4320200c2f8ba',
+                           h'c65c697c3c302304c9ad0b50d5c002c0'
+                        ]
+                     ),
+                     62(   ; agreement-public-key
+                        h'c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c'
+                     )
+                  ]
+               )
+            )
+         )
+      ]
+   ]
+)
+```
+
+### Tagged CBOR Annotated Binary
+
+```
+d8 31                                    # tag(49)   ; crypto-envelope
+   84                                    # array(4)
+      d8 30                              # tag(48)   ; crypto-msg
+         84                              # array(4)
+            47                           # bytes(7)
+               33174003238d64
+            4c                           # bytes(12)
+               9214b0b0ffe2aab44755bfa5
+            50                           # bytes(16)
+               eaf05c9494c8894ccaad326951030035
+            5824                         # bytes(36)
+               d8385820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  05                     # unsigned(5)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 37                     # tag(55)   ; crypto-sealed
+                  82                     # array(2)
+                     d8 30               # tag(48)   ; crypto-msg
+                        83               # array(3)
+                           5824          # bytes(36)
+                              0d77cbd68848c3fa6c7ac98a870035c789cb14670b56c6d2e36943c04583f42d0a818b07
+                           4c            # bytes(12)
+                              c62873ff250d1ca6ecc8668b
+                           50            # bytes(16)
+                              359d65e1aaa149488ca27140e49695cc
+                     d8 3e               # tag(62)   ; agreement-public-key
+                        5820             # bytes(32)
+                           9c15d9e3fff88aa7d80f98f1ccc903b348131275b04e36e0f13c06184b72ec52
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  03                     # unsigned(3)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3d                     # tag(61)   ; signature
+                  5840                   # bytes(64)
+                     6f056d6a8f3c3d8b79d02cc69df1eacd3bd511e99d64525ee2a76060ec230aab75e345b690459a110fa3b2a1d4d67a105fdbe5c0f41f0bf9642c989fbd1a0be9
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  05                     # unsigned(5)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 37                     # tag(55)   ; crypto-sealed
+                  82                     # array(2)
+                     d8 30               # tag(48)   ; crypto-msg
+                        83               # array(3)
+                           5824          # bytes(36)
+                              9621ea4d6ffaa6dafb8bda2c89ab6d228b70631cbba4e0d676e811c0ee574587bab61f55
+                           4c            # bytes(12)
+                              c852c9ba59f4320200c2f8ba
+                           50            # bytes(16)
+                              c65c697c3c302304c9ad0b50d5c002c0
+                     d8 3e               # tag(62)   ; agreement-public-key
+                        5820             # bytes(32)
+                           c9b0b1303d04dd0e29e6e73fec27225b8800ae2100eda4fde7870c6127e73f2c
+```
+
+---
+
+## TEST VECTOR 9: Verifiable Credential
+
+John Smith is issued a Permanent Resident Card signed by the State of Example
+
+### Payload in Envelope Notation
+
+```
+{
+    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+        "dateIssued": 2022-04-27
+        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            "birthCountry": "bs" [
+                note: "The Bahamas"
+            ]
+            "birthDate": 1974-02-18
+            "familyName": "SMITH"
+            "givenName": "JOHN"
+            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                note: "This is an image of John Smith."
+            ]
+            "lprCategory": "C09"
+            "lprNumber": "999-999-999"
+            "residentSince": 2018-01-07
+            "sex": "MALE"
+            isA: "Permanent Resident"
+            isA: "Person"
+        ]
+        isA: "credential"
+        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+            note: "Issued by the State of Example"
+        ]
+        note: "The State of Example recognizes JOHN SMITH as a Permanent Resident."
+    ]
+} [
+    verifiedBy: Signature [
+        note: "Made by the State of Example."
+    ]
+]
+```
+
+### UR
+
+👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
+
+```
+ur:crypto-envelope/lftpehlntpfntpfthdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosplftpehtpfnimiehsjyihgajkjkkpihietpehtpfnsecyidisltlalftpehtpfntpfraatpehtpfnksfxghisihcxgujyhsjyihcxjliycxfekshsjnjojzihcxjpihiajliojtinknihjkcxgegwfdglcxgugtgaghfdcxhsjkcxhscxgdihjpjnhsjtihjtjycxgmihjkinieihjtjydmlftpehtpfntpfrbttpehlstpfntpfthdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvslftpehtpfntpfrastpehtpfntpcxksheisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndljkiainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihetlftpehtpfntpfraatpehtpfnksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihlftpehtpfntpfraotpehtpfnimiajpihieihjtjyinhsjzlftpehtpfntpfrbatpehlktpfntpfthdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguolftpehtpfntpfraotpehtpfniygdihjpjkjljtlftpehtpfnjnjpihjkinieihjtjyguinjtiaihtpehtpfnsecyhtgyiaaelftpehtpfninioinkoihjtglhsjnihtpehtpfniegegwfdgllftpehtpfnjzidinjpjyisfxjlkpjtjyjpkktpehlftpfnididjklftpehtpfntpfraatpehtpfnjeghisihcxfwhsishsjnhsjklftpehtpfninjzjojpglkpjnidihjptpehtpfnjeesesesdpesesesdpeseseslftpehtpfniajkihkstpehtpfniegtfpgsfelftpehtpfninidinjpjyisfyhsjyihtpehtpfnsecyatskiolalftpehtpfnihinjnhsioihtpehlstpfntpethdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonllftpehtpfntpfrastpehtpfnkshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaeseseslftpehtpfntpfraatpehtpfnksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmlftpehtpfnimiyhsjninjzkkglhsjnihtpehtpfnihgugtgaghfdlftpehtpfntpfraotpehtpfnjpgdihjpjnhsjtihjtjycxgmihjkinieihjtjylftpehtpfnjejzjojpfxhsjyihiojljpkktpehtpfniafxdyeslftpehtpfntpfraxtpehlftpfntpfshdfzhevysacyrtvefhsnwesaaafdhsastplaenpmemnlfwttjeurcpbsjopfhnseehkourdeprjovohfmyfhjpqzcspslyehgdgaecghonhgwkrsdrtboxksftiofsltkkqdlftpehtpfntpfraatpehtpfnkscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmwsfnckgw
+```
+
+### Tagged CBOR Binary
+
+```
+d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c882d831d83c6a64617465497373756564d831d83cc11a6268878082d831d83cd83b04d831d83c7843546865205374617465206f66204578616d706c65207265636f676e697a6573204a4f484e20534d4954482061732061205065726d616e656e74205265736964656e742e82d831d83cd83b0dd83183d83cd83a582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e882d831d83cd83b09d831d83cd820785f68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f3034333633643566663939373333626330663135373762616261343430616631636633343461643965343534666164396431323863303066656636353035653882d831d83cd83b04d831d83c781e49737375656420627920746865205374617465206f66204578616d706c6582d831d83cd83b02d831d83c6a63726564656e7469616c82d831d83cd83b0ed8318cd83cd83a582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc82d831d83cd83b02d831d83c66506572736f6e82d831d83c6d7265736964656e7453696e6365d831d83cc11a5a51630082d831d83c69676976656e4e616d65d831d83c644a4f484e82d831d83c6c6269727468436f756e747279d83182d83c62627382d831d83cd83b04d831d83c6b54686520426168616d617382d831d83c696c70724e756d626572d831d83c6b3939392d3939392d39393982d831d83c63736578d831d83c644d414c4582d831d83c69626972746844617465d831d83cc11a07c5678082d831d83c65696d616765d83183d83cd838582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c99982d831d83cd83b09d831d83c786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f3336626533303732366265666236356361313362313336616532396438303831663634373932633237303234313565623630616431633536656433336339393982d831d83cd83b04d831d83c781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682e82d831d83c6a66616d696c794e616d65d831d83c65534d49544882d831d83cd83b02d831d83c725065726d616e656e74205265736964656e7482d831d83c6b6c707243617465676f7279d831d83c6343303982d831d83cd83b03d83182d83cd83d58405fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b382d831d83cd83b04d831d83c781d4d61646520627920746865205374617465206f66204578616d706c652e
+```
+
+### Tagged CBOR Diagnostic Notation
+
+```
+49(   ; crypto-envelope
+   [
+      49(   ; crypto-envelope
+         [
+            60(   ; plaintext
+               58(   ; crypto-scid
+                  h'174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8'
+               )
+            ),
+            [
+               49(   ; crypto-envelope
+                  60("dateIssued")   ; plaintext
+               ),
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     1(2022-04-27T00:00:00Z)
+                  )
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(4)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     "The State of Example recognizes JOHN SMITH as a Permanent Resident."
+                  )
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(13)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  [
+                     60(   ; plaintext
+                        58(   ; crypto-scid
+                           h'04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8'
+                        )
+                     ),
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(9)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              32(   ; uri
+                                 "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                              )
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(4)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              "Issued by the State of Example"
+                           )
+                        )
+                     ]
+                  ]
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(2)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  60("credential")   ; plaintext
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(14)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  [
+                     60(   ; plaintext
+                        58(   ; crypto-scid
+                           h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
+                        )
+                     ),
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(2)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60("Person")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("residentSince")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              1(2018-01-07T00:00:00Z)
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("givenName")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("JOHN")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("birthCountry")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           [
+                              60("bs")   ; plaintext,
+                              [
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       59(4)   ; predicate
+                                    )
+                                 ),
+                                 49(   ; crypto-envelope
+                                    60("The Bahamas")   ; plaintext
+                                 )
+                              ]
+                           ]
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("lprNumber")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("999-999-999")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("sex")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("MALE")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("birthDate")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              1(1974-02-18T00:00:00Z)
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("image")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           [
+                              60(   ; plaintext
+                                 56(   ; crypto-digest
+                                    h'36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999'
+                                 )
+                              ),
+                              [
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       59(9)   ; predicate
+                                    )
+                                 ),
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                                    )
+                                 )
+                              ],
+                              [
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       59(4)   ; predicate
+                                    )
+                                 ),
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       "This is an image of John Smith."
+                                    )
+                                 )
+                              ]
+                           ]
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("familyName")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("SMITH")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(2)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60("Permanent Resident")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("lprCategory")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("C09")   ; plaintext
+                        )
+                     ]
+                  ]
+               )
+            ]
+         ]
+      ),
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(3)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            [
+               60(   ; plaintext
+                  61(   ; signature
+                     h'5fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b3'
+                  )
+               ),
+               [
+                  49(   ; crypto-envelope
+                     60(   ; plaintext
+                        59(4)   ; predicate
+                     )
+                  ),
+                  49(   ; crypto-envelope
+                     60(   ; plaintext
+                        "Made by the State of Example."
+                     )
+                  )
+               ]
+            ]
+         )
+      ]
+   ]
+)
+```
+
+### Tagged CBOR Annotated Binary
+
+```
+d8 31                                    # tag(49)   ; crypto-envelope
+   82                                    # array(2)
+      d8 31                              # tag(49)   ; crypto-envelope
+         86                              # array(6)
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3a                     # tag(58)   ; crypto-scid
+                  5820                   # bytes(32)
+                     174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     6a                  # text(10)
+                        64617465497373756564 # "dateIssued"
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     c1 1a62688780       # date(2022-04-27 00:00:00 +0000)
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        04               # unsigned(4)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     78 43               # text(67)
+                        546865205374617465206f66204578616d706c65207265636f676e697a6573204a4f484e20534d4954482061732061205065726d616e656e74205265736964656e742e # "The State of Example recognizes JOHN SMITH as a Permanent Resident."
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        0d               # unsigned(13)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  83                     # array(3)
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3a            # tag(58)   ; crypto-scid
+                           5820          # bytes(32)
+                              04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 09      # unsigned(9)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 20      # tag(32)   ; uri
+                                 78 5f   # text(95)
+                                    68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538 # "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 04      # unsigned(4)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              78 1e      # text(30)
+                                 49737375656420627920746865205374617465206f66204578616d706c65 # "Issued by the State of Example"
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        02               # unsigned(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     6a                  # text(10)
+                        63726564656e7469616c # "credential"
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        0e               # unsigned(14)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  8c                     # array(12)
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3a            # tag(58)   ; crypto-scid
+                           5820          # bytes(32)
+                              78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 02      # unsigned(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              66         # text(6)
+                                 506572736f6e # "Person"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6d         # text(13)
+                                 7265736964656e7453696e6365 # "residentSince"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              c1 1a5a516300 # date(2018-01-07 00:00:00 +0000)
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              69         # text(9)
+                                 676976656e4e616d65 # "givenName"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              64         # text(4)
+                                 4a4f484e # "JOHN"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6c         # text(12)
+                                 6269727468436f756e747279 # "birthCountry"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           82            # array(2)
+                              d8 3c      # tag(60)   ; plaintext
+                                 62      # text(2)
+                                    6273 # "bs"
+                              82         # array(2)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       d8 3b # tag(59)   ; predicate
+                                          04 # unsigned(4)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       6b # text(11)
+                                          54686520426168616d6173 # "The Bahamas"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              69         # text(9)
+                                 6c70724e756d626572 # "lprNumber"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6b         # text(11)
+                                 3939392d3939392d393939 # "999-999-999"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              63         # text(3)
+                                 736578  # "sex"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              64         # text(4)
+                                 4d414c45 # "MALE"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              69         # text(9)
+                                 626972746844617465 # "birthDate"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              c1 1a07c56780 # date(1974-02-18 00:00:00 +0000)
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              65         # text(5)
+                                 696d616765 # "image"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           83            # array(3)
+                              d8 3c      # tag(60)   ; plaintext
+                                 d8 38   # tag(56)   ; crypto-digest
+                                    5820 # bytes(32)
+                                       36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999
+                              82         # array(2)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       d8 3b # tag(59)   ; predicate
+                                          09 # unsigned(9)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       78 61 # text(97)
+                                          68747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939 # "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                              82         # array(2)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       d8 3b # tag(59)   ; predicate
+                                          04 # unsigned(4)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       78 1f # text(31)
+                                          5468697320697320616e20696d616765206f66204a6f686e20536d6974682e # "This is an image of John Smith."
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6a         # text(10)
+                                 66616d696c794e616d65 # "familyName"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              65         # text(5)
+                                 534d495448 # "SMITH"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 02      # unsigned(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              72         # text(18)
+                                 5065726d616e656e74205265736964656e74 # "Permanent Resident"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6b         # text(11)
+                                 6c707243617465676f7279 # "lprCategory"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              63         # text(3)
+                                 433039  # "C09"
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  03                     # unsigned(3)
+         d8 31                           # tag(49)   ; crypto-envelope
+            82                           # array(2)
+               d8 3c                     # tag(60)   ; plaintext
+                  d8 3d                  # tag(61)   ; signature
+                     5840                # bytes(64)
+                        5fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b3
+               82                        # array(2)
+                  d8 31                  # tag(49)   ; crypto-envelope
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3b            # tag(59)   ; predicate
+                           04            # unsigned(4)
+                  d8 31                  # tag(49)   ; crypto-envelope
+                     d8 3c               # tag(60)   ; plaintext
+                        78 1d            # text(29)
+                           4d61646520627920746865205374617465206f66204578616d706c652e # "Made by the State of Example."
+```
+
+---
+
+## TEST VECTOR 10: Redacted Verifiable Credential
+
+John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the redacted structure is the same, and the signature still validates.
+
+### Payload in Envelope Notation
+
+```
+{
+    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+        REDACTED: REDACTED
+        REDACTED: REDACTED
+        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            "familyName": "SMITH"
+            "givenName": "JOHN"
+            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                note: "This is an image of John Smith."
+            ]
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+            REDACTED: REDACTED
+        ]
+        isA: "credential"
+        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+            note: "Issued by the State of Example"
+        ]
+    ]
+} [
+    verifiedBy: Signature [
+        note: "Made by the State of Example."
+    ]
+]
+```
+
+### UR
+
+👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
+
+```
+ur:crypto-envelope/lftpehlntpfntpfthdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosplftpehtpethdcxstenembyhfpdwdsgtlwfdnrhuyidlrswgsndemlrielofhdrtlwyfwzcvebywewltpehtpethdcxfemdjpkszohhkkmelfsgmossmsaxihytrdhygylknnsouycawtluayrlbydrqdhslftpehtpethdcxihglkijnweprecbwwyjzbwjkhdwmdwdsglrlkoiecpldntmncachmynnflmwsspktpehtpethdcxbsptwtttuygtpdmthfamtkpehsspuyemjzzesstyfmtndldlvowlfmtlmurfatkklftpehtpfntpfrbttpehlstpfntpfthdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvslftpehtpfntpfrastpehtpfntpcxksheisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndljkiainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihetlftpehtpfntpfraatpehtpfnksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihlftpehtpfntpfraotpehtpfnimiajpihieihjtjyinhsjzlftpehtpfntpfrbatpehlktpfntpfthdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguolftpehtpethdcxueoxtdfsgdzohnbgcscllurttpueeopsfzeohygdnnrpvypsrsprsslahlatsnoetpehtpethdcxenbdhlhncyvoswwmfxlofnjkkklpetamqdbbgdioiahldpstmuwdurgmwekktbqzlftpehtpethdcxwtlegucpsriycaimfnhdcxdechrtrsmhwfassbbnmwjpztpytpmegrnbssbafebntpehtpethdcxlerocwrowyrskbotrlmwbnzedsetroinnlhekpnenbmnahgoahfwylswfmrdtioxlftpehtpfninioinkoihjtglhsjnihtpehtpfniegegwfdgllftpehtpethdcxdsfrhpkilufelocxcsgwrerfsklridamkkfebaenbnlbtlbwrhesdtdizebngtgytpehtpethdcxrlpsvegwseyndejepfaatozmecqznyvwwkehndchtpimehwklorkhlpmdsjtfgvllftpehtpethdcxeyrtgumdololnnlpzevofmdpwmrnbnkivdehamhfuttstynycykpehlsutmtbkgotpehtpethdcxmwfmbnwftnqztlherotkjerpgaeymhptnlteisgtleneoyvatlrkehwpnebdcsdelftpehtpethdcxkidtasvwaazowmwemnbghsjegmknhymybkwlbstobkadfwwtbsecahvecymywpwstpehtpethdcxieoltyfxntrdhpflsotdtbsssfbwstrnrkcleykocfrtsgbkwsdklowndwzmtibdlftpehtpethdcxtpfmjpdpcsbeckstplmdehbwgdzofmmkrtjobygdprpfdlvdeekphfmocwtyaaditpehtpethdcxrtneuezcbkcanbfpjkbwvdylisemonjeatjsntfmatsbfebtglhfgrpmtalamkrylftpehtpfnihinjnhsioihtpehlstpfntpethdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonllftpehtpfntpfrastpehtpfnkshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaeseseslftpehtpfntpfraatpehtpfnksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmlftpehtpfnimiyhsjninjzkkglhsjnihtpehtpfnihgugtgaghfdlftpehtpethdcxueoxtdfsgdzohnbgcscllurttpueeopsfzeohygdnnrpvypsrsprsslahlatsnoetpehtpethdcxhhluasdrtaoyaxuokkamfxbtnlecaanyctckadiafpgedevyidsacxguhpsoiygalftpehtpethdcxfxrktiflgdlgpftbwltedydkdalrfrgdbguelrlfamcsbkjptigmgevsiewehevotpehtpethdcxmdltbwieclmklaylswhlmyrptltkutmepdnbkoospdlnglntkkrkpkhpmnjpyadnlftpehtpfntpfraxtpehlftpfntpfshdfzhevysacyrtvefhsnwesaaafdhsastplaenpmemnlfwttjeurcpbsjopfhnseehkourdeprjovohfmyfhjpqzcspslyehgdgaecghonhgwkrsdrtboxksftiofsltkkqdlftpehtpfntpfraatpehtpfnkscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmpdgeiygy
+```
+
+### Tagged CBOR Binary
+
+```
+d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c882d831d8385820c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9d831d838582045957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab36182d831d8385820654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aad831d83858200fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc077982d831d83cd83b0dd83183d83cd83a582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e882d831d83cd83b09d831d83cd820785f68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f3034333633643566663939373333626330663135373762616261343430616631636633343461643965343534666164396431323863303066656636353035653882d831d83cd83b04d831d83c781e49737375656420627920746865205374617465206f66204578616d706c6582d831d83cd83b02d831d83c6a63726564656e7469616c82d831d83cd83b0ed8318cd83cd83a582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc82d831d8385820dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2d831d8385820360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b482d831d8385820f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450cd831d83858208ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a482d831d83c69676976656e4e616d65d831d83c644a4f484e82d831d8385820263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51d831d8385820b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e382d831d838582032c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55d831d8385820943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b182882d831d83858207d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecefd831d838582064a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b82d831d8385820d83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427d831d8385820c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd82d831d83c65696d616765d83183d83cd838582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c99982d831d83cd83b09d831d83c786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f3336626533303732366265666236356361313362313336616532396438303831663634373932633237303234313565623630616431633536656433336339393982d831d83cd83b04d831d83c781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682e82d831d83c6a66616d696c794e616d65d831d83c65534d49544882d831d8385820dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2d831d83858205c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc9664982d831d838582043bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2d831d838582095871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b82d831d83cd83b03d83182d83cd83d58405fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b382d831d83cd83b04d831d83c781d4d61646520627920746865205374617465206f66204578616d706c652e
+```
+
+### Tagged CBOR Diagnostic Notation
+
+```
+49(   ; crypto-envelope
+   [
+      49(   ; crypto-envelope
+         [
+            60(   ; plaintext
+               58(   ; crypto-scid
+                  h'174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8'
+               )
+            ),
+            [
+               49(   ; crypto-envelope
+                  56(   ; crypto-digest
+                     h'c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9'
+                  )
+               ),
+               49(   ; crypto-envelope
+                  56(   ; crypto-digest
+                     h'45957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab361'
+                  )
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  56(   ; crypto-digest
+                     h'654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aa'
+                  )
+               ),
+               49(   ; crypto-envelope
+                  56(   ; crypto-digest
+                     h'0fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc0779'
+                  )
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(13)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  [
+                     60(   ; plaintext
+                        58(   ; crypto-scid
+                           h'04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8'
+                        )
+                     ),
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(9)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              32(   ; uri
+                                 "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                              )
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              59(4)   ; predicate
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           60(   ; plaintext
+                              "Issued by the State of Example"
+                           )
+                        )
+                     ]
+                  ]
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(2)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  60("credential")   ; plaintext
+               )
+            ],
+            [
+               49(   ; crypto-envelope
+                  60(   ; plaintext
+                     59(14)   ; predicate
+                  )
+               ),
+               49(   ; crypto-envelope
+                  [
+                     60(   ; plaintext
+                        58(   ; crypto-scid
+                           h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
+                        )
+                     ),
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b4'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450c'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'8ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a4'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("givenName")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("JOHN")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e3'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'32c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b1828'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'7d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecef'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'64a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'd83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("image")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           [
+                              60(   ; plaintext
+                                 56(   ; crypto-digest
+                                    h'36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999'
+                                 )
+                              ),
+                              [
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       59(9)   ; predicate
+                                    )
+                                 ),
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                                    )
+                                 )
+                              ],
+                              [
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       59(4)   ; predicate
+                                    )
+                                 ),
+                                 49(   ; crypto-envelope
+                                    60(   ; plaintext
+                                       "This is an image of John Smith."
+                                    )
+                                 )
+                              ]
+                           ]
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           60("familyName")   ; plaintext
+                        ),
+                        49(   ; crypto-envelope
+                           60("SMITH")   ; plaintext
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'5c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc96649'
+                           )
+                        )
+                     ],
+                     [
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'43bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2'
+                           )
+                        ),
+                        49(   ; crypto-envelope
+                           56(   ; crypto-digest
+                              h'95871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b'
+                           )
+                        )
+                     ]
+                  ]
+               )
+            ]
+         ]
+      ),
+      [
+         49(   ; crypto-envelope
+            60(   ; plaintext
+               59(3)   ; predicate
+            )
+         ),
+         49(   ; crypto-envelope
+            [
+               60(   ; plaintext
+                  61(   ; signature
+                     h'5fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b3'
+                  )
+               ),
+               [
+                  49(   ; crypto-envelope
+                     60(   ; plaintext
+                        59(4)   ; predicate
+                     )
+                  ),
+                  49(   ; crypto-envelope
+                     60(   ; plaintext
+                        "Made by the State of Example."
+                     )
+                  )
+               ]
+            ]
+         )
+      ]
+   ]
+)
+```
+
+### Tagged CBOR Annotated Binary
+
+```
+d8 31                                    # tag(49)   ; crypto-envelope
+   82                                    # array(2)
+      d8 31                              # tag(49)   ; crypto-envelope
+         86                              # array(6)
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3a                     # tag(58)   ; crypto-scid
+                  5820                   # bytes(32)
+                     174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 38                  # tag(56)   ; crypto-digest
+                     5820                # bytes(32)
+                        c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 38                  # tag(56)   ; crypto-digest
+                     5820                # bytes(32)
+                        45957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab361
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 38                  # tag(56)   ; crypto-digest
+                     5820                # bytes(32)
+                        654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aa
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 38                  # tag(56)   ; crypto-digest
+                     5820                # bytes(32)
+                        0fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc0779
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        0d               # unsigned(13)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  83                     # array(3)
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3a            # tag(58)   ; crypto-scid
+                           5820          # bytes(32)
+                              04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 09      # unsigned(9)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 20      # tag(32)   ; uri
+                                 78 5f   # text(95)
+                                    68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538 # "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              d8 3b      # tag(59)   ; predicate
+                                 04      # unsigned(4)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              78 1e      # text(30)
+                                 49737375656420627920746865205374617465206f66204578616d706c65 # "Issued by the State of Example"
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        02               # unsigned(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     6a                  # text(10)
+                        63726564656e7469616c # "credential"
+            82                           # array(2)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  d8 3c                  # tag(60)   ; plaintext
+                     d8 3b               # tag(59)   ; predicate
+                        0e               # unsigned(14)
+               d8 31                     # tag(49)   ; crypto-envelope
+                  8c                     # array(12)
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3a            # tag(58)   ; crypto-scid
+                           5820          # bytes(32)
+                              78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b4
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450c
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 8ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a4
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              69         # text(9)
+                                 676976656e4e616d65 # "givenName"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              64         # text(4)
+                                 4a4f484e # "JOHN"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e3
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 32c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b1828
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 7d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecef
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 64a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 d83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              65         # text(5)
+                                 696d616765 # "image"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           83            # array(3)
+                              d8 3c      # tag(60)   ; plaintext
+                                 d8 38   # tag(56)   ; crypto-digest
+                                    5820 # bytes(32)
+                                       36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999
+                              82         # array(2)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       d8 3b # tag(59)   ; predicate
+                                          09 # unsigned(9)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       78 61 # text(97)
+                                          68747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939 # "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                              82         # array(2)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       d8 3b # tag(59)   ; predicate
+                                          04 # unsigned(4)
+                                 d8 31   # tag(49)   ; crypto-envelope
+                                    d8 3c # tag(60)   ; plaintext
+                                       78 1f # text(31)
+                                          5468697320697320616e20696d616765206f66204a6f686e20536d6974682e # "This is an image of John Smith."
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              6a         # text(10)
+                                 66616d696c794e616d65 # "familyName"
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 3c         # tag(60)   ; plaintext
+                              65         # text(5)
+                                 534d495448 # "SMITH"
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 5c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc96649
+                     82                  # array(2)
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 43bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2
+                        d8 31            # tag(49)   ; crypto-envelope
+                           d8 38         # tag(56)   ; crypto-digest
+                              5820       # bytes(32)
+                                 95871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b
+      82                                 # array(2)
+         d8 31                           # tag(49)   ; crypto-envelope
+            d8 3c                        # tag(60)   ; plaintext
+               d8 3b                     # tag(59)   ; predicate
+                  03                     # unsigned(3)
+         d8 31                           # tag(49)   ; crypto-envelope
+            82                           # array(2)
+               d8 3c                     # tag(60)   ; plaintext
+                  d8 3d                  # tag(61)   ; signature
+                     5840                # bytes(64)
+                        5fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b3
+               82                        # array(2)
+                  d8 31                  # tag(49)   ; crypto-envelope
+                     d8 3c               # tag(60)   ; plaintext
+                        d8 3b            # tag(59)   ; predicate
+                           04            # unsigned(4)
+                  d8 31                  # tag(49)   ; crypto-envelope
+                     d8 3c               # tag(60)   ; plaintext
+                        78 1d            # text(29)
+                           4d61646520627920746865205374617465206f66204578616d706c652e # "Made by the State of Example."
 ```
 
 ---
