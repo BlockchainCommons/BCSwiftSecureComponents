@@ -176,7 +176,7 @@ extension LibSecP256K1 {
         return hash
     }
     
-    static func schnorrSign32(msg32: Data, keyPair: secp256k1_keypair) -> Data {
+    static func schnorrSign32(msg32: Data, keyPair: secp256k1_keypair, randomGenerator: ((Int) -> Data)? = nil) -> Data {
         let msgCount = 32
         precondition(msg32.count == msgCount)
         
@@ -184,7 +184,14 @@ extension LibSecP256K1 {
         defer { secp256k1_context_destroy(context) }
 
         let randomizeCount = 32
-        let randomize = SecureRandomNumberGenerator.shared.data(count: randomizeCount)
+        let randomize: Data
+        
+        if let randomGenerator {
+            randomize = randomGenerator(randomizeCount)
+        } else {
+            randomize = SecureRandomNumberGenerator.shared.data(count: randomizeCount)
+        }
+        
         randomize.withUnsafeByteBuffer {
             _ = secp256k1_context_randomize(context, $0.baseAddress!)
         }
@@ -193,7 +200,13 @@ extension LibSecP256K1 {
         var sig64 = Data(repeating: 0, count: sigCount)
         
         let auxRandCount = 32
-        let auxRand = SecureRandomNumberGenerator.shared.data(count: auxRandCount)
+        let auxRand: Data
+        
+        if let randomGenerator {
+            auxRand = randomGenerator(auxRandCount)
+        } else {
+            auxRand = SecureRandomNumberGenerator.shared.data(count: auxRandCount)
+        }
 
         sig64.withUnsafeMutableByteBuffer { sig64 in
             msg32.withUnsafeByteBuffer { msg32 in
@@ -208,9 +221,9 @@ extension LibSecP256K1 {
         return sig64
     }
     
-    static func schnorrSign(msg: Data, tag: Data, keyPair: secp256k1_keypair) -> Data {
+    static func schnorrSign(msg: Data, tag: Data, keyPair: secp256k1_keypair, randomGenerator: ((Int) -> Data)? = nil) -> Data {
         let digest = taggedSHA256(msg: msg, tag: tag)
-        return schnorrSign32(msg32: digest, keyPair: keyPair)
+        return schnorrSign32(msg32: digest, keyPair: keyPair, randomGenerator: randomGenerator)
     }
     
     static func schnorrVerify32(msg32: Data, signature: Data, publicKey: secp256k1_xonly_pubkey) -> Bool {

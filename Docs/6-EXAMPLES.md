@@ -13,7 +13,9 @@
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
 * [Definitions](5-DEFINITIONS.md)
-* [Examples](6-EXAMPLES.md): This document
+* Examples: This document
+* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
+* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 

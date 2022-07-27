@@ -24,10 +24,10 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
         return Signature(ecdsaData: sig)!
     }
 
-    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil) -> Signature {
+    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Signature {
         let privateKey = ECPrivateKey(data)!
         let tag = tag ?? Data()
-        let sig = privateKey.schnorrSign(message: message.providedData, tag: tag.providedData)
+        let sig = privateKey.schnorrSign(message: message.providedData, tag: tag.providedData, randomGenerator: randomGenerator)
         return Signature(schnorrData: sig, tag: tag)!
     }
     

@@ -11,9 +11,11 @@
 * [Overview](1-OVERVIEW.md)
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
-* [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md): This document
+* Envelope Expressions: This document
 * [Definitions](5-DEFINITIONS.md)
 * [Examples](6-EXAMPLES.md)
+* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
+* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 
@@ -32,7 +34,7 @@ Ideally the method of encoding would have the following traits:
 
 ## Status
 
-This document is an early draft. While there is a reference implementation of `Envelope` in [BCSwiftFoundation](https://github.com/blockchaincommons/BCSwiftFoundation), there is currently no reference implementation of Envelope Expressions.
+This document is an early draft. While there is a reference implementation of `Envelope` in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents), there is currently no reference implementation of Envelope Expressions.
 
 ## Well-Known Expressions
 

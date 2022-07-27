@@ -2,60 +2,38 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-fileprivate let plaintext = "Hello."
-
-fileprivate let aliceIdentifier = SCID(‡"d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")!
-fileprivate let alicePrivateKeys = PrivateKeyBase(Seed(data: ‡"82f32c855d3d542256180810797e0073")!)
-fileprivate let alicePublicKeys = alicePrivateKeys.publicKeys
-
-fileprivate let bobIdentifier = SCID(‡"24b5b23d8aed462c5a3c02cc4972315eb71a6c5fdfc0063de28603f467ae499c")!
-fileprivate let bobPrivateKeys = PrivateKeyBase(Seed(data: ‡"187a5973c64d359c836eba466a44db7b")!)
-fileprivate let bobPublicKeys = bobPrivateKeys.publicKeys
-
-fileprivate let carolIdentifier = SCID(‡"06c777262faedf49a443277474c1c08531efcff4c58e9cb3b04f7fc1c0e6d60d")!
-fileprivate let carolPrivateKeys = PrivateKeyBase(Seed(data: ‡"8574afab18e229651c1be8f76ffee523")!)
-fileprivate let carolPublicKeys = carolPrivateKeys.publicKeys
-
-fileprivate let exampleLedgerIdentifier = SCID(‡"0eda5ce79a2b5619e387f490861a2e7211559029b3b369cf98fb749bd3ba9a5d")!
-fileprivate let exampleLedgerPrivateKeys = PrivateKeyBase(Seed(data: ‡"d6737ab34e4e8bb05b6ac035f9fba81a")!)
-fileprivate let exampleLedgerPublicKeys = exampleLedgerPrivateKeys.publicKeys
-
-fileprivate let stateIdentifier = SCID(‡"04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!
-fileprivate let statePrivateKeys = PrivateKeyBase(Seed(data: ‡"3e9271f46cdb85a3b584e7220b976918")!)
-fileprivate let statePublicKeys = statePrivateKeys.publicKeys
-
 class EnvelopeTests: XCTestCase {
     func testPredicate() {
-        let container = Envelope(predicate: .verifiedBy)
-        XCTAssertEqual(container.format, "verifiedBy")
+        let envelope = Envelope(predicate: .verifiedBy)
+        XCTAssertEqual(envelope.format, "verifiedBy")
     }
     
     func testDate() throws {
-        let container = try Envelope(Date(iso8601: "2018-01-07"))
-        XCTAssertEqual(container.format, "2018-01-07")
+        let envelope = try Envelope(Date(iso8601: "2018-01-07"))
+        XCTAssertEqual(envelope.format, "2018-01-07")
     }
 
     func testNestingPlaintext() {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
 
         let expectedFormat =
         """
         "Hello."
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
         
-        let redactedContainer = container.redact()
-        XCTAssertEqual(redactedContainer, container)
+        let redactedEnvelope = envelope.redact()
+        XCTAssertEqual(redactedEnvelope, envelope)
 
         let expectedRedactedFormat =
         """
         REDACTED
         """
-        XCTAssertEqual(redactedContainer.format, expectedRedactedFormat)
+        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
     }
     
     func testNestingOnce() {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .enclose()
 
         let expectedFormat =
@@ -64,13 +42,13 @@ class EnvelopeTests: XCTestCase {
             "Hello."
         }
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redactedContainer = Envelope(plaintext)
+        let redactedEnvelope = Envelope(plaintextHello)
             .redact()
             .enclose()
 
-        XCTAssertEqual(redactedContainer, container)
+        XCTAssertEqual(redactedEnvelope, envelope)
 
         let expectedRedactedFormat =
         """
@@ -78,11 +56,11 @@ class EnvelopeTests: XCTestCase {
             REDACTED
         }
         """
-        XCTAssertEqual(redactedContainer.format, expectedRedactedFormat)
+        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
     }
     
     func testNestingTwice() throws {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .enclose()
             .enclose()
 
@@ -94,13 +72,13 @@ class EnvelopeTests: XCTestCase {
             }
         }
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = try container
+        let redaction = try envelope
             .extract()
             .extract()
             .digest
-        let redactedContainer = container.redact(items: Set([redaction]))
+        let redactedEnvelope = envelope.redact(items: Set([redaction]))
         
         let expectedRedactedFormat =
         """
@@ -108,11 +86,11 @@ class EnvelopeTests: XCTestCase {
             REDACTED
         }
         """
-        XCTAssertEqual(redactedContainer.format, expectedRedactedFormat)
+        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
     }
     
     func testNestingSigned() throws {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
 
         let expectedFormat =
@@ -121,24 +99,24 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = container
+        let redaction = envelope
             .subject
             .digest
-        let redactedContainer = container.redact(items: Set([redaction]))
-        try redactedContainer.validateSignature(from: alicePublicKeys)
+        let redactedEnvelope = envelope.redact(items: Set([redaction]))
+        try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =
         """
         REDACTED [
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(redactedContainer.format, expectedRedactedFormat)
+        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
     }
     
     func testNestingEncloseThenSign() throws {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .enclose()
             .sign(with: alicePrivateKeys)
 
@@ -150,15 +128,15 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = try container
+        let redaction = try envelope
             .extract()
             .subject
             .digest
-        let redactedContainer = container.redact(items: Set([redaction]))
-        XCTAssertEqual(redactedContainer, container)
-        try redactedContainer.validateSignature(from: alicePublicKeys)
+        let redactedEnvelope = envelope.redact(items: Set([redaction]))
+        XCTAssertEqual(redactedEnvelope, envelope)
+        try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =
         """
         {
@@ -167,14 +145,14 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(redactedContainer.format, expectedRedactedFormat)
+        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
         
-        let p1 = container
+        let p1 = envelope
         let p2 = try p1.extract()
         let p3 = p2.subject
         let revealSet: Set<Digest> = [p1.digest, p2.digest, p3.digest]
-        let revealedContainer = container.redact(revealing: revealSet)
-        XCTAssertEqual(revealedContainer, container)
+        let revealedEnvelope = envelope.redact(revealing: revealSet)
+        XCTAssertEqual(revealedEnvelope, envelope)
         let expectedRevealedFormat =
         """
         {
@@ -183,11 +161,11 @@ class EnvelopeTests: XCTestCase {
             REDACTED: REDACTED
         ]
         """
-        XCTAssertEqual(revealedContainer.format, expectedRevealedFormat)
+        XCTAssertEqual(revealedEnvelope.format, expectedRevealedFormat)
     }
     
     func testNestingSignThenEnclose() {
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
             .enclose()
 
@@ -199,15 +177,15 @@ class EnvelopeTests: XCTestCase {
             ]
         }
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
     }
 
-    func testAssertionsOnAllPartsOfContainer() throws {
+    func testAssertionsOnAllPartsOfEnvelope() throws {
         let predicate = Envelope("predicate")
             .add("predicate-predicate", "predicate-object")
         let object = Envelope("object")
             .add("object-predicate", "object-object")
-        let container = Envelope("subject")
+        let envelope = Envelope("subject")
             .add(predicate, object)
 
         let expectedFormat =
@@ -221,41 +199,41 @@ class EnvelopeTests: XCTestCase {
             ]
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
     }
 
     func testPlaintext() throws {
         // Alice sends a plaintext message to Bob.
-        let container = Envelope(plaintext)
-        let ur = container.ur
+        let envelope = Envelope(plaintextHello)
+        let ur = envelope.ur
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
 //        print(ur)
 
         let expectedFormat =
         """
         "Hello."
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container and reads the message.
+        // Bob receives the envelope and reads the message.
         let receivedPlaintext = try Envelope(ur: ur)
             .extract(String.self)
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
 
     func testSignedPlaintext() throws {
         // Alice sends a signed plaintext message to Bob.
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
-        let ur = container.ur
+        let ur = envelope.ur
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         let expectedFormat =
         """
@@ -263,37 +241,37 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container.
-        let receivedContainer = try Envelope(ur: ur)
+        // Bob receives the envelope.
+        let receivedEnvelope = try Envelope(ur: ur)
         
         // Bob receives the message, validates Alice's signature, and reads the message.
-        let receivedPlaintext = try receivedContainer.validateSignature(from: alicePublicKeys)
+        let receivedPlaintext = try receivedEnvelope.validateSignature(from: alicePublicKeys)
             .extract(String.self)
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
 
         // Confirm that it wasn't signed by Carol.
-        XCTAssertThrowsError(try receivedContainer.validateSignature(from: carolPublicKeys))
+        XCTAssertThrowsError(try receivedEnvelope.validateSignature(from: carolPublicKeys))
         
         // Confirm that it was signed by Alice OR Carol.
-        try receivedContainer.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
+        try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
         
         // Confirm that it was not signed by Alice AND Carol.
-        XCTAssertThrowsError(try receivedContainer.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
+        XCTAssertThrowsError(try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
     }
     
     func testMultisignedPlaintext() throws {
         // Alice and Carol jointly send a signed plaintext message to Bob.
-        let container = Envelope(plaintext)
+        let envelope = Envelope(plaintextHello)
             .sign(with: [alicePrivateKeys, carolPrivateKeys])
-        let ur = container.ur
+        let ur = envelope.ur
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         let expectedFormat =
         """
@@ -302,17 +280,17 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
         // Alice & Carol ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container and verifies the message was signed by both Alice and Carol.
+        // Bob receives the envelope and verifies the message was signed by both Alice and Carol.
         let receivedPlaintext = try Envelope(ur: ur)
             .validateSignatures(from: [alicePublicKeys, carolPublicKeys])
             .extract(String.self)
 
         // Bob reads the message.
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
     
     func testSymmetricEncryption() throws {
@@ -320,48 +298,48 @@ class EnvelopeTests: XCTestCase {
         let key = SymmetricKey()
 
         // Alice sends a message encrypted with the key to Bob.
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .encrypt(with: key)
-        let ur = container.ur
+        let ur = envelope.ur
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         let expectedFormat =
         """
         EncryptedMessage
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container.
-        let receivedContainer = try Envelope(ur: ur)
+        // Bob receives the envelope.
+        let receivedEnvelope = try Envelope(ur: ur)
         
         // Bob decrypts and reads the message.
-        let receivedPlaintext = try receivedContainer
+        let receivedPlaintext = try receivedEnvelope
             .decrypt(with: key)
             .extract(String.self)
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
 
         // Can't read with no key.
-        try XCTAssertThrowsError(receivedContainer.extract(String.self))
+        try XCTAssertThrowsError(receivedEnvelope.extract(String.self))
         
         // Can't read with incorrect key.
-        try XCTAssertThrowsError(receivedContainer.decrypt(with: SymmetricKey()))
+        try XCTAssertThrowsError(receivedEnvelope.decrypt(with: SymmetricKey()))
     }
     
     func testEncryptDecrypt() throws {
         let key = SymmetricKey()
-        let plaintextContainer = Envelope(plaintext)
-//        print(plaintextContainer.format)
-        let encryptedContainer = try plaintextContainer.encrypt(with: key)
-//        print(encryptedContainer.format)
-        XCTAssertEqual(plaintextContainer, encryptedContainer)
-        let plaintextContainer2 = try encryptedContainer.decrypt(with: key)
-//        print(plaintextContainer2.format)
-        XCTAssertEqual(encryptedContainer, plaintextContainer2)
+        let plaintextEnvelope = Envelope(plaintextHello)
+//        print(plaintextEnvelope.format)
+        let encryptedEnvelope = try plaintextEnvelope.encrypt(with: key)
+//        print(encryptedEnvelope.format)
+        XCTAssertEqual(plaintextEnvelope, encryptedEnvelope)
+        let plaintextEnvelope2 = try encryptedEnvelope.decrypt(with: key)
+//        print(plaintextEnvelope2.format)
+        XCTAssertEqual(encryptedEnvelope, plaintextEnvelope2)
     }
     
     func testSignThenEncrypt() throws {
@@ -369,32 +347,32 @@ class EnvelopeTests: XCTestCase {
         let key = SymmetricKey()
 
         // Alice signs a plaintext message, then encrypts it.
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
             .enclose()
             .encrypt(with: key)
-        let ur = container.ur
+        let ur = envelope.ur
 
         let expectedFormat =
         """
         EncryptedMessage
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container, decrypts it using the shared key, and then validates Alice's signature.
+        // Bob receives the envelope, decrypts it using the shared key, and then validates Alice's signature.
         let receivedPlaintext = try Envelope(ur: ur)
             .decrypt(with: key)
             .extract()
             .validateSignature(from: alicePublicKeys)
             .extract(String.self)
         // Bob reads the message.
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
     
     func testEncryptThenSign() throws {
@@ -425,10 +403,10 @@ class EnvelopeTests: XCTestCase {
         // be performed first before the presence of signatures can be known or checked.
         // With this order of operations, the presence of signatures is known before
         // decryption, and may be checked before or after decryption.
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .encrypt(with: key)
             .sign(with: alicePrivateKeys)
-        let ur = container.ur
+        let ur = envelope.ur
 
         let expectedFormat =
         """
@@ -436,31 +414,31 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container, validates Alice's signature, then decrypts the message.
+        // Bob receives the envelope, validates Alice's signature, then decrypts the message.
         let receivedPlaintext = try Envelope(ur: ur)
             .validateSignature(from: alicePublicKeys)
             .decrypt(with: key)
             .extract(String.self)
         // Bob reads the message.
-        XCTAssertEqual(receivedPlaintext, plaintext)
+        XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
     
     func testMultiRecipient() throws {
         // Alice encrypts a message so that it can only be decrypted by Bob or Carol.
         let contentKey = SymmetricKey()
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .encrypt(with: contentKey)
             .addRecipient(bobPublicKeys, contentKey: contentKey)
             .addRecipient(carolPublicKeys, contentKey: contentKey)
-        let ur = container.ur
+        let ur = envelope.ur
 
         let expectedFormat =
         """
@@ -469,43 +447,43 @@ class EnvelopeTests: XCTestCase {
             hasRecipient: SealedMessage
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         // Alice ➡️ ☁️ ➡️ Bob
         // Alice ➡️ ☁️ ➡️ Carol
 
-        // The container is received
-        let receivedContainer = try Envelope(ur: ur)
+        // The envelope is received
+        let receivedEnvelope = try Envelope(ur: ur)
         
         // Bob decrypts and reads the message
-        let bobReceivedPlaintext = try receivedContainer
+        let bobReceivedPlaintext = try receivedEnvelope
             .decrypt(to: bobPrivateKeys)
             .extract(String.self)
-        XCTAssertEqual(bobReceivedPlaintext, plaintext)
+        XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Alice decrypts and reads the message
-        let carolReceivedPlaintext = try receivedContainer
+        let carolReceivedPlaintext = try receivedEnvelope
             .decrypt(to: carolPrivateKeys)
             .extract(String.self)
-        XCTAssertEqual(carolReceivedPlaintext, plaintext)
+        XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
         
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedContainer.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
     }
     
     func testVisibleSignatureMultiRecipient() throws {
         // Alice signs a message, and then encrypts it so that it can only be decrypted by Bob or Carol.
         let contentKey = SymmetricKey()
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
             .encrypt(with: contentKey)
             .addRecipient(bobPublicKeys, contentKey: contentKey)
             .addRecipient(carolPublicKeys, contentKey: contentKey)
-        let ur = container.ur
+        let ur = envelope.ur
         
         let expectedFormat =
         """
@@ -515,49 +493,49 @@ class EnvelopeTests: XCTestCase {
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         // Alice ➡️ ☁️ ➡️ Bob
         // Alice ➡️ ☁️ ➡️ Carol
 
-        // The container is received
-        let receivedContainer = try Envelope(ur: ur)
+        // The envelope is received
+        let receivedEnvelope = try Envelope(ur: ur)
 
         // Bob validates Alice's signature, then decrypts and reads the message
-        let bobReceivedPlaintext = try receivedContainer
+        let bobReceivedPlaintext = try receivedEnvelope
             .validateSignature(from: alicePublicKeys)
             .decrypt(to: bobPrivateKeys)
             .extract(String.self)
-        XCTAssertEqual(bobReceivedPlaintext, plaintext)
+        XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Carol validates Alice's signature, then decrypts and reads the message
-        let carolReceivedPlaintext = try receivedContainer
+        let carolReceivedPlaintext = try receivedEnvelope
             .validateSignature(from: alicePublicKeys)
             .decrypt(to: carolPrivateKeys)
             .extract(String.self)
-        XCTAssertEqual(carolReceivedPlaintext, plaintext)
+        XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
 
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedContainer.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
     }
     
     func testHiddenSignatureMultiRecipient() throws {
-        // Alice signs a message, and then encloses it in another container before
+        // Alice signs a message, and then encloses it in another envelope before
         // encrypting it so that it can only be decrypted by Bob or Carol. This hides
         // Alice's signature, and requires recipients to decrypt the subject before they
         // are able to validate the signature.
         let contentKey = SymmetricKey()
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
             .enclose()
             .encrypt(with: contentKey)
             .addRecipient(bobPublicKeys, contentKey: contentKey)
             .addRecipient(carolPublicKeys, contentKey: contentKey)
-        let ur = container.ur
+        let ur = envelope.ur
         
         let expectedFormat =
         """
@@ -566,38 +544,38 @@ class EnvelopeTests: XCTestCase {
             hasRecipient: SealedMessage
         ]
         """
-        XCTAssertEqual(container.format, expectedFormat)
+        XCTAssertEqual(envelope.format, expectedFormat)
 
-//        print(container.taggedCBOR.diag)
-//        print(container.taggedCBOR.dump)
-//        print(container.ur)
+//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.dump)
+//        print(envelope.ur)
 
         // Alice ➡️ ☁️ ➡️ Bob
         // Alice ➡️ ☁️ ➡️ Carol
 
-        // The container is received
-        let receivedContainer = try Envelope(ur: ur)
+        // The envelope is received
+        let receivedEnvelope = try Envelope(ur: ur)
 
-        // Bob decrypts the container, then extracts the inner container and validates
+        // Bob decrypts the envelope, then extracts the inner envelope and validates
         // Alice's signature, then reads the message
-        let bobReceivedPlaintext = try receivedContainer
+        let bobReceivedPlaintext = try receivedEnvelope
             .decrypt(to: bobPrivateKeys)
             .extract()
             .validateSignature(from: alicePublicKeys)
             .extract(String.self)
-        XCTAssertEqual(bobReceivedPlaintext, plaintext)
+        XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
-        // Carol decrypts the container, then extracts the inner container and validates
+        // Carol decrypts the envelope, then extracts the inner envelope and validates
         // Alice's signature, then reads the message
-        let carolReceivedPlaintext = try receivedContainer
+        let carolReceivedPlaintext = try receivedEnvelope
             .decrypt(to: carolPrivateKeys)
             .extract()
             .validateSignature(from: alicePublicKeys)
             .extract(String.self)
-        XCTAssertEqual(carolReceivedPlaintext, plaintext)
+        XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
 
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedContainer.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
     }
     
     func testSSKR() throws {
@@ -618,7 +596,7 @@ class EnvelopeTests: XCTestCase {
             .encrypt(with: contentKey)
             .split(groupThreshold: 1, groups: [(2, 3)], contentKey: contentKey)
         
-        // Flattening the array of arrays gives just a single array of all the containers
+        // Flattening the array of arrays gives just a single array of all the envelopes
         // to be distributed.
         let sentEnvelopes = envelopes.flatMap { $0 }
         let sentURs = sentEnvelopes.map { $0.ur }
@@ -631,7 +609,7 @@ class EnvelopeTests: XCTestCase {
         """
         XCTAssertEqual(sentEnvelopes[0].format, expectedFormat)
         
-        // Dan sends one container to each of Alice, Bob, and Carol.
+        // Dan sends one envelope to each of Alice, Bob, and Carol.
 
         print(sentEnvelopes[0].format)
         print(sentEnvelopes[0].taggedCBOR.diag)
@@ -646,7 +624,7 @@ class EnvelopeTests: XCTestCase {
         let bobEnvelope = try Envelope(ur: sentURs[1])
         let carolEnvelope = try Envelope(ur: sentURs[2])
 
-        // At some future point, Dan retrieves two of the three containers so he can recover his seed.
+        // At some future point, Dan retrieves two of the three envelopes so he can recover his seed.
         let recoveredEnvelopes = [bobEnvelope, carolEnvelope]
         let recoveredSeed = try Envelope(shares: recoveredEnvelopes)
             .extract(Seed.self)
@@ -657,7 +635,7 @@ class EnvelopeTests: XCTestCase {
         XCTAssertEqual(danSeed.name, recoveredSeed.name)
         XCTAssertEqual(danSeed.note, recoveredSeed.note)
 
-        // Attempting to recover with only one of the containers won't work.
+        // Attempting to recover with only one of the envelopes won't work.
         XCTAssertThrowsError(try Envelope(shares: [bobEnvelope]))
     }
 

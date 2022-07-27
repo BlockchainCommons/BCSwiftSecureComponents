@@ -71,9 +71,9 @@ public struct ECPrivateKey: ECKey {
         LibSecP256K1.ecdsaSign(message: message.providedData, secKey: data)
     }
     
-    public func schnorrSign(message: DataProvider, tag: DataProvider) -> Data {
+    public func schnorrSign(message: DataProvider, tag: DataProvider, randomGenerator: ((Int) -> Data)? = nil) -> Data {
         let kp = LibSecP256K1.keyPair(from: self.data)!
-        return LibSecP256K1.schnorrSign(msg: message.providedData, tag: tag.providedData, keyPair: kp)
+        return LibSecP256K1.schnorrSign(msg: message.providedData, tag: tag.providedData, keyPair: kp, randomGenerator: randomGenerator)
     }
     
     public var wif: String {

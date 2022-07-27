@@ -12,8 +12,10 @@
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
-* [Definitions](5-DEFINITIONS.md): This document
+* Definitions: This document
 * [Examples](6-EXAMPLES.md)
+* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
+* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 

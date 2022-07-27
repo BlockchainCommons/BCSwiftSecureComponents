@@ -183,15 +183,15 @@ extension Envelope {
 }
 
 extension Envelope {
-    public func sign(with privateKeys: PrivateKeyBase, note: String? = nil, tag: Data? = nil) -> Envelope {
-        let signature = privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag)
+    public func sign(with privateKeys: PrivateKeyBase, note: String? = nil, tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
+        let signature = privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator)
         return add(.verifiedBy(signature: signature, note: note))
     }
     
-    public func sign(with privateKeys: [PrivateKeyBase], tag: Data? = nil) -> Envelope {
+    public func sign(with privateKeys: [PrivateKeyBase], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
         var result = self
         for keys in privateKeys {
-            result = result.sign(with: keys)
+            result = result.sign(with: keys, randomGenerator: randomGenerator)
         }
         return result
     }

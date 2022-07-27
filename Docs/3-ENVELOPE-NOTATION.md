@@ -10,10 +10,12 @@
 
 * [Overview](1-OVERVIEW.md)
 * [Envelope Overview](2-ENVELOPE.md)
-* [Envelope Notation](3-ENVELOPE-NOTATION.md): This document
+* Envelope Notation: This document
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
 * [Definitions](5-DEFINITIONS.md)
 * [Examples](6-EXAMPLES.md)
+* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
+* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 
@@ -23,7 +25,7 @@ We provide a simplified textual notation for pretty-printing and reading instanc
 
 ## Status
 
-This document is a draft with a reference implementation in [BCSwiftFoundation](https://github.com/blockchaincommons/BCSwiftFoundation).
+This document is a draft with a reference implementation in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents).
 
 * Braces `{ }` are used to delimit the contents of a nested `Envelope`.
 * Top-level braces representing the outermost `Envelope` are omitted.
