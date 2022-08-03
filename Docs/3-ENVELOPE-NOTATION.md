@@ -123,7 +123,7 @@ Thus, the `Envelope` type provides a flexible foundation for constructing soluti
 
 ---
 
-## A container containing plaintext.
+## An envelope containing plaintext.
 
 ```
 "Hello."
@@ -131,7 +131,7 @@ Thus, the `Envelope` type provides a flexible foundation for constructing soluti
 
 ---
 
-## A container containing signed plaintext.
+## An envelope containing signed plaintext.
 
 This is the `.leaf` string with a single `Assertion` whose predicate is a well-known integer with a CBOR tag meaning `predicate`, while the object is a `Signature`.
 
@@ -143,7 +143,7 @@ This is the `.leaf` string with a single `Assertion` whose predicate is a well-k
 
 ---
 
-## A container containing plaintext signed by several parties.
+## An envelope containing plaintext signed by several parties.
 
 Although you cannot have duplicate assertions every signature is unique, hence these are two *different* assertions.
 
@@ -156,7 +156,7 @@ Although you cannot have duplicate assertions every signature is unique, hence t
 
 ---
 
-## A container containing a symmetrically encrypted message.
+## An envelope containing a symmetrically encrypted message.
 
 The subject is just an `EncryptedMessage`. Because this `EncryptedMessage` is the `subject` of an `Envelope`, we do know that its plaintext MUST be CBOR. This CBOR plaintext may be a leaf or another `Envelope` with more layers of assertions possibly  including signatures, but the receiver will have to decrypt it to find out.
 
@@ -191,7 +191,7 @@ EncryptedMessage [
 
 ---
 
-## A signed container that can only be opened by specific receivers.
+## A signed envelope that can only be opened by specific receivers.
 
 As before, the signature can be outside the `subject` message, as below, or inside it, requiring decryption before verification.
 

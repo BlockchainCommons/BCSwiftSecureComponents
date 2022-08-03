@@ -213,10 +213,10 @@ extension Envelope {
         }
     }
     
-    public static func shares(in containers: [Envelope]) throws -> [UInt16: [SSKRShare]] {
+    public static func shares(in envelopes: [Envelope]) throws -> [UInt16: [SSKRShare]] {
         var result: [UInt16: [SSKRShare]] = [:]
-        for container in containers {
-            try container.assertions(predicate: .sskrShare)
+        for envelope in envelopes {
+            try envelope.assertions(predicate: .sskrShare)
                 .forEach {
                     let share = try $0.object.extract(SSKRShare.self)
                     let identifier = share.identifier
@@ -229,15 +229,15 @@ extension Envelope {
         return result
     }
 
-    public init(shares containers: [Envelope]) throws {
-        guard !containers.isEmpty else {
+    public init(shares envelopes: [Envelope]) throws {
+        guard !envelopes.isEmpty else {
             throw EnvelopeError.invalidShares
         }
-        for shares in try Self.shares(in: containers).values {
+        for shares in try Self.shares(in: envelopes).values {
             guard let contentKey = try? SymmetricKey(SSKRCombine(shares: shares)) else {
                 continue
             }
-            self = try containers.first!.decrypt(with: contentKey)
+            self = try envelopes.first!.decrypt(with: contentKey)
             return
         }
         throw EnvelopeError.invalidShares

@@ -67,12 +67,12 @@ In this example no signing or encryption is performed.
 
 ```swift
 // Alice sends a plaintext message to Bob.
-let container = Envelope(plaintext)
-let ur = container.ur
+let envelope = Envelope(plaintext)
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the container and reads the message.
+// Bob receives the envelope and reads the message.
 let receivedPlaintext = try Envelope(ur: ur)
     .extract(String.self)
 XCTAssertEqual(receivedPlaintext, plaintext)
@@ -88,28 +88,28 @@ XCTAssertEqual(receivedPlaintext, plaintext)
 
 ```swift
 // Alice sends a signed plaintext message to Bob.
-let container = Envelope(plaintext)
+let envelope = Envelope(plaintext)
     .sign(with: alicePrivateKeys)
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the container.
-let receivedContainer = try Envelope(ur: ur)
+// Bob receives the envelope.
+let receivedEnvelope = try Envelope(ur: ur)
 
 // Bob receives the message, validates Alice's signature, and reads the message.
-let receivedPlaintext = try receivedContainer.validateSignature(from: alicePublicKeys)
+let receivedPlaintext = try receivedEnvelope.validateSignature(from: alicePublicKeys)
     .extract(String.self)
 XCTAssertEqual(receivedPlaintext, plaintext)
 
 // Confirm that it wasn't signed by Carol.
-XCTAssertThrowsError(try receivedContainer.validateSignature(from: carolPublicKeys))
+XCTAssertThrowsError(try receivedEnvelope.validateSignature(from: carolPublicKeys))
 
 // Confirm that it was signed by Alice OR Carol.
-try receivedContainer.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
+try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
 
 // Confirm that it was not signed by Alice AND Carol.
-XCTAssertThrowsError(try receivedContainer.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
+XCTAssertThrowsError(try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
 ```
 
 ### Envelope Notation
@@ -124,13 +124,13 @@ XCTAssertThrowsError(try receivedContainer.verifySignatures(from: [alicePublicKe
 
 ```swift
 // Alice and Carol jointly send a signed plaintext message to Bob.
-let container = Envelope(plaintext)
+let envelope = Envelope(plaintext)
     .sign(with: [alicePrivateKeys, carolPrivateKeys])
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice & Carol ➡️ ☁️ ➡️ Bob
 
-// Bob receives the container and verifies the message was signed by both Alice and Carol.
+// Bob receives the envelope and verifies the message was signed by both Alice and Carol.
 let receivedPlaintext = try Envelope(ur: ur)
     .verifySignatures(from: [alicePublicKeys, carolPublicKeys])
     .extract(String.self)
@@ -155,26 +155,26 @@ XCTAssertEqual(receivedPlaintext, plaintext)
         let key = SymmetricKey()
 
         // Alice sends a message encrypted with the key to Bob.
-        let container = try Envelope(plaintext)
+        let envelope = try Envelope(plaintext)
             .encrypt(with: key)
-        let ur = container.ur
+        let ur = envelope.ur
 
         // Alice ➡️ ☁️ ➡️ Bob
 
-        // Bob receives the container.
-        let receivedContainer = try Envelope(ur: ur)
+        // Bob receives the envelope.
+        let receivedEnvelope = try Envelope(ur: ur)
 
         // Bob decrypts and reads the message.
-        let receivedPlaintext = try receivedContainer
+        let receivedPlaintext = try receivedEnvelope
             .decrypt(with: key)
             .extract(String.self)
         XCTAssertEqual(receivedPlaintext, plaintext)
 
         // Can't read with no key.
-        try XCTAssertThrowsError(receivedContainer.extract(String.self))
+        try XCTAssertThrowsError(receivedEnvelope.extract(String.self))
 
         // Can't read with incorrect key.
-        try XCTAssertThrowsError(receivedContainer.decrypt(with: SymmetricKey()))
+        try XCTAssertThrowsError(receivedEnvelope.decrypt(with: SymmetricKey()))
 ```
 
 ### Envelope Notation
@@ -190,15 +190,15 @@ EncryptedMessage
 let key = SymmetricKey()
 
 // Alice signs a plaintext message, then encrypts it.
-let container = try Envelope(plaintext)
+let envelope = try Envelope(plaintext)
     .sign(with: alicePrivateKeys)
     .enclose()
     .encrypt(with: key)
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the container, decrypts it using the shared key, and then validates Alice's signature.
+// Bob receives the envelope, decrypts it using the shared key, and then validates Alice's signature.
 let receivedPlaintext = try Envelope(ur: ur)
     .decrypt(with: key)
     .extract()
@@ -229,14 +229,14 @@ The main difference between this order of operations and the sign-then-encrypt o
 let key = SymmetricKey()
 
 // Alice encryptes a plaintext message, then signs it.
-let container = try Envelope(plaintext)
+let envelope = try Envelope(plaintext)
     .encrypt(with: key)
     .sign(with: alicePrivateKeys)
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the container, validates Alice's signature, then decrypts the message.
+// Bob receives the envelope, validates Alice's signature, then decrypts the message.
 let receivedPlaintext = try Envelope(ur: ur)
     .validateSignature(from: alicePublicKeys)
     .decrypt(with: key)
@@ -258,32 +258,32 @@ EncryptedMessage [
 ```swift
 // Alice encrypts a message so that it can only be decrypted by Bob or Carol.
 let contentKey = SymmetricKey()
-let container = try Envelope(plaintext)
+let envelope = try Envelope(plaintext)
     .encrypt(with: contentKey)
     .addRecipient(bobPublicKeys, contentKey: contentKey)
     .addRecipient(carolPublicKeys, contentKey: contentKey)
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 // Alice ➡️ ☁️ ➡️ Carol
 
-// The container is received
-let receivedContainer = try Envelope(ur: ur)
+// The envelope is received
+let receivedEnvelope = try Envelope(ur: ur)
 
 // Bob decrypts and reads the message
-let bobReceivedPlaintext = try receivedContainer
+let bobReceivedPlaintext = try receivedEnvelope
     .decrypt(to: bobPrivateKeys)
     .extract(String.self)
 XCTAssertEqual(bobReceivedPlaintext, plaintext)
 
 // Alice decrypts and reads the message
-let carolReceivedPlaintext = try receivedContainer
+let carolReceivedPlaintext = try receivedEnvelope
     .decrypt(to: carolPrivateKeys)
     .extract(String.self)
 XCTAssertEqual(carolReceivedPlaintext, plaintext)
 
 // Alice didn't encrypt it to herself, so she can't read it.
-XCTAssertThrowsError(try receivedContainer.decrypt(to: alicePrivateKeys))
+XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
 ```
 
 ### Envelope Notation
@@ -300,36 +300,36 @@ EncryptedMessage [
 ```swift
 // Alice signs a message, and then encrypts it so that it can only be decrypted by Bob or Carol.
 let contentKey = SymmetricKey()
-let container = try Envelope(plaintext)
+let envelope = try Envelope(plaintext)
     .sign(with: alicePrivateKeys)
     // .enclose() // Add if you want to encrypt the signature
     .encrypt(with: contentKey)
     .addRecipient(bobPublicKeys, contentKey: contentKey)
     .addRecipient(carolPublicKeys, contentKey: contentKey)
-let ur = container.ur
+let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 // Alice ➡️ ☁️ ➡️ Carol
 
-// The container is received
-let receivedContainer = try Envelope(ur: ur)
+// The envelope is received
+let receivedEnvelope = try Envelope(ur: ur)
 
 // Bob validates Alice's signature, then decrypts and reads the message
-let bobReceivedPlaintext = try receivedContainer
+let bobReceivedPlaintext = try receivedEnvelope
     .validateSignature(from: alicePublicKeys)
     .decrypt(to: bobPrivateKeys)
     .extract(String.self)
 XCTAssertEqual(bobReceivedPlaintext, plaintext)
 
 // Carol validates Alice's signature, then decrypts and reads the message
-let carolReceivedPlaintext = try receivedContainer
+let carolReceivedPlaintext = try receivedEnvelope
     .validateSignature(from: alicePublicKeys)
     .decrypt(to: carolPrivateKeys)
     .extract(String.self)
 XCTAssertEqual(carolReceivedPlaintext, plaintext)
 
 // Alice didn't encrypt it to herself, so she can't read it.
-XCTAssertThrowsError(try receivedContainer.decrypt(to: alicePrivateKeys))
+XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
 ```
 
 ### Envelope Notation
@@ -358,26 +358,26 @@ danSeed.note = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
 // representing SSKR groups and the inner array elements each holding the encrypted
 // seed and a single share.
 let contentKey = SymmetricKey()
-let containers = try Envelope(danSeed)
+let Envelopes = try Envelope(danSeed)
     .encrypt(with: contentKey)
     .split(groupThreshold: 1, groups: [(2, 3)], contentKey: contentKey)
 
-// Flattening the array of arrays gives just a single array of all the containers
+// Flattening the array of arrays gives just a single array of all the envelopes
 // to be distributed.
-let sentContainers = containers.flatMap { $0 }
-let sentURs = sentContainers.map { $0.ur }
+let sentEnvelopes = envelopes.flatMap { $0 }
+let sentURs = sentEnvelopes.map { $0.ur }
 
 // Dan ➡️ ☁️ ➡️ Alice
 // Dan ➡️ ☁️ ➡️ Bob
 // Dan ➡️ ☁️ ➡️ Carol
 
-// let aliceContainer = Envelope(ur: sentURs[0]) // UNRECOVERED
-let bobContainer = try Envelope(ur: sentURs[1])
-let carolContainer = try Envelope(ur: sentURs[2])
+// let aliceEnvelope = Envelope(ur: sentURs[0]) // UNRECOVERED
+let bobEnvelope = try Envelope(ur: sentURs[1])
+let carolEnvelope = try Envelope(ur: sentURs[2])
 
-// At some future point, Dan retrieves two of the three containers so he can recover his seed.
-let recoveredContainers = [bobContainer, carolContainer]
-let recoveredSeed = try Envelope(shares: recoveredContainers)
+// At some future point, Dan retrieves two of the three envelopes so he can recover his seed.
+let recoveredEnvelopes = [bobEnvelope, carolEnvelope]
+let recoveredSeed = try Envelope(shares: recoveredEnvelopes)
     .extract(Seed.self)
 
 // The recovered seed is correct.
@@ -386,8 +386,8 @@ XCTAssertEqual(danSeed.creationDate, recoveredSeed.creationDate)
 XCTAssertEqual(danSeed.name, recoveredSeed.name)
 XCTAssertEqual(danSeed.note, recoveredSeed.note)
 
-// Attempting to recover with only one of the containers won't work.
-XCTAssertThrowsError(try Envelope(shares: [bobContainer]))
+// Attempting to recover with only one of the envelopes won't work.
+XCTAssertThrowsError(try Envelope(shares: [bobEnvelope]))
 ```
 
 ### Envelope Notation
