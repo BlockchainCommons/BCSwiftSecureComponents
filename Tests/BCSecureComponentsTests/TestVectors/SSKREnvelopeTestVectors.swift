@@ -158,7 +158,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
                 groupThreshold: groupThreshold,
                 groups: groups,
                 contentKey: fakeContentKey,
-                randomGenerator: {
+                testRandomGenerator: {
                     fakeRandomGenerator.data(count: $0)
                 }
             )

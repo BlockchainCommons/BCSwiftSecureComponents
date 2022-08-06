@@ -3,16 +3,16 @@ import WolfBase
 import SSKR
 import URKit
 
-public func SSKRGenerate(groupThreshold: Int, groups: [SSKRGroupDescriptor], secret: DataProvider, randomGenerator: ((Int) -> Data)? = nil) throws -> [[SSKRShare]] {
-    let randomGenerator = randomGenerator ?? {
+public func SSKRGenerate(groupThreshold: Int, groups: [SSKRGroupDescriptor], secret: DataProvider, testRandomGenerator: ((Int) -> Data)? = nil) throws -> [[SSKRShare]] {
+    let randomGenerator = testRandomGenerator ?? {
         SecureRandomNumberGenerator.shared.data(count: $0)
     }
     return try SSKRGenerate(groupThreshold: groupThreshold, groups: groups, secret: secret.providedData, randomGenerator: randomGenerator)
 }
 
-public func SSKRGenerate(groupThreshold: Int, groups: [(Int, Int)], secret: DataProvider, randomGenerator: ((Int) -> Data)? = nil) throws -> [[SSKRShare]] {
+public func SSKRGenerate(groupThreshold: Int, groups: [(Int, Int)], secret: DataProvider, testRandomGenerator: ((Int) -> Data)? = nil) throws -> [[SSKRShare]] {
     let groups = groups.map { SSKRGroupDescriptor(threshold: UInt8($0.0), count: UInt8($0.1)) }
-    return try SSKRGenerate(groupThreshold: groupThreshold, groups: groups, secret: secret.providedData, randomGenerator: randomGenerator)
+    return try SSKRGenerate(groupThreshold: groupThreshold, groups: groups, secret: secret.providedData, testRandomGenerator: testRandomGenerator)
 }
 
 extension SSKRShare {
