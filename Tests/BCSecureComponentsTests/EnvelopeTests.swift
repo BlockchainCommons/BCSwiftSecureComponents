@@ -78,7 +78,7 @@ class EnvelopeTests: XCTestCase {
             .extract()
             .extract()
             .digest
-        let redactedEnvelope = envelope.redact(items: Set([redaction]))
+        let redactedEnvelope = envelope.redact(items: [redaction])
         
         let expectedRedactedFormat =
         """
@@ -87,6 +87,8 @@ class EnvelopeTests: XCTestCase {
         }
         """
         XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
+        XCTAssertEqual(envelope.digest, redactedEnvelope.digest)
+        try XCTAssertEqual(envelope.extract().digest, redactedEnvelope.extract().digest)
     }
     
     func testNestingSigned() throws {

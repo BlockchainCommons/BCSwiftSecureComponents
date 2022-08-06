@@ -151,7 +151,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             let fakeRandomGenerator = makeFakeRandomGenerator()
             
             // Encrypt the envelope with the content key. This is the key that will be split below using SSKR.
-            let encryptedEnvelope = try envelopeWithPayload.encrypt(with: fakeContentKey, nonce: fakeNonce)
+            let encryptedEnvelope = try envelopeWithPayload.encrypt(with: fakeContentKey, testNonce: fakeNonce)
             
             // Split the encrypted envelope into shares.
             let shares = encryptedEnvelope.split(

@@ -196,8 +196,8 @@ extension Envelope {
         return result
     }
     
-    public func addRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey) -> Envelope {
-        add(.hasRecipient(recipient, contentKey: contentKey))
+    public func addRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
+        add(.hasRecipient(recipient, contentKey: contentKey, testKeyMaterial: testKeyMaterial, testNonce: testNonce))
     }
     
     public func addSSKRShare(_ share: SSKRShare) -> Envelope {
@@ -328,8 +328,8 @@ extension Envelope {
 }
 
 extension Envelope {
-    public func encrypt(with key: SymmetricKey, nonce: Nonce? = nil) throws -> Envelope {
-        let subject = try self.subject.encrypt(with: key, nonce: nonce)
+    public func encrypt(with key: SymmetricKey, testNonce: Nonce? = nil) throws -> Envelope {
+        let subject = try self.subject.encrypt(with: key, nonce: testNonce)
         let result = Envelope(subject: subject, assertions: assertions)
         assert(digest == result.digest)
         return result

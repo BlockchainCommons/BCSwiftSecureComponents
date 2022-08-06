@@ -10,11 +10,11 @@ public struct SealedMessage {
     public let message: EncryptedMessage
     public let ephemeralPublicKey: AgreementPublicKey
     
-    public init(plaintext: DataProvider, recipient: PublicKeyBase, aad: Data? = nil) {
-        let ephemeralSender = PrivateKeyBase()
+    public init(plaintext: DataProvider, recipient: PublicKeyBase, aad: Data? = nil, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) {
+        let ephemeralSender = PrivateKeyBase(testKeyMaterial?.providedData)
         let recipientPublicKey = recipient.agreementPublicKey
         let key = EncryptedMessage.sharedKey(agreementPrivateKey: ephemeralSender.agreementPrivateKey, agreementPublicKey: recipientPublicKey)
-        self.message = key.encrypt(plaintext: plaintext, aad: aad)
+        self.message = key.encrypt(plaintext: plaintext, aad: aad, nonce: testNonce)
         self.ephemeralPublicKey = ephemeralSender.agreementPrivateKey.publicKey
     }
     

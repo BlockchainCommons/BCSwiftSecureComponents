@@ -62,8 +62,8 @@ extension Assertion {
         return Assertion(Envelope(predicate: .verifiedBy), object)
     }
     
-    public static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey) -> Assertion {
-        let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient)
+    public static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Assertion {
+        let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient, testKeyMaterial: testKeyMaterial, testNonce: testNonce)
         return Assertion(Envelope(predicate: .hasRecipient), Envelope(sealedMessage))
     }
     

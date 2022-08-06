@@ -30,7 +30,7 @@ final class EnvelopeTestVectors: XCTestCase {
             name: "Symmetric Encryption",
             explanation: "Alice and Bob have agreed to use a symmetric key.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey, nonce: fakeNonce)
+                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
         )
         
         let signThenEncrypt = TestCase(
@@ -39,34 +39,34 @@ final class EnvelopeTestVectors: XCTestCase {
             envelope: try Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
                 .enclose()
-                .encrypt(with: fakeContentKey, nonce: fakeNonce)
+                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
         )
         
         let encryptThenSign = TestCase(
             name: "Encrypt Then Sign",
             explanation: "A message is first encrypted, then signed. Its signature may be checked before the envelope is decrypted.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey)
-                .sign(with: alicePrivateKeys)
+                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
         )
         
         let multiRecipient = TestCase(
             name: "Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey)
-                .addRecipient(bobPublicKeys, contentKey: fakeContentKey)
-                .addRecipient(carolPublicKeys, contentKey: fakeContentKey)
+                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
+                .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
         
         let visibleSignatureMultiRecipient = TestCase(
             name: "Visible Signature Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload. Alice then signs the envelope so her signature may be verified by anyone with her public key.",
             envelope: try Envelope(plaintextHello)
-                .sign(with: alicePrivateKeys)
-                .encrypt(with: fakeContentKey)
-                .addRecipient(bobPublicKeys, contentKey: fakeContentKey)
-                .addRecipient(carolPublicKeys, contentKey: fakeContentKey)
+                .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
+                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
+                .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
         
         let verifiableCredential = TestCase(
