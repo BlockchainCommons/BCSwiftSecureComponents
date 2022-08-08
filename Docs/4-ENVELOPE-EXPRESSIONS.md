@@ -21,7 +21,7 @@
 
 ## Introduction
 
-We provide a method for encoding machine-evaluatable expressions using `Envelope`. Evaluating expressions results in results that can substitute in-place for the original unevaluated expression, although the replacement may have a different digest.
+We provide a method for encoding machine-evaluatable expressions using `Envelope`. Evaluating expressions produces results that can substitute in-place for the original unevaluated expression, although the replacement may have a different digest.
 
 Ideally the method of encoding would have the following traits:
 
@@ -36,9 +36,11 @@ Ideally the method of encoding would have the following traits:
 
 This document is an early draft. While there is a reference implementation of `Envelope` in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents), there is currently no reference implementation of Envelope Expressions.
 
+**NOTE:** None of the function names defined in this document are normative. The goal of this document is to explore and define the structure of how expressions may be evaluated in the context of `Envelope`, and not to define specific functions.
+
 ## Well-Known Expressions
 
-Since every Envelope has a unique digest, any Envelope expression can be replaced by its digest as long as the expression can eventually be found that matches it. In some cases, certain expressions may be so common as to be designated "well-known". In this case they can be represented by their digest alone or even a small tagged integer, trusting that the recipient of a Envelope can resolve the expression should they wish to evaluate it. Expressions that solve problems in specific domains and include placeholders for their arguments may be good candidates for this, one example being common cryptocurrency spending conditions.
+Since every Envelope has a unique digest, any Envelope expression can be replaced by its digest as long as the expression can be found that matches it. In some cases, certain expressions may be so common as to be designated "well known". In this case they can be represented by their digest alone or even a small tagged integer, trusting that the recipient of a Envelope can resolve the expression should they wish to evaluate it. Expressions that solve problems in specific domains and include placeholders for their arguments may be good candidates for this, one example being common cryptocurrency spending conditions.
 
 Even for expressions that are not "well known," like any other `Envelope`, an expression could appear as a reference to a `Digest` with one or more `dereferenceBy` assertions that tell the evaluator how to retrieve the expression that belongs in that place.
 
@@ -148,11 +150,11 @@ false
 Function calls of any arity may be encoded:
 
 ```
-validateSignature(key: pubkey, sig: signature, digest: sha256(message))
+verifySignature(key: pubkey, sig: signature, digest: sha256(message)) -> Bool
 ```
 
 ```
-«validateSignature» [
+«verifySignature» [
     ❰key❱: SigningPublicKey
     ❰sig❱: Signature
     ❰digest❱: «sha256» [
@@ -161,7 +163,7 @@ validateSignature(key: pubkey, sig: signature, digest: sha256(message))
 ]
 ```
 
-The `validateSignature` function is a logical predicate. The result of this expression is a boolean value that would typically be used as the object of an assertion.
+The `verifySignature` function is a logical predicate. The result of this expression is a boolean value that would typically be used as the object of an assertion.
 
 ## Structured Parameters
 
@@ -177,6 +179,33 @@ Functions may take parameters that are sequences encoded as CBOR arrays, or dict
 FooBarBaz
 ```
 
+## Distributed Function Calls
+
+A distributed function call is a call invoked on systems that do not reside in the calling process. This is one of the most common use-cases for `Envelope`. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
+
+To facilitate this, we generate a unique SCID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the object must be an envelope expression as described herein. The wrapping `request(SCID)` provides a unique identifier used to route the result of the request back to the caller:
+
+```
+request(SCID) [
+	body: «add» [
+	    ❰lhs❱: 2
+	    ❰rhs❱: 3
+	]
+]
+```
+
+Once the expression has been evaluated, its result is returned in an envelope with `response(SCID)` as the subject. The response SCID must match the request SCID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which can be an Error as described above.
+
+```
+response(SCID) [
+	result: 5
+]
+```
+
+Any party to a request/response can use the SCID as a way of discarding duplicate requests or avoiding replay attacks.
+
+Because the functionality of `Envelope` is composable, the outer envelope of a request or a response can be signed as a way of authenticating the request, and if necessary the request and/or response can be encrypted by any of the available methods.
+
 ## Variable Substitution and Partially-Applied Expressions
 
 Envelope expressions support scoped variable substitution.
@@ -187,7 +216,7 @@ Corresponsing predicates that are CBOR unsigned integers or CBOR strings and tag
 
 ```
 {
-    «validateSignature» [
+    «verifySignature» [
         ❰key❱: $key
         ❰sig❱: $sig
         ❰digest❱: «sha256» [
