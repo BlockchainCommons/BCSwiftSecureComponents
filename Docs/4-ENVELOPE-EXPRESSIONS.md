@@ -183,7 +183,7 @@ FooBarBaz
 
 A distributed function call is a call invoked on systems that do not reside in the calling process. This is one of the most common use-cases for `Envelope`. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
 
-To facilitate this, we generate a unique SCID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the object must be an envelope expression as described herein. The wrapping `request(SCID)` provides a unique identifier used to route the result of the request back to the caller:
+To facilitate this, we generate a unique SCID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(SCID)` provides a unique identifier used to route the result of the request back to the caller:
 
 ```
 request(SCID) [
@@ -194,7 +194,7 @@ request(SCID) [
 ]
 ```
 
-Once the expression has been evaluated, its result is returned in an envelope with `response(SCID)` as the subject. The response SCID must match the request SCID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which can be an Error as described above.
+Once the expression has been evaluated, its result is returned in an envelope with `response(SCID)` as the subject. The response SCID must match the request SCID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which may be an Error as described above.
 
 ```
 response(SCID) [
@@ -202,7 +202,7 @@ response(SCID) [
 ]
 ```
 
-Any party to a request/response can use the SCID as a way of discarding duplicate requests or avoiding replay attacks.
+Any party to a request/response may use the SCID as a way of discarding duplicates or avoiding replays.
 
 Because the functionality of `Envelope` is composable, the outer envelope of a request or a response can be signed as a way of authenticating the request, and if necessary the request and/or response can be encrypted by any of the available methods.
 
