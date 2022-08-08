@@ -181,7 +181,9 @@ FooBarBaz
 
 ## Distributed Function Calls
 
-A distributed function call is a call invoked on systems that do not reside in the calling process. This is one of the most common use-cases for `Envelope`. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
+A distributed function call (also known as a "remote procedure call") is a call invoked on systems that do not reside in the same process as the caller. This is one of the most common use-cases for `Envelope`.
+
+Due to latency and availability, all distributed function calls are by nature asynchronous, and any distributed function call may fail. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
 
 To facilitate this, we generate a unique SCID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(SCID)` provides a unique identifier used to route the result of the request back to the caller:
 
@@ -205,6 +207,19 @@ response(SCID) [
 Any party to a request/response may use the SCID as a way of discarding duplicates or avoiding replays.
 
 Because the functionality of `Envelope` is composable, the outer envelope of a request or a response can be signed as a way of authenticating the request, and if necessary the request and/or response can be encrypted by any of the available methods.
+
+A request may contain further instructions on the channels via which it may be responded to. For example, a request may be scanned with a QR code, and that request may include a URL with a REST endpoint via which to return the result:
+
+```
+request(SCID) [
+	body: «add» [
+	    ❰lhs❱: 2
+	    ❰rhs❱: 3
+	]
+	respondVia: url(https://example.com/api/receive-response)
+]
+```
+
 
 ## Variable Substitution and Partially-Applied Expressions
 

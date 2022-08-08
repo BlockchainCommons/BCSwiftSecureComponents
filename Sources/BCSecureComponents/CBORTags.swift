@@ -79,3 +79,11 @@ extension CBOR.Tag {
     public static let signingPublicKey = CBOR.Tag(705, "signing-public-key")
     public static let nonce = CBOR.Tag(707, "nonce")
 }
+
+/// Tags for subtypes specific to Distributed Function Calls
+extension CBOR.Tag {
+    public static let function = CBOR.Tag(800, "function")
+    public static let parameter = CBOR.Tag(801, "parameter")
+    public static let request = CBOR.Tag(802, "request")
+    public static let response = CBOR.Tag(803, "response")
+}

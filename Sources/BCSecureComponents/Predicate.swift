@@ -15,4 +15,6 @@ public enum Predicate: UInt64 {
     case language
     case issuer
     case holder
+    case body
+    case result
 }

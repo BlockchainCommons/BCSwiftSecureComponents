@@ -461,3 +461,23 @@ extension Envelope {
         try? self.init(taggedCBOR: CBOR(taggedCBOR))
     }
 }
+
+extension Envelope {
+    public init(function: FunctionIdentifier) {
+        self.init(function.cbor)
+    }
+    
+    public init(function name: String) {
+        self.init(FunctionIdentifier.tagged(name: name))
+    }
+    
+    public init(request id: SCID, body: CBOREncodable) {
+        self = Envelope(CBOR.tagged(.request, id.taggedCBOR))
+            .add(.body, body)
+    }
+    
+    public init(response id: SCID, result: CBOREncodable) {
+        self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
+            .add(.result, result)
+    }
+}

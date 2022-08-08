@@ -125,3 +125,13 @@ extension Assertion {
         self.init(predicate, object)
     }
 }
+
+extension Assertion {
+    public static func parameter(_ param: FunctionParameter, value: CBOREncodable) -> Assertion {
+        Assertion(Envelope(param.cbor), Envelope(value))
+    }
+    
+    public static func parameter(_ name: String, value: CBOREncodable) -> Assertion {
+        Assertion(Envelope(FunctionParameter.tagged(name: name)), Envelope(value))
+    }
+}

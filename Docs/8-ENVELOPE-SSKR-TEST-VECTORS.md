@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 6, 2022</br>
+**Revised:** Aug 8, 2022</br>
 **Status:** DRAFT
 
 ## Contents
