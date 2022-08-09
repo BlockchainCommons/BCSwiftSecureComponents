@@ -35,11 +35,11 @@ class TestFunction: XCTestCase {
     }
     
     func testRequest() {
-        let scid = SCID(‡"66071f80a93735adc7f06713cca8b6026dabd7ede03914a6b7b97dde898f1d79")!
+        let uuid = UUID(uuidString: "F741A43F-6091-456D-A0DD-6108651DF751")!
         
-        let requestEnvelope = Envelope(request: scid, body: twoPlusThree())
+        let requestEnvelope = Envelope(request: uuid, body: twoPlusThree())
         let expectedRequestFormat = """
-        request(SCID(66071f80a93735adc7f06713cca8b6026dabd7ede03914a6b7b97dde898f1d79)) [
+        request(UUID(F741A43F-6091-456D-A0DD-6108651DF751)) [
             body: «add» [
                 ❰lhs❱: 2
                 ❰rhs❱: 3
@@ -48,9 +48,9 @@ class TestFunction: XCTestCase {
         """
         XCTAssertEqual(requestEnvelope.format, expectedRequestFormat)
 
-        let responseEnvelope = Envelope(response: scid, result: 5)
+        let responseEnvelope = Envelope(response: uuid, result: 5)
         let expectedResponseFormat = """
-        response(SCID(66071f80a93735adc7f06713cca8b6026dabd7ede03914a6b7b97dde898f1d79)) [
+        response(UUID(F741A43F-6091-456D-A0DD-6108651DF751)) [
             result: 5
         ]
         """

@@ -185,10 +185,10 @@ A distributed function call (also known as a "remote procedure call") is a call 
 
 Due to latency and availability, all distributed function calls are by nature asynchronous, and any distributed function call may fail. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
 
-To facilitate this, we generate a unique SCID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(SCID)` provides a unique identifier used to route the result of the request back to the caller:
+To facilitate this, we generate a unique UUID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(UUID)` provides a unique identifier used to route the result of the request back to the caller:
 
 ```
-request(SCID) [
+request(UUID(27A2977C-0A63-46E8-A009-D403E19496B9)) [
 	body: «add» [
 	    ❰lhs❱: 2
 	    ❰rhs❱: 3
@@ -196,30 +196,29 @@ request(SCID) [
 ]
 ```
 
-Once the expression has been evaluated, its result is returned in an envelope with `response(SCID)` as the subject. The response SCID must match the request SCID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which may be an Error as described above.
+Once the expression has been evaluated, its result is returned in an envelope with `response(UUID)` as the subject. The response UUID must match the request UUID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which may be an Error as described above.
 
 ```
-response(SCID) [
+response(UUID(27A2977C-0A63-46E8-A009-D403E19496B9)) [
 	result: 5
 ]
 ```
 
-Any party to a request/response may use the SCID as a way of discarding duplicates or avoiding replays.
+Any party to a request/response may use the UUID as a way of discarding duplicates or avoiding replays.
 
 Because the functionality of `Envelope` is composable, the outer envelope of a request or a response can be signed as a way of authenticating the request, and if necessary the request and/or response can be encrypted by any of the available methods.
 
 A request may contain further instructions on the channels via which it may be responded to. For example, a request may be scanned with a QR code, and that request may include a URL with a REST endpoint via which to return the result:
 
 ```
-request(SCID) [
+request(UUID(01D32CD0-F3D6-415A-A960-EC36C2B5A56D)) [
 	body: «add» [
 	    ❰lhs❱: 2
 	    ❰rhs❱: 3
 	]
-	respondVia: url(https://example.com/api/receive-response)
+	respondVia: URI(https://example.com/api/receive-response)
 ]
 ```
-
 
 ## Variable Substitution and Partially-Applied Expressions
 
@@ -227,7 +226,7 @@ Envelope expressions support scoped variable substitution.
 
 Subjects that are CBOR unsigned integers or CBOR strings and tagged `placeholder` (`$`) identify the targets of subtitutions.
 
-Corresponsing predicates that are CBOR unsigned integers or CBOR strings and tagged `replacement` (`/`) identify the sources of substutions, which can themselves be arbitrarily complex.
+Corresponding predicates that are CBOR unsigned integers or CBOR strings and tagged `replacement` (`/`) identify the sources of substutions, which can themselves be arbitrarily complex.
 
 ```
 {

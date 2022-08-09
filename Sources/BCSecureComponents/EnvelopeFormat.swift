@@ -56,6 +56,8 @@ extension CBOR: EnvelopeFormat {
                 return try .item(SCID(taggedCBOR: self)†)
             case CBOR.tagged(.uri, _):
                 return try .item(URL(taggedCBOR: self)†.flanked("URI(", ")"))
+            case CBOR.tagged(.uuid, _):
+                return try .item(UUID(taggedCBOR: self)†.flanked("UUID(", ")"))
             case CBOR.tagged(URType.digest.tag, _):
                 return try .item(Digest(taggedCBOR: self)†)
             case CBOR.tagged(URType.scid.tag, _):

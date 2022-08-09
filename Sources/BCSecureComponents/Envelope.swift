@@ -471,12 +471,12 @@ extension Envelope {
         self.init(FunctionIdentifier.tagged(name: name))
     }
     
-    public init(request id: SCID, body: CBOREncodable) {
+    public init(request id: UUID, body: CBOREncodable) {
         self = Envelope(CBOR.tagged(.request, id.taggedCBOR))
             .add(.body, body)
     }
     
-    public init(response id: SCID, result: CBOREncodable) {
+    public init(response id: UUID, result: CBOREncodable) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .add(.result, result)
     }
