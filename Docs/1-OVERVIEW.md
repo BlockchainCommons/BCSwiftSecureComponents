@@ -84,7 +84,7 @@ Many of the types defined herein are assigned CBOR tags for use when encoding th
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
 |48|`crypto-msg`|`EncryptedMessage`|
-|49|`crypto-envelope`|`Envelope`|
+|49|`envelope`|`Envelope`|
 |50|`crypto-prvkeys`|`PrivateKeyBase`|
 |51|`crypto-pubkeys`|`PublicKeyBase`|
 |55|`crypto-sealed`|`SealedMessage`|

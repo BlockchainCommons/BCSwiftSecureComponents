@@ -2,7 +2,7 @@
 
 A collection of useful primitives for cryptography, semantic graphs, and cryptocurrency in Swift.
 
-Features `crypto-envelope`, which supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs.
+Features `Envelope`, which supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs.
 
 Includes an opinionated Swift wrapper around [LibWally](https://github.com/ElementsProject/libwally-core).
 

@@ -64,7 +64,7 @@ struct Assertion {
 
 |CBOR Tag|UR Type|Type|
 |---|---|---|
-|49|`crypto-envelope`|`Envelope`|
+|49|`envelope`|`Envelope`|
 |60||`plaintext`|
 
 If the `Envelope` has no assertions, the encoding is simply the `subject`. If the `Envelope` has one or more assertions, then the encoding is an array of two or more elements with the `subject` as the first element, followed by the assertions threaded into the array.
