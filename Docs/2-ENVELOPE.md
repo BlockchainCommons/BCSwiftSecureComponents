@@ -69,13 +69,59 @@ graph LR
     subject:Alice --> |predicate:knows| object:Bob
 ```
 
-The `predicate` and `object` are themselves `Envelope`s, and thus may also be encrypted or redacted, and may in turn contain their own assertions. It is therefore possible to hide any part of an assertion by encrypting or redacting its parts:
+The `predicate` and `object` are themselves `Envelope`s, and thus may also be encrypted or redacted, and may in turn contain their own assertions. It is therefore possible to hide any part of a `Envelope` or any of its assertions by encrypting or redacting its parts. Here is a simple example consisting of an `Envelope` whose `subject` is a simple text string, which has been signed.
 
-* You can of course hide the `subject` about which assertions are made.
-* You can hide the `predicate` to reveal that the `subject` and `object` are related, but hide *how* they are related,
-* You can hide the `object` to assert that the subject is related in a specific way to some other hidden object,
-* You can hide every part of the assertion by hiding the `subject`, `predicate`, and `object` separately, while still revealing that an assertion *exists*,
-* Finally, you can hide even the fact of the assertion's existence by encrypting or redacting a `subject` containing a `Envelope`, with its assertions hidden along with it.
+```
+"Hello." [
+    verifiedBy: Signature
+]
+```
+
+* You can hide the `subject` about which assertions are made:
+
+```
+REDACTED [
+    verifiedBy: Signature
+]
+```
+
+* You can hide the `predicate` to reveal that the `subject` and `object` are related, but hide *how* they are related:
+
+```
+"Hello." [
+    REDACTED: Signature
+]
+```
+
+* You can hide the `object` to assert that the subject is related in a specific way to some other hidden object:
+
+```
+"Hello." [
+    verifiedBy: REDACTED
+]
+```
+
+* You can hide both parts of the assertion separately by hiding the `subject`, `predicate`, and `object`, while still revealing that an assertion *exists*, and allowing verification of the `Digest`s of the two parts separately:
+
+```
+"Hello." [
+    REDACTED: REDACTED
+]
+```
+
+* You can hide a complete `Assertion`, hiding the digests of the individual `predicate` and `object`,
+
+```
+"Hello." [
+    REDACTED
+]
+```
+
+* Finally, you can hide even the fact of the assertion's existence by encrypting or redacting the entire envelope, including its assertions.
+
+```
+REDACTED
+```
 
 It is important to understand that because `Envelope` supports "complex metadata", i.e., "assertions with assertions," users are not limited to semantic triples. Adding context, as in a [semantic quad](https://en.wikipedia.org/wiki/Named_graph#Named_graphs_and_quads), is easily accomplished with an assertion on the subject. In fact, any Envelope can also be an element of a [cons pair](https://en.wikipedia.org/wiki/Cons), with the "first" element being the `subject` and the "rest" being the assertions. And since the `subject` of an `Envelope` can be any CBOR object, a `subject` can also be any structure (such as an array or map) containing other `Envelope`s.
 
