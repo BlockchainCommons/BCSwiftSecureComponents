@@ -20,6 +20,10 @@
 
 ---
 
+# Introduction
+
+This document discusses noncorrelation and related concepts. It introduces terminology, then analyzes Secure Components from the standpoint of noncorrelation, then introduces the opt-in decorrelation capabilities built into the `Envelope` type.
+
 # Definitions
 
 ## Image and Projection
