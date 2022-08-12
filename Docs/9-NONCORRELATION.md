@@ -139,6 +139,8 @@ The `Envelope` type provides the `addSalt()` method that adds a `salt: Data` ass
 * For small objects, the number of bytes added will generally be from 8...16.
 * For larger objects the number of bytes added will generally be from 5%...25% of the size of the object.
 
+Adding salt to an element changes the `Digest` of the element and all elements up to the root of the Merkle tree. Therefore, when noncorralatability is desired, it should be added to the construction of the `Envelope` before other constructs like signatures that depend on the stability of the Merkle tree.
+
 Code to create a simple envelope:
 
 ```swift
