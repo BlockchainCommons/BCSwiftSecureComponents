@@ -183,6 +183,20 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    func addSalt(_ count: Int) -> Envelope {
+        add(.salt, SecureRandomNumberGenerator.shared.data(count: count))
+    }
+    
+    func addSalt(_ range: ClosedRange<Int>) -> Envelope {
+        add(.salt, SecureRandomNumberGenerator.shared.data(range: range))
+    }
+
+    func addSalt() -> Envelope {
+        addSalt(8...24)
+    }
+}
+
+public extension Envelope {
     func addIf(_ condition: Bool, _ assertion: Assertion) -> Envelope {
         guard condition else {
             return self

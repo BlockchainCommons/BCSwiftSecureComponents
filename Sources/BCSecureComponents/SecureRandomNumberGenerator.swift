@@ -17,4 +17,11 @@ public final class SecureRandomNumberGenerator: RandomNumberGenerator {
         var s = self
         return Data((0..<count).map { _ in UInt8.random(in: 0...255, using: &s) })
     }
+        
+    public func data(range: ClosedRange<Int>) -> Data {
+        precondition(range == range.clamped(to: 1...32))
+        var s = self
+        let count = range.randomElement(using: &s)!
+        return data(count: count)
+    }
 }

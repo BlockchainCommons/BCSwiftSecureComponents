@@ -17,4 +17,5 @@ public enum Predicate: UInt64 {
     case holder
     case body
     case result
+    case salt
 }
