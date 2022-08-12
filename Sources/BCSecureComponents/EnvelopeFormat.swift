@@ -96,7 +96,12 @@ extension Subject: EnvelopeFormat {
 
 extension Assertion: EnvelopeFormat {
     var formatItem: EnvelopeFormatItem {
-        .list([predicate.formatItem, ": ", object.formatItem])
+        switch self {
+        case .present(predicate: let predicate, object: let object, digest: _):
+            return .list([predicate.formatItem, ": ", object.formatItem])
+        case .redacted(_):
+            return "REDACTED"
+        }
     }
 }
 

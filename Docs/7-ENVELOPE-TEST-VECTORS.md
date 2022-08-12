@@ -1,7 +1,7 @@
 # Secure Components - Envelope Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 9, 2022</br>
+**Revised:** Aug 12, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -1365,23 +1365,23 @@ John wishes to identify himself to a third party using his government-issued cre
 ```
 {
     SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        REDACTED: REDACTED
-        REDACTED: REDACTED
+        REDACTED
+        REDACTED
         holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
             "familyName": "SMITH"
             "givenName": "JOHN"
             "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
                 dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                 note: "This is an image of John Smith."
             ]
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
         ]
         isA: "credential"
         issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
@@ -1401,13 +1401,13 @@ John wishes to identify himself to a third party using his government-issued cre
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpehlntpfntpfthdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosplftpehtpethdcxstenembyhfpdwdsgtlwfdnrhuyidlrswgsndemlrielofhdrtlwyfwzcvebywewltpehtpethdcxfemdjpkszohhkkmelfsgmossmsaxihytrdhygylknnsouycawtluayrlbydrqdhslftpehtpethdcxihglkijnweprecbwwyjzbwjkhdwmdwdsglrlkoiecpldntmncachmynnflmwsspktpehtpethdcxbsptwtttuygtpdmthfamtkpehsspuyemjzzesstyfmtndldlvowlfmtlmurfatkklftpehtpfntpfrbttpehlstpfntpfthdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvslftpehtpfntpfrastpehtpfntpcxksheisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndljkiainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihetlftpehtpfntpfraatpehtpfnksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihlftpehtpfntpfraotpehtpfnimiajpihieihjtjyinhsjzlftpehtpfntpfrbatpehlktpfntpfthdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguolftpehtpethdcxueoxtdfsgdzohnbgcscllurttpueeopsfzeohygdnnrpvypsrsprsslahlatsnoetpehtpethdcxenbdhlhncyvoswwmfxlofnjkkklpetamqdbbgdioiahldpstmuwdurgmwekktbqzlftpehtpethdcxwtlegucpsriycaimfnhdcxdechrtrsmhwfassbbnmwjpztpytpmegrnbssbafebntpehtpethdcxlerocwrowyrskbotrlmwbnzedsetroinnlhekpnenbmnahgoahfwylswfmrdtioxlftpehtpfninioinkoihjtglhsjnihtpehtpfniegegwfdgllftpehtpethdcxdsfrhpkilufelocxcsgwrerfsklridamkkfebaenbnlbtlbwrhesdtdizebngtgytpehtpethdcxrlpsvegwseyndejepfaatozmecqznyvwwkehndchtpimehwklorkhlpmdsjtfgvllftpehtpethdcxeyrtgumdololnnlpzevofmdpwmrnbnkivdehamhfuttstynycykpehlsutmtbkgotpehtpethdcxmwfmbnwftnqztlherotkjerpgaeymhptnlteisgtleneoyvatlrkehwpnebdcsdelftpehtpethdcxkidtasvwaazowmwemnbghsjegmknhymybkwlbstobkadfwwtbsecahvecymywpwstpehtpethdcxieoltyfxntrdhpflsotdtbsssfbwstrnrkcleykocfrtsgbkwsdklowndwzmtibdlftpehtpethdcxtpfmjpdpcsbeckstplmdehbwgdzofmmkrtjobygdprpfdlvdeekphfmocwtyaaditpehtpethdcxrtneuezcbkcanbfpjkbwvdylisemonjeatjsntfmatsbfebtglhfgrpmtalamkrylftpehtpfnihinjnhsioihtpehlstpfntpethdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonllftpehtpfntpfrastpehtpfnkshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaeseseslftpehtpfntpfraatpehtpfnksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmlftpehtpfnimiyhsjninjzkkglhsjnihtpehtpfnihgugtgaghfdlftpehtpethdcxueoxtdfsgdzohnbgcscllurttpueeopsfzeohygdnnrpvypsrsprsslahlatsnoetpehtpethdcxhhluasdrtaoyaxuokkamfxbtnlecaanyctckadiafpgedevyidsacxguhpsoiygalftpehtpethdcxfxrktiflgdlgpftbwltedydkdalrfrgdbguelrlfamcsbkjptigmgevsiewehevotpehtpethdcxmdltbwieclmklaylswhlmyrptltkutmepdnbkoospdlnglntkkrkpkhpmnjpyadnlftpehtpfntpfraxtpehlftpfntpfshdfzhevysacyrtvefhsnwesaaafdhsastplaenpmemnlfwttjeurcpbsjopfhnseehkourdeprjovohfmyfhjpqzcspslyehgdgaecghonhgwkrsdrtboxksftiofsltkkqdlftpehtpfntpfraatpehtpfnkscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmpdgeiygy
+ur:envelope/lftpehlntpfntpfthdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosptpethdcxcskkguyaflmdtilghyzeteahqzmnlbbtoectwlutmwastytyfxwtheryemhkkeettpethdcxfzlkimswsawmkibkdrfxlnjlfrpftkfeuerehfvtsbykyasnayfseecelpcxfgtolftpehtpfntpfrbttpehlstpfntpfthdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvslftpehtpfntpfrastpehtpfntpcxksheisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndljkiainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihetlftpehtpfntpfraatpehtpfnksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihlftpehtpfntpfraotpehtpfnimiajpihieihjtjyinhsjzlftpehtpfntpfrbatpehlktpfntpfthdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguotpethdcxaeldhpztclrtbwmtiorytiloihbwhkbtpkwtmemnpfmyiaaegeoslgtpdlnyjzprtpethdcxcfctlpnbtojlbdgrwpmhhgoeinlbwpaechbthgiywszowpghgeotgoidkbmdiontlftpehtpfninioinkoihjtglhsjnihtpehtpfniegegwfdgltpethdcxkbsnhggycngsfpiogdlrtdjsttplbwktsnfspevovsndkeotlnnlchtsnbkimhmotpethdcxlgrensuyvdskgsdktnurwnbnaeldcslbtkatdwjofmttswwfldvtcmrpaepdvepytpethdcxmypeoxotdieopaimtnpdbbnymyheykwtbeylvyoxwpurcfwmksamkscatdkghynetpethdcxnlpkgsqzuylpgysbieltetiyfhkgctadpedscwwzldrncnotcslymycavsgrcpntlftpehtpfnihinjnhsioihtpehlstpfntpethdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonllftpehtpfntpfrastpehtpfnkshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaeseseslftpehtpfntpfraatpehtpfnksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmlftpehtpfnimiyhsjninjzkkglhsjnihtpehtpfnihgugtgaghfdtpethdcxtyzocxcmtijebtwdbsvwtlwekoclecghdtrpcmclfzctlgcapsdlcysezsehmyrntpethdcxvwgmjtftoycngesffpkofntlspmnasbdgsfmimsstbcndrztzmdetakicwcwykahlftpehtpfntpfraxtpehlftpfntpfshdfzhevysacyrtvefhsnwesaaafdhsastplaenpmemnlfwttjeurcpbsjopfhnseehkourdeprjovohfmyfhjpqzcspslyehgdgaecghonhgwkrsdrtboxksftiofsltkkqdlftpehtpfntpfraatpehtpfnkscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmlyiavwjz
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c882d831d8385820c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9d831d838582045957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab36182d831d8385820654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aad831d83858200fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc077982d831d83cd83b0dd83183d83cd83a582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e882d831d83cd83b09d831d83cd820785f68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f3034333633643566663939373333626330663135373762616261343430616631636633343461643965343534666164396431323863303066656636353035653882d831d83cd83b04d831d83c781e49737375656420627920746865205374617465206f66204578616d706c6582d831d83cd83b02d831d83c6a63726564656e7469616c82d831d83cd83b0ed8318cd83cd83a582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc82d831d8385820dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2d831d8385820360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b482d831d8385820f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450cd831d83858208ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a482d831d83c69676976656e4e616d65d831d83c644a4f484e82d831d8385820263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51d831d8385820b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e382d831d838582032c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55d831d8385820943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b182882d831d83858207d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecefd831d838582064a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b82d831d8385820d83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427d831d8385820c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd82d831d83c65696d616765d83183d83cd838582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c99982d831d83cd83b09d831d83c786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f3336626533303732366265666236356361313362313336616532396438303831663634373932633237303234313565623630616431633536656433336339393982d831d83cd83b04d831d83c781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682e82d831d83c6a66616d696c794e616d65d831d83c65534d49544882d831d8385820dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2d831d83858205c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc9664982d831d838582043bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2d831d838582095871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b82d831d83cd83b03d83182d83cd83d58405fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b382d831d83cd83b04d831d83c781d4d61646520627920746865205374617465206f66204578616d706c652e
+d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8d8385820187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38d8385820408c6ac6c2eb7d0a2a43866f3bb0cf45deb556e0cbf5f8cd083d341c852046ce82d831d83cd83b0dd83183d83cd83a582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e882d831d83cd83b09d831d83cd820785f68747470733a2f2f6578616d706c656c65646765722e636f6d2f736369642f3034333633643566663939373333626330663135373762616261343430616631636633343461643965343534666164396431323863303066656636353035653882d831d83cd83b04d831d83c781e49737375656420627920746865205374617465206f66204578616d706c6582d831d83cd83b02d831d83c6a63726564656e7469616c82d831d83cd83b0ed8318cd83cd83a582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadcd838582000895bfc21c0139667bdd0886513590daaf0918eb08f63004aa78dd82f9a6cb2d8385820191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679d82d831d83c69676976656e4e616d65d831d83c644a4f484ed83858207ecd5751234c41675084d271d1ae1377cd3dafe2e89b7ca3869917d7a07d9092d83858208db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4abd83858208fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9fd838582099aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229d82d831d83c65696d616765d83183d83cd838582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c99982d831d83cd83b09d831d83c786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f3336626533303732366265666236356361313362313336616532396438303831663634373932633237303234313565623630616431633536656433336339393982d831d83cd83b04d831d83c781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682e82d831d83c6a66616d696c794e616d65d831d83c65534d495448d8385820d4fb2016d06b0dea0fe5d5ed7621355429b61621401f8d1dac2f1ac1fa318fbed8385820e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf50582d831d83cd83b03d83182d83cd83d58405fe1c21ac0e43fcdedc204486109d88036ad379942d16bdf220f70b060c13176df28b270e2568f3f72b418ac813150493554a557f4bf2ad6a4783a673d8779b382d831d83cd83b04d831d83c781d4d61646520627920746865205374617465206f66204578616d706c652e
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -1422,30 +1422,12 @@ d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                   h'174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8'
                )
             ),
-            [
-               49(   ; envelope
-                  56(   ; crypto-digest
-                     h'c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9'
-                  )
-               ),
-               49(   ; envelope
-                  56(   ; crypto-digest
-                     h'45957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab361'
-                  )
-               )
-            ],
-            [
-               49(   ; envelope
-                  56(   ; crypto-digest
-                     h'654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aa'
-                  )
-               ),
-               49(   ; envelope
-                  56(   ; crypto-digest
-                     h'0fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc0779'
-                  )
-               )
-            ],
+            56(   ; crypto-digest
+               h'187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38'
+            ),
+            56(   ; crypto-digest
+               h'408c6ac6c2eb7d0a2a43866f3bb0cf45deb556e0cbf5f8cd083d341c852046ce'
+            ),
             [
                49(   ; envelope
                   60(   ; plaintext
@@ -1511,30 +1493,12 @@ d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                            h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
                         )
                      ),
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b4'
-                           )
-                        )
-                     ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450c'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'8ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a4'
-                           )
-                        )
-                     ],
+                     56(   ; crypto-digest
+                        h'00895bfc21c0139667bdd0886513590daaf0918eb08f63004aa78dd82f9a6cb2'
+                     ),
+                     56(   ; crypto-digest
+                        h'191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679d'
+                     ),
                      [
                         49(   ; envelope
                            60("givenName")   ; plaintext
@@ -1543,54 +1507,18 @@ d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                            60("JOHN")   ; plaintext
                         )
                      ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e3'
-                           )
-                        )
-                     ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'32c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b1828'
-                           )
-                        )
-                     ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'7d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecef'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'64a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b'
-                           )
-                        )
-                     ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'd83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd'
-                           )
-                        )
-                     ],
+                     56(   ; crypto-digest
+                        h'7ecd5751234c41675084d271d1ae1377cd3dafe2e89b7ca3869917d7a07d9092'
+                     ),
+                     56(   ; crypto-digest
+                        h'8db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4ab'
+                     ),
+                     56(   ; crypto-digest
+                        h'8fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9f'
+                     ),
+                     56(   ; crypto-digest
+                        h'99aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229d'
+                     ),
                      [
                         49(   ; envelope
                            60("image")   ; plaintext
@@ -1637,30 +1565,12 @@ d83182d83186d83cd83a5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                            60("SMITH")   ; plaintext
                         )
                      ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'5c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc96649'
-                           )
-                        )
-                     ],
-                     [
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'43bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2'
-                           )
-                        ),
-                        49(   ; envelope
-                           56(   ; crypto-digest
-                              h'95871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b'
-                           )
-                        )
-                     ]
+                     56(   ; crypto-digest
+                        h'd4fb2016d06b0dea0fe5d5ed7621355429b61621401f8d1dac2f1ac1fa318fbe'
+                     ),
+                     56(   ; crypto-digest
+                        h'e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505'
+                     )
                   ]
                )
             ]
@@ -1709,24 +1619,12 @@ d8 31                                    # tag(49)   ; envelope
                d8 3a                     # tag(58)   ; crypto-scid
                   5820                   # bytes(32)
                      174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 38                  # tag(56)   ; crypto-digest
-                     5820                # bytes(32)
-                        c736371156a8eacad5f32bb9db6284c64c9b378464883f2ad5ee42fde411ede9
-               d8 31                     # tag(49)   ; envelope
-                  d8 38                  # tag(56)   ; crypto-digest
-                     5820                # bytes(32)
-                        45957278fb5c799182ca92c4970365f9ba5e518c9ec9db1df08b08b7112ab361
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 38                  # tag(56)   ; crypto-digest
-                     5820                # bytes(32)
-                        654e7d6dedb23513ee6c137358eb2c264eb7766422899d8e1d178f9e4794c4aa
-               d8 31                     # tag(49)   ; envelope
-                  d8 38                  # tag(56)   ; crypto-digest
-                     5820                # bytes(32)
-                        0fa9f0d1db4da8965606cfaf61c8db376cfec4d43eda2f2fe2e93ed593bc0779
+            d8 38                        # tag(56)   ; crypto-digest
+               5820                      # bytes(32)
+                  187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38
+            d8 38                        # tag(56)   ; crypto-digest
+               5820                      # bytes(32)
+                  408c6ac6c2eb7d0a2a43866f3bb0cf45deb556e0cbf5f8cd083d341c852046ce
             82                           # array(2)
                d8 31                     # tag(49)   ; envelope
                   d8 3c                  # tag(60)   ; plaintext
@@ -1777,24 +1675,12 @@ d8 31                                    # tag(49)   ; envelope
                         d8 3a            # tag(58)   ; crypto-scid
                            5820          # bytes(32)
                               78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 360b5d601ae2c6eb43883c7379853806b3145067635d2dc793eadf52ed79d6b4
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 f08a5322c3661d6a3c58202817c0bf90f309cb0c9472fcabd8914ba0c40e450c
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 8ab81bb8eebf7ea3b7940cfe2638b869995f759fa08e05550542f7c63ebad0a4
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           00895bfc21c0139667bdd0886513590daaf0918eb08f63004aa78dd82f9a6cb2
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679d
                      82                  # array(2)
                         d8 31            # tag(49)   ; envelope
                            d8 3c         # tag(60)   ; plaintext
@@ -1804,42 +1690,18 @@ d8 31                                    # tag(49)   ; envelope
                            d8 3c         # tag(60)   ; plaintext
                               64         # text(4)
                                  4a4f484e # "JOHN"
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 263b5b7d8b458820184fb5bcc584620679450e360c7fd513b9392927fe0c4d51
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 b7ace44fc1f6286bb004ceff35b49ae5f4319b17d86a31f488bb5dad266e46e3
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 32c05395a6a69e85fee23e2debbe0c7de7310656ddd7d49a1a753183dd960a55
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 943e0cf3dab4d55fb8cf6bb6493290a999d3684d8a9fa1e6d5bb31ec9f0b1828
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 7d2909e504fbebed8e12616b527a5e8f0ae90fce0a0142f00f3505e41a8fecef
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 64a6d4439dba5b47c9d2d6c4cc13c7bebb21327619c0ca0aef2488f12cffd00b
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 d83e722d18101ec7ae95311350fb3e98c0701150b2b02fe7347556921bd40427
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 c09fdefd0a1da0417313e7f76837a56b07719d3e07cb450d4e564badd98098bd
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           7ecd5751234c41675084d271d1ae1377cd3dafe2e89b7ca3869917d7a07d9092
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           8db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4ab
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           8fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9f
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           99aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229d
                      82                  # array(2)
                         d8 31            # tag(49)   ; envelope
                            d8 3c         # tag(60)   ; plaintext
@@ -1878,24 +1740,12 @@ d8 31                                    # tag(49)   ; envelope
                            d8 3c         # tag(60)   ; plaintext
                               65         # text(5)
                                  534d495448 # "SMITH"
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 dea4d23d50fb601218218bc0d8de33ac40335e509eb6e1acbfb2c4805d07cda2
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 5c8b092ad9a103dc7906430d9935049a1f1e0163414a28e162c220535bc96649
-                     82                  # array(2)
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 43bbd047508db0d6e9d3302425843b5012de848206180a72d0524ae864ed5fe2
-                        d8 31            # tag(49)   ; envelope
-                           d8 38         # tag(56)   ; crypto-digest
-                              5820       # bytes(32)
-                                 95871364219880f7c65d8fb6d5cfdd91a8a076a7a8864e9d79bbaa5b8e72f82b
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           d4fb2016d06b0dea0fe5d5ed7621355429b61621401f8d1dac2f1ac1fa318fbe
+                     d8 38               # tag(56)   ; crypto-digest
+                        5820             # bytes(32)
+                           e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505
       82                                 # array(2)
          d8 31                           # tag(49)   ; envelope
             d8 3c                        # tag(60)   ; plaintext

@@ -52,12 +52,12 @@ enum Subject {
 
 ## Assertion
 
-`Assertion`s are `predicate`-`object` pairs that supply additional information about the `subject`.
+An `Assertion` is an enumerated types that may either be `present` as a `predicate`-`object` pair that supplies additional information about the `subject`, or `redacted`, which appears as just a `Digest`.
 
 ```swift
-struct Assertion {
-    let predicate: Envelope
-    let object: Envelope
+enum Assertion: DigestProvider {
+    case present(predicate: Envelope, object: Envelope)
+    case redacted(Digest)
 }
 ```
 

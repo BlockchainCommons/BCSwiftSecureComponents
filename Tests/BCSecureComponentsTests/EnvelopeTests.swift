@@ -160,7 +160,7 @@ class EnvelopeTests: XCTestCase {
         {
             "Hello."
         } [
-            REDACTED: REDACTED
+            REDACTED
         ]
         """
         XCTAssertEqual(revealedEnvelope.format, expectedRevealedFormat)
@@ -980,23 +980,23 @@ class EnvelopeTests: XCTestCase {
         """
         {
             SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-                REDACTED: REDACTED
-                REDACTED: REDACTED
+                REDACTED
+                REDACTED
                 holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+                    REDACTED
+                    REDACTED
+                    REDACTED
+                    REDACTED
+                    REDACTED
+                    REDACTED
+                    REDACTED
+                    REDACTED
                     "familyName": "SMITH"
                     "givenName": "JOHN"
                     "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
                         dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                         note: "This is an image of John Smith."
                     ]
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
-                    REDACTED: REDACTED
                 ]
                 isA: "credential"
                 issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
@@ -1010,6 +1010,7 @@ class EnvelopeTests: XCTestCase {
             ]
         ]
         """
+        print(redactedCredential.format)
         XCTAssertEqual(redactedCredential.format, expectedRedactedFormat)
     }
     

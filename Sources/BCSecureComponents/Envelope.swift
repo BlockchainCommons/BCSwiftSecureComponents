@@ -118,8 +118,7 @@ extension Envelope: ExpressibleByIntegerLiteral {
 
 public extension Envelope {
     func assertions(predicate: CBOREncodable) -> [Assertion] {
-        let predicate = Envelope(predicate)
-        return assertions.filter { $0.predicate == predicate }
+        return assertions.filter { $0.hasPredicate(predicate) }
     }
 
     func assertion(predicate: CBOREncodable) throws -> Assertion {
@@ -141,8 +140,7 @@ public extension Envelope {
 
 public extension Envelope {
     func assertions(predicate: Predicate) -> [Assertion] {
-        let p = Envelope(predicate: predicate)
-        return assertions.filter { $0.predicate == p }
+        return assertions.filter { $0.hasPredicate(predicate) }
     }
     
     func assertion(predicate: Predicate) throws -> Assertion {
@@ -183,16 +181,28 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    /// Add a specified number of bytes of salt.
     func addSalt(_ count: Int) -> Envelope {
-        add(.salt, SecureRandomNumberGenerator.shared.data(count: count))
+        return add(.salt, SecureRandomNumberGenerator.shared.data(count: count))
     }
     
+    /// Add a number of bytes of salt chosen randomly from the given range.
     func addSalt(_ range: ClosedRange<Int>) -> Envelope {
-        add(.salt, SecureRandomNumberGenerator.shared.data(range: range))
+        var s = SecureRandomNumberGenerator.shared
+        let count = range.randomElement(using: &s)!
+        return addSalt(count)
     }
 
+    /// Add a number of bytes of salt generally proportional to the size of the object being salted.
+    ///
+    /// For small objects, the number of bytes added will generally be from 8...16.
+    ///
+    /// For larger objects the number of bytes added will generally be from 5%...25% of the size of the object.
     func addSalt() -> Envelope {
-        addSalt(8...24)
+        let size = Double(self.taggedCBOR.cborEncode.count)
+        let minSize = max(8, Int((size * 0.05).rounded(.up)))
+        let maxSize = max(minSize + 8, Int((size * 0.25).rounded(.up)))
+        return addSalt(minSize...maxSize)
     }
 }
 

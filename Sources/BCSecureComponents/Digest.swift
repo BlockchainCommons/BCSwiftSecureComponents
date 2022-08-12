@@ -122,3 +122,11 @@ extension Digest: DataProvider {
         data
     }
 }
+
+public func +(lhs: Digest, rhs: Digest) -> Data {
+    lhs.data + rhs.data
+}
+
+public func +(lhs: Data, rhs: Digest) -> Data {
+    lhs + rhs.data
+}

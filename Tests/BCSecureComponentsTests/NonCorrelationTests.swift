@@ -40,7 +40,7 @@ class NonCorrelationTests: XCTestCase {
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
         // e1 and e2 have the same predicate
-        XCTAssertEqual(e1.assertions.first!.predicate, e2.assertions.first!.predicate)
+        try XCTAssertEqual(e1.assertions.first!.predicate, e2.assertions.first!.predicate)
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.
@@ -48,42 +48,39 @@ class NonCorrelationTests: XCTestCase {
         
         let redactedExpectedFormat = """
         REDACTED [
-            REDACTED: REDACTED
+            REDACTED
         ]
         """
         XCTAssertEqual(e1Redacted.format, redactedExpectedFormat)
-        
-        // Envelopes always have the same digest in their redacted form.
-        // Predicates are just envelopes, and often very simple ones at taht.
-        // This is a problem if we want complete non-correlation.
-        let notePredicate = Envelope(predicate: .note)
-        let notePredicateRedacted = notePredicate.redact()
-        XCTAssertEqual(notePredicate, notePredicateRedacted)
-        
-        // We can tell that the redacted object's first assertion has
-        // a "note" predicate, because even though it's been redacted,
-        // it still has the same digest.
-        XCTAssertEqual(e1Redacted.assertions.first!.predicate, notePredicate)
-        
-        // Create an envelope where the note predicate's assertion is salted.
-        let e3 = Envelope("Alpha")
-            .add(Envelope(predicate: .note).addSalt(), "Beta")
-        let e3ExpectedFormat = """
-        "Alpha" [
+    }
+    
+    func testAddSalt() {
+        // Add salt to every part of an envelope.
+        let e1 = Envelope(Envelope("Alpha").addSalt())
+            .add(Envelope(predicate: .note).addSalt(), Envelope("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.").addSalt())
+        let e1ExpectedFormat = """
+        {
+            "Alpha" [
+                salt: CBOR
+            ]
+        } [
             note [
                 salt: CBOR
             ]
-            : "Beta"
+            : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." [
+                salt: CBOR
+            ]
         ]
         """
-        XCTAssertEqual(e3.format, e3ExpectedFormat)
+        XCTAssertEqual(e1.format, e1ExpectedFormat)
+
+        let e1Redacted = e1.redact(revealing: [e1.digest])
         
-        // The redacted e3 has the same form as the redacted e1.
-        let e3Redacted = e3.redact(revealing: [e3.digest])
-        XCTAssertEqual(e3, e3Redacted)
-        XCTAssertEqual(e3Redacted.format, redactedExpectedFormat)
-        
-        // But its first assertion's predicate can no longer be recognized.
-        XCTAssertNotEqual(e3Redacted.assertions.first!.predicate, notePredicate)
+        let redactedExpectedFormat = """
+        REDACTED [
+            REDACTED
+        ]
+        """
+        XCTAssertEqual(e1Redacted.format, redactedExpectedFormat)
     }
 }
