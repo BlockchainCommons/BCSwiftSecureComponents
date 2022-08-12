@@ -18,6 +18,7 @@ let tocItems: [(title: String, filename: String)] = [
     ("Examples", "EXAMPLES.md"),
     ("Envelope Test Vectors", "ENVELOPE-TEST-VECTORS.md"),
     ("Envelope SSKR Test Vectors", "ENVELOPE-SSKR-TEST-VECTORS.md"),
+    ("Noncorrelation", "NONCORRELATION.md"),
 ]
 
 func tocFilename(at index: Int) -> String {

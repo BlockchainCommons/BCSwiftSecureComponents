@@ -8,6 +8,16 @@
 
 ## Contents
 
+* [Overview](1-OVERVIEW.md)
+* [Envelope Overview](2-ENVELOPE.md)
+* [Envelope Notation](3-ENVELOPE-NOTATION.md)
+* [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
+* [Definitions](5-DEFINITIONS.md)
+* [Examples](6-EXAMPLES.md)
+* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
+* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
+* Noncorrelation: This document
+
 ---
 
 # Definitions
@@ -103,22 +113,64 @@ In the above:
 * the `verifiedBy` predicate is correlatable, because it is a well-known value, and
 * the `Signature` is noncorrelatable, because it was constructed with entropy.
 
-If just the asserion is redacted, we get:
+If the asserion is redacted, we get:
 
 ```
 EncryptedMessage [
-    REDACTED: REDACTED
+    REDACTED
 ]
 ```
 
 When redacted, each element is replaced with its `Digest`, preserving the Merkle tree. `Digests` by themselves are noncorrelatable, but an attacker could infer certain things from the structure and positioning of the elements:
 
-* the redacted `verifiedBy` predicate is a well-known value, and therefore has a well-known `Digest`, because digests are correlatable,
-* the redacted `Signature` is inferred to be a `Signature` because it is in the object position with a well-known `verifiedBy` predicate, and
-* the size of the plaintext of the `EncryptedMessage` subject can be inferred.
+* the redacted assertion's `Digest` is noncorrelatable because it includes a `Signature`, which was generated using entropy and so the `Digest` inherits its noncorrelatability.
+* As described above, the `EncryptedMessage` is quasicorrelatable.
 
-The `REDACTED` elements carry with them the same `Digest` as their unredacted forms, and hence the merkle tree remains the same. A third party observer would be able to determine nothing about the subject or the signature directly, but would be able to infer that the assertion is a `verifiedBy: Signature` because the predicate has a well-known value and therefore a well-known `Digest`, which is therefore correlatable. While this isn't a lot to go on, an attacker would know that the redacted assertion is in fact a `Signature` of the subject.
+In general, a completely redacted assertion (`REDACTED`) inherits the maximum noncorralatability of either its predicate or object. If only the predicate is redacted (`REDACTED: object`) or only the object is redacted (`predicate: REDACTED`), or both are individually redacted but not the assertion as a whole (`REDACTED: REDACTED`), and noncorrelatability is desired, then each element must be analyzed separately.
 
-The same issue *might* be present with the subject, because even though it has been encrypted, an `EncryptedMessage` ciphertext is the same size as the plaintext, and is therefore quasicorrelatable.
+## Opt-In Decorrelation in Secure Components
 
-To hide the most information about what has been redacted from a possible attacker, while still keeping the Merkle tree intact (and hence identity of the various parts, including signatures remaining verifiable) we need to construct the `Envelope` with noncorrelation in mind.
+The `Envelope` type provides the `addSalt()` method that adds a `salt: Data` assertion, where the data is a random number of random bytes.
+
+* For small objects, the number of bytes added will generally be from 8...16.
+* For larger objects the number of bytes added will generally be from 5%...25% of the size of the object.
+
+Code to create a simple envelope:
+
+```swift
+let e1 = Envelope("Alpha")
+    .add(.note, "Beta")
+```
+
+The above in Envelope Notation:
+
+```
+"Alpha" [
+    note: "Beta"
+]
+```
+
+The same content, but with every element salted.
+
+```swift
+let e1 = Envelope(Envelope("Hello").addSalt())
+    .add(Envelope(predicate: .note).addSalt(), Envelope("Beta").addSalt())
+```
+
+```
+{
+    "Alpha" [
+        salt: CBOR
+    ]
+} [
+    note [
+        salt: CBOR
+    ]
+    : "MyNote." [
+        salt: CBOR
+    ]
+]
+"""
+```
+
+Any or all elements of this salted `Envelope` could be redacted with a high degree of noncorrelatability..
