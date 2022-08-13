@@ -86,6 +86,8 @@ extension Subject: EnvelopeFormat {
             return cbor.formatItem
         case .envelope(let envelope):
             return envelope.formatItem
+        case .assertion(predicate: let predicate, object: let object, digest: _):
+            return .list([predicate.formatItem, ": ", object.formatItem])
         case .encrypted(_, _):
             return "EncryptedMessage"
         case .redacted(_):
@@ -96,12 +98,7 @@ extension Subject: EnvelopeFormat {
 
 extension Assertion: EnvelopeFormat {
     var formatItem: EnvelopeFormatItem {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: _):
-            return .list([predicate.formatItem, ": ", object.formatItem])
-        case .redacted(_):
-            return "REDACTED"
-        }
+        envelope.formatItem
     }
 }
 
@@ -119,15 +116,20 @@ extension Envelope: EnvelopeFormat {
             isList = false
         }
 
+        let isAssertion = subject.isAssertion
+
         let assertionsItems = assertions.map { [$0.formatItem] }.sorted()
         let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
         let hasAssertions = !joinedAssertionsItems.isEmpty
         var items: [EnvelopeFormatItem] = []
-        if isList {
+
+        let needsBraces = (isAssertion && hasAssertions) || (!isAssertion && isList)
+
+        if needsBraces {
             items.append(.begin("{"))
         }
         items.append(subjectItem)
-        if isList {
+        if needsBraces {
             if hasAssertions {
                 items.append(.end("} ["))
                 items.append(.begin(""))
@@ -171,8 +173,8 @@ extension EnvelopeFormatItem: CustomStringConvertible {
             return ".item(\(string))"
         case .separator:
             return ".separator"
-        case .list(let array):
-            return ".array(\(array))"
+        case .list(let list):
+            return ".list(\(list))"
         }
     }
 }

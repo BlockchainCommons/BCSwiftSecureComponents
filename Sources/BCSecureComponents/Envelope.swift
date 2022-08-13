@@ -28,6 +28,16 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    init(predicate: Envelope, object: Envelope) {
+        self.init(subject: Subject(predicate: predicate, object: object))
+    }
+    
+    init(predicate: CBOREncodable, object: CBOREncodable) {
+        self.init(predicate: Envelope(predicate), object: Envelope(object))
+    }
+}
+
+public extension Envelope {
     var deepDigests: Set<Digest> {
         var result = subject.deepDigests.union([digest])
         for assertion in assertions {
@@ -107,6 +117,12 @@ public extension Envelope {
 extension Envelope: Equatable {
     public static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
         lhs.digest == rhs.digest
+    }
+}
+
+extension Envelope: Comparable {
+    public static func <(lhs: Envelope, rhs: Envelope) -> Bool {
+        lhs.digest < rhs.digest
     }
 }
 
@@ -461,7 +477,7 @@ public extension Envelope {
             return subject.cbor
         } else {
             var array = [subject.cbor]
-            array.append(contentsOf: assertions.map { $0.untaggedCBOR })
+            array.append(contentsOf: assertions.map { $0.taggedCBOR })
             return CBOR.array(array)
         }
     }
@@ -476,7 +492,7 @@ public extension Envelope {
                 throw CBORError.invalidFormat
             }
             let subject = try Subject(cbor: elements[0])
-            let assertions = try elements.dropFirst().map { try Assertion(untaggedCBOR: $0 ) }
+            let assertions = try elements.dropFirst().map { try Assertion(taggedCBOR: $0 ) }
             self.init(subject: subject, assertions: assertions)
         } else {
             try self.init(subject: Subject(cbor: untaggedCBOR), assertions: [])

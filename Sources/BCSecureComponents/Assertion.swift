@@ -3,42 +3,39 @@ import WolfBase
 import SSKR
 import URKit
 
-public enum Assertion: DigestProvider {
-    case present(predicate: Envelope, object: Envelope, digest: Digest)
-    case redacted(Digest)
+public struct Assertion: DigestProvider {
+    let envelope: Envelope
 }
-
-//public struct Assertion: DigestProvider {
-//    public let predicate: Envelope
-//    public let object: Envelope
-//    public let digest: Digest
-//}
 
 public extension Assertion {
     init(_ predicate: Envelope, _ object: Envelope) {
-        let digest = Digest(predicate.digest + object.digest)
-        self = .present(predicate: predicate, object: object, digest: digest)
+        self.envelope = Envelope(predicate: predicate, object: object)
+    }
+
+    init(_ digest: Digest) {
+        self.envelope = Envelope(digest)
     }
     
-    init(_ digest: Digest) {
-        self = .redacted(digest)
+    init(_ envelope: Envelope) {
+        self.envelope = envelope
     }
 }
 
 public extension Assertion {
     func hasPredicate(_ predicate: Envelope) -> Bool {
-        switch self {
-        case .present(predicate: let myPredicate, object: _, digest: _):
-            return myPredicate == predicate
-        case .redacted(_):
+        guard
+            let myPredicate = try? self.predicate,
+            myPredicate == predicate
+        else {
             return false
         }
+        return true
     }
-    
+
     func hasPredicate(_ predicate: Predicate) -> Bool {
         hasPredicate(Envelope(predicate: predicate))
     }
-    
+
     func hasPredicate(_ predicate: CBOREncodable) -> Bool {
         hasPredicate(Envelope(predicate))
     }
@@ -46,32 +43,27 @@ public extension Assertion {
 
 public extension Assertion {
     var digest: Digest {
-        switch self {
-        case .present(predicate: _, object: _, digest: let digest):
-            return digest
-        case .redacted(let digest):
-            return digest
-        }
+        envelope.digest
     }
-    
+
     var predicate: Envelope {
         get throws {
-            switch self {
-            case .present(predicate: let predicate, object: _, digest: _):
+            switch envelope.subject {
+            case .assertion(predicate: let predicate, object: _, digest: _):
                 return predicate
-            case .redacted(_):
-                throw EnvelopeError.redacted
+            default:
+                throw EnvelopeError.invalidFormat
             }
         }
     }
-    
+
     var object: Envelope {
         get throws {
-            switch self {
-            case .present(predicate: _, object: let object, digest: _):
+            switch envelope.subject {
+            case .assertion(predicate: _, object: let object, digest: _):
                 return object
-            case .redacted(_):
-                throw EnvelopeError.redacted
+            default:
+                throw EnvelopeError.invalidFormat
             }
         }
     }
@@ -79,46 +71,31 @@ public extension Assertion {
 
 public extension Assertion {
     var deepDigests: Set<Digest> {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: let digest):
-            return predicate.deepDigests.union(object.deepDigests).union([digest])
-        case .redacted(let digest):
-            return [digest]
-        }
-        
+        envelope.deepDigests
     }
-    
+
     var shallowDigests: Set<Digest> {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: let digest):
-            return         [
+        switch envelope.subject {
+        case .assertion(predicate: let predicate, object: let object, digest: let digest):
+            return [
+                envelope.digest,
                 digest,
                 predicate.digest, predicate.subject.digest,
                 object.digest, object.subject.digest
             ]
-        case .redacted(let digest):
-            return [digest]
+        default:
+            return envelope.shallowDigests
         }
     }
 }
 
 public extension Assertion {
     func assertions(predicate: CBOREncodable) -> [Assertion] {
-        switch self {
-        case .present(predicate: _, object: let object, digest: _):
-            return object.assertions(predicate: predicate)
-        case .redacted(_):
-            return []
-        }
+        envelope.assertions(predicate: predicate)
     }
-    
+
     func assertion(predicate: CBOREncodable) throws -> Assertion {
-        switch self {
-        case .present(predicate: _, object: let object, digest: _):
-            return try object.assertion(predicate: predicate)
-        case .redacted(_):
-            throw EnvelopeError.redacted
-        }
+        try envelope.assertion(predicate: predicate)
     }
 }
 
@@ -142,20 +119,20 @@ public extension Assertion {
         }
         return Assertion(Envelope(predicate: .verifiedBy), object)
     }
-    
+
     static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Assertion {
         let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient, testKeyMaterial: testKeyMaterial, testNonce: testNonce)
         return Assertion(Envelope(predicate: .hasRecipient), Envelope(sealedMessage))
     }
-    
+
     static func sskrShare(_ share: SSKRShare) -> Assertion {
         Assertion(Envelope(predicate: .sskrShare), Envelope(share))
     }
-    
+
     static func isA(_ object: Envelope) -> Assertion {
         Assertion(Envelope(predicate: .isA), object)
     }
-    
+
     static func id(_ id: SCID) -> Assertion {
         Assertion(Envelope(predicate: .id), Envelope(id))
     }
@@ -163,65 +140,15 @@ public extension Assertion {
 
 public extension Assertion {
     func redact() -> Assertion {
-        switch self {
-        case .present(predicate: _, object: _, digest: let digest):
-            return .redacted(digest)
-        case .redacted(_):
-            return self
-        }
+        Assertion(envelope.redact())
     }
-    
+
     func redact(items: Set<Digest>) -> Assertion {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: let digest):
-            if items.contains(digest) {
-                return redact()
-            }
-            let result = Assertion(predicate.redact(items: items), object.redact(items: items))
-            assert(result.digest == digest)
-            return result
-        case .redacted(_):
-            return self
-        }
+        Assertion(envelope.redact(items: items))
     }
-    
+
     func redact(revealing items: Set<Digest>) -> Assertion {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: let digest):
-            if !items.contains(digest) {
-                return redact()
-            }
-            let result = Assertion(predicate.redact(revealing: items), object.redact(revealing: items))
-            assert(result.digest == digest)
-            return result
-        case .redacted(_):
-            return self
-        }
-    }
-}
-
-public extension Assertion {
-    var untaggedCBOR: CBOR {
-        switch self {
-        case .present(predicate: let predicate, object: let object, digest: _):
-            return [predicate.taggedCBOR, object.taggedCBOR]
-        case .redacted(let digest):
-            return digest.taggedCBOR
-        }
-    }
-    
-    init(untaggedCBOR: CBOR) throws {
-        guard
-            case let CBOR.array(elements) = untaggedCBOR,
-            elements.count == 2
-        else {
-            throw CBORError.invalidFormat
-        }
-
-        let predicate = try Envelope(taggedCBOR: elements[0])
-        let object = try Envelope(taggedCBOR: elements[1])
-
-        self.init(predicate, object)
+        Assertion(envelope.redact(revealing: items))
     }
 }
 
@@ -229,8 +156,22 @@ public extension Assertion {
     static func parameter(_ param: FunctionParameter, value: CBOREncodable) -> Assertion {
         Assertion(Envelope(param.cbor), Envelope(value))
     }
-    
+
     static func parameter(_ name: String, value: CBOREncodable) -> Assertion {
         Assertion(Envelope(FunctionParameter.tagged(name: name)), Envelope(value))
+    }
+}
+
+public extension Assertion {
+    var taggedCBOR: CBOR {
+        envelope.taggedCBOR
+    }
+    
+    init(taggedCBOR: CBOR) throws {
+        let envelope = try Envelope(taggedCBOR: taggedCBOR)
+        guard case .assertion = envelope.subject else {
+            throw EnvelopeError.invalidFormat
+        }
+        self.envelope = envelope
     }
 }

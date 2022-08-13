@@ -1,8 +1,168 @@
 import XCTest
-import BCSecureComponents
+@testable import BCSecureComponents
 import WolfBase
 
 class EnvelopeTests: XCTestCase {
+    func testPredicateEnclosures() throws {
+        let alice = Envelope("Alice")
+        let knows = Envelope("knows")
+        let bob = Envelope("Bob")
+        
+        let a = Envelope("A")
+        let b = Envelope("B")
+
+        let knowsBob = Envelope(predicate: knows, object: bob)
+        XCTAssertEqual(knowsBob.format,
+            """
+            "knows": "Bob"
+            """
+        )
+        
+        let ab = Envelope(predicate: a, object: b)
+        XCTAssertEqual(ab.format,
+            """
+            "A": "B"
+            """
+        )
+
+        let knowsABBob = Envelope(predicate: knows.add(Assertion(ab)), object: bob)
+        XCTAssertEqual(knowsABBob.format,
+            """
+            "knows" [
+                "A": "B"
+            ]
+            : "Bob"
+            """
+        )
+
+        let knowsBobAB = Envelope(predicate: knows, object: bob.add(Assertion(ab)))
+        XCTAssertEqual(knowsBobAB.format,
+            """
+            "knows": "Bob" [
+                "A": "B"
+            ]
+            """
+        )
+        
+        let knowsBobEncloseAB = knowsBob
+            .add(Assertion(ab))
+        XCTAssertEqual(knowsBobEncloseAB.format,
+            """
+            {
+                "knows": "Bob"
+            } [
+                "A": "B"
+            ]
+            """
+        )
+
+        let aliceKnowsBob = alice
+            .add(Assertion(knowsBob))
+        XCTAssertEqual(aliceKnowsBob.format,
+            """
+            "Alice" [
+                "knows": "Bob"
+            ]
+            """
+        )
+
+        let aliceABKnowsBob = aliceKnowsBob
+            .add(Assertion(ab))
+        XCTAssertEqual(aliceABKnowsBob.format,
+            """
+            "Alice" [
+                "A": "B"
+                "knows": "Bob"
+            ]
+            """
+        )
+
+        
+
+        let aliceKnowsABBob = alice
+            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob)))
+        XCTAssertEqual(aliceKnowsABBob.format,
+            """
+            "Alice" [
+                "knows" [
+                    "A": "B"
+                ]
+                : "Bob"
+            ]
+            """
+        )
+
+        let aliceKnowsBobAB = alice
+            .add(Assertion(Envelope(predicate: knows, object: bob.add(Assertion(ab)))))
+        XCTAssertEqual(aliceKnowsBobAB.format,
+            """
+            "Alice" [
+                "knows": "Bob" [
+                    "A": "B"
+                ]
+            ]
+            """
+        )
+
+        let aliceKnowsABBobAB = alice
+            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))))
+        XCTAssertEqual(aliceKnowsABBobAB.format,
+            """
+            "Alice" [
+                "knows" [
+                    "A": "B"
+                ]
+                : "Bob" [
+                    "A": "B"
+                ]
+            ]
+            """
+        )
+
+        let aliceABKnowsABBobAB = alice
+            .add(Assertion(ab))
+            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))))
+        print(aliceABKnowsABBobAB.format)
+        XCTAssertEqual(aliceABKnowsABBobAB.format,
+            """
+            "Alice" [
+                "A": "B"
+                "knows" [
+                    "A": "B"
+                ]
+                : "Bob" [
+                    "A": "B"
+                ]
+            ]
+            """
+        )
+
+        let aliceABKnowsABBobABEncloseAB = alice
+            .add(Assertion(ab))
+            .add(
+                Assertion(
+                    Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))
+                        .add(Assertion(ab)))
+            )
+        XCTAssertEqual(aliceABKnowsABBobABEncloseAB.format,
+            """
+            "Alice" [
+                {
+                    "knows" [
+                        "A": "B"
+                    ]
+                    : "Bob" [
+                        "A": "B"
+                    ]
+                } [
+                    "A": "B"
+                ]
+                "A": "B"
+            ]
+            """
+        )
+    }
+
     func testPredicate() {
         let envelope = Envelope(predicate: .verifiedBy)
         XCTAssertEqual(envelope.format, "verifiedBy")
@@ -963,9 +1123,10 @@ class EnvelopeTests: XCTestCase {
         revealSet.insert(holder.shallowDigests)
         
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
-        try revealSet.insert(holder.assertion(predicate: "givenName").deepDigests)
-        try revealSet.insert(holder.assertion(predicate: "familyName").deepDigests)
-        try revealSet.insert(holder.assertion(predicate: "image").deepDigests)
+        let holderObject = try holder.object
+        try revealSet.insert(holderObject.assertion(predicate: "givenName").deepDigests)
+        try revealSet.insert(holderObject.assertion(predicate: "familyName").deepDigests)
+        try revealSet.insert(holderObject.assertion(predicate: "image").deepDigests)
         
         // Perform the redaction
         let redactedCredential = top.redact(revealing: revealSet)
@@ -1010,7 +1171,7 @@ class EnvelopeTests: XCTestCase {
             ]
         ]
         """
-        print(redactedCredential.format)
+//        print(redactedCredential.format)
         XCTAssertEqual(redactedCredential.format, expectedRedactedFormat)
     }
     
@@ -1090,7 +1251,7 @@ class EnvelopeTests: XCTestCase {
 
         let line2ExpectedFormat =
         """
-        Digest(6eda6278399769c825633f19c1e9591814f959a8781e459fd8531900d14b3d43) [
+        Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
             "priceEach": "4.99"
             "product": SCID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
             "quantity": 3
@@ -1112,14 +1273,14 @@ class EnvelopeTests: XCTestCase {
         let purchaseOrderProjectionExpectedFormat =
         """
         SCID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [
-            "lineItem": Digest(6eda6278399769c825633f19c1e9591814f959a8781e459fd8531900d14b3d43) [
+            "lineItem": Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
                 "priceEach": "10.99"
                 "product": SCID(5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1)
                 "quantity": 4
                 hasName: "Quality Widget"
                 isA: "PurchaseOrderLineItem"
             ]
-            "lineItem": Digest(6eda6278399769c825633f19c1e9591814f959a8781e459fd8531900d14b3d43) [
+            "lineItem": Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
                 "priceEach": "4.99"
                 "product": SCID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
                 "quantity": 3

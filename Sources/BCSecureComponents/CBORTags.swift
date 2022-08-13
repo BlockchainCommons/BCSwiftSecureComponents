@@ -70,6 +70,7 @@ extension CBOR.Tag {
 extension CBOR.Tag {
     public static let predicate = CBOR.Tag(59, "predicate")
     public static let plaintext = CBOR.Tag(60, "plaintext")
+    public static let assertion = CBOR.Tag(63, "plaintext")
     public static let signature = CBOR.Tag(61, "signature")
     public static let agreementPublicKey = CBOR.Tag(62, "agreement-public-key")
     
