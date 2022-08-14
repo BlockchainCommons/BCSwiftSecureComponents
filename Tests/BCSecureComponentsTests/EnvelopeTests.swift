@@ -872,10 +872,10 @@ class EnvelopeTests: XCTestCase {
     }
 
     func testComplexMetadata() throws {
-        // Assertions made about an SCID are considered part of a distributed set. Which
-        // assertions are returned depends on who resolves the SCID and when it is
-        // resolved. In other words, the referent of an SCID is mutable.
-        let author = Envelope(SCID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
+        // Assertions made about an CID are considered part of a distributed set. Which
+        // assertions are returned depends on who resolves the CID and when it is
+        // resolved. In other words, the referent of a CID is mutable.
+        let author = Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
             .add(.dereferenceVia, "LibraryOfCongress")
             .add(.hasName, "Ayn Rand")
         
@@ -887,7 +887,7 @@ class EnvelopeTests: XCTestCase {
         let name_es = Envelope("La rebelión de Atlas")
             .add(.language, "es")
         
-        let work = Envelope(SCID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
+        let work = Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
             .add(.isA, "novel")
             .add("isbn", "9780451191144")
             .add("author", author)
@@ -907,8 +907,8 @@ class EnvelopeTests: XCTestCase {
         """
         Digest(e8aa201db4044168d05b77d7b36648fb7a97db2d3e72f5babba9817911a52809) [
             "format": "EPUB"
-            "work": SCID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
-                "author": SCID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
+            "work": CID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
+                "author": CID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
                     dereferenceVia: "LibraryOfCongress"
                     hasName: "Ayn Rand"
                 ]
@@ -929,8 +929,8 @@ class EnvelopeTests: XCTestCase {
     }
     
     func testIdentifier() throws {
-        // An analogue of a DID document, which identifies a self-sovereign entity. The
-        // document itself can be referred to by its SCID, while the signed document
+        // An analogue of a DID document, which identifies an entity. The
+        // document itself can be referred to by its CID, while the signed document
         // can be referred to by its digest.
         
         let aliceUnsignedDocument = Envelope(aliceIdentifier)
@@ -944,8 +944,8 @@ class EnvelopeTests: XCTestCase {
         let expectedFormat =
         """
         {
-            SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                controller: SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+            CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+                controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
                 publicKeys: PublicKeyBase
             ]
         } [
@@ -970,17 +970,17 @@ class EnvelopeTests: XCTestCase {
         // ➡️ ☁️ ➡️
 
         // A registrar checks the signature on Alice's submitted identifier document,
-        // performs any other necessary validity checks, and then extracts her SCID from
+        // performs any other necessary validity checks, and then extracts her CID from
         // it.
-        let aliceSCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
+        let aliceCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
             .extract()
             // other validity checks here
-            .extract(SCID.self)
+            .extract(CID.self)
         
-        // The registrar creates its own registration document using Alice's SCID as the
+        // The registrar creates its own registration document using Alice's CID as the
         // subject, incorporating Alice's signed document, and adding its own signature.
-        let aliceURL = URL(string: "https://exampleledger.com/scid/\(aliceSCID.data.hex)")!
-        let aliceRegistration = Envelope(aliceSCID)
+        let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
+        let aliceRegistration = Envelope(aliceCID)
             .add(.entity, aliceSignedDocument)
             .add(.dereferenceVia, aliceURL)
             .enclose()
@@ -989,11 +989,11 @@ class EnvelopeTests: XCTestCase {
         let expectedRegistrationFormat =
         """
         {
-            SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                dereferenceVia: URI(https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+            CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+                dereferenceVia: URI(https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
                 entity: {
-                    SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                        controller: SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+                    CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+                        controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
                         publicKeys: PublicKeyBase
                     ]
                 } [
@@ -1016,7 +1016,7 @@ class EnvelopeTests: XCTestCase {
             .validateSignature(from: exampleLedgerPublicKeys)
             .extract()
             .extract(URL.self, predicate: .dereferenceVia)
-        XCTAssertEqual(aliceURI†, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+        XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
         // identifier. Bob sends a challenge:
@@ -1046,7 +1046,7 @@ class EnvelopeTests: XCTestCase {
                     note: "Challenge to Alice from Bob."
                 ]
             } [
-                dereferenceVia: URI(https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+                dereferenceVia: URI(https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
             ]
         } [
             verifiedBy: Signature [
@@ -1066,7 +1066,7 @@ class EnvelopeTests: XCTestCase {
         let responseURI = try aliceChallengeResponse
             .extract()
             .extract(URL.self, predicate: .dereferenceVia)
-        XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+        XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
         // checks ExampleLedgers's signature. Bob trusts ExampleLedger's validation of
@@ -1085,7 +1085,7 @@ class EnvelopeTests: XCTestCase {
     
     func testCredential() throws {
         // John Smith's identifier
-        let johnSmithIdentifier = SCID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
+        let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 
         // A photo of John Smith
         let johnSmithImage = Envelope(Digest("John Smith smiling"))
@@ -1093,12 +1093,12 @@ class EnvelopeTests: XCTestCase {
             .add(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
         
         // John Smith's Permanent Resident Card issued by the State of Example
-        let johnSmithResidentCard = try Envelope(SCID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
+        let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
             .add(.isA, "credential")
             .add("dateIssued", Date(iso8601: "2022-04-27"))
             .add(.issuer, Envelope(stateIdentifier)
                 .add(.note, "Issued by the State of Example")
-                .add(.dereferenceVia, URL(string: "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
+                .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
             )
             .add(.holder, Envelope(johnSmithIdentifier)
                 .add(.isA, "Person")
@@ -1123,9 +1123,9 @@ class EnvelopeTests: XCTestCase {
         let expectedFormat =
         """
         {
-            SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+            CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
                 "dateIssued": 2022-04-27
-                holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+                holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
                     "birthCountry": "bs" [
                         note: "The Bahamas"
                     ]
@@ -1144,8 +1144,8 @@ class EnvelopeTests: XCTestCase {
                     isA: "Person"
                 ]
                 isA: "credential"
-                issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-                    dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+                issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+                    dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
                     note: "Issued by the State of Example"
                 ]
                 note: "The State of Example recognizes JOHN SMITH as a Permanent Resident."
@@ -1180,7 +1180,7 @@ class EnvelopeTests: XCTestCase {
         // Reveal everything about the state's signature on the card
         try revealSet.insert(top.assertion(predicate: .verifiedBy).deepDigests)
 
-        // Reveal the top level subject of the card. This is John Smith's SCID.
+        // Reveal the top level subject of the card. This is John Smith's CID.
         let topContent = top.subject.envelope!
         revealSet.insert(topContent.shallowDigests)
 
@@ -1210,10 +1210,10 @@ class EnvelopeTests: XCTestCase {
         let expectedRedactedFormat =
         """
         {
-            SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+            CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
                 REDACTED
                 REDACTED
-                holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+                holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
                     REDACTED
                     REDACTED
                     REDACTED
@@ -1230,8 +1230,8 @@ class EnvelopeTests: XCTestCase {
                     ]
                 ]
                 isA: "credential"
-                issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-                    dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+                issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+                    dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
                     note: "Issued by the State of Example"
                 ]
             ]
@@ -1250,31 +1250,31 @@ class EnvelopeTests: XCTestCase {
         // Declare Actors
         //
 
-//        let johnSmithIdentifier = SCID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
+//        let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 //        let johnSmithPrivateKeys = PrivateKeyBase(Seed(data: ‡"3e9271f46cdb85a3b584e7220b976918")!)
 //        let johnSmithPublicKeys = johnSmithPrivateKeys.publicKeys
 //        let johnSmithDocument = Envelope(johnSmithIdentifier)
 //            .add(.hasName, "John Smith")
-//            .add(.dereferenceVia, URL(string: "https://exampleledger.com/scid/78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!)
+//            .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!)
 
 //        let acmeCorpPrivateKeys = PrivateKeyBase(Seed(data: ‡"3e9271f46cdb85a3b584e7220b976918")!)
 //        let acmeCorpPublicKeys = acmeCorpPrivateKeys.publicKeys
-        let acmeCorpIdentifier = SCID(‡"361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!
+        let acmeCorpIdentifier = CID(‡"361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!
         let acmeCorpDocument = Envelope(acmeCorpIdentifier)
             .add(.hasName, "Acme Corp.")
-            .add(.dereferenceVia, URL(string: "https://exampleledger.com/scid/361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!)
+            .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!)
         
         //
         // Declare Products
         //
 
-        let qualityProduct = Envelope(SCID(‡"5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1")!)
+        let qualityProduct = Envelope(CID(‡"5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1")!)
             .add(.isA, "Product")
             .add(.hasName, "Quality Widget")
             .add("seller", acmeCorpDocument)
             .add("priceEach", "10.99")
 
-        let cheapProduct = Envelope(SCID(‡"ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64")!)
+        let cheapProduct = Envelope(CID(‡"ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64")!)
             .add(.isA, "Product")
             .add(.hasName, "Cheap Widget")
             .add("seller", acmeCorpDocument)
@@ -1287,7 +1287,7 @@ class EnvelopeTests: XCTestCase {
         // Since the line items of a PurchaseOrder may be mutated before being finalized,
         // they are not declared as part of the creation of the PurchaseOrder itself.
         
-        let purchaseOrder = Envelope(SCID(‡"1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625")!)
+        let purchaseOrder = Envelope(CID(‡"1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625")!)
             .add(.isA, "PurchaseOrder")
             .add(.hasName, "PO 123")
         
@@ -1299,21 +1299,21 @@ class EnvelopeTests: XCTestCase {
         // order object. This forms a successor -> predecessor relationship to the purchase
         // order.
         //
-        // A line item's product is the SCID of the product. The product document found by
-        // referencing the product's SCID may change over time, for instance the price may
+        // A line item's product is the CID of the product. The product document found by
+        // referencing the product's CID may change over time, for instance the price may
         // be updated. The line item therefore captures the current price from the product
         // document in its priceEach assertion.
         
         let line1 = try Envelope(purchaseOrder.digest)
             .add(.isA, "PurchaseOrderLineItem")
-            .add("product", qualityProduct.extract(SCID.self))
+            .add("product", qualityProduct.extract(CID.self))
             .add(.hasName, qualityProduct.extract(predicate: .hasName))
             .add("priceEach", qualityProduct.extract(predicate: "priceEach"))
             .add("quantity", 4)
 
         let line2 = try Envelope(purchaseOrder.digest)
             .add(.isA, "PurchaseOrderLineItem")
-            .add("product", cheapProduct.extract(SCID.self))
+            .add("product", cheapProduct.extract(CID.self))
             .add(.hasName, cheapProduct.extract(predicate: .hasName))
             .add("priceEach", cheapProduct.extract(predicate: "priceEach"))
             .add("quantity", 3)
@@ -1322,7 +1322,7 @@ class EnvelopeTests: XCTestCase {
         """
         Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
             "priceEach": "4.99"
-            "product": SCID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
+            "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
             "quantity": 3
             hasName: "Cheap Widget"
             isA: "PurchaseOrderLineItem"
@@ -1341,17 +1341,17 @@ class EnvelopeTests: XCTestCase {
         
         let purchaseOrderProjectionExpectedFormat =
         """
-        SCID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [
+        CID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [
             "lineItem": Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
                 "priceEach": "10.99"
-                "product": SCID(5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1)
+                "product": CID(5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1)
                 "quantity": 4
                 hasName: "Quality Widget"
                 isA: "PurchaseOrderLineItem"
             ]
             "lineItem": Digest(897379666d0cfbdb6db80c47ee4014a8b40bcaf7d8787d88d47e085ba3acc04e) [
                 "priceEach": "4.99"
-                "product": SCID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
+                "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
                 "quantity": 3
                 hasName: "Cheap Widget"
                 isA: "PurchaseOrderLineItem"

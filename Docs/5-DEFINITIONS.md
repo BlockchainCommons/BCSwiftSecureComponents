@@ -125,24 +125,24 @@ object = envelope
 
 ---
 
-## SCID
+## CID
 
-A Self-Certifying Identifier (SCID) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `SCID` or when. In other words, the referent of a `SCID` may be considered mutabled.
+A Common Identifier (CID) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `CID` or when. In other words, the referent of a `CID` may be considered mutabled.
 
-### SCID: Swift Defintion
+### CID: Swift Defintion
 
 ```swift
-struct SCID {
+struct CID {
     let data: Data
 }
 ```
 
-### SCID: CDDL
+### CID: CDDL
 
 ```
-scid = #6.58(scid-data)
+cid = #6.58(cid-data)
 
-scid-data = bytes .size 32
+cid-data = bytes .size 32
 ```
 
 ---

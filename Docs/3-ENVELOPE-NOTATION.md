@@ -235,8 +235,8 @@ This structure uses the `dereferenceVia` predicate to indicate that the full boo
 ```
 Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
     "format": "EPUB"
-    "work": SCID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
-        "author": SCID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
+    "work": CID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
+        "author": CID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
             dereferenceVia: "LibraryOfCongress"
             hasName: "Ayn Rand"
         ]
@@ -258,13 +258,13 @@ Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
 
 ## Verifiable Credential
 
-A government wishes to issue a verifiable credential for permanent residency to an individual using a Self-Certifying Identifier (SCID) provided by that person.
+A government wishes to issue a verifiable credential for permanent residency to an individual using a Common Identifier (CID) provided by that person.
 
 ```
 {
-    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
         "dateIssued": 2022-04-27
-        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
             "birthCountry": "bs" [
                 note: "The Bahamas"
             ]
@@ -283,8 +283,8 @@ A government wishes to issue a verifiable credential for permanent residency to 
             isA: "Person"
         ]
         isA: "credential"
-        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]
         note: "The State of Example recognizes JOHN SMITH as a Permanent Resident."
@@ -306,10 +306,10 @@ Redaction is performed by building a set of `Digest`s that will be revealed. All
 
 ```
 {
-    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
         REDACTED: REDACTED
         REDACTED: REDACTED
-        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
             "familyName": "SMITH"
             "givenName": "JOHN"
             "image": Digest(4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54) [
@@ -326,8 +326,8 @@ Redaction is performed by building a set of `Digest`s that will be revealed. All
             REDACTED: REDACTED
         ]
         isA: "credential"
-        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]
     ]
@@ -348,7 +348,7 @@ Envelope Notation compactly describes the potentially complex semantic structure
 |32|`URI`|
 |49|`Envelope`|
 |56|`Digest`|
-|58|`SCID`|
+|58|`CID`|
 |59|`Predicate`|
 |60|`.leaf`|
 |61|`Signature`|
@@ -574,7 +574,7 @@ Integers below tagged 59 are well-known predicates:
                         49(
                            60(
                               32(
-                                 "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                                 "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
                               )
                            )
                         )

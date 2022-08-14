@@ -133,7 +133,7 @@ Because hashing a concatenation of items is non-commutative, the order of the el
 
 Envelopes can be be in several forms, for any of these forms, the same digest is present for the same binary object:
 
-* Present locally or referenced by SCID or Digest.
+* Present locally or referenced by CID or Digest.
 * Unencrypted or encrypted.
 * Unredacted or redacted.
 
@@ -141,15 +141,15 @@ Thus the `Digest` of an `Envelope` identifies the `subject` and its assertions a
 
 This architecture supports selective disclosure of contents of nested `Envelope`s by revealing only the minimal objects necessary to traverse to a particular nesting path, and having done so, calculating the hashes back to the root allows verification that the correct and included contents were disclosed. On a structure where only a minimal number of fields have been revealed, a signature can still be validated.
 
-## SCID
+## CID
 
-This proposal uses a `SCID` (Self-Certifying Identifier) type as an analogue for a [DID (Decentralized Identifier)](https://www.w3.org/TR/did-core). Both `SCID` and `Digest` may be dereferenceable through some form of distributed ledger or registry. The main difference is that the dereferenced content of a `SCID` may differ depending on what system dereferenced it or when it was dereferenced (in other words, it may be viewed as mutable), while a `Digest` always dereferences to a unique, immutable object.
+This proposal uses a `CID` (Common Identifier) type as an analogue for a [DID (Decentralized Identifier)](https://www.w3.org/TR/did-core). Both `CID` and `Digest` may be dereferenceable through some form of distributed ledger or registry. The main difference is that the dereferenced content of a `CID` may differ depending on what system dereferenced it or when it was dereferenced (in other words, it may be viewed as mutable), while a `Digest` always dereferences to a unique, immutable object.
 
-Put another way, a `SCID` resolves to a *projection* of a current view of an object, while a `Digest` resolves only to a specific immutable object.
+Put another way, a `CID` resolves to a *projection* of a current view of an object, while a `Digest` resolves only to a specific immutable object.
 
 ## References
 
-In the [DID spec](https://www.w3.org/TR/did-core/), a given DID URI is tied to a single specific method for resolving it. However, there are many cases where one may want a resource (possibly a DID document-like object) or third-party assertions about such a resource to persist in a multiplicity of places, retrievable by a multiplicity of methods. Therefore, in this proposal, one or more methods for dereferencing a `SCID` or `Digest` (analogous to DID methods) may be added to an `Envelope` as assertions with the `dereferenceVia` predicate. This allows the referent to potentially exist in many places (including local caches), with the assertions providing guidance to authoritative or recommended methods for dereferencing them.
+In the [DID spec](https://www.w3.org/TR/did-core/), a given DID URI is tied to a single specific method for resolving it. However, there are many cases where one may want a resource (possibly a DID document-like object) or third-party assertions about such a resource to persist in a multiplicity of places, retrievable by a multiplicity of methods. Therefore, in this proposal, one or more methods for dereferencing a `CID` or `Digest` (analogous to DID methods) may be added to an `Envelope` as assertions with the `dereferenceVia` predicate. This allows the referent to potentially exist in many places (including local caches), with the assertions providing guidance to authoritative or recommended methods for dereferencing them.
 
 ## Signatures
 

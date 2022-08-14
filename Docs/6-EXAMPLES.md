@@ -30,28 +30,28 @@ These examples are actual, running unit tests in the [BCSwiftFoundation package]
 
 ## Common structures used by the examples
 
-The unit tests define a common plaintext, and `SCID`s and `PrivateKeyBase` objects for *Alice*, *Bob*, *Carol*, *ExampleLedger*, and *The State of Example*, each with a corresponding `PublicKeyBase`.
+The unit tests define a common plaintext, and `CID`s and `PrivateKeyBase` objects for *Alice*, *Bob*, *Carol*, *ExampleLedger*, and *The State of Example*, each with a corresponding `PublicKeyBase`.
 
 ```swift
 fileprivate let plaintext = "Hello."
 
-fileprivate let aliceIdentifier = SCID(‡"d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")!
+fileprivate let aliceIdentifier = CID(‡"d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")!
 fileprivate let alicePrivateKeys = PrivateKeyBase(Seed(data: ‡"82f32c855d3d542256180810797e0073")!)
 fileprivate let alicePublicKeys = alicePrivateKeys.publicKeys
 
-fileprivate let bobIdentifier = SCID(‡"24b5b23d8aed462c5a3c02cc4972315eb71a6c5fdfc0063de28603f467ae499c")!
+fileprivate let bobIdentifier = CID(‡"24b5b23d8aed462c5a3c02cc4972315eb71a6c5fdfc0063de28603f467ae499c")!
 fileprivate let bobPrivateKeys = PrivateKeyBase(Seed(data: ‡"187a5973c64d359c836eba466a44db7b")!)
 fileprivate let bobPublicKeys = bobPrivateKeys.publicKeys
 
-fileprivate let carolIdentifier = SCID(‡"06c777262faedf49a443277474c1c08531efcff4c58e9cb3b04f7fc1c0e6d60d")!
+fileprivate let carolIdentifier = CID(‡"06c777262faedf49a443277474c1c08531efcff4c58e9cb3b04f7fc1c0e6d60d")!
 fileprivate let carolPrivateKeys = PrivateKeyBase(Seed(data: ‡"8574afab18e229651c1be8f76ffee523")!)
 fileprivate let carolPublicKeys = carolPrivateKeys.publicKeys
 
-fileprivate let exampleLedgerIdentifier = SCID(‡"0eda5ce79a2b5619e387f490861a2e7211559029b3b369cf98fb749bd3ba9a5d")!
+fileprivate let exampleLedgerIdentifier = CID(‡"0eda5ce79a2b5619e387f490861a2e7211559029b3b369cf98fb749bd3ba9a5d")!
 fileprivate let exampleLedgerPrivateKeys = PrivateKeyBase(Seed(data: ‡"d6737ab34e4e8bb05b6ac035f9fba81a")!)
 fileprivate let exampleLedgerPublicKeys = exampleLedgerPrivateKeys.publicKeys
 
-fileprivate let stateIdentifier = SCID(‡"04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!
+fileprivate let stateIdentifier = CID(‡"04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!
 fileprivate let statePrivateKeys = PrivateKeyBase(Seed(data: ‡"3e9271f46cdb85a3b584e7220b976918")!)
 fileprivate let statePublicKeys = statePrivateKeys.publicKeys
 ```
@@ -402,10 +402,10 @@ EncryptedMessage [
 ## Example 10: Complex Metadata
 
 ```swift
-// Assertions made about an SCID are considered part of a distributed set. Which
-// assertions are returned depends on who resolves the SCID and when it is
-// resolved. In other words, the referent of an SCID is mutable.
-let author = Envelope(SCID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
+// Assertions made about an CID are considered part of a distributed set. Which
+// assertions are returned depends on who resolves the CID and when it is
+// resolved. In other words, the referent of an CID is mutable.
+let author = Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
     .add(.dereferenceVia, "LibraryOfCongress")
     .add(.hasName, "Ayn Rand")
 
@@ -417,7 +417,7 @@ let name_en = Envelope("Atlas Shrugged")
 let name_es = Envelope("La rebelión de Atlas")
     .add(.language, "es")
 
-let work = Envelope(SCID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
+let work = Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
     .add(.isA, "novel")
     .add("isbn", "9780451191144")
     .add("author", author)
@@ -440,8 +440,8 @@ let bookMetadata = Envelope(Digest(bookData))
 ```
 Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
     "format": "EPUB"
-    "work": SCID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
-        "author": SCID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
+    "work": CID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
+        "author": CID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
             dereferenceVia: "LibraryOfCongress"
             hasName: "Ayn Rand"
         ]
@@ -459,9 +459,9 @@ Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
 ]
 ```
 
-## Example 11: Self-Certifying Identifier
+## Example 11: Common Identifier
 
-An analogue of a DID document, which identifies a self-sovereign entity. The document itself can be referred to by its SCID, while the signed document can be referred to by its digest.
+An analogue of a DID document, which identifies an entity. The document itself can be referred to by its CID, while the signed document can be referred to by its digest.
 
 ```swift
 let aliceUnsignedDocument = Envelope(aliceIdentifier)
@@ -477,8 +477,8 @@ let aliceSignedDocument = aliceUnsignedDocument
 
 ```
 {
-    SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-        controller: SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+    CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+        controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
         publicKeys: PublicKeyBase
     ]
 } [
@@ -502,17 +502,17 @@ XCTAssertNotEqual(aliceSignedDocument, aliceSignedDocument2)
 // ➡️ ☁️ ➡️
 
 // A registrar checks the signature on Alice's submitted identifier document,
-// performs any other necessary validity checks, and then extracts her SCID from
+// performs any other necessary validity checks, and then extracts her CID from
 // it.
-let aliceSCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
+let aliceCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
     .extract()
     // other validity checks here
-    .extract(SCID.self)
+    .extract(CID.self)
 
-// The registrar creates its own registration document using Alice's SCID as the
+// The registrar creates its own registration document using Alice's CID as the
 // subject, incorporating Alice's signed document, and adding its own signature.
-let aliceURL = URL(string: "https://exampleledger.com/scid/\(aliceSCID.data.hex)")!
-let aliceRegistration = Envelope(aliceSCID)
+let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
+let aliceRegistration = Envelope(aliceCID)
     .add(.entity, aliceSignedDocument)
     .add(.dereferenceVia, aliceURL)
     .enclose()
@@ -523,11 +523,11 @@ let aliceRegistration = Envelope(aliceSCID)
 
 ```
 {
-    SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-        dereferenceVia: URI(https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+    CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+        dereferenceVia: URI(https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
         entity: {
-            SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                controller: SCID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+            CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+                controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
                 publicKeys: PublicKeyBase
             ]
         } [
@@ -550,7 +550,7 @@ let aliceURI = try aliceRegistration
     .validateSignature(from: exampleLedgerPublicKeys)
     .extract()
     .extract(predicate: .dereferenceVia, URL.self)
-XCTAssertEqual(aliceURI†, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
 
 // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
 // identifier. Bob sends a challenge:
@@ -584,7 +584,7 @@ let aliceChallengeResponse = aliceChallenge
             note: "Challenge to Alice from Bob."
         ]
     } [
-        dereferenceVia: URI(https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+        dereferenceVia: URI(https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
     ]
 } [
     verifiedBy: Signature [
@@ -604,7 +604,7 @@ XCTAssertEqual(aliceChallenge, responseNonce)
 let responseURI = try aliceChallengeResponse
     .extract()
     .extract(predicate: .dereferenceVia, URL.self)
-XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
 
 // Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
 // checks ExampleLedgers's signature. Bob trusts ExampleLedger's validation of
@@ -625,7 +625,7 @@ try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
 
 ```swift
 // John Smith's identifier
-let johnSmithIdentifier = SCID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
+let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 
 // A photo of John Smith
 let johnSmithImage = Envelope(Digest("John Smith smiling"))
@@ -633,12 +633,12 @@ let johnSmithImage = Envelope(Digest("John Smith smiling"))
     .add(.dereferenceVia, "https://exampleledger.com/digest/4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54")
 
 // John Smith's Permanent Resident Card issued by the State of Example
-let johnSmithResidentCard = try Envelope(SCID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
+let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
     .add(.isA, "credential")
     .add("dateIssued", Date(iso8601: "2022-04-27"))
     .add(.issuer, Envelope(stateIdentifier)
         .add(.note, "Issued by the State of Example")
-        .add(.dereferenceVia, URL(string: "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
+        .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
     )
     .add(.holder, Envelope(johnSmithIdentifier)
         .add(.isA, "Person")
@@ -665,9 +665,9 @@ try johnSmithResidentCard.validateSignature(from: statePublicKeys)
 
 ```
 {
-    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
         "dateIssued": 2022-04-27
-        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
             "birthCountry": "bs" [
                 note: "The Bahamas"
             ]
@@ -686,8 +686,8 @@ try johnSmithResidentCard.validateSignature(from: statePublicKeys)
             isA: "Person"
         ]
         isA: "credential"
-        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]
         note: "The State of Example recognizes JOHN SMITH as a Permanent Resident."
@@ -722,7 +722,7 @@ revealSet.insert(top)
 // Reveal everything about the state's signature on the card
 try revealSet.insert(top.assertion(predicate: .verifiedBy).deepDigests)
 
-// Reveal the top level subject of the card. This is John Smith's SCID.
+// Reveal the top level subject of the card. This is John Smith's CID.
 let topContent = top.subject.envelope!
 revealSet.insert(topContent.shallowDigests)
 
@@ -753,10 +753,10 @@ try redactedCredential.validateSignature(from: statePublicKeys)
 
 ```
 {
-    SCID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
         REDACTED: REDACTED
         REDACTED: REDACTED
-        holder: SCID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
             "familyName": "SMITH"
             "givenName": "JOHN"
             "image": Digest(4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54) [
@@ -773,8 +773,8 @@ try redactedCredential.validateSignature(from: statePublicKeys)
             REDACTED: REDACTED
         ]
         isA: "credential"
-        issuer: SCID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
-            dereferenceVia: URI(https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
+        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+            dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]
     ]

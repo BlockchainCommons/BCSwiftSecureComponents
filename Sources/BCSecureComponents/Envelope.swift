@@ -330,7 +330,7 @@ public extension Envelope {
         Envelope(predicate: .isA, object: object)
     }
 
-    static func id(_ id: SCID) -> Envelope {
+    static func id(_ id: CID) -> Envelope {
         Envelope(predicate: .id, object: id)
     }
 }

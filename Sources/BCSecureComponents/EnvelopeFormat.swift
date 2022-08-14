@@ -12,7 +12,7 @@ extension Digest: EnvelopeFormat {
     }
 }
 
-extension SCID: EnvelopeFormat {
+extension CID: EnvelopeFormat {
     var formatItem: EnvelopeFormatItem {
         return .item(data.hex)
     }
@@ -52,16 +52,16 @@ extension CBOR: EnvelopeFormat {
                 return "SSKRShare"
             case CBOR.tagged(URType.publicKeyBase.tag, _):
                 return "PublicKeyBase"
-            case CBOR.tagged(URType.scid.tag, _):
-                return try .item(SCID(taggedCBOR: self)†)
+            case CBOR.tagged(URType.cid.tag, _):
+                return try .item(CID(taggedCBOR: self)†)
             case CBOR.tagged(.uri, _):
                 return try .item(URL(taggedCBOR: self)†.flanked("URI(", ")"))
             case CBOR.tagged(.uuid, _):
                 return try .item(UUID(taggedCBOR: self)†.flanked("UUID(", ")"))
             case CBOR.tagged(URType.digest.tag, _):
                 return try .item(Digest(taggedCBOR: self)†)
-            case CBOR.tagged(URType.scid.tag, _):
-                return try .item(SCID(taggedCBOR: self)†)
+            case CBOR.tagged(URType.cid.tag, _):
+                return try .item(CID(taggedCBOR: self)†)
             case CBOR.tagged(CBOR.Tag.function, let cbor):
                 return .item(FunctionIdentifier.nameString(for: cbor).flanked("«", "»"))
             case CBOR.tagged(CBOR.Tag.parameter, let cbor):

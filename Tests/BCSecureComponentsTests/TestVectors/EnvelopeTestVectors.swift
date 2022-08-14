@@ -194,19 +194,19 @@ final class EnvelopeTestVectors: XCTestCase {
     }
     
     // John Smith's identifier
-    static let johnSmithIdentifier = SCID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
+    static let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 
     // A photo of John Smith
     static let johnSmithImage = Envelope(Digest("John Smith smiling"))
         .add(.note, "This is an image of John Smith.")
         .add(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
 
-    static let johnSmithResidentCard = try! Envelope(SCID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
+    static let johnSmithResidentCard = try! Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
         .add(.isA, "credential")
         .add("dateIssued", Date(iso8601: "2022-04-27"))
         .add(.issuer, Envelope(stateIdentifier)
             .add(.note, "Issued by the State of Example")
-            .add(.dereferenceVia, URL(string: "https://exampleledger.com/scid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
+            .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
         )
         .add(.holder, Envelope(johnSmithIdentifier)
             .add(.isA, "Person")
@@ -235,7 +235,7 @@ final class EnvelopeTestVectors: XCTestCase {
         // Reveal everything about the state's signature on the card
         try! revealSet.insert(top.assertion(predicate: .verifiedBy).deepDigests)
 
-        // Reveal the top level subject of the card. This is John Smith's SCID.
+        // Reveal the top level subject of the card. This is John Smith's CID.
         let topContent = top.subject.envelope!
         revealSet.insert(topContent.shallowDigests)
 

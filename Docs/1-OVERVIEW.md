@@ -78,7 +78,7 @@ The types defined in the Secure Components suite are designed to be minimal, eas
 * `PublicKeyBase` holds the public keys of an identifiable entity, and can be made public. It is not simply called a "public key" because it holds at least _two_ public keys: one for signing and another for encryption.
 * `SealedMessage` is a message that has been one-way encrypted to a specific `PublicKeyBase`, and is used to implement multi-recipient public key encryption using `Envelope`.
 * `Digest` is a cryptographic hash that uniquely identifies an immutable binary object.
-* `SCID` is a "self-certifying identifier" that uniquely identifies a mutable set of traits.
+* `CID` is a [Common Identifier](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2022-002-cid-common-identifier.md) that uniquely identifies a mutable set of traits.
 
 Many of the types defined herein are assigned CBOR tags for use when encoding these structures. The types in this section may be used embedded within larger structures as tagged CBOR, or as top-level objects in URs. Note that when encoding URs, a top-level CBOR tag is not used, as the UR type provides that information.
 
@@ -91,7 +91,7 @@ Many of the types defined herein are assigned CBOR tags for use when encoding th
 |55|`crypto-sealed`|`SealedMessage`|
 |56|`crypto-digest`|`Digest`|
 |57|`crypto-key`|`SymmetricKey`|
-|58|`crypto-scid`|`SCID`|
+|58|`crypto-cid`|`CID`|
 
 ## Tagged Types
 
