@@ -26,7 +26,7 @@ extension Seed {
     public var untaggedCBOR: CBOR {
         var a: OrderedMap = [1: .data(data)]
 
-        if let creationDate = creationDate {
+        if let creationDate {
             a.append(2, .date(creationDate))
         }
 

@@ -39,7 +39,7 @@ public struct Digest: CustomStringConvertible, Hashable {
     }
     
     public static func validate(_ data: DataProvider, digest: Digest?) -> Bool {
-        guard let digest = digest else {
+        guard let digest else {
             return true
         }
         return digest.validate(data)
@@ -62,7 +62,7 @@ extension Digest {
     }
     
     public static func optionalTaggedCBOR(_ digest: Digest?) -> CBOR {
-        guard let digest = digest else {
+        guard let digest else {
             return CBOR.null
         }
         return digest.taggedCBOR

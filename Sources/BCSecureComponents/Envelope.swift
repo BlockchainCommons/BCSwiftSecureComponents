@@ -127,9 +127,7 @@ public extension Envelope {
     }
     
     func extract() throws -> Envelope {
-        guard
-            let envelope = envelope
-        else {
+        guard let envelope else {
             throw EnvelopeError.invalidFormat
         }
         return envelope
