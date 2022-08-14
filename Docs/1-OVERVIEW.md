@@ -99,8 +99,9 @@ Types that do not define a UR type generally would never be serialized as a top-
 
 |CBOR Tag|Swift Type|
 |---|---|
-|59|`Predicate`|
+|59|`KnownPredicate`|
 |60|`Plaintext`|
+|63|`Assertion`|
 |61|`Signature`|
 |62|`AgreementPublicKey`|
 |700|`Password`|

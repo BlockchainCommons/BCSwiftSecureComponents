@@ -25,7 +25,7 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let knowsABBob = Envelope(predicate: knows.add(Assertion(ab)), object: bob)
+        let knowsABBob = try Envelope(predicate: knows.add(ab), object: bob)
         XCTAssertEqual(knowsABBob.format,
             """
             "knows" [
@@ -35,7 +35,7 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let knowsBobAB = Envelope(predicate: knows, object: bob.add(Assertion(ab)))
+        let knowsBobAB = try Envelope(predicate: knows, object: bob.add(ab))
         XCTAssertEqual(knowsBobAB.format,
             """
             "knows": "Bob" [
@@ -44,8 +44,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
         
-        let knowsBobEncloseAB = knowsBob
-            .add(Assertion(ab))
+        let knowsBobEncloseAB = try knowsBob
+            .add(ab)
         XCTAssertEqual(knowsBobEncloseAB.format,
             """
             {
@@ -56,8 +56,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceKnowsBob = alice
-            .add(Assertion(knowsBob))
+        let aliceKnowsBob = try alice
+            .add(knowsBob)
         XCTAssertEqual(aliceKnowsBob.format,
             """
             "Alice" [
@@ -66,8 +66,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceABKnowsBob = aliceKnowsBob
-            .add(Assertion(ab))
+        let aliceABKnowsBob = try aliceKnowsBob
+            .add(ab)
         XCTAssertEqual(aliceABKnowsBob.format,
             """
             "Alice" [
@@ -77,10 +77,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        
-
-        let aliceKnowsABBob = alice
-            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob)))
+        let aliceKnowsABBob = try alice
+            .add(Envelope(predicate: knows.add(ab), object: bob))
         XCTAssertEqual(aliceKnowsABBob.format,
             """
             "Alice" [
@@ -92,8 +90,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceKnowsBobAB = alice
-            .add(Assertion(Envelope(predicate: knows, object: bob.add(Assertion(ab)))))
+        let aliceKnowsBobAB = try alice
+            .add(Envelope(predicate: knows, object: bob.add(ab)))
         XCTAssertEqual(aliceKnowsBobAB.format,
             """
             "Alice" [
@@ -104,8 +102,8 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceKnowsABBobAB = alice
-            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))))
+        let aliceKnowsABBobAB = try alice
+            .add(Envelope(predicate: knows.add(ab), object: bob.add(ab)))
         XCTAssertEqual(aliceKnowsABBobAB.format,
             """
             "Alice" [
@@ -119,9 +117,9 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceABKnowsABBobAB = alice
-            .add(Assertion(ab))
-            .add(Assertion(Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))))
+        let aliceABKnowsABBobAB = try alice
+            .add(ab)
+            .add(Envelope(predicate: knows.add(ab), object: bob.add(ab)))
         print(aliceABKnowsABBobAB.format)
         XCTAssertEqual(aliceABKnowsABBobAB.format,
             """
@@ -137,12 +135,11 @@ class EnvelopeTests: XCTestCase {
             """
         )
 
-        let aliceABKnowsABBobABEncloseAB = alice
-            .add(Assertion(ab))
+        let aliceABKnowsABBobABEncloseAB = try alice
+            .add(ab)
             .add(
-                Assertion(
-                    Envelope(predicate: knows.add(Assertion(ab)), object: bob.add(Assertion(ab)))
-                        .add(Assertion(ab)))
+                Envelope(predicate: knows.add(ab), object: bob.add(ab))
+                    .add(ab)
             )
         XCTAssertEqual(aliceABKnowsABBobABEncloseAB.format,
             """
@@ -160,6 +157,79 @@ class EnvelopeTests: XCTestCase {
                 "A": "B"
             ]
             """
+        )
+    }
+    
+    func testRedaction() throws {
+        let alice = Envelope("Alice")
+        let knows = Envelope("knows")
+        let bob = Envelope("Bob")
+        
+        let knowsBob = Envelope(predicate: knows, object: bob)
+
+        let aliceKnowsBob = try alice
+            .add(knowsBob)
+        XCTAssertEqual(aliceKnowsBob.format,
+        """
+        "Alice" [
+            "knows": "Bob"
+        ]
+        """
+        )
+        
+        let allRedacted = aliceKnowsBob.redact()
+        XCTAssertEqual(allRedacted.format,
+        """
+        REDACTED
+        """
+        )
+        
+        let aliceRedacted = aliceKnowsBob.redact(items: [aliceKnowsBob.subject.digest])
+        XCTAssertEqual(aliceRedacted.format,
+        """
+        REDACTED [
+            "knows": "Bob"
+        ]
+        """
+        )
+        
+        let assertion = try aliceKnowsBob.assertion(predicate: "knows")
+        let assertionRedacted = aliceKnowsBob.redact(items: [assertion.digest])
+        XCTAssertEqual(assertionRedacted.format,
+        """
+        "Alice" [
+            REDACTED
+        ]
+        """
+        )
+        
+        let predicate = assertion.predicate!
+        let predicateRedacted = aliceKnowsBob.redact(items: [predicate.digest])
+        XCTAssertEqual(predicateRedacted.format,
+        """
+        "Alice" [
+            REDACTED: "Bob"
+        ]
+        """
+        )
+        
+        let object = assertion.object!
+        let objectRedacted = aliceKnowsBob.redact(items: [object.digest])
+        XCTAssertEqual(objectRedacted.format,
+        """
+        "Alice" [
+            "knows": REDACTED
+        ]
+        """
+        )
+        
+        let predicateObjectRedacted = aliceKnowsBob.redact(items: [predicate.digest, object.digest])
+        XCTAssertEqual(predicateObjectRedacted.format,
+        """
+        "Alice" [
+            REDACTED: REDACTED
+        ]
+        """
         )
     }
 
@@ -945,7 +1015,7 @@ class EnvelopeTests: XCTestCase {
         let aliceURI = try aliceRegistration
             .validateSignature(from: exampleLedgerPublicKeys)
             .extract()
-            .extract(predicate: .dereferenceVia, URL.self)
+            .extract(URL.self, predicate: .dereferenceVia)
         XCTAssertEqual(aliceURI†, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
@@ -995,7 +1065,7 @@ class EnvelopeTests: XCTestCase {
         // Bob then extracts Alice's registered URI
         let responseURI = try aliceChallengeResponse
             .extract()
-            .extract(predicate: .dereferenceVia, URL.self)
+            .extract(URL.self, predicate: .dereferenceVia)
         XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/scid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
@@ -1007,7 +1077,7 @@ class EnvelopeTests: XCTestCase {
             .extract()
             .extract(predicate: .entity)
             .extract()
-            .extract(predicate: .publicKeys, PublicKeyBase.self)
+            .extract(PublicKeyBase.self, predicate: .publicKeys)
         
         // Finally, Bob uses Alice's public keys to validate the challenge he sent her.
         try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
@@ -1121,9 +1191,9 @@ class EnvelopeTests: XCTestCase {
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
         let holder = try topContent.assertion(predicate: .holder)
         revealSet.insert(holder.shallowDigests)
-        
+
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
-        let holderObject = try holder.object
+        let holderObject = holder.object!
         try revealSet.insert(holderObject.assertion(predicate: "givenName").deepDigests)
         try revealSet.insert(holderObject.assertion(predicate: "familyName").deepDigests)
         try revealSet.insert(holderObject.assertion(predicate: "image").deepDigests)
@@ -1171,7 +1241,6 @@ class EnvelopeTests: XCTestCase {
             ]
         ]
         """
-//        print(redactedCredential.format)
         XCTAssertEqual(redactedCredential.format, expectedRedactedFormat)
     }
     

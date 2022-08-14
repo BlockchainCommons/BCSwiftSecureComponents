@@ -37,7 +37,7 @@ extension CBOR: EnvelopeFormat {
             case CBOR.tagged(.predicate, let cbor):
                 guard
                     case let CBOR.unsignedInt(rawValue) = cbor,
-                    case let predicate = Predicate(rawValue: rawValue)
+                    case let predicate = KnownPredicate(rawValue: rawValue)
                 else {
                     return "<unknown predicate>"
                 }
@@ -96,11 +96,11 @@ extension Subject: EnvelopeFormat {
     }
 }
 
-extension Assertion: EnvelopeFormat {
-    var formatItem: EnvelopeFormatItem {
-        envelope.formatItem
-    }
-}
+//extension Assertion: EnvelopeFormat {
+//    var formatItem: EnvelopeFormatItem {
+//        envelope.formatItem
+//    }
+//}
 
 extension Envelope: EnvelopeFormat {
     public var format: String {

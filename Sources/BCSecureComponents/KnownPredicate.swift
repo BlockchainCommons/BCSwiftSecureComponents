@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Predicate: UInt64 {
+public enum KnownPredicate: UInt64 {
     case id = 1
     case isA
     case verifiedBy

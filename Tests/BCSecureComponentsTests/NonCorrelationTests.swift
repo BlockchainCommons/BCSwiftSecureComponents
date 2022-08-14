@@ -40,7 +40,7 @@ class NonCorrelationTests: XCTestCase {
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
         // e1 and e2 have the same predicate
-        try XCTAssertEqual(e1.assertions.first!.predicate, e2.assertions.first!.predicate)
+        XCTAssertEqual(e1.assertions.first!.predicate!, e2.assertions.first!.predicate!)
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.

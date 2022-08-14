@@ -248,7 +248,7 @@ final class EnvelopeTestVectors: XCTestCase {
         revealSet.insert(holder.shallowDigests)
         
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
-        let holderObject = try! holder.object
+        let holderObject = holder.object!
         try! revealSet.insert(holderObject.assertion(predicate: "givenName").deepDigests)
         try! revealSet.insert(holderObject.assertion(predicate: "familyName").deepDigests)
         try! revealSet.insert(holderObject.assertion(predicate: "image").deepDigests)

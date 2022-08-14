@@ -40,6 +40,21 @@ extension Subject: DigestProvider {
 }
 
 public extension Subject {
+    var shallowDigests: Set<Digest> {
+        switch self {
+        case .leaf(_, let digest):
+            return [digest]
+        case .envelope(let envelope):
+            return envelope.shallowDigests
+        case .assertion(predicate: let predicate, object: let object, digest: let digest):
+            return [digest, predicate.digest, predicate.subject.digest, object.digest, object.subject.digest]
+        case .encrypted(_, let digest):
+            return [digest]
+        case .redacted(let digest):
+            return [digest]
+        }
+    }
+
     var deepDigests: Set<Digest> {
         switch self {
         case .leaf(_, let digest):
@@ -145,28 +160,26 @@ public extension Subject {
         }
     }
     
-    init(predicate: Predicate) {
+    init(predicate: KnownPredicate) {
         self.init(plaintext: CBOR.tagged(.predicate, CBOR.unsignedInt(predicate.rawValue)))
     }
-    
+}
+
+public extension Subject {
     var plaintext: CBOR? {
         guard case let .leaf(plaintext, _) = self else {
             return nil
         }
         return plaintext
     }
-}
 
-public extension Subject {
     var envelope: Envelope? {
         guard case let .envelope(envelope) = self else {
             return nil
         }
         return envelope
     }
-}
 
-public extension Subject {
     var predicate: Envelope? {
         guard case let .assertion(predicate, _, _) = self else {
             return nil
@@ -179,6 +192,20 @@ public extension Subject {
             return nil
         }
         return object
+    }
+    
+    var knownPredicate: KnownPredicate? {
+        guard
+            let predicate = predicate,
+            let plaintext = predicate.plaintext,
+            case CBOR.tagged(.predicate, let value) = plaintext,
+            case CBOR.unsignedInt(let rawValue) = value,
+            let result = KnownPredicate(rawValue: rawValue)
+        else {
+            return nil
+        }
+        
+        return result
     }
 }
 

@@ -6,20 +6,43 @@ import SSKR
 
 public struct Envelope: DigestProvider {
     public let subject: Subject
-    public let assertions: [Assertion]
+    public let assertions: [Envelope]
     public let digest: Digest
 }
 
 public extension Envelope {
-    init(subject: Subject, assertions: [Assertion] = []) {
+    private init(subject: Subject, uncheckedAssertions: [Envelope]) {
         self.subject = subject
-        let sortedAssertions = assertions.sorted()
+        let sortedAssertions = uncheckedAssertions.sorted()
         self.assertions = sortedAssertions
         var digests = [subject.digest]
         digests.append(contentsOf: sortedAssertions.map { $0.digest })
         self.digest = Digest(Data(digests.map { $0.data }.joined()))
     }
-    
+
+    init(subject: Subject, assertions: [Envelope]) throws {
+        guard assertions.allSatisfy({ $0.isAssertion }) else {
+            throw EnvelopeError.invalidFormat
+        }
+        self.init(subject: subject, uncheckedAssertions: assertions)
+    }
+
+    init(subject: Subject) {
+        try! self.init(subject: subject, assertions: [])
+    }
+
+    init(predicate: CBOREncodable, object: CBOREncodable) {
+        let p = predicate as? Envelope ?? Envelope(predicate)
+        let o = object as? Envelope ?? Envelope(object)
+        self.init(subject: Subject(predicate: p, object: o))
+    }
+
+    init(predicate: KnownPredicate, object: CBOREncodable) {
+        let p = Envelope(predicate: predicate)
+        let o = object as? Envelope ?? Envelope(object)
+        self.init(subject: Subject(predicate: p, object: o))
+    }
+
     init(digest: Digest) {
         self.subject = .redacted(digest)
         self.assertions = []
@@ -28,12 +51,8 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    init(predicate: Envelope, object: Envelope) {
-        self.init(subject: Subject(predicate: predicate, object: object))
-    }
-    
-    init(predicate: CBOREncodable, object: CBOREncodable) {
-        self.init(predicate: Envelope(predicate), object: Envelope(object))
+    var isAssertion: Bool {
+        subject.isAssertion
     }
 }
 
@@ -47,7 +66,7 @@ public extension Envelope {
     }
     
     var shallowDigests: Set<Digest> {
-        [digest, subject.digest]
+        Set([digest, subject.digest]).union(subject.shallowDigests)
     }
 }
 
@@ -68,7 +87,7 @@ public extension Envelope {
         self.init(subject: Subject(plaintext: plaintext))
     }
     
-    init(predicate: Predicate) {
+    init(predicate: KnownPredicate) {
         self.init(subject: Subject(predicate: predicate))
     }
     
@@ -78,7 +97,9 @@ public extension Envelope {
         }
         return try T.cborDecode(cbor)
     }
-    
+}
+
+public extension Envelope {
     var plaintext: CBOR? {
         subject.plaintext
     }
@@ -87,19 +108,20 @@ public extension Envelope {
         subject.envelope
     }
     
-    var predicate: Predicate? {
-        guard
-            let plaintext = plaintext,
-            case let CBOR.tagged(.predicate, value) = plaintext,
-            case let CBOR.unsignedInt(rawValue) = value,
-            let predicate = Predicate(rawValue: rawValue)
-        else {
-            return nil
-        }
-        
-        return predicate
+    var predicate: Envelope? {
+        subject.predicate
     }
     
+    var object: Envelope? {
+        subject.object
+    }
+    
+    var knownPredicate: KnownPredicate? {
+        subject.knownPredicate
+    }
+}
+
+public extension Envelope {
     func enclose() -> Envelope {
         Envelope(subject: Subject(plaintext: self))
     }
@@ -133,66 +155,130 @@ extension Envelope: ExpressibleByIntegerLiteral {
 }
 
 public extension Envelope {
-    func assertions(predicate: CBOREncodable) -> [Assertion] {
+    func hasPredicate(_ predicate: Envelope) -> Bool {
+        guard
+            let myPredicate = self.predicate,
+            myPredicate == predicate
+        else {
+            return false
+        }
+        return true
+    }
+
+    func hasPredicate(_ predicate: KnownPredicate) -> Bool {
+        hasPredicate(Envelope(predicate: predicate))
+    }
+
+    func hasPredicate(_ predicate: CBOREncodable) -> Bool {
+        hasPredicate(Envelope(predicate))
+    }
+}
+
+public extension Envelope {
+    func assertions(predicate: Envelope) -> [Envelope] {
         return assertions.filter { $0.hasPredicate(predicate) }
     }
 
-    func assertion(predicate: CBOREncodable) throws -> Assertion {
+    func assertion(predicate: Envelope) throws -> Envelope {
         let a = assertions(predicate: predicate)
-        guard a.count == 1 else {
+        guard
+            a.count == 1,
+            let result = a.first
+        else {
             throw EnvelopeError.invalidFormat
         }
-        return a.first!
+        return result
+    }
+
+    func extract(predicate: Envelope) throws -> Envelope {
+        guard let result = try assertion(predicate: predicate).object else {
+            throw EnvelopeError.invalidFormat
+        }
+        return result
+    }
+    
+    func extract<T>(_ type: T.Type, predicate: Envelope) throws -> T where T: CBORDecodable {
+        try extract(predicate: predicate).extract(type)
+    }
+}
+
+public extension Envelope {
+    func assertions(predicate: CBOREncodable) -> [Envelope] {
+        assertions(predicate: Envelope(predicate))
+    }
+
+    func assertion(predicate: CBOREncodable) throws -> Envelope {
+        try assertion(predicate: Envelope(predicate))
     }
 
     func extract(predicate: CBOREncodable) throws -> Envelope {
-        try assertion(predicate: predicate).object
+        try extract(predicate: Envelope(predicate))
     }
     
-    func extract<T>(predicate: CBOREncodable, _ type: T.Type) throws -> T where T: CBORDecodable {
-        try extract(predicate: predicate).extract(type)
+    func extract<T>(_ type: T.Type, predicate: CBOREncodable) throws -> T where T: CBORDecodable {
+        try extract(type, predicate: Envelope(predicate))
     }
 }
 
 public extension Envelope {
-    func assertions(predicate: Predicate) -> [Assertion] {
-        return assertions.filter { $0.hasPredicate(predicate) }
+    func assertions(predicate: KnownPredicate) -> [Envelope] {
+        assertions(predicate: Envelope(predicate: predicate))
+    }
+
+    func assertion(predicate: KnownPredicate) throws -> Envelope {
+        try assertion(predicate: Envelope(predicate: predicate))
+    }
+
+    func extract(predicate: KnownPredicate) throws -> Envelope {
+        try extract(predicate: Envelope(predicate: predicate))
     }
     
-    func assertion(predicate: Predicate) throws -> Assertion {
-        let a = assertions(predicate: predicate)
-        guard a.count == 1 else {
+    func extract<T>(_ type: T.Type, predicate: KnownPredicate) throws -> T where T: CBORDecodable {
+        try extract(type, predicate: Envelope(predicate: predicate))
+    }
+}
+
+public extension Envelope {
+    func add(_ assertion: Envelope) throws -> Envelope {
+        guard assertion.isAssertion else {
             throw EnvelopeError.invalidFormat
         }
-        return a.first!
-    }
-    
-    func extract(predicate: Predicate) throws -> Envelope {
-        try assertion(predicate: predicate).object
-    }
-    
-    func extract<T>(predicate: Predicate, _ type: T.Type) throws -> T where T: CBORDecodable {
-        try extract(predicate: predicate).extract(type)
-    }
-}
-
-public extension Envelope {
-    func add(_ assertion: Assertion) -> Envelope {
         if !assertions.contains(assertion) {
-            return Envelope(subject: self.subject, assertions: assertions.appending(assertion))
+            return Envelope(subject: self.subject, uncheckedAssertions: assertions.appending(assertion))
         } else {
             return self
         }
     }
     
     func add(_ predicate: CBOREncodable, _ object: CBOREncodable) -> Envelope {
-        let p = predicate as? Envelope ?? Envelope(predicate)
-        let o = object as? Envelope ?? Envelope(object)
-        return add(Assertion(p, o))
+        try! add(Envelope(predicate: predicate, object: object))
     }
 
-    func add(_ predicate: Predicate, _ object: CBOREncodable) -> Envelope {
-        return add(Envelope(predicate: predicate), object)
+    func add(_ predicate: KnownPredicate, _ object: CBOREncodable) -> Envelope {
+        add(Envelope(predicate: predicate), object)
+    }
+}
+
+public extension Envelope {
+    func addIf(_ condition: Bool, _ assertion: @autoclosure () -> Envelope) throws -> Envelope {
+        guard condition else {
+            return self
+        }
+        return try add(assertion())
+    }
+    
+    func addIf(_ condition: Bool, _ predicate: @autoclosure () -> CBOREncodable, _ object: @autoclosure () -> CBOREncodable) -> Envelope {
+        guard condition else {
+            return self
+        }
+        return add(predicate(), object())
+    }
+    
+    func addIf(_ condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> CBOREncodable) -> Envelope {
+        guard condition else {
+            return self
+        }
+        return add(predicate(), object())
     }
 }
 
@@ -223,32 +309,54 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func addIf(_ condition: Bool, _ assertion: Assertion) -> Envelope {
-        guard condition else {
-            return self
-        }
-        return add(assertion)
+    static func verifiedBy(signature: Signature, note: String? = nil) -> Envelope {
+        Envelope(
+            predicate: .verifiedBy,
+            object: Envelope(signature)
+                .addIf(note != nil, .note, note!)
+        )
+    }
+
+    static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
+        let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient, testKeyMaterial: testKeyMaterial, testNonce: testNonce)
+        return Envelope(predicate: .hasRecipient, object: sealedMessage)
+    }
+
+    static func sskrShare(_ share: SSKRShare) -> Envelope {
+        Envelope(predicate: .sskrShare, object: share)
+    }
+
+    static func isA(_ object: Envelope) -> Envelope {
+        Envelope(predicate: .isA, object: object)
+    }
+
+    static func id(_ id: SCID) -> Envelope {
+        Envelope(predicate: .id, object: id)
+    }
+}
+
+public extension Envelope {
+    static func parameter(_ param: FunctionParameter, value: CBOREncodable) -> Envelope {
+        Envelope(predicate: param.cbor, object: Envelope(value))
+    }
+
+    static func parameter(_ name: String, value: CBOREncodable) -> Envelope {
+        Envelope(predicate: FunctionParameter.tagged(name: name), object: value)
     }
     
-    func addIf(_ condition: Bool, _ predicate: CBOREncodable, _ object: CBOREncodable) -> Envelope {
-        guard condition else {
-            return self
-        }
-        return add(predicate, object)
+    func addParameter(_ param: FunctionParameter, value: CBOREncodable) -> Envelope {
+        try! add(.parameter(param, value: value))
     }
     
-    func addIf(_ condition: Bool, _ predicate: Predicate, _ object: CBOREncodable) -> Envelope {
-        guard condition else {
-            return self
-        }
-        return add(predicate, object)
+    func addParameter(_ name: String, value: CBOREncodable) -> Envelope {
+        try! add(.parameter(name, value: value))
     }
 }
 
 public extension Envelope {
     func sign(with privateKeys: PrivateKeyBase, note: String? = nil, tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
         let signature = privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator)
-        return add(.verifiedBy(signature: signature, note: note))
+        return try! add(.verifiedBy(signature: signature, note: note))
     }
     
     func sign(with privateKeys: [PrivateKeyBase], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
@@ -260,11 +368,11 @@ public extension Envelope {
     }
     
     func addRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
-        add(.hasRecipient(recipient, contentKey: contentKey, testKeyMaterial: testKeyMaterial, testNonce: testNonce))
+        try! add(.hasRecipient(recipient, contentKey: contentKey, testKeyMaterial: testKeyMaterial, testNonce: testNonce))
     }
     
     func addSSKRShare(_ share: SSKRShare) -> Envelope {
-        add(.sskrShare(share))
+        try! add(.sskrShare(share))
     }
     
     func split(groupThreshold: Int, groups: [(Int, Int)], contentKey: SymmetricKey, testRandomGenerator: ((Int) -> Data)? = nil) -> [[Envelope]] {
@@ -281,7 +389,7 @@ public extension Envelope {
         for envelope in envelopes {
             try envelope.assertions(predicate: .sskrShare)
                 .forEach {
-                    let share = try $0.object.extract(SSKRShare.self)
+                    let share = try $0.object!.extract(SSKRShare.self)
                     let identifier = share.identifier
                     if result[identifier] == nil {
                         result[identifier] = []
@@ -311,7 +419,7 @@ public extension Envelope {
     var signatures: [Signature] {
         get throws {
             try assertions(predicate: .verifiedBy)
-                .map { try $0.object.extract(Signature.self) }
+                .map { try $0.object!.extract(Signature.self) }
         }
     }
     
@@ -393,14 +501,14 @@ public extension Envelope {
 public extension Envelope {
     func encrypt(with key: SymmetricKey, testNonce: Nonce? = nil) throws -> Envelope {
         let subject = try self.subject.encrypt(with: key, nonce: testNonce)
-        let result = Envelope(subject: subject, assertions: assertions)
+        let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(digest == result.digest)
         return result
     }
     
     func decrypt(with key: SymmetricKey) throws -> Envelope {
         let subject = try self.subject.decrypt(with: key)
-        let result = Envelope(subject: subject, assertions: assertions)
+        let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(digest == result.digest)
         return result
     }
@@ -410,7 +518,7 @@ public extension Envelope {
     var recipients: [SealedMessage] {
         get throws {
             try assertions(predicate: .hasRecipient)
-                .map { try $0.object.extract(SealedMessage.self) }
+                .map { try $0.object!.extract(SealedMessage.self) }
         }
     }
     
@@ -442,7 +550,7 @@ public extension Envelope {
         let assertions = self.assertions.map {
             $0.redact(items: items)
         }
-        let result = Envelope(subject: subject, assertions: assertions)
+        let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)
         return result
     }
@@ -455,7 +563,7 @@ public extension Envelope {
         let assertions = self.assertions.map {
             $0.redact(revealing: items)
         }
-        let result = Envelope(subject: subject, assertions: assertions)
+        let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)
         return result
     }
@@ -467,7 +575,7 @@ public extension Envelope {
         if let index = assertions.firstIndex(where: { $0.digest == digest }) {
             assertions.remove(at: index)
         }
-        return Envelope(subject: subject, assertions: assertions)
+        return Envelope(subject: subject, uncheckedAssertions: assertions)
     }
 }
 
@@ -492,8 +600,8 @@ public extension Envelope {
                 throw CBORError.invalidFormat
             }
             let subject = try Subject(cbor: elements[0])
-            let assertions = try elements.dropFirst().map { try Assertion(taggedCBOR: $0 ) }
-            self.init(subject: subject, assertions: assertions)
+            let assertions = try elements.dropFirst().map { try Envelope(taggedCBOR: $0 ) }
+            try self.init(subject: subject, assertions: assertions)
         } else {
             try self.init(subject: Subject(cbor: untaggedCBOR), assertions: [])
         }

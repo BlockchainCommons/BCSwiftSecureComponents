@@ -5,8 +5,8 @@ import WolfBase
 class TestFunction: XCTestCase {
     private func twoPlusThree() -> Envelope {
         return Envelope(function: .add)
-            .add(.parameter(.lhs, value: 2))
-            .add(.parameter(.rhs, value: 3))
+            .addParameter(.lhs, value: 2)
+            .addParameter(.rhs, value: 3)
     }
     
     func testWellKnown() {
@@ -22,8 +22,8 @@ class TestFunction: XCTestCase {
     
     func testQuoted() {
         let envelope = Envelope(function: "foo")
-            .add(.parameter("bar", value: 2))
-            .add(.parameter("baz", value: 3))
+            .addParameter("bar", value: 2)
+            .addParameter("baz", value: 3)
         
         let expectedFormat = """
         «"foo"» [
