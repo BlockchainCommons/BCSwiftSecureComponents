@@ -102,7 +102,7 @@ public extension Subject {
         }
     }
     
-    func redact(items: Set<Digest>) -> Subject {
+    func redact(removing items: Set<Digest>) -> Subject {
         if items.contains(digest) {
             return .redacted(digest)
         }
@@ -111,12 +111,12 @@ public extension Subject {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.redact(items: items))
+            return .envelope(envelope.redact(removing: items))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             if items.contains(digest) {
                 return .redacted(digest)
             } else {
-                return .assertion(predicate: predicate.redact(items: items), object: object.redact(items: items), digest: digest)
+                return .assertion(predicate: predicate.redact(removing: items), object: object.redact(removing: items), digest: digest)
             }
         case .encrypted(_, _):
             return self

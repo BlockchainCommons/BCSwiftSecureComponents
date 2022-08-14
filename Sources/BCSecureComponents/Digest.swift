@@ -123,6 +123,12 @@ extension Digest: DataProvider {
     }
 }
 
+extension Digest: DigestProvider {
+    public var digest: Digest {
+        self
+    }
+}
+
 public func +(lhs: Digest, rhs: Digest) -> Data {
     lhs.data + rhs.data
 }

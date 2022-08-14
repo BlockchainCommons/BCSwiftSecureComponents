@@ -540,13 +540,13 @@ public extension Envelope {
         return result
     }
     
-    func redact(items: Set<Digest>) -> Envelope {
+    func redact(removing items: Set<Digest>) -> Envelope {
         if items.contains(digest) {
             return redact()
         }
-        let subject = self.subject.redact(items: items)
+        let subject = self.subject.redact(removing: items)
         let assertions = self.assertions.map {
-            $0.redact(items: items)
+            $0.redact(removing: items)
         }
         let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)

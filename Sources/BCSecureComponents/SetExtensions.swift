@@ -1,15 +1,11 @@
 import Foundation
 
-extension Set {
-    public mutating func insert<E>(_ element: E) where Element == Digest, E: DigestProvider {
+public extension Set where Element == Digest {
+    mutating func insert<E>(_ element: E) where E: DigestProvider {
         insert(element.digest)
     }
-    
-    public mutating func insert<S>(_ other: S) where Element == Digest, S.Element == Digest, S: Sequence {
-        formUnion(other)
-    }
 
-    public mutating func insert<S>(_ other: S) where Element == Digest, S.Element == DigestProvider, S: Sequence {
+    mutating func insert<S>(_ other: S) where S: Sequence, S.Element: DigestProvider {
         formUnion(other.map { $0.digest })
     }
 }

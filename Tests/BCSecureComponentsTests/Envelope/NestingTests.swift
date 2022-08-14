@@ -225,7 +225,7 @@ class NestingTests: XCTestCase {
             .extract()
             .extract()
             .digest
-        let redactedEnvelope = envelope.redact(items: [redaction])
+        let redactedEnvelope = envelope.redact(removing: [redaction])
         
         let expectedRedactedFormat =
         """
@@ -253,7 +253,7 @@ class NestingTests: XCTestCase {
         let redaction = envelope
             .subject
             .digest
-        let redactedEnvelope = envelope.redact(items: Set([redaction]))
+        let redactedEnvelope = envelope.redact(removing: Set([redaction]))
         try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =
         """
@@ -283,7 +283,7 @@ class NestingTests: XCTestCase {
             .extract()
             .subject
             .digest
-        let redactedEnvelope = envelope.redact(items: Set([redaction]))
+        let redactedEnvelope = envelope.redact(removing: Set([redaction]))
         XCTAssertEqual(redactedEnvelope, envelope)
         try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =

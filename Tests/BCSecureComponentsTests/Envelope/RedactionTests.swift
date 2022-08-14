@@ -27,7 +27,7 @@ class RedactionTests: XCTestCase {
         """
         )
         
-        let aliceRedacted = aliceKnowsBob.redact(items: [aliceKnowsBob.subject.digest])
+        let aliceRedacted = aliceKnowsBob.redact(removing: [aliceKnowsBob.subject.digest])
         XCTAssertEqual(aliceRedacted.format,
         """
         REDACTED [
@@ -37,7 +37,7 @@ class RedactionTests: XCTestCase {
         )
         
         let assertion = try aliceKnowsBob.assertion(predicate: "knows")
-        let assertionRedacted = aliceKnowsBob.redact(items: [assertion.digest])
+        let assertionRedacted = aliceKnowsBob.redact(removing: [assertion.digest])
         XCTAssertEqual(assertionRedacted.format,
         """
         "Alice" [
@@ -47,7 +47,7 @@ class RedactionTests: XCTestCase {
         )
         
         let predicate = assertion.predicate!
-        let predicateRedacted = aliceKnowsBob.redact(items: [predicate.digest])
+        let predicateRedacted = aliceKnowsBob.redact(removing: [predicate.digest])
         XCTAssertEqual(predicateRedacted.format,
         """
         "Alice" [
@@ -57,7 +57,7 @@ class RedactionTests: XCTestCase {
         )
         
         let object = assertion.object!
-        let objectRedacted = aliceKnowsBob.redact(items: [object.digest])
+        let objectRedacted = aliceKnowsBob.redact(removing: [object.digest])
         XCTAssertEqual(objectRedacted.format,
         """
         "Alice" [
@@ -66,7 +66,7 @@ class RedactionTests: XCTestCase {
         """
         )
         
-        let predicateObjectRedacted = aliceKnowsBob.redact(items: [predicate.digest, object.digest])
+        let predicateObjectRedacted = aliceKnowsBob.redact(removing: [predicate.digest, object.digest])
         XCTAssertEqual(predicateObjectRedacted.format,
         """
         "Alice" [
