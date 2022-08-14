@@ -303,35 +303,35 @@ class ScenarioTests: XCTestCase {
         // everything *about* the parent objects must be revealed.
 
         // Start a reveal-set
-        var revealSet: Set<Digest> = []
+        var target: Set<Digest> = []
 
         // Reveal the card. Without this, everything about the card would be redacted.
         let top = johnSmithResidentCard
-        revealSet.insert(top)
+        target.insert(top)
 
         // Reveal everything about the state's signature on the card
-        try revealSet.insert(top.assertion(predicate: .verifiedBy).deepDigests)
+        try target.insert(top.assertion(predicate: .verifiedBy).deepDigests)
 
         // Reveal the top level subject of the card. This is John Smith's CID.
         let topContent = top.subject.envelope!
-        revealSet.insert(topContent.shallowDigests)
+        target.insert(topContent.shallowDigests)
 
         // Reveal everything about the `isA` and `issuer` assertions at the top level of the card.
-        try revealSet.insert(topContent.assertion(predicate: .isA).deepDigests)
-        try revealSet.insert(topContent.assertion(predicate: .issuer).deepDigests)
+        try target.insert(topContent.assertion(predicate: .isA).deepDigests)
+        try target.insert(topContent.assertion(predicate: .issuer).deepDigests)
 
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
         let holder = try topContent.assertion(predicate: .holder)
-        revealSet.insert(holder.shallowDigests)
+        target.insert(holder.shallowDigests)
 
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
         let holderObject = holder.object!
-        try revealSet.insert(holderObject.assertion(predicate: "givenName").deepDigests)
-        try revealSet.insert(holderObject.assertion(predicate: "familyName").deepDigests)
-        try revealSet.insert(holderObject.assertion(predicate: "image").deepDigests)
+        try target.insert(holderObject.assertion(predicate: "givenName").deepDigests)
+        try target.insert(holderObject.assertion(predicate: "familyName").deepDigests)
+        try target.insert(holderObject.assertion(predicate: "image").deepDigests)
         
         // Perform the redaction
-        let redactedCredential = top.redact(revealing: revealSet)
+        let redactedCredential = top.redact(revealing: target)
         
         // Verify that the redacted credential compares equal to the original credential.
         XCTAssertEqual(redactedCredential, johnSmithResidentCard)

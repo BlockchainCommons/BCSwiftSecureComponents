@@ -221,11 +221,8 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = try envelope
-            .extract()
-            .extract()
-            .digest
-        let redactedEnvelope = envelope.redact(removing: [redaction])
+        let target = try envelope.extract().extract()
+        let redactedEnvelope = envelope.redact(removing: target)
         
         let expectedRedactedFormat =
         """
@@ -250,10 +247,8 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = envelope
-            .subject
-            .digest
-        let redactedEnvelope = envelope.redact(removing: Set([redaction]))
+        let target = envelope.subject
+        let redactedEnvelope = envelope.redact(removing: target)
         try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =
         """
@@ -279,11 +274,8 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redaction = try envelope
-            .extract()
-            .subject
-            .digest
-        let redactedEnvelope = envelope.redact(removing: Set([redaction]))
+        let target = try envelope.extract().subject
+        let redactedEnvelope = envelope.redact(removing: target)
         XCTAssertEqual(redactedEnvelope, envelope)
         try redactedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedRedactedFormat =
@@ -299,8 +291,7 @@ class NestingTests: XCTestCase {
         let p1 = envelope
         let p2 = try p1.extract()
         let p3 = p2.subject
-        let revealSet: Set<Digest> = [p1.digest, p2.digest, p3.digest]
-        let revealedEnvelope = envelope.redact(revealing: revealSet)
+        let revealedEnvelope = envelope.redact(revealing: [p1, p2, p3])
         XCTAssertEqual(revealedEnvelope, envelope)
         let expectedRevealedFormat =
         """

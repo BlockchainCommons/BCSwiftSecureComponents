@@ -44,7 +44,7 @@ class NonCorrelationTests: XCTestCase {
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.
-        let e1Redacted = e1.redact(revealing: [e1.digest])
+        let e1Redacted = e1.redact(revealing: e1)
         
         let redactedExpectedFormat = """
         REDACTED [
@@ -74,7 +74,7 @@ class NonCorrelationTests: XCTestCase {
         """
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
-        let e1Redacted = e1.redact(revealing: [e1.digest])
+        let e1Redacted = e1.redact(revealing: e1)
         
         let redactedExpectedFormat = """
         REDACTED [

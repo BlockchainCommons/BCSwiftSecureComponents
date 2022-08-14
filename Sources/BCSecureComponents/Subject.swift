@@ -102,8 +102,8 @@ public extension Subject {
         }
     }
     
-    func redact(removing items: Set<Digest>) -> Subject {
-        if items.contains(digest) {
+    func redact(removing target: Set<Digest>) -> Subject {
+        if target.contains(digest) {
             return .redacted(digest)
         }
         
@@ -111,12 +111,12 @@ public extension Subject {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.redact(removing: items))
+            return .envelope(envelope.redact(removing: target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            if items.contains(digest) {
+            if target.contains(digest) {
                 return .redacted(digest)
             } else {
-                return .assertion(predicate: predicate.redact(removing: items), object: object.redact(removing: items), digest: digest)
+                return .assertion(predicate: predicate.redact(removing: target), object: object.redact(removing: target), digest: digest)
             }
         case .encrypted(_, _):
             return self
@@ -125,8 +125,8 @@ public extension Subject {
         }
     }
     
-    func redact(revealing items: Set<Digest>) -> Subject {
-        if !items.contains(digest) {
+    func redact(revealing target: Set<Digest>) -> Subject {
+        if !target.contains(digest) {
             return .redacted(digest)
         }
         
@@ -134,12 +134,12 @@ public extension Subject {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.redact(revealing: items))
+            return .envelope(envelope.redact(revealing: target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            if !items.contains(digest) {
+            if !target.contains(digest) {
                 return .redacted(digest)
             } else {
-                return .assertion(predicate: predicate.redact(revealing: items), object: object.redact(revealing: items), digest: digest)
+                return .assertion(predicate: predicate.redact(revealing: target), object: object.redact(revealing: target), digest: digest)
             }
         case .encrypted(_, _):
             return self

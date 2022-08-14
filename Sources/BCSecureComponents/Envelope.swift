@@ -539,31 +539,53 @@ public extension Envelope {
         assert(result.digest == digest)
         return result
     }
-    
-    func redact(removing items: Set<Digest>) -> Envelope {
-        if items.contains(digest) {
+}
+
+public extension Envelope {
+    func redact(removing target: Set<Digest>) -> Envelope {
+        if target.contains(digest) {
             return redact()
         }
-        let subject = self.subject.redact(removing: items)
+        let subject = self.subject.redact(removing: target)
         let assertions = self.assertions.map {
-            $0.redact(removing: items)
+            $0.redact(removing: target)
         }
         let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)
         return result
     }
     
-    func redact(revealing items: Set<Digest>) -> Envelope {
-        if !items.contains(digest) {
+    func redact(revealing target: Set<Digest>) -> Envelope {
+        if !target.contains(digest) {
             return redact()
         }
-        let subject = self.subject.redact(revealing: items)
+        let subject = self.subject.redact(revealing: target)
         let assertions = self.assertions.map {
-            $0.redact(revealing: items)
+            $0.redact(revealing: target)
         }
         let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)
         return result
+    }
+}
+
+public extension Envelope {
+    func redact(removing target: [DigestProvider]) -> Envelope {
+        redact(removing: Set(target.map { $0.digest }))
+    }
+
+    func redact(revealing target: [DigestProvider]) -> Envelope {
+        redact(revealing: Set(target.map { $0.digest }))
+    }
+}
+
+public extension Envelope {
+    func redact(removing target: DigestProvider) -> Envelope {
+        redact(removing: [target])
+    }
+
+    func redact(revealing target: DigestProvider) -> Envelope {
+        redact(revealing: [target])
     }
 }
 
