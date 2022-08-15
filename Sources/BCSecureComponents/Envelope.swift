@@ -21,7 +21,7 @@ public extension Envelope {
     }
 
     init(subject: Subject, assertions: [Envelope]) throws {
-        guard assertions.allSatisfy({ $0.isAssertion }) else {
+        guard assertions.allSatisfy({ $0.isAssertion || $0.isRedacted }) else {
             throw EnvelopeError.invalidFormat
         }
         self.init(subject: subject, uncheckedAssertions: assertions)
@@ -42,18 +42,14 @@ public extension Envelope {
         let o = object as? Envelope ?? Envelope(object)
         self.init(subject: Subject(predicate: p, object: o))
     }
-
-    init(digest: Digest) {
-        self.subject = .redacted(digest)
-        self.assertions = []
-        self.digest = digest
-    }
 }
 
 public extension Envelope {
-    var isAssertion: Bool {
-        subject.isAssertion
-    }
+    var isLeaf: Bool { subject.isLeaf }
+    var isEnvelope: Bool { subject.isEnvelope }
+    var isAssertion: Bool { subject.isAssertion }
+    var isEncrypted: Bool { subject.isEncrypted }
+    var isRedacted: Bool { subject.isRedacted }
 }
 
 public extension Envelope {
@@ -535,7 +531,7 @@ public extension Envelope {
 
 public extension Envelope {
     func redact() -> Envelope {
-        let result = Envelope(digest: digest)
+        let result = Envelope(subject: .redacted(subject.digest), uncheckedAssertions: assertions)
         assert(result.digest == digest)
         return result
     }
@@ -547,8 +543,10 @@ public extension Envelope {
             return redact()
         }
         let subject = self.subject.redact(removing: target)
-        let assertions = self.assertions.map {
-            $0.redact(removing: target)
+        let assertions = self.assertions.map { assertion in
+            let redactedAssertion = assertion.redact(removing: target)
+            assert(assertion.digest == redactedAssertion.digest)
+            return redactedAssertion
         }
         let result = Envelope(subject: subject, uncheckedAssertions: assertions)
         assert(result.digest == digest)
@@ -605,7 +603,9 @@ public extension Envelope {
             return subject.cbor
         } else {
             var array = [subject.cbor]
-            array.append(contentsOf: assertions.map { $0.taggedCBOR })
+            array.append(contentsOf: assertions.map {
+                $0.untaggedCBOR
+            })
             return CBOR.array(array)
         }
     }
@@ -620,7 +620,7 @@ public extension Envelope {
                 throw CBORError.invalidFormat
             }
             let subject = try Subject(cbor: elements[0])
-            let assertions = try elements.dropFirst().map { try Envelope(taggedCBOR: $0 ) }
+            let assertions = try elements.dropFirst().map { try Envelope(untaggedCBOR: $0 ) }
             try self.init(subject: subject, assertions: assertions)
         } else {
             try self.init(subject: Subject(cbor: untaggedCBOR), assertions: [])
@@ -670,5 +670,31 @@ public extension Envelope {
     init(response id: UUID, result: CBOREncodable) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .add(.result, result)
+    }
+}
+
+public extension Envelope {
+    @discardableResult
+    func checkEncoding() throws -> Envelope {
+        do {
+            let cbor = taggedCBOR
+            let restored = try Envelope(taggedCBOR: cbor)
+            guard self == restored else {
+                print("=== EXPECTED")
+                print(self.format)
+                print("=== GOT")
+                print(restored.format)
+                print("===")
+                throw EnvelopeError.invalidFormat
+            }
+            return self
+        } catch {
+            print("===")
+            print(format)
+            print("===")
+            print(cbor.diagAnnotated)
+            print("===")
+            throw error
+        }
     }
 }

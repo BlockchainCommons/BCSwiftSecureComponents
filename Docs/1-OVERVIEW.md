@@ -1,7 +1,7 @@
 # Secure Components - Overview
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** May 16, 2022</br>
+**Revised:** Aug 13, 2022</br>
 **Status:** DRAFT
 
 ---
@@ -28,7 +28,30 @@ The Secure Components suite provides tools for easily implementing encryption (s
 
 **DRAFT.** There is a reference implementation of parts of this document in [BCSwiftFoundation](https://github.com/blockchaincommons/BCSwiftFoundation), but everything is still fluid and subject to change.
 
-**⚠️ WARNING:** As of the date of this publication the CBOR tags in the range `48` through `51` and `55` are currently unallocated in the [IANA Registry of CBOR Tags](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml). Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
+## Reserved CBOR Tags
+
+Lower-numbered CBOR tags take fewer bytes to encode, and are hence more desirable "real estate."
+
+* Tags in the range 0-23 require one byte to encode.
+* Tags in the range 24-255 require two bytes to encode.
+* Tags from 256 and above require three or more bytes to encode.
+
+Although there is no technical restriction on using any tag to represent anything, [tags are assigned by IANA](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) to represent many common data types, and avoiding tag collision is generally desirable to facilitate interoperability.
+
+As there are fewer lowered-number tags, IANA has different requirements for recognizing tags reserved in different ranges.
+
+* Tags in the range 0-23 require standards action.
+* Tags in the range 24-32767 require a specification.
+* Tags in the range 32768 and above are first come, first served.
+
+As of the date of this document, the [IANA Registry of CBOR Tags](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) shows the following low-numbered tags as unassigned.
+
+* One byte encoding: 6-15, 19-20
+* Two byte encoding: 48-51, 53, 55-60, 62, 88-95, 99, 102, 105-109, 113-119, 128-255
+
+Currently Secure Components would benefit from having 17 of these tags. As we expect to file a specification at some point, we are choosing tags starting at #6.200 for highest-frequency tags.
+
+Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
 
 ## Goals
 
@@ -84,14 +107,14 @@ Many of the types defined herein are assigned CBOR tags for use when encoding th
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|48|`crypto-msg`|`EncryptedMessage`|
-|49|`envelope`|`Envelope`|
-|50|`crypto-prvkeys`|`PrivateKeyBase`|
-|51|`crypto-pubkeys`|`PublicKeyBase`|
-|55|`crypto-sealed`|`SealedMessage`|
-|56|`crypto-digest`|`Digest`|
-|57|`crypto-key`|`SymmetricKey`|
-|58|`crypto-cid`|`CID`|
+|200|`envelope`|`Envelope`|
+|201|`crypto-msg`|`EncryptedMessage`|
+|202|`crypto-cid`|`CID`|
+|203|`crypto-digest`|`Digest`|
+|204|`crypto-key`|`SymmetricKey`|
+|205|`crypto-prvkeys`|`PrivateKeyBase`|
+|206|`crypto-pubkeys`|`PublicKeyBase`|
+|207|`crypto-sealed`|`SealedMessage`|
 
 ## Tagged Types
 
@@ -99,11 +122,11 @@ Types that do not define a UR type generally would never be serialized as a top-
 
 |CBOR Tag|Swift Type|
 |---|---|
-|59|`KnownPredicate`|
-|60|`Plaintext`|
-|63|`Assertion`|
-|61|`Signature`|
-|62|`AgreementPublicKey`|
+|220|`Plaintext`|
+|221|`Assertion`|
+|222|`Signature`|
+|223|`KnownPredicate`|
+|230|`AgreementPublicKey`|
 |700|`Password`|
 |701|`Permit`|
 |702|`AgreementPrivateKey`|

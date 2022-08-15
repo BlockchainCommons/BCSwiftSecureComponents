@@ -8,7 +8,7 @@ class RedactionTests: XCTestCase {
         let knows = Envelope("knows")
         let bob = Envelope("Bob")
         
-        let knowsBob = Envelope(predicate: knows, object: bob)
+        let knowsBob = try Envelope(predicate: knows, object: bob).checkEncoding()
 
         let aliceKnowsBob = try alice
             .add(knowsBob)
@@ -20,14 +20,19 @@ class RedactionTests: XCTestCase {
         """
         )
         
-        let allRedacted = aliceKnowsBob.redact()
+        let allRedacted = try aliceKnowsBob
+            .enclose()
+            .redact()
+            .checkEncoding()
         XCTAssertEqual(allRedacted.format,
         """
         REDACTED
         """
         )
         
-        let aliceRedacted = aliceKnowsBob.redact(removing: aliceKnowsBob.subject)
+        let aliceRedacted = try aliceKnowsBob
+            .redact(removing: aliceKnowsBob.subject)
+            .checkEncoding()
         XCTAssertEqual(aliceRedacted.format,
         """
         REDACTED [
@@ -37,7 +42,9 @@ class RedactionTests: XCTestCase {
         )
         
         let assertion = try aliceKnowsBob.assertion(predicate: "knows")
-        let assertionRedacted = aliceKnowsBob.redact(removing: assertion)
+        let assertionRedacted = try aliceKnowsBob
+            .redact(removing: assertion)
+            .checkEncoding()
         XCTAssertEqual(assertionRedacted.format,
         """
         "Alice" [
@@ -47,7 +54,9 @@ class RedactionTests: XCTestCase {
         )
         
         let predicate = assertion.predicate!
-        let predicateRedacted = aliceKnowsBob.redact(removing: predicate)
+        let predicateRedacted = try aliceKnowsBob
+            .redact(removing: predicate)
+            .checkEncoding()
         XCTAssertEqual(predicateRedacted.format,
         """
         "Alice" [
@@ -57,7 +66,9 @@ class RedactionTests: XCTestCase {
         )
         
         let object = assertion.object!
-        let objectRedacted = aliceKnowsBob.redact(removing: object)
+        let objectRedacted = try aliceKnowsBob
+            .redact(removing: object)
+            .checkEncoding()
         XCTAssertEqual(objectRedacted.format,
         """
         "Alice" [
@@ -66,7 +77,9 @@ class RedactionTests: XCTestCase {
         """
         )
         
-        let predicateObjectRedacted = aliceKnowsBob.redact(removing: [predicate, object])
+        let predicateObjectRedacted = try aliceKnowsBob
+            .redact(removing: [predicate, object])
+            .checkEncoding()
         XCTAssertEqual(predicateObjectRedacted.format,
         """
         "Alice" [

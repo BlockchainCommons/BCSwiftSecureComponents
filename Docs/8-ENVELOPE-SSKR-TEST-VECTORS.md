@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 13, 2022</br>
+**Revised:** Aug 14, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -74,45 +74,39 @@ CBOR
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeadaefltivlttcloxssbnadahlsbdghcmcwuyatwnjliomwtkvaflztlnghfhfeplnthktbtpeyie
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduoaeadaefltivlttcloxssbnadahlsbdghcmcwuyatwnjliomwtkvaflztlnghfhfeplnthkeeytlfso
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -121,30 +115,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
 ```
 
 ---
@@ -156,45 +147,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeadadwtztmhvthhjtrncplsfeuyhfehvdnnvsresevwotzewmvalbrfspleytcadefddaiekiwmso
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduoaeadadwtztmhvthhjtrncplsfeuyhfehvdnnvsresevwotzewmvalbrfspleytcadefddalnhhhpie
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -203,30 +188,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
 ```
 
 ---
@@ -238,45 +220,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeadaoeyloahqduydndygdcklpeopannwsbkryksmehnwkfzltvaemkecywfpdykrhdwoyvtsavtpa
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduoaeadaoeyloahqduydndygdcklpeopannwsbkryksmehnwkfzltvaemkecywfpdykrhdwoyaovlgdce
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -285,30 +261,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
 ```
 
 ---
@@ -336,61 +309,49 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpdylrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdgtwsfdzcattabtlyptoevsdtleeyfncyhddktpethdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpehtpfhlftpehtpfntpfraatpehtpfnksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeaoaetkvsvakiaxzsqzchjpkktlgamnknuopdtkvsvakiaxzsqzchjpkktlgamnknuopdmkwsaebd
+ur:envelope/lstpsolrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdzelrdkeshfkgnbsrfpaylyhnueoystrkhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtputlftpuotpuramtpuotaadechddapduoaeaoaetkvsvakiaxzsqzchjpkktlgamnknuopdtkvsvakiaxzsqzchjpkktlgamnknuopdtputlftpuotpuraatpuoksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmfmeeaxjz
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac0504def48fd07d90d81a9a2e8298a323c1a5824d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd831d83f82d831d83cd83b04d831d83c783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652ed831d83f82d831d83cd83b06d831d83cd901355825a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8
+d8c883d8c984585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac050fe842439567ba0c341088160dea1c7bb5824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8dd82d8dcd8df06d8dcd901355825a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8d8dd82d8dcd8df04d8dc783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651',
             h'4d785658f36c22fb5aed3ac0',
-            h'4def48fd07d90d81a9a2e8298a323c1a',
-            h'd8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
+            h'fe842439567ba0c341088160dea1c7bb',
+            h'd8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(4)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     "This could be vendor-specific data attached to the envelope."
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8'
                )
-            ]
-         )
+            )
+         ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8'
-                     )
-                  )
-               )
-            ]
-         )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(4)   ; known-predicate
+            ),
+            220(   ; leaf
+               "This could be vendor-specific data attached to the envelope."
+            )
+         ]
       )
    ]
 )
@@ -399,41 +360,35 @@ d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6d
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    83                                    # array(3)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             585b                         # bytes(91)
                a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               4def48fd07d90d81a9a2e8298a323c1a
+               fe842439567ba0c341088160dea1c7bb
             5824                         # bytes(36)
-               d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        04               # unsigned(4)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     78 3c               # text(60)
-                        5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8
+               d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  04                     # unsigned(4)
+            d8 dc                        # tag(220)   ; leaf
+               78 3c                     # text(60)
+                  5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
 ```
 
 ---
@@ -445,61 +400,49 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpdylrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdgtwsfdzcattabtlyptoevsdtleeyfncyhddktpethdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeaoadksssmdgskbdytoeswteslgbbwmluhkndkitpjzrhinueqzdleyembdmytbztastytpehtpfhlftpehtpfntpfraatpehtpfnksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmoesttyue
+ur:envelope/lstpsolrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdzelrdkeshfkgnbsrfpaylyhnueoystrkhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtputlftpuotpuraatpuoksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmtputlftpuotpuramtpuotaadechddapduoaeaoadksssmdgskbdytoeswteslgbbwmluhkndkitpjzrhinueqzdleyembdmytbztastydsvosbfw
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac0504def48fd07d90d81a9a2e8298a323c1a5824d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd831d83f82d831d83cd83b06d831d83cd901355825a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4d831d83f82d831d83cd83b04d831d83c783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c984585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac050fe842439567ba0c341088160dea1c7bb5824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8dd82d8dcd8df04d8dc783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652ed8dd82d8dcd8df06d8dcd901355825a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651',
             h'4d785658f36c22fb5aed3ac0',
-            h'4def48fd07d90d81a9a2e8298a323c1a',
-            h'd8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
+            h'fe842439567ba0c341088160dea1c7bb',
+            h'd8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4'
-                     )
-                  )
-               )
-            ]
-         )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(4)   ; known-predicate
+            ),
+            220(   ; leaf
+               "This could be vendor-specific data attached to the envelope."
+            )
+         ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(4)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     "This could be vendor-specific data attached to the envelope."
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -508,41 +451,35 @@ d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6d
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    83                                    # array(3)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             585b                         # bytes(91)
                a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               4def48fd07d90d81a9a2e8298a323c1a
+               fe842439567ba0c341088160dea1c7bb
             5824                         # bytes(36)
-               d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        04               # unsigned(4)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     78 3c               # text(60)
-                        5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
+               d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  04                     # unsigned(4)
+            d8 dc                        # tag(220)   ; leaf
+               78 3c                     # text(60)
+                  5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4
 ```
 
 ---
@@ -554,61 +491,49 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpdylrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdgtwsfdzcattabtlyptoevsdtleeyfncyhddktpethdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeaoaownhdpssppmhslucpsarhlsmumhfnrohsdrgdktgmlkaadngajsksckutrtlsinyltpehtpfhlftpehtpfntpfraatpehtpfnksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmdlcnueol
+ur:envelope/lstpsolrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdzelrdkeshfkgnbsrfpaylyhnueoystrkhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtputlftpuotpuramtpuotaadechddapduoaeaoaownhdpssppmhslucpsarhlsmumhfnrohsdrgdktgmlkaadngajsksckutrtlsinyltputlftpuotpuraatpuoksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmwnbzbzgo
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac0504def48fd07d90d81a9a2e8298a323c1a5824d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd831d83f82d831d83cd83b06d831d83cd901355825a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7d831d83f82d831d83cd83b04d831d83c783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c984585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac050fe842439567ba0c341088160dea1c7bb5824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8dd82d8dcd8df06d8dcd901355825a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7d8dd82d8dcd8df04d8dc783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651',
             h'4d785658f36c22fb5aed3ac0',
-            h'4def48fd07d90d81a9a2e8298a323c1a',
-            h'd8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
+            h'fe842439567ba0c341088160dea1c7bb',
+            h'd8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7'
                )
-            ]
-         )
+            )
+         ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(4)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     "This could be vendor-specific data attached to the envelope."
-                  )
-               )
-            ]
-         )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(4)   ; known-predicate
+            ),
+            220(   ; leaf
+               "This could be vendor-specific data attached to the envelope."
+            )
+         ]
       )
    ]
 )
@@ -617,41 +542,35 @@ d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6d
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    83                                    # array(3)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             585b                         # bytes(91)
                a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               4def48fd07d90d81a9a2e8298a323c1a
+               fe842439567ba0c341088160dea1c7bb
             5824                         # bytes(36)
-               d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        04               # unsigned(4)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     78 3c               # text(60)
-                        5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
+               d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  04                     # unsigned(4)
+            d8 dc                        # tag(220)   ; leaf
+               78 3c                     # text(60)
+                  5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
 ```
 
 ---
@@ -663,61 +582,49 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpdylrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdgtwsfdzcattabtlyptoevsdtleeyfncyhddktpethdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpehtpfhlftpehtpfntpfraatpehtpfnksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeaoaxfgjyuryttipywnbnfzytuytoyksnfsgmmkhnzcmtvacxdnjsehenrtcwmkahrflugmetsbne
+ur:envelope/lstpsolrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdzelrdkeshfkgnbsrfpaylyhnueoystrkhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtputlftpuotpuramtpuotaadechddapduoaeaoaxfgjyuryttipywnbnfzytuytoyksnfsgmmkhnzcmtvacxdnjsehenrtcwmkahrflutputlftpuotpuraatpuoksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmsnsrcson
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac0504def48fd07d90d81a9a2e8298a323c1a5824d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd831d83f82d831d83cd83b04d831d83c783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652ed831d83f82d831d83cd83b06d831d83cd901355825a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b
+d8c883d8c984585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac050fe842439567ba0c341088160dea1c7bb5824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8dd82d8dcd8df06d8dcd901355825a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8bd8dd82d8dcd8df04d8dc783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651',
             h'4d785658f36c22fb5aed3ac0',
-            h'4def48fd07d90d81a9a2e8298a323c1a',
-            h'd8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
+            h'fe842439567ba0c341088160dea1c7bb',
+            h'd8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(4)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     "This could be vendor-specific data attached to the envelope."
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b'
                )
-            ]
-         )
+            )
+         ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b'
-                     )
-                  )
-               )
-            ]
-         )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(4)   ; known-predicate
+            ),
+            220(   ; leaf
+               "This could be vendor-specific data attached to the envelope."
+            )
+         ]
       )
    ]
 )
@@ -726,41 +633,35 @@ d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6d
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    83                                    # array(3)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             585b                         # bytes(91)
                a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               4def48fd07d90d81a9a2e8298a323c1a
+               fe842439567ba0c341088160dea1c7bb
             5824                         # bytes(36)
-               d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        04               # unsigned(4)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     78 3c               # text(60)
-                        5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b
+               d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  04                     # unsigned(4)
+            d8 dc                        # tag(220)   ; leaf
+               78 3c                     # text(60)
+                  5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
 ```
 
 ---
@@ -772,61 +673,49 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpdylrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdgtwsfdzcattabtlyptoevsdtleeyfncyhddktpethdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduoaeaoaalrckwkkibsltsbsalsytsfkitkfnuypyfztomevwjswfuybwgleswfkostamryrftpehtpfhlftpehtpfntpfraatpehtpfnksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmtiswsffh
+ur:envelope/lstpsolrhdhpptcalfwytahyyllngsjpgruemtjsztsnvlhebycscxnetsldfltehejkvyrtrdjntswnsgflkosacnmoahkpmklkrozoregawscelrrkesbdbaemhdmeoloelthddifesfldjsayckeyimtshkdyvovlwnetdkendeasmttkluzscxonfgyngygsgtkshfhdwfjzcpzohtweftrtgdzelrdkeshfkgnbsrfpaylyhnueoystrkhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtputlftpuotpuramtpuotaadechddapduoaeaoaalrckwkkibsltsbsalsytsfkitkfnuypyfztomevwjswfuybwgleswfkostamryrftputlftpuotpuraatpuoksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmiylgwpsf
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac0504def48fd07d90d81a9a2e8298a323c1a5824d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd831d83f82d831d83cd83b06d831d83cd901355825a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbcd831d83f82d831d83cd83b04d831d83c783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c984585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f6514c4d785658f36c22fb5aed3ac050fe842439567ba0c341088160dea1c7bb5824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8dd82d8dcd8df06d8dcd901355825a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbcd8dd82d8dcd8df04d8dc783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651',
             h'4d785658f36c22fb5aed3ac0',
-            h'4def48fd07d90d81a9a2e8298a323c1a',
-            h'd8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
+            h'fe842439567ba0c341088160dea1c7bb',
+            h'd8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc'
                )
-            ]
-         )
+            )
+         ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(4)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     "This could be vendor-specific data attached to the envelope."
-                  )
-               )
-            ]
-         )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(4)   ; known-predicate
+            ),
+            220(   ; leaf
+               "This could be vendor-specific data attached to the envelope."
+            )
+         ]
       )
    ]
 )
@@ -835,41 +724,35 @@ d83183d83084585ba91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6d
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    83                                    # array(3)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             585b                         # bytes(91)
                a91d82eed95ef7864c724bde9671fccde35f1118209fd78947d35f73e1c0ba6dd7f1ca4776c223920575988cb8fbb549ef1c84bb390b0e375891a6a287582745cc8971081e326ad75930e2e3f1382436280996cf8bfa20a546f651
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               4def48fd07d90d81a9a2e8298a323c1a
+               fe842439567ba0c341088160dea1c7bb
             5824                         # bytes(36)
-               d8385820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        04               # unsigned(4)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     78 3c               # text(60)
-                        5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
+               d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563b
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  04                     # unsigned(4)
+            d8 dc                        # tag(220)   ; leaf
+               78 3c                     # text(60)
+                  5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e # "This could be vendor-specific data attached to the envelope."
 ```
 
 ---
@@ -906,45 +789,39 @@ CBOR
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgadaehsjklgrevenybbimhfnyrtfrgakoueindpdpweetoyfhadfshliyjlihtoptasjetozthnpl
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgadaehsjklgrevenybbimhfnyrtfrgakoueindpdpweetoyfhadfshliyjlihtoptasjedwuttiax
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -953,30 +830,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
 ```
 
 ---
@@ -988,45 +862,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgadadlrkssodtgrfybntomkktongtcknyjsonhdonhgcmrklefrtdjtayutdilozccxdahkwdwnsp
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgadadlrkssodtgrfybntomkktongtcknyjsonhdonhgcmrklefrtdjtayutdilozccxdarksbfpih
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1035,30 +903,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
 ```
 
 ---
@@ -1070,45 +935,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgadaopfihahmtoyfsdkestthpbktsvdrendwdstdslfiemdglkpyafrrdbevyfwadhpyluyvtsbcy
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgadaopfihahmtoyfsdkestthpbktsvdrendwdstdslfiemdglkpyafrrdbevyfwadhpylessekgrl
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1117,30 +976,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
 ```
 
 ---
@@ -1152,45 +1008,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgbyaegspldepsaxsfjowpbblkberdutmdcnsghetasfpswfaoflwtvowfistigrwzjpgetsfhfmre
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgbyaegspldepsaxsfjowpbblkberdutmdcnsghetasfpswfaoflwtvowfistigrwzjpgeecckmncs
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1199,30 +1049,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
 ```
 
 ---
@@ -1234,45 +1081,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgbyaddebnfnkidpuycwltcfqdchfycnnyhphewlvontcslbmhjyswtifpfmlynleyuobgckkoluwp
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgbyaddebnfnkidpuycwltcfqdchfycnnyhphewlvontcslbmhjyswtifpfmlynleyuobgzthgfrfp
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1281,30 +1122,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
 ```
 
 ---
@@ -1316,45 +1154,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgbyaolrwnaebzhevoolftbawzckhlftlutezodepejturwtfsclnslnlkssjpwkineczsehlkmeah
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgbyaolrwnaebzhevoolftbawzckhlftlutezodepejturwtfsclnslnlkssjpwkineczstepmclpd
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1363,30 +1195,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
 ```
 
 ---
@@ -1398,45 +1227,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgclaedydmwljnttiolrdkcwlkbsinylsnlgzsjnteehtsvwbbtlvwwnjnbzhegmkkgtvdmejnvtqz
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgclaedydmwljnttiolrdkcwlkbsinylsnlgzsjnteehtsvwbbtlvwwnjnbzhegmkkgtvdjkgsgdcf
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1445,30 +1268,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
 ```
 
 ---
@@ -1480,45 +1300,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgcladaygachutasrpaeiaktjowlmevdhdhpwstnpkrlhyolinltskzmbaeorndtrdrywyvysbvsca
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgcladaygachutasrpaeiaktjowlmevdhdhpwstnpkrlhyolinltskzmbaeorndtrdrywyaxwdhdpf
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1527,30 +1341,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
 ```
 
 ---
@@ -1562,45 +1373,39 @@ d8 31                                    # tag(49)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpdylrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdnsosoxenhebdmnmycmrnnysetepatdayhddktpethdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpehtpfhlftpehtpfntpframtpehtpfntaadechddapduobgclaofzvtbacmknuemspksrjltplftsztftticscldsueiawyjsonwepyhklnoxverpykjzcloyue
+ur:envelope/lftpsolrhdprayfevdfmyaioutghbycxkpdynngmimcnzclaghbnskdeoycxeetigelultvlplfetnotsfamfpueeyluaykbsbweryvywkatsfattdpshdahbecyhpsrrlossabydkgutnmteecsaojodaloghiatkynosdydpjkctgeswuolyvaecptfzwygdbbnsswfgahqdrdfmuyhelpzmmsynrsttgdgtistsadbybtcalphsntgalacpbzwelkwlfldrynselegduowdkptsrlamnnrpiemuonfssgktloteidtkneckbaztktnndelrgouehtdngopyrdcnldhgrtlntybadypainvyaxcypagsgtkshfhdwfjzcpzohtweftrtgdihtymkzcmeaobsehpmvlongmrocfloeshddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtputlftpuotpuramtpuotaadechddapduobgclaofzvtbacmknuemspksrjltplftsztftticscldsueiawyjsonwepyhklnoxverpykmnaebyjk
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac0509ca7a4365f0b8e8f16be9ac1d3b1d2085824d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd831d83f82d831d83cd83b06d831d83cd901355825a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
+d8c882d8c98458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab14c4d785658f36c22fb5aed3ac05065d498fd91020f31ade3a552b81988395824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8dd82d8dcd8df06d8dcd901355825a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
 ```
 
 #### Tagged CBOR Diagnostic Notation
 
 ```
-49(   ; envelope
+200(   ; envelope
    [
-      48(   ; crypto-msg
+      201(   ; crypto-msg
          [
             h'0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1',
             h'4d785658f36c22fb5aed3ac0',
-            h'9ca7a4365f0b8e8f16be9ac1d3b1d208',
-            h'd8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
+            h'65d498fd91020f31ade3a552b8198839',
+            h'd8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb'
          ]
       ),
-      49(   ; envelope
-         63(   ; plaintext
-            [
-               49(   ; envelope
-                  60(   ; plaintext
-                     59(6)   ; predicate
-                  )
-               ),
-               49(   ; envelope
-                  60(   ; plaintext
-                     309(   ; crypto-sskr
-                        h'a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5'
-                     )
-                  )
+      221(   ; assertion
+         [
+            220(   ; leaf
+               223(6)   ; known-predicate
+            ),
+            220(   ; leaf
+               309(   ; crypto-sskr
+                  h'a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5'
                )
-            ]
-         )
+            )
+         ]
       )
    ]
 )
@@ -1609,30 +1414,27 @@ d83182d8308458b20845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45
 #### Tagged CBOR Annotated Binary
 
 ```
-d8 31                                    # tag(49)   ; envelope
+d8 c8                                    # tag(200)   ; envelope
    82                                    # array(2)
-      d8 30                              # tag(48)   ; crypto-msg
+      d8 c9                              # tag(201)   ; crypto-msg
          84                              # array(4)
             58b2                         # bytes(178)
                0845e73ef867dd54112075309e526a23fd80540cc528a12034d04a8b87e3ae45daa3cc0641de328b087ecbedbde1f407cc07d2ac5805101a5bc3b7a7c2112453da963418027025885463cff6a7302d731f4ac6dc81e635a940ee50149cc64605b3ba3edb5f85ff97f6bfd1504d68d701110d1d85619d49802215ed8ce9472af6c18a50dcea75d7b7069eb66493a53dca7788d362cf9f1e0efc779e288455de5a2b55abba238957c086d40e30b169e1031ab1
             4c                           # bytes(12)
                4d785658f36c22fb5aed3ac0
             50                           # bytes(16)
-               9ca7a4365f0b8e8f16be9ac1d3b1d208
+               65d498fd91020f31ade3a552b8198839
             5824                         # bytes(36)
-               d8385820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
-      d8 31                              # tag(49)   ; envelope
-         d8 3f                           # tag(63)   ; plaintext
-            82                           # array(2)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d8 3b               # tag(59)   ; predicate
-                        06               # unsigned(6)
-               d8 31                     # tag(49)   ; envelope
-                  d8 3c                  # tag(60)   ; plaintext
-                     d9 0135             # tag(309)   ; crypto-sskr
-                        5825             # bytes(37)
-                           a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
+               d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cb
+      d8 dd                              # tag(221)   ; assertion
+         82                              # array(2)
+            d8 dc                        # tag(220)   ; leaf
+               d8 df                     # tag(223)   ; known-predicate
+                  06                     # unsigned(6)
+            d8 dc                        # tag(220)   ; leaf
+               d9 0135                   # tag(309)   ; crypto-sskr
+                  5825                   # bytes(37)
+                     a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
 ```
 
 ---

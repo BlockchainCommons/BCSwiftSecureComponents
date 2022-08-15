@@ -35,7 +35,7 @@ class DigestTests: XCTestCase {
     func testCBOR() {
         let expected =
         """
-        56(
+        203(
            h'50f97c3d91dde7faf12a10272c1627be2902581b27051a485f8e7162c4c914d2'
         )
         """

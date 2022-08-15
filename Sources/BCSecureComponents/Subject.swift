@@ -15,11 +15,11 @@ public extension Subject {
         self = .assertion(predicate: predicate, object: object, digest: digest)
     }
     
-    init(predicate: CBOR, object: CBOR) throws {
-        let predicate = try Envelope(taggedCBOR: predicate)
-        let object = try Envelope(taggedCBOR: object)
-        self.init(predicate: predicate, object: object)
-    }
+//    init(predicate: CBOR, object: CBOR) throws {
+//        let predicate = try Envelope(taggedCBOR: predicate)
+//        let object = try Envelope(taggedCBOR: object)
+//        self.init(predicate: predicate, object: object)
+//    }
 }
 
 extension Subject: DigestProvider {
@@ -78,10 +78,28 @@ extension Subject: Equatable {
 }
 
 public extension Subject {
+    var isLeaf: Bool {
+        if case .leaf = self { return true }
+        return false
+    }
+    
+    var isEnvelope: Bool {
+        if case .envelope = self { return true }
+        return false
+    }
+    
     var isAssertion: Bool {
-        if case .assertion = self {
-            return true
-        }
+        if case .assertion = self { return true }
+        return false
+    }
+    
+    var isEncrypted: Bool {
+        if case .encrypted = self { return true }
+        return false
+    }
+    
+    var isRedacted: Bool {
+        if case .redacted = self { return true }
         return false
     }
 }
@@ -161,7 +179,7 @@ public extension Subject {
     }
     
     init(predicate: KnownPredicate) {
-        self.init(plaintext: CBOR.tagged(.predicate, CBOR.unsignedInt(predicate.rawValue)))
+        self.init(plaintext: CBOR.tagged(.knownPredicate, CBOR.unsignedInt(predicate.rawValue)))
     }
 }
 
@@ -198,7 +216,7 @@ public extension Subject {
         guard
             let predicate = predicate,
             let plaintext = predicate.plaintext,
-            case CBOR.tagged(.predicate, let value) = plaintext,
+            case CBOR.tagged(.knownPredicate, let value) = plaintext,
             case CBOR.unsignedInt(let rawValue) = value,
             let result = KnownPredicate(rawValue: rawValue)
         else {
@@ -213,11 +231,11 @@ public extension Subject {
     var cbor: CBOR {
         switch self {
         case .envelope(let envelope):
-            return envelope.taggedCBOR
-        case .leaf(let plaintext, _):
-            return CBOR.tagged(.plaintext, plaintext)
+            return CBOR.tagged(.enclosedEnvelope, envelope.untaggedCBOR)
+        case .leaf(let leaf, _):
+            return CBOR.tagged(.leaf, leaf)
         case .assertion(predicate: let predicate, object: let object, digest: _):
-            return CBOR.tagged(.assertion, [predicate.taggedCBOR, object.taggedCBOR])
+            return CBOR.tagged(.assertion, [predicate.untaggedCBOR, object.untaggedCBOR])
         case .encrypted(let message, _):
             return message.taggedCBOR
         case .redacted(let digest):
@@ -226,18 +244,20 @@ public extension Subject {
     }
     
     init(cbor: CBOR) throws {
-        if case CBOR.tagged(URType.envelope.tag, _) = cbor {
-            self = try .envelope(Envelope(taggedCBOR: cbor))
-        } else if case let CBOR.tagged(.plaintext, plaintext) = cbor {
-            self = .leaf(plaintext, Digest(plaintext.cborEncode))
-        } else if case let CBOR.tagged(.assertion, assertion) = cbor {
+        if case CBOR.tagged(.enclosedEnvelope, let envelopeItem) = cbor {
+            self = try .envelope(Envelope(untaggedCBOR: envelopeItem))
+        } else if case CBOR.tagged(.leaf, let leaf) = cbor {
+            self = .leaf(leaf, Digest(leaf.cborEncode))
+        } else if case CBOR.tagged(.assertion, let assertion) = cbor {
             guard
                 case let CBOR.array(array) = assertion,
                 array.count == 2
             else {
                 throw EnvelopeError.invalidFormat
             }
-            try self.init(predicate: array[0], object: array[1])
+            let predicate = try Envelope(untaggedCBOR: array[0])
+            let object = try Envelope(untaggedCBOR: array[1])
+            self.init(predicate: predicate, object: object)
         } else if case CBOR.tagged(URType.message.tag, _) = cbor {
             let message = try EncryptedMessage(taggedCBOR: cbor)
             self = try .encrypted(message, message.digest)
@@ -297,7 +317,9 @@ public extension Subject {
             guard array.count == 2 else {
                 throw EnvelopeError.invalidFormat
             }
-            let assertion = try Subject(predicate: array[0], object: array[1])
+            let predicate = try Envelope(untaggedCBOR: array[0])
+            let object = try Envelope(untaggedCBOR: array[1])
+            let assertion = Subject(predicate: predicate, object: object)
             guard assertion.digest == digest else {
                 throw EnvelopeError.invalidDigest
             }

@@ -22,7 +22,7 @@
 
 ## Introduction
 
-We provide a simplified textual notation for pretty-printing and reading instances of the `Envelope` type.
+We provide a simplified textual notation for pretty-printing instances of the `Envelope` type.
 
 ## Status
 
@@ -51,12 +51,12 @@ we simply write:
 If we were to output the [CBOR diagnostic notation](https://www.rfc-editor.org/rfc/rfc8949.html#name-diagnostic-notation) for the above, we'd see:
 
 ```
-49(
-   60("Hello")
+200(
+   220("Hello.")
 )
 ```
 
-`49` is the CBOR tag for `Envelope` and `60` is the tag for `.leaf`. Wrapping this 5-byte UTF-8 string in an `Envelope` only adds 2 bytes (1 for each tag) and 1 byte that identifies the string's type and length, for a total of 8 bytes. CBOR (and hence `Envelope`) is therefore completely self-describing.
+`200` is the CBOR tag for `Envelope` and `220` is the tag for `.leaf`. Wrapping this 5-byte UTF-8 string in an `Envelope` only adds 4 bytes (2 for each tag) and 1 byte that identifies the string's type and length, for a total of 10 bytes. CBOR (and hence `Envelope`) is therefore completely self-describing.
 
 Generally, a `Envelope` output in Envelope Notation looks like this:
 
@@ -68,7 +68,7 @@ Subject [
 ]
 ```
 
-The three roles `Subject`, `Predicate`, and `Object` are *themselves* Envelopes, allowing for *complex metadata*, i.e., meta assertions about any part of a Envelope:
+The four roles `Assertion`, `Subject`, `Predicate`, and `Object` are *themselves* Envelopes, allowing for *complex metadata*, i.e., meta assertions about any part of a Envelope:
 
 ```
 {
@@ -233,7 +233,7 @@ A specific digital object is identified and several layers of metadata are attri
 This structure uses the `dereferenceVia` predicate to indicate that the full book in EPUB format may be retrieved using ExampleStore, and that its hash will match the hash provided, while more information about the author may be retrieved from the Library of Congress, and this information may change over time.
 
 ```
-Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
+Digest(e8aa201db4044168d05b77d7b36648fb7a97db2d3e72f5babba9817911a52809) [
     "format": "EPUB"
     "work": CID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
         "author": CID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
@@ -250,7 +250,7 @@ Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
         ]
         isA: "novel"
     ]
-    dereferenceVia: "ExampleStore"
+    dereferenceVia: "IPFS"
 ]
 ```
 
@@ -271,8 +271,8 @@ A government wishes to issue a verifiable credential for permanent residency to 
             "birthDate": 1974-02-18
             "familyName": "SMITH"
             "givenName": "JOHN"
-            "image": Digest(4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54) [
-                dereferenceVia: "https://exampleledger.com/digest/4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54"
+            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                 note: "This is an image of John Smith."
             ]
             "lprCategory": "C09"
@@ -302,28 +302,28 @@ A government wishes to issue a verifiable credential for permanent residency to 
 
 The holder of a credential can then selectively reveal any of the micro-claims in this document. For instance, the holder could reveal just their name, their photo, and the issuer's signature, thereby proving that the issuer did indeed certify those facts.
 
-Redaction is performed by building a set of `Digest`s that will be revealed. All digests not present in the reveal-set will be replaced with redaction markers containing only the hash of what has been redacted, thus preserving the hash tree including revealed signatures. If a higher-level object is redacted, then everything it contains will also be redacted, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
+Redaction is performed by building a target set of `Digest`s that will be revealed. All digests not present in the target will be replaced with redaction markers containing only the digest of what has been redacted, thus preserving the Merkle tree including revealed signatures. If a higher-level object is redacted, then everything it contains will also be redacted, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
 
 ```
 {
     CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        REDACTED: REDACTED
-        REDACTED: REDACTED
+        REDACTED
+        REDACTED
         holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
+            REDACTED
             "familyName": "SMITH"
             "givenName": "JOHN"
-            "image": Digest(4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54) [
-                dereferenceVia: "https://exampleledger.com/digest/4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54"
+            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                 note: "This is an image of John Smith."
             ]
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
         ]
         isA: "credential"
         issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
@@ -342,296 +342,366 @@ Redaction is performed by building a set of `Digest`s that will be revealed. All
 
 Envelope Notation compactly describes the potentially complex semantic structure of a `Envelope` in a friendly, human-readable format. For comparison, below is the same structure from the Credential example in CBOR diagnostic notation. The tags this CBOR structure uses are:
 
-|CBOR Tag|Type|
-|---|---|
-|1|`Date`|
-|32|`URI`|
-|49|`Envelope`|
-|56|`Digest`|
-|58|`CID`|
-|59|`Predicate`|
-|60|`.leaf`|
-|61|`Signature`|
-
-Integers below tagged 59 are well-known predicates:
-
-|Integer|Predicate|
-|---|---|
-|2|`isA`|
-|3|`verifiedBy`|
-|4|`note`|
-|9|`dereferenceVia`|
-|13|`issuer`|
-|14|`holder`|
-
 ```
-49(
+200(   ; envelope
    [
-      49(
+      200(   ; envelope
          [
-            60(
-               58(
+            220(   ; leaf
+               202(   ; crypto-cid
                   h'174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8'
                )
             ),
-            [
-               49(
-                  60(
-                     59(4)
-                  )
-               ),
-               49(
-                  60(
-                     "The State of Example recognizes JOHN SMITH as a Permanent Resident."
-                  )
-               )
-            ],
-            [
-               49(
-                  60(
-                     59(14)
-                  )
-               ),
-               49(
+            200(   ; envelope
+               221(   ; assertion
                   [
-                     60(
-                        58(
-                           h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
+                     200(   ; envelope
+                        220(   ; leaf
+                           223(4)   ; known-predicate
                         )
                      ),
-                     [
-                        49(
-                           60("givenName")
-                        ),
-                        49(
-                           60("JOHN")
+                     200(   ; envelope
+                        220(   ; leaf
+                           "The State of Example recognizes JOHN SMITH as a Permanent Resident."
                         )
-                     ],
-                     [
-                        49(
-                           60(
-                              59(2)
-                           )
-                        ),
-                        49(
-                           60("Permanent Resident")
-                        )
-                     ],
-                     [
-                        49(
-                           60("residentSince")
-                        ),
-                        49(
-                           60(
-                              1(2018-01-07T00:00:00Z)
-                           )
-                        )
-                     ],
-                     [
-                        49(
-                           60(
-                              59(2)
-                           )
-                        ),
-                        49(
-                           60("Person")
-                        )
-                     ],
-                     [
-                        49(
-                           60("familyName")
-                        ),
-                        49(
-                           60("SMITH")
-                        )
-                     ],
-                     [
-                        49(
-                           60("image")
-                        ),
-                        49(
-                           [
-                              60(
-                                 56(
-                                    h'4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54'
-                                 )
-                              ),
-                              [
-                                 49(
-                                    60(
-                                       59(9)
-                                    )
-                                 ),
-                                 49(
-                                    60(
-                                       "https://exampleledger.com/digest/4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54"
-                                    )
-                                 )
-                              ],
-                              [
-                                 49(
-                                    60(
-                                       59(4)
-                                    )
-                                 ),
-                                 49(
-                                    60(
-                                       "This is an image of John Smith."
-                                    )
-                                 )
-                              ]
-                           ]
-                        )
-                     ],
-                     [
-                        49(
-                           60("sex")
-                        ),
-                        49(
-                           60("MALE")
-                        )
-                     ],
-                     [
-                        49(
-                           60("birthDate")
-                        ),
-                        49(
-                           60(
-                              1(1974-02-18T00:00:00Z)
-                           )
-                        )
-                     ],
-                     [
-                        49(
-                           60("lprNumber")
-                        ),
-                        49(
-                           60("999-999-999")
-                        )
-                     ],
-                     [
-                        49(
-                           60("birthCountry")
-                        ),
-                        49(
-                           [
-                              60("bs"),
-                              [
-                                 49(
-                                    60(
-                                       59(4)
-                                    )
-                                 ),
-                                 49(
-                                    60("The Bahamas")
-                                 )
-                              ]
-                           ]
-                        )
-                     ],
-                     [
-                        49(
-                           60("lprCategory")
-                        ),
-                        49(
-                           60("C09")
-                        )
-                     ]
+                     )
                   ]
                )
-            ],
-            [
-               49(
-                  60(
-                     59(13)
-                  )
-               ),
-               49(
+            ),
+            200(   ; envelope
+               221(   ; assertion
                   [
-                     60(
-                        58(
-                           h'04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8'
+                     200(   ; envelope
+                        220("dateIssued")   ; leaf
+                     ),
+                     200(   ; envelope
+                        220(   ; leaf
+                           1(2022-04-27T00:00:00Z)
+                        )
+                     )
+                  ]
+               )
+            ),
+            200(   ; envelope
+               221(   ; assertion
+                  [
+                     200(   ; envelope
+                        220(   ; leaf
+                           223(14)   ; known-predicate
                         )
                      ),
-                     [
-                        49(
-                           60(
-                              59(4)
-                           )
-                        ),
-                        49(
-                           60(
-                              "Issued by the State of Example"
-                           )
-                        )
-                     ],
-                     [
-                        49(
-                           60(
-                              59(9)
-                           )
-                        ),
-                        49(
-                           60(
-                              32(
-                                 "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                     200(   ; envelope
+                        [
+                           220(   ; leaf
+                              202(   ; crypto-cid
+                                 h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          223(2)   ; known-predicate
+                                       )
+                                    ),
+                                    200(   ; envelope
+                                       220("Permanent Resident")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("sex")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220("MALE")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("birthCountry")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       [
+                                          220("bs")   ; leaf,
+                                          200(   ; envelope
+                                             221(   ; assertion
+                                                [
+                                                   200(   ; envelope
+                                                      220(   ; leaf
+                                                         223(4)   ; known-predicate
+                                                      )
+                                                   ),
+                                                   200(   ; envelope
+                                                      220("The Bahamas")   ; leaf
+                                                   )
+                                                ]
+                                             )
+                                          )
+                                       ]
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("residentSince")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          1(2018-01-07T00:00:00Z)
+                                       )
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("birthDate")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          1(1974-02-18T00:00:00Z)
+                                       )
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("familyName")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220("SMITH")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("image")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       [
+                                          220(   ; leaf
+                                             203(   ; crypto-digest
+                                                h'36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999'
+                                             )
+                                          ),
+                                          200(   ; envelope
+                                             221(   ; assertion
+                                                [
+                                                   200(   ; envelope
+                                                      220(   ; leaf
+                                                         223(9)   ; known-predicate
+                                                      )
+                                                   ),
+                                                   200(   ; envelope
+                                                      220(   ; leaf
+                                                         "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
+                                                      )
+                                                   )
+                                                ]
+                                             )
+                                          ),
+                                          200(   ; envelope
+                                             221(   ; assertion
+                                                [
+                                                   200(   ; envelope
+                                                      220(   ; leaf
+                                                         223(4)   ; known-predicate
+                                                      )
+                                                   ),
+                                                   200(   ; envelope
+                                                      220(   ; leaf
+                                                         "This is an image of John Smith."
+                                                      )
+                                                   )
+                                                ]
+                                             )
+                                          )
+                                       ]
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("lprCategory")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220("C09")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          223(2)   ; known-predicate
+                                       )
+                                    ),
+                                    200(   ; envelope
+                                       220("Person")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("lprNumber")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220("999-999-999")   ; leaf
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220("givenName")   ; leaf
+                                    ),
+                                    200(   ; envelope
+                                       220("JOHN")   ; leaf
+                                    )
+                                 ]
                               )
                            )
-                        )
-                     ]
+                        ]
+                     )
                   ]
                )
-            ],
-            [
-               49(
-                  60(
-                     59(2)
-                  )
-               ),
-               49(
-                  60("credential")
+            ),
+            200(   ; envelope
+               221(   ; assertion
+                  [
+                     200(   ; envelope
+                        220(   ; leaf
+                           223(2)   ; known-predicate
+                        )
+                     ),
+                     200(   ; envelope
+                        220("credential")   ; leaf
+                     )
+                  ]
                )
-            ],
-            [
-               49(
-                  60("dateIssued")
-               ),
-               49(
-                  60(
-                     1(2022-04-27T00:00:00Z)
-                  )
+            ),
+            200(   ; envelope
+               221(   ; assertion
+                  [
+                     200(   ; envelope
+                        220(   ; leaf
+                           223(13)   ; known-predicate
+                        )
+                     ),
+                     200(   ; envelope
+                        [
+                           220(   ; leaf
+                              202(   ; crypto-cid
+                                 h'04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8'
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          223(4)   ; known-predicate
+                                       )
+                                    ),
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          "Issued by the State of Example"
+                                       )
+                                    )
+                                 ]
+                              )
+                           ),
+                           200(   ; envelope
+                              221(   ; assertion
+                                 [
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          223(9)   ; known-predicate
+                                       )
+                                    ),
+                                    200(   ; envelope
+                                       220(   ; leaf
+                                          32(   ; uri
+                                             "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
+                                          )
+                                       )
+                                    )
+                                 ]
+                              )
+                           )
+                        ]
+                     )
+                  ]
                )
-            ]
+            )
          ]
       ),
-      [
-         49(
-            60(
-               59(3)
-            )
-         ),
-         49(
+      200(   ; envelope
+         221(   ; assertion
             [
-               60(
-                  61(
-                     h'0f8a3cfc2139ded0fa4dd4ea80bad8b5c3f18bf3523e0063793056910980e2b3d8b51ee2fcc4ca17aeb559741deb954a6b0ecb089ff8d56b4d46a7c84656d6a1'
+               200(   ; envelope
+                  220(   ; leaf
+                     223(3)   ; known-predicate
                   )
                ),
-               [
-                  49(
-                     60(
-                        59(4)
+               200(   ; envelope
+                  [
+                     220(   ; leaf
+                        222(   ; signature
+                           h'aa149df0ca231d4d8d5dc42c5ca870e0aae328de2849afb2309387086b6617aac69615e913601d7d194baec5b75f8eb7298c9842953637c373208437cf34c82d'
+                        )
+                     ),
+                     200(   ; envelope
+                        221(   ; assertion
+                           [
+                              200(   ; envelope
+                                 220(   ; leaf
+                                    223(4)   ; known-predicate
+                                 )
+                              ),
+                              200(   ; envelope
+                                 220(   ; leaf
+                                    "Made by the State of Example."
+                                 )
+                              )
+                           ]
+                        )
                      )
-                  ),
-                  49(
-                     60(
-                        "Made by the State of Example."
-                     )
-                  )
-               ]
+                  ]
+               )
             ]
          )
-      ]
+      )
    ]
 )
 ```

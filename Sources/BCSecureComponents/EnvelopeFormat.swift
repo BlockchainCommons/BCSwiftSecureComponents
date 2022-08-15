@@ -34,7 +34,7 @@ extension CBOR: EnvelopeFormat {
                 return .item(s)
             case CBOR.tagged(URType.envelope.tag, _):
                 return try Envelope(taggedCBOR: cbor).formatItem
-            case CBOR.tagged(.predicate, let cbor):
+            case CBOR.tagged(.knownPredicate, let cbor):
                 guard
                     case let CBOR.unsignedInt(rawValue) = cbor,
                     case let predicate = KnownPredicate(rawValue: rawValue)

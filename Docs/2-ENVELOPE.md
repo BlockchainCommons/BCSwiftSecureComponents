@@ -22,12 +22,12 @@
 
 ## Introduction
 
-The `Envelope` type supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs. Here is its (slightly simplified) definition in Swift:
+The `Envelope` type efficiently supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs. Here is its (slightly simplified) definition in Swift:
 
 ```swift
 struct Envelope {
     let subject: Subject
-    let assertions: [Assertion]
+    let assertions: [Envelope]
 }
 ```
 
@@ -39,6 +39,7 @@ The `subject` of an `Envelope` is an enumerated type.
 
 * `.leaf` represents any terminal CBOR object.
 * `.envelope` represents a nested `Envelope`.
+* `.assertion` represents a `predicate`-`object` pair.
 * `.encrypted` represents an `EncryptedMessage` that could be a `.leaf` or a `.envelope`.
 * `.redacted` represents a value that has been elided with its place held by its `Digest`.
 
@@ -46,18 +47,8 @@ The `subject` of an `Envelope` is an enumerated type.
 enum Subject {
     case leaf(CBOR)
     case envelope(Envelope)
+    case assertion(predicate: Envelope, object: Envelope)
     case encrypted(EncryptedMessage)
-    case redacted(Digest)
-}
-```
-
-## Assertion
-
-An `Assertion` is an enumerated types that may either be `present` as a `predicate`-`object` pair that supplies additional information about the `subject`, or `redacted`, which appears as just a `Digest`.
-
-```swift
-enum Assertion: DigestProvider {
-    case present(predicate: Envelope, object: Envelope)
     case redacted(Digest)
 }
 ```
@@ -69,7 +60,13 @@ graph LR
     subject:Alice --> |predicate:knows| object:Bob
 ```
 
-The `predicate` and `object` are themselves `Envelope`s, and thus may also be encrypted or redacted, and may in turn contain their own assertions. It is therefore possible to hide any part of a `Envelope` or any of its assertions by encrypting or redacting its parts. Here is a simple example consisting of an `Envelope` whose `subject` is a simple text string, which has been signed.
+## Assertions
+
+Assertions are themselves `Envelope`s, and can therefore be encrypted, redacted, or carry assersions.
+
+Within an assertion, the `predicate` and `object` are themselves `Envelope`s, and so they may also be encrypted or redacted, or carry assertions.
+
+It is therefore possible to hide any part of a `Envelope` or any of its assertions by encrypting or redacting its parts. Here is a simple example consisting of an `Envelope` whose `subject` is a simple text string, which has been signed.
 
 ```
 "Hello." [
@@ -123,7 +120,9 @@ REDACTED [
 REDACTED
 ```
 
-It is important to understand that because `Envelope` supports "complex metadata", i.e., "assertions with assertions," users are not limited to semantic triples. Adding context, as in a [semantic quad](https://en.wikipedia.org/wiki/Named_graph#Named_graphs_and_quads), is easily accomplished with an assertion on the subject. In fact, any Envelope can also be an element of a [cons pair](https://en.wikipedia.org/wiki/Cons), with the "first" element being the `subject` and the "rest" being the assertions. And since the `subject` of an `Envelope` can be any CBOR object, a `subject` can also be any structure (such as an array or map) containing other `Envelope`s.
+It is important to understand that because `Envelope` supports "complex metadata", i.e., "assertions with assertions," users are not limited to semantic triples. Adding context, as in a [semantic quad](https://en.wikipedia.org/wiki/Named_graph#Named_graphs_and_quads), is easily accomplished with an assertion on the subject.
+
+In fact, any `Envelope` can also be an element of a [cons pair](https://en.wikipedia.org/wiki/Cons), with the "first" element being the `subject` and the "rest" being the assertions. And since the `subject` of an `Envelope` can be any CBOR object, a `subject` can also be any structure (such as an array or map) containing other `Envelope`s.
 
 ## Digests
 
@@ -143,7 +142,7 @@ This architecture supports selective disclosure of contents of nested `Envelope`
 
 ## CID
 
-This proposal uses a `CID` (Common Identifier) type as an analogue for a [DID (Decentralized Identifier)](https://www.w3.org/TR/did-core). Both `CID` and `Digest` may be dereferenceable through some form of distributed ledger or registry. The main difference is that the dereferenced content of a `CID` may differ depending on what system dereferenced it or when it was dereferenced (in other words, it may be viewed as mutable), while a `Digest` always dereferences to a unique, immutable object.
+This proposal uses the [`CID` (Common Identifier)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2022-002-cid-common-identifier.md) type as an analogue for a [DID (Decentralized Identifier)](https://www.w3.org/TR/did-core). Both `CID` and `Digest` may be dereferenceable through some form of distributed ledger or registry. The main difference is that the dereferenced content of a `CID` may differ depending on what system dereferenced it or when it was dereferenced (in other words, it may be viewed as mutable), while a `Digest` always dereferences to a unique, immutable object.
 
 Put another way, a `CID` resolves to a *projection* of a current view of an object, while a `Digest` resolves only to a specific immutable object.
 
