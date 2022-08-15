@@ -5,6 +5,7 @@ public indirect enum Subject {
     case leaf(CBOR, Digest)
     case envelope(Envelope)
     case assertion(predicate: Envelope, object: Envelope, digest: Digest)
+    case knownPredicate(KnownPredicate, Digest)
     case encrypted(EncryptedMessage, Digest)
     case redacted(Digest)
 }
@@ -31,6 +32,8 @@ extension Subject: DigestProvider {
             return envelope.digest
         case .assertion(predicate: _, object: _, digest: let digest):
             return digest
+        case .knownPredicate(_, let digest):
+            return digest
         case .encrypted(_, let digest):
             return digest
         case .redacted(let digest):
@@ -48,6 +51,8 @@ public extension Subject {
             return envelope.shallowDigests
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             return [digest, predicate.digest, predicate.subject.digest, object.digest, object.subject.digest]
+        case .knownPredicate(_, let digest):
+            return [digest]
         case .encrypted(_, let digest):
             return [digest]
         case .redacted(let digest):
@@ -63,6 +68,8 @@ public extension Subject {
             return envelope.deepDigests
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             return predicate.deepDigests.union(object.deepDigests).union([digest])
+        case .knownPredicate(_, let digest):
+            return [digest]
         case .encrypted(_, let digest):
             return [digest]
         case .redacted(let digest):
@@ -113,6 +120,8 @@ public extension Subject {
             return .redacted(envelope.digest)
         case .assertion(predicate: _, object: _, digest: let digest):
             return .redacted(digest)
+        case .knownPredicate(_, let digest):
+            return .redacted(digest)
         case .encrypted(_, let digest):
             return .redacted(digest)
         case .redacted(_):
@@ -136,6 +145,12 @@ public extension Subject {
             } else {
                 return .assertion(predicate: predicate.redact(removing: target), object: object.redact(removing: target), digest: digest)
             }
+        case .knownPredicate(_, let digest):
+            if target.contains(digest) {
+                return .redacted(digest)
+            } else {
+                return self
+            }
         case .encrypted(_, _):
             return self
         case .redacted(_):
@@ -158,6 +173,12 @@ public extension Subject {
                 return .redacted(digest)
             } else {
                 return .assertion(predicate: predicate.redact(revealing: target), object: object.redact(revealing: target), digest: digest)
+            }
+        case .knownPredicate(_, let digest):
+            if !target.contains(digest) {
+                return .redacted(digest)
+            } else {
+                return self
             }
         case .encrypted(_, _):
             return self
@@ -217,13 +238,12 @@ public extension Subject {
             let predicate = predicate,
             let plaintext = predicate.plaintext,
             case CBOR.tagged(.knownPredicate, let value) = plaintext,
-            case CBOR.unsignedInt(let rawValue) = value,
-            let result = KnownPredicate(rawValue: rawValue)
+            case CBOR.unsignedInt(let rawValue) = value
         else {
             return nil
         }
         
-        return result
+        return KnownPredicate(rawValue: rawValue)
     }
 }
 
@@ -236,6 +256,8 @@ public extension Subject {
             return CBOR.tagged(.leaf, leaf)
         case .assertion(predicate: let predicate, object: let object, digest: _):
             return CBOR.tagged(.assertion, [predicate.untaggedCBOR, object.untaggedCBOR])
+        case .knownPredicate(let predicate, _):
+            return CBOR.tagged(.knownPredicate, CBOR.unsignedInt(predicate.rawValue))
         case .encrypted(let message, _):
             return message.taggedCBOR
         case .redacted(let digest):
@@ -258,6 +280,9 @@ public extension Subject {
             let predicate = try Envelope(untaggedCBOR: array[0])
             let object = try Envelope(untaggedCBOR: array[1])
             self.init(predicate: predicate, object: object)
+        } else if case CBOR.tagged(.knownPredicate, _) = cbor {
+            let predicate = try KnownPredicate(taggedCBOR: cbor)
+            self = .knownPredicate(predicate, predicate.digest)
         } else if case CBOR.tagged(URType.message.tag, _) = cbor {
             let message = try EncryptedMessage(taggedCBOR: cbor)
             self = try .encrypted(message, message.digest)
@@ -282,6 +307,9 @@ public extension Subject {
             digest = s.digest
         case .assertion(predicate: let predicate, object: let object, digest: let _digest):
             encodedCBOR = CBOR.array([predicate.taggedCBOR, object.taggedCBOR]).cborEncode
+            digest = _digest
+        case .knownPredicate(let predicate, let _digest):
+            encodedCBOR = predicate.taggedCBOR.cborEncode
             digest = _digest
         case .encrypted(_, _):
             throw EnvelopeError.invalidOperation

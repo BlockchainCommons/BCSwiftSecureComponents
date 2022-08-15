@@ -88,6 +88,8 @@ extension Subject: EnvelopeFormat {
             return envelope.formatItem
         case .assertion(predicate: let predicate, object: let object, digest: _):
             return .list([predicate.formatItem, ": ", object.formatItem])
+        case .knownPredicate(let predicate, _):
+            return .item(predicate.description)
         case .encrypted(_, _):
             return "EncryptedMessage"
         case .redacted(_):
