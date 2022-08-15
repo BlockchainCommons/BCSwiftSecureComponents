@@ -12,6 +12,7 @@ class NestingTests: XCTestCase {
         let b = Envelope("B")
 
         let knowsBob = Envelope(predicate: knows, object: bob)
+        print(knowsBob.taggedCBOR.diagAnnotated)
         XCTAssertEqual(knowsBob.format,
             """
             "knows": "Bob"

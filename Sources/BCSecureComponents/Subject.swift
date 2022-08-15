@@ -247,7 +247,11 @@ public extension Subject {
         case .envelope(let envelope):
             return CBOR.tagged(.enclosedEnvelope, envelope.untaggedCBOR)
         case .leaf(let leaf, _):
-            return CBOR.tagged(.leaf, leaf)
+            if case CBOR.array(_) = leaf {
+                return CBOR.tagged(.leaf, leaf)
+            } else {
+                return leaf
+            }
         case .assertion(predicate: let predicate, object: let object, digest: _):
             return CBOR.tagged(.assertion, [predicate.untaggedCBOR, object.untaggedCBOR])
         case .knownPredicate(let predicate, _):
@@ -283,7 +287,7 @@ public extension Subject {
         } else if case CBOR.tagged(URType.digest.tag, _) = cbor {
             self = try .redacted(Digest(taggedCBOR: cbor))
         } else {
-            throw EnvelopeError.invalidFormat
+            self = .leaf(cbor, Digest(cbor.cborEncode))
         }
     }
 }
