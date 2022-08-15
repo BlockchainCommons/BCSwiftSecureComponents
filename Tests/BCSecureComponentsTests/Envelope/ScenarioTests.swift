@@ -307,17 +307,17 @@ class ScenarioTests: XCTestCase {
         // fact that the state has verified his identity.
 
         // Redaction is performed by building a set of `Digest`s that will be revealed. All
-        // digests not present in the reveal-set will be replaced with redaction markers
-        // containing only the hash of what has been redacted, thus preserving the hash
-        // tree including revealed signatures. If a higher-level object is redacted, then
-        // everything it contains will also be redacted, so if a deeper object is to be
+        // digests not present in the reveal-set will be replaced with elision markers
+        // containing only the hash of what has been elided, thus preserving the hash
+        // tree including revealed signatures. If a higher-level object is elided, then
+        // everything it contains will also be elided, so if a deeper object is to be
         // revealed, all of its parent objects also need to be revealed, even though not
         // everything *about* the parent objects must be revealed.
 
         // Start a reveal-set
         var target: Set<Digest> = []
 
-        // Reveal the card. Without this, everything about the card would be redacted.
+        // Reveal the card. Without this, everything about the card would be elided.
         let top = johnSmithResidentCard
         target.insert(top)
 
@@ -342,30 +342,30 @@ class ScenarioTests: XCTestCase {
         try target.insert(holderObject.assertion(predicate: "familyName").deepDigests)
         try target.insert(holderObject.assertion(predicate: "image").deepDigests)
         
-        // Perform the redaction
-        let redactedCredential = try top.redact(revealing: target).checkEncoding()
+        // Perform the elision
+        let elidedCredential = try top.elide(revealing: target).checkEncoding()
         
-        // Verify that the redacted credential compares equal to the original credential.
-        XCTAssertEqual(redactedCredential, johnSmithResidentCard)
+        // Verify that the elided credential compares equal to the original credential.
+        XCTAssertEqual(elidedCredential, johnSmithResidentCard)
         
-        // Verify that the state's signature on the redacted card is still valid.
-        try redactedCredential.validateSignature(from: statePublicKeys)
+        // Verify that the state's signature on the elided card is still valid.
+        try elidedCredential.validateSignature(from: statePublicKeys)
         
-        let expectedRedactedFormat =
+        let expectedElidedFormat =
         """
         {
             CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-                REDACTED
-                REDACTED
+                ELIDED
+                ELIDED
                 holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
-                    REDACTED
-                    REDACTED
-                    REDACTED
-                    REDACTED
-                    REDACTED
-                    REDACTED
-                    REDACTED
-                    REDACTED
+                    ELIDED
+                    ELIDED
+                    ELIDED
+                    ELIDED
+                    ELIDED
+                    ELIDED
+                    ELIDED
+                    ELIDED
                     "familyName": "SMITH"
                     "givenName": "JOHN"
                     "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
@@ -385,7 +385,7 @@ class ScenarioTests: XCTestCase {
             ]
         ]
         """
-        XCTAssertEqual(redactedCredential.format, expectedRedactedFormat)
+        XCTAssertEqual(elidedCredential.format, expectedElidedFormat)
     }
     
     /// See [The Art of Immutable Architecture, by Michael L. Perry](https://amzn.to/3Kszr1p).

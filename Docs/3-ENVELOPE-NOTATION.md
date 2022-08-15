@@ -298,26 +298,26 @@ A government wishes to issue a verifiable credential for permanent residency to 
 
 ---
 
-## Redaction
+## Redaction/Elision
 
 The holder of a credential can then selectively reveal any of the micro-claims in this document. For instance, the holder could reveal just their name, their photo, and the issuer's signature, thereby proving that the issuer did indeed certify those facts.
 
-Redaction is performed by building a target set of `Digest`s that will be revealed. All digests not present in the target will be replaced with redaction markers containing only the digest of what has been redacted, thus preserving the Merkle tree including revealed signatures. If a higher-level object is redacted, then everything it contains will also be redacted, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
+Elision is performed by building a target set of `Digest`s that will be revealed. All digests not present in the target will be replaced with elision markers containing only the digest of what has been elided, thus preserving the Merkle tree including revealed signatures. If a higher-level object is elided, then everything it contains will also be elided, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
 
 ```
 {
     CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        REDACTED
-        REDACTED
+        ELIDED
+        ELIDED
         holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
             "familyName": "SMITH"
             "givenName": "JOHN"
             "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [

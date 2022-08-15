@@ -7,7 +7,7 @@ public indirect enum Subject {
     case assertion(predicate: Envelope, object: Envelope, digest: Digest)
     case knownPredicate(KnownPredicate, Digest)
     case encrypted(EncryptedMessage, Digest)
-    case redacted(Digest)
+    case elided(Digest)
 }
 
 public extension Subject {
@@ -44,7 +44,7 @@ extension Subject: DigestProvider {
             return digest
         case .encrypted(_, let digest):
             return digest
-        case .redacted(let digest):
+        case .elided(let digest):
             return digest
         }
     }
@@ -63,7 +63,7 @@ public extension Subject {
             return [digest]
         case .encrypted(_, let digest):
             return [digest]
-        case .redacted(let digest):
+        case .elided(let digest):
             return [digest]
         }
     }
@@ -80,7 +80,7 @@ public extension Subject {
             return [digest]
         case .encrypted(_, let digest):
             return [digest]
-        case .redacted(let digest):
+        case .elided(let digest):
             return [digest]
         }
     }
@@ -113,84 +113,84 @@ public extension Subject {
         return false
     }
     
-    var isRedacted: Bool {
-        if case .redacted = self { return true }
+    var isElided: Bool {
+        if case .elided = self { return true }
         return false
     }
 }
 
 public extension Subject {
-    func redact() -> Subject {
+    func elide() -> Subject {
         switch self {
         case .leaf(_, let digest):
-            return .redacted(digest)
+            return .elided(digest)
         case .envelope(let envelope):
-            return .redacted(envelope.digest)
+            return .elided(envelope.digest)
         case .assertion(predicate: _, object: _, digest: let digest):
-            return .redacted(digest)
+            return .elided(digest)
         case .knownPredicate(_, let digest):
-            return .redacted(digest)
+            return .elided(digest)
         case .encrypted(_, let digest):
-            return .redacted(digest)
-        case .redacted(_):
+            return .elided(digest)
+        case .elided(_):
             return self
         }
     }
     
-    func redact(removing target: Set<Digest>) -> Subject {
+    func elide(removing target: Set<Digest>) -> Subject {
         if target.contains(digest) {
-            return .redacted(digest)
+            return .elided(digest)
         }
         
         switch self {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.redact(removing: target))
+            return .envelope(envelope.elide(removing: target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             if target.contains(digest) {
-                return .redacted(digest)
+                return .elided(digest)
             } else {
-                return .assertion(predicate: predicate.redact(removing: target), object: object.redact(removing: target), digest: digest)
+                return .assertion(predicate: predicate.elide(removing: target), object: object.elide(removing: target), digest: digest)
             }
         case .knownPredicate(_, let digest):
             if target.contains(digest) {
-                return .redacted(digest)
+                return .elided(digest)
             } else {
                 return self
             }
         case .encrypted(_, _):
             return self
-        case .redacted(_):
+        case .elided(_):
             return self
         }
     }
     
-    func redact(revealing target: Set<Digest>) -> Subject {
+    func elide(revealing target: Set<Digest>) -> Subject {
         if !target.contains(digest) {
-            return .redacted(digest)
+            return .elided(digest)
         }
         
         switch self {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.redact(revealing: target))
+            return .envelope(envelope.elide(revealing: target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             if !target.contains(digest) {
-                return .redacted(digest)
+                return .elided(digest)
             } else {
-                return .assertion(predicate: predicate.redact(revealing: target), object: object.redact(revealing: target), digest: digest)
+                return .assertion(predicate: predicate.elide(revealing: target), object: object.elide(revealing: target), digest: digest)
             }
         case .knownPredicate(_, let digest):
             if !target.contains(digest) {
-                return .redacted(digest)
+                return .elided(digest)
             } else {
                 return self
             }
         case .encrypted(_, _):
             return self
-        case .redacted(_):
+        case .elided(_):
             return self
         }
     }
@@ -256,8 +256,8 @@ public extension Subject {
             return CBOR.tagged(.knownPredicate, CBOR.unsignedInt(predicate.rawValue))
         case .encrypted(let message, _):
             return message.taggedCBOR
-        case .redacted(let digest):
-            return CBOR.tagged(.redacted, digest.taggedCBOR)
+        case .elided(let digest):
+            return CBOR.tagged(.elided, digest.taggedCBOR)
         }
     }
     
@@ -282,8 +282,8 @@ public extension Subject {
         } else if case CBOR.tagged(URType.message.tag, _) = cbor {
             let message = try EncryptedMessage(taggedCBOR: cbor)
             self = try .encrypted(message, message.digest)
-        } else if case CBOR.tagged(.redacted, let digest) = cbor {
-            self = try .redacted(Digest(taggedCBOR: digest))
+        } else if case CBOR.tagged(.elided, let digest) = cbor {
+            self = try .elided(Digest(taggedCBOR: digest))
         } else {
             self = .leaf(cbor, Digest(cbor.cborEncode))
         }
@@ -309,7 +309,7 @@ public extension Subject {
             digest = _digest
         case .encrypted(_, _):
             throw EnvelopeError.invalidOperation
-        case .redacted(_):
+        case .elided(_):
             throw EnvelopeError.invalidOperation
         }
         

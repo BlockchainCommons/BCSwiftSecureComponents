@@ -31,7 +31,7 @@ struct Envelope {
 }
 ```
 
-The basic idea is that an `Envelope` contains some [deterministically-encoded CBOR](https://www.rfc-editor.org/rfc/rfc8949.html#name-deterministically-encoded-c) data (the `subject`) that may or may not be encrypted or redacted, and zero or more assertions about the `subject`.
+The basic idea is that an `Envelope` contains some [deterministically-encoded CBOR](https://www.rfc-editor.org/rfc/rfc8949.html#name-deterministically-encoded-c) data (the `subject`) that may or may not be encrypted or elided, and zero or more assertions about the `subject`.
 
 ## Subject
 
@@ -41,7 +41,7 @@ The `subject` of an `Envelope` is an enumerated type.
 * `.envelope` represents a nested `Envelope`.
 * `.assertion` represents a `predicate`-`object` pair.
 * `.encrypted` represents an `EncryptedMessage` that could be a `.leaf` or a `.envelope`.
-* `.redacted` represents a value that has been elided with its place held by its `Digest`.
+* `.elided` represents a value that has been elided with its place held by its `Digest`.
 
 ```swift
 enum Subject {
@@ -49,7 +49,7 @@ enum Subject {
     case envelope(Envelope)
     case assertion(predicate: Envelope, object: Envelope)
     case encrypted(EncryptedMessage)
-    case redacted(Digest)
+    case elided(Digest)
 }
 ```
 
@@ -62,11 +62,11 @@ graph LR
 
 ## Assertions
 
-Assertions are themselves `Envelope`s, and can therefore be encrypted, redacted, or carry assersions.
+Assertions are themselves `Envelope`s, and can therefore be encrypted, elided, or carry assersions.
 
-Within an assertion, the `predicate` and `object` are themselves `Envelope`s, and so they may also be encrypted or redacted, or carry assertions.
+Within an assertion, the `predicate` and `object` are themselves `Envelope`s, and so they may also be encrypted or elided, or carry assertions.
 
-It is therefore possible to hide any part of a `Envelope` or any of its assertions by encrypting or redacting its parts. Here is a simple example consisting of an `Envelope` whose `subject` is a simple text string, which has been signed.
+It is therefore possible to hide any part of a `Envelope` or any of its assertions by encrypting or eliding its parts. Here is a simple example consisting of an `Envelope` whose `subject` is a simple text string, which has been signed.
 
 ```
 "Hello." [
@@ -77,7 +77,7 @@ It is therefore possible to hide any part of a `Envelope` or any of its assertio
 * You can hide the `subject` about which assertions are made:
 
 ```
-REDACTED [
+ELIDED [
     verifiedBy: Signature
 ]
 ```
@@ -86,7 +86,7 @@ REDACTED [
 
 ```
 "Hello." [
-    REDACTED: Signature
+    ELIDED: Signature
 ]
 ```
 
@@ -94,7 +94,7 @@ REDACTED [
 
 ```
 "Hello." [
-    verifiedBy: REDACTED
+    verifiedBy: ELIDED
 ]
 ```
 
@@ -102,7 +102,7 @@ REDACTED [
 
 ```
 "Hello." [
-    REDACTED: REDACTED
+    ELIDED: ELIDED
 ]
 ```
 
@@ -110,14 +110,14 @@ REDACTED [
 
 ```
 "Hello." [
-    REDACTED
+    ELIDED
 ]
 ```
 
-* Finally, you can hide even the fact of the assertion's existence by encrypting or redacting the entire envelope, including its assertions.
+* Finally, you can hide even the fact of the assertion's existence by encrypting or eliding the entire envelope, including its assertions.
 
 ```
-REDACTED
+ELIDED
 ```
 
 It is important to understand that because `Envelope` supports "complex metadata", i.e., "assertions with assertions," users are not limited to semantic triples. Adding context, as in a [semantic quad](https://en.wikipedia.org/wiki/Named_graph#Named_graphs_and_quads), is easily accomplished with an assertion on the subject.
@@ -134,9 +134,9 @@ Envelopes can be be in several forms, for any of these forms, the same digest is
 
 * Present locally or referenced by CID or Digest.
 * Unencrypted or encrypted.
-* Unredacted or redacted.
+* Unelided or elided.
 
-Thus the `Digest` of an `Envelope` identifies the `subject` and its assertions as if they were all present (dereferenced), unredacted, and unencrypted. This allows an `Envelope` to be transformed either into or out of the various encrypted/decrypted, local/reference, and redacted/unredacted forms without changing the cumulative [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) of digests. This also means that any transformations that do not preserve the digest tree invalidate the signatures of any enclosing `Envelope`s.
+Thus the `Digest` of an `Envelope` identifies the `subject` and its assertions as if they were all present (dereferenced), unelided, and unencrypted. This allows an `Envelope` to be transformed either into or out of the various encrypted/decrypted, local/reference, and elided/unelided forms without changing the cumulative [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) of digests. This also means that any transformations that do not preserve the digest tree invalidate the signatures of any enclosing `Envelope`s.
 
 This architecture supports selective disclosure of contents of nested `Envelope`s by revealing only the minimal objects necessary to traverse to a particular nesting path, and having done so, calculating the hashes back to the root allows verification that the correct and included contents were disclosed. On a structure where only a minimal number of fields have been revealed, a signature can still be validated.
 

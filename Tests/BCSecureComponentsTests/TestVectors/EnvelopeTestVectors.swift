@@ -75,9 +75,9 @@ final class EnvelopeTestVectors: XCTestCase {
             envelope: Self.johnSmithResidentCard
         )
         
-        let redactedCredential = TestCase(
+        let elidedCredential = TestCase(
             name: "Redacted Verifiable Credential",
-            explanation: "John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the redacted structure is the same, and the signature still validates.",
+            explanation: "John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the elided structure is the same, and the signature still validates.",
             envelope: Self.johnSmithRedactedCredential
         )
 
@@ -91,7 +91,7 @@ final class EnvelopeTestVectors: XCTestCase {
             multiRecipient,
             visibleSignatureMultiRecipient,
             verifiableCredential,
-            redactedCredential
+            elidedCredential
         ]
             .enumerated().map {
                 var testCase = $0.1
@@ -228,7 +228,7 @@ final class EnvelopeTestVectors: XCTestCase {
     static let johnSmithRedactedCredential: Envelope = {
         var target: Set<Digest> = []
 
-        // Reveal the card. Without this, everything about the card would be redacted.
+        // Reveal the card. Without this, everything about the card would be elided.
         let top = johnSmithResidentCard
         target.insert(top)
 
@@ -253,13 +253,13 @@ final class EnvelopeTestVectors: XCTestCase {
         try! target.insert(holderObject.assertion(predicate: "familyName").deepDigests)
         try! target.insert(holderObject.assertion(predicate: "image").deepDigests)
         
-        // Perform the redaction
-        let redactedCredential = top.redact(revealing: target)
+        // Perform the elision
+        let elidedCredential = top.elide(revealing: target)
         
-        // Verify that the redacted credential compares equal to the original credential.
-        XCTAssertEqual(redactedCredential, johnSmithResidentCard)
+        // Verify that the elided credential compares equal to the original credential.
+        XCTAssertEqual(elidedCredential, johnSmithResidentCard)
         
-        // Verify that the state's signature on the redacted card is still valid.
-        return try! redactedCredential.validateSignature(from: statePublicKeys)
+        // Verify that the state's signature on the elided card is still valid.
+        return try! elidedCredential.validateSignature(from: statePublicKeys)
     }()
 }

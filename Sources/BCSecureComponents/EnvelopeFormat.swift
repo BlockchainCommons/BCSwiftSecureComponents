@@ -92,8 +92,8 @@ extension Subject: EnvelopeFormat {
             return .item(predicate.description)
         case .encrypted(_, _):
             return "EncryptedMessage"
-        case .redacted(_):
-            return "REDACTED"
+        case .elided(_):
+            return "ELIDED"
         }
     }
 }

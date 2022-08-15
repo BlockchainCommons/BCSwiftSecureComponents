@@ -117,20 +117,20 @@ In the above:
 * the `verifiedBy` predicate is correlatable, because it is a well-known value, and
 * the `Signature` is noncorrelatable, because it was constructed with entropy.
 
-If the asserion is redacted, we get:
+If the asserion is elided, we get:
 
 ```
 EncryptedMessage [
-    REDACTED
+    ELIDED
 ]
 ```
 
-When redacted, each element is replaced with its `Digest`, preserving the Merkle tree. `Digests` by themselves are noncorrelatable, but an attacker could infer certain things from the structure and positioning of the elements:
+When elided, each element is replaced with its `Digest`, preserving the Merkle tree. `Digests` by themselves are noncorrelatable, but an attacker could infer certain things from the structure and positioning of the elements:
 
-* the redacted assertion's `Digest` is noncorrelatable because it includes a `Signature`, which was generated using entropy and so the `Digest` inherits its noncorrelatability.
+* the elided assertion's `Digest` is noncorrelatable because it includes a `Signature`, which was generated using entropy and so the `Digest` inherits its noncorrelatability.
 * As described above, the `EncryptedMessage` is quasicorrelatable.
 
-In general, a completely redacted assertion (`REDACTED`) inherits the maximum noncorralatability of either its predicate or object. If only the predicate is redacted (`REDACTED: object`) or only the object is redacted (`predicate: REDACTED`), or both are individually redacted but not the assertion as a whole (`REDACTED: REDACTED`), and noncorrelatability is desired, then each element must be analyzed separately.
+In general, a completely elided assertion (`ELIDED`) inherits the maximum noncorralatability of either its predicate or object. If only the predicate is elided (`ELIDED: object`) or only the object is elided (`predicate: ELIDED`), or both are individually elided but not the assertion as a whole (`ELIDED: ELIDED`), and noncorrelatability is desired, then each element must be analyzed separately.
 
 ## Opt-In Decorrelation in Secure Components
 
@@ -179,4 +179,4 @@ let e1 = Envelope(Envelope("Hello").addSalt())
 """
 ```
 
-Any or all elements of this salted `Envelope` could be redacted with a high degree of noncorrelatability..
+Any or all elements of this salted `Envelope` could be elided with a high degree of noncorrelatability..

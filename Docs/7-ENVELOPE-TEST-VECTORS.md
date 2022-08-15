@@ -1091,24 +1091,24 @@ d8 c8                                    # tag(200)   ; envelope
 
 ## TEST VECTOR 10: Redacted Verifiable Credential
 
-John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the redacted structure is the same, and the signature still validates.
+John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the elided structure is the same, and the signature still validates.
 
 ### Payload in Envelope Notation
 
 ```
 {
     CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        REDACTED
-        REDACTED
+        ELIDED
+        ELIDED
         holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
-            REDACTED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
             "familyName": "SMITH"
             "givenName": "JOHN"
             "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
@@ -1153,12 +1153,12 @@ d8c882d8e086d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed4077703
             202(   ; crypto-cid
                h'174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8'
             ),
-            225(   ; redacted
+            225(   ; elided
                203(   ; crypto-digest
                   h'e8b3c0cdcf0ea76890d1149585ce82d6f71412cab0341a212ecff9ec99a9f018'
                )
             ),
-            225(   ; redacted
+            225(   ; elided
                203(   ; crypto-digest
                   h'187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38'
                )
@@ -1170,27 +1170,27 @@ d8c882d8e086d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed4077703
                      202(   ; crypto-cid
                         h'78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc'
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'340cc8a11e45112ad3566b308e000583350dfb2f0c481aa952dbfbc30568b6a6'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'8fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9f'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'0d9e38594766816dfabd44e9393b40ec9d269b94c7537342457b3ed9f25fe029'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679d'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'99aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229d'
                         )
@@ -1220,17 +1220,17 @@ d8c882d8e086d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed4077703
                            ]
                         ]
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'52fe262f94ed95afb030eeb1c28830041208c9ed9a4eb9da5719b5704057ffbf'
                         )
                      ),
-                     225(   ; redacted
+                     225(   ; elided
                         203(   ; crypto-digest
                            h'8db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4ab'
                         )
@@ -1303,11 +1303,11 @@ d8 c8                                    # tag(200)   ; envelope
             d8 ca                        # tag(202)   ; crypto-cid
                5820                      # bytes(32)
                   174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8
-            d8 e1                        # tag(225)   ; redacted
+            d8 e1                        # tag(225)   ; elided
                d8 cb                     # tag(203)   ; crypto-digest
                   5820                   # bytes(32)
                      e8b3c0cdcf0ea76890d1149585ce82d6f71412cab0341a212ecff9ec99a9f018
-            d8 e1                        # tag(225)   ; redacted
+            d8 e1                        # tag(225)   ; elided
                d8 cb                     # tag(203)   ; crypto-digest
                   5820                   # bytes(32)
                      187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38
@@ -1319,23 +1319,23 @@ d8 c8                                    # tag(200)   ; envelope
                      d8 ca               # tag(202)   ; crypto-cid
                         5820             # bytes(32)
                            78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               340cc8a11e45112ad3566b308e000583350dfb2f0c481aa952dbfbc30568b6a6
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               8fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9f
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               0d9e38594766816dfabd44e9393b40ec9d269b94c7537342457b3ed9f25fe029
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679d
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               99aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229d
@@ -1365,15 +1365,15 @@ d8 c8                                    # tag(200)   ; envelope
                                        04 # unsigned(4)
                                     78 1f # text(31)
                                        5468697320697320616e20696d616765206f66204a6f686e20536d6974682e # "This is an image of John Smith."
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               52fe262f94ed95afb030eeb1c28830041208c9ed9a4eb9da5719b5704057ffbf
-                     d8 e1               # tag(225)   ; redacted
+                     d8 e1               # tag(225)   ; elided
                         d8 cb            # tag(203)   ; crypto-digest
                            5820          # bytes(32)
                               8db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4ab

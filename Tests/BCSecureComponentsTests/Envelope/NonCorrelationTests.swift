@@ -6,8 +6,8 @@ class NonCorrelationTests: XCTestCase {
     func testEnvelopeNonCorrelation() throws {
         let e1 = Envelope("Hello.")
         
-        // e1 correlates with its redaction
-        XCTAssertEqual(e1, e1.redact())
+        // e1 correlates with its elision
+        XCTAssertEqual(e1, e1.elide())
 
         // e2 is the same message, but with random salt
         let e2 = try e1.addSalt().checkEncoding()
@@ -22,8 +22,8 @@ class NonCorrelationTests: XCTestCase {
         // So even though its content is the same, it doesn't correlate.
         XCTAssertNotEqual(e1, e2)
 
-        // And of course, neither does its redaction.
-        XCTAssertNotEqual(e1, e2.redact())
+        // And of course, neither does its elision.
+        XCTAssertNotEqual(e1, e2.elide())
     }
     
     func testPredicateCorrelation() throws {
@@ -44,14 +44,14 @@ class NonCorrelationTests: XCTestCase {
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.
-        let e1Redacted = try e1.redact(revealing: e1).checkEncoding()
+        let e1Elided = try e1.elide(revealing: e1).checkEncoding()
         
         let redactedExpectedFormat = """
-        REDACTED [
-            REDACTED
+        ELIDED [
+            ELIDED
         ]
         """
-        XCTAssertEqual(e1Redacted.format, redactedExpectedFormat)
+        XCTAssertEqual(e1Elided.format, redactedExpectedFormat)
     }
     
     func testAddSalt() throws {
@@ -74,13 +74,13 @@ class NonCorrelationTests: XCTestCase {
         """
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
-        let e1Redacted = try e1.redact(revealing: e1).checkEncoding()
+        let e1Elided = try e1.elide(revealing: e1).checkEncoding()
         
         let redactedExpectedFormat = """
-        REDACTED [
-            REDACTED
+        ELIDED [
+            ELIDED
         ]
         """
-        XCTAssertEqual(e1Redacted.format, redactedExpectedFormat)
+        XCTAssertEqual(e1Elided.format, redactedExpectedFormat)
     }
 }

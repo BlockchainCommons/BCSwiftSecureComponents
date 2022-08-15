@@ -178,14 +178,14 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
         
-        let redactedEnvelope = envelope.redact()
-        XCTAssertEqual(redactedEnvelope, envelope)
+        let elidedEnvelope = envelope.elide()
+        XCTAssertEqual(elidedEnvelope, envelope)
 
-        let expectedRedactedFormat =
+        let expectedElidedFormat =
         """
-        REDACTED
+        ELIDED
         """
-        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
+        XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
     }
     
     func testNestingOnce() throws {
@@ -201,20 +201,20 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let redactedEnvelope = try Envelope(plaintextHello)
-            .redact()
+        let elidedEnvelope = try Envelope(plaintextHello)
+            .elide()
             .enclose()
             .checkEncoding()
 
-        XCTAssertEqual(redactedEnvelope, envelope)
+        XCTAssertEqual(elidedEnvelope, envelope)
 
-        let expectedRedactedFormat =
+        let expectedElidedFormat =
         """
         {
-            REDACTED
+            ELIDED
         }
         """
-        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
+        XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
     }
     
     func testNestingTwice() throws {
@@ -234,17 +234,17 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let target = try envelope.extract().extract()
-        let redactedEnvelope = envelope.redact(removing: target)
+        let elidedEnvelope = envelope.elide(removing: target)
         
-        let expectedRedactedFormat =
+        let expectedElidedFormat =
         """
         {
-            REDACTED
+            ELIDED
         }
         """
-        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
-        XCTAssertEqual(envelope.digest, redactedEnvelope.digest)
-        try XCTAssertEqual(envelope.extract().digest, redactedEnvelope.extract().digest)
+        XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
+        XCTAssertEqual(envelope.digest, elidedEnvelope.digest)
+        try XCTAssertEqual(envelope.extract().digest, elidedEnvelope.extract().digest)
     }
     
     func testNestingSigned() throws {
@@ -261,15 +261,15 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let target = envelope.subject
-        let redactedEnvelope = try envelope.redact(removing: target).checkEncoding()
-        try redactedEnvelope.validateSignature(from: alicePublicKeys)
-        let expectedRedactedFormat =
+        let elidedEnvelope = try envelope.elide(removing: target).checkEncoding()
+        try elidedEnvelope.validateSignature(from: alicePublicKeys)
+        let expectedElidedFormat =
         """
-        REDACTED [
+        ELIDED [
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
+        XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
     }
     
     func testNestingEncloseThenSign() throws {
@@ -289,30 +289,30 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let target = try envelope.extract().subject
-        let redactedEnvelope = try envelope.redact(removing: target).checkEncoding()
-        XCTAssertEqual(redactedEnvelope, envelope)
-        try redactedEnvelope.validateSignature(from: alicePublicKeys)
-        let expectedRedactedFormat =
+        let elidedEnvelope = try envelope.elide(removing: target).checkEncoding()
+        XCTAssertEqual(elidedEnvelope, envelope)
+        try elidedEnvelope.validateSignature(from: alicePublicKeys)
+        let expectedElidedFormat =
         """
         {
-            REDACTED
+            ELIDED
         } [
             verifiedBy: Signature
         ]
         """
-        XCTAssertEqual(redactedEnvelope.format, expectedRedactedFormat)
+        XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
         
         let p1 = envelope
         let p2 = try p1.extract()
         let p3 = p2.subject
-        let revealedEnvelope = try envelope.redact(revealing: [p1, p2, p3]).checkEncoding()
+        let revealedEnvelope = try envelope.elide(revealing: [p1, p2, p3]).checkEncoding()
         XCTAssertEqual(revealedEnvelope, envelope)
         let expectedRevealedFormat =
         """
         {
             "Hello."
         } [
-            REDACTED
+            ELIDED
         ]
         """
         XCTAssertEqual(revealedEnvelope.format, expectedRevealedFormat)

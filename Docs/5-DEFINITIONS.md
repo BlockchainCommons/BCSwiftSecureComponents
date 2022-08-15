@@ -41,14 +41,14 @@ struct Envelope {
 }
 ```
 
-The `Subject` of an `Envelope` is an enumerated type. `.leaf` represents any terminal CBOR object. `.envelope` represents a nested `Envelope`, `.encrypted` represents an `EncryptedMessage` that could be a `.leaf` or a `.envelope`, and `.redacted` represents a value that has been elided with its place held by its `Digest`.
+The `Subject` of an `Envelope` is an enumerated type. `.leaf` represents any terminal CBOR object. `.envelope` represents a nested `Envelope`, `.encrypted` represents an `EncryptedMessage` that could be a `.leaf` or a `.envelope`, and `.elided` represents a value that has been elided with its place held by its `Digest`.
 
 ```swift
 enum Subject {
     case leaf(CBOR)
     case envelope(Envelope)
     case encrypted(EncryptedMessage)
-    case redacted(Digest)
+    case elided(Digest)
 }
 ```
 
@@ -90,7 +90,7 @@ subject =
     envelope /
     leaf /
     encrypted /
-    redacted
+    elided
 ```
 
 A `leaf` is any CBOR-encoded object tagged with #6.60 (`plaintext`).
@@ -105,10 +105,10 @@ An `encrypted` is a tagged `EncryptedMessage`. The `Digest` of the encrypted pla
 encrypted = crypto-msg
 ```
 
-A `redacted` is the `Digest` of the redacted item.
+An `elided` is the `Digest` of the elided item.
 
 ```
-redacted = digest
+elided = digest
 ```
 
 An `assertion` is a two-element array with the `predicate` as its first element and the `object` as its second. The `predicate` and `object` are `envelope`es as defined above.

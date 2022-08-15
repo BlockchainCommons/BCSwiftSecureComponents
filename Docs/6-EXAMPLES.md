@@ -704,18 +704,18 @@ try johnSmithResidentCard.validateSignature(from: statePublicKeys)
 // credential, but does not wish to reveal more than his name, his photo, and the
 // fact that the state has verified his identity.
 
-// Redaction is performed by building a set of `Digest`s that will be revealed. All
-// digests not present in the reveal-set will be replaced with redaction markers
-// containing only the hash of what has been redacted, thus preserving the hash
-// tree including revealed signatures. If a higher-level object is redacted, then
-// everything it contains will also be redacted, so if a deeper object is to be
+// Elision is performed by building a set of `Digest`s that will be revealed. All
+// digests not present in the reveal-set will be replaced with elision markers
+// containing only the hash of what has been elided, thus preserving the hash
+// tree including revealed signatures. If a higher-level object is elided, then
+// everything it contains will also be elided, so if a deeper object is to be
 // revealed, all of its parent objects also need to be revealed, even though not
 // everything *about* the parent objects must be revealed.
 
 // Start a reveal-set
 var revealSet: Set<Digest> = []
 
-// Reveal the card. Without this, everything about the card would be redacted.
+// Reveal the card. Without this, everything about the card would be elided.
 let top = johnSmithResidentCard
 revealSet.insert(top)
 
@@ -739,14 +739,14 @@ try revealSet.insert(holder.assertion(predicate: "givenName").deepDigests)
 try revealSet.insert(holder.assertion(predicate: "familyName").deepDigests)
 try revealSet.insert(holder.assertion(predicate: "image").deepDigests)
 
-// Perform the redaction
-let redactedCredential = top.redact(revealing: revealSet)
+// Perform the elision
+let elidedCredential = top.elide(revealing: revealSet)
 
-// Verify that the redacted credential compares equal to the original credential.
-XCTAssertEqual(redactedCredential, johnSmithResidentCard)
+// Verify that the elided credential compares equal to the original credential.
+XCTAssertEqual(elidedCredential, johnSmithResidentCard)
 
-// Verify that the state's signature on the redacted card is still valid.
-try redactedCredential.validateSignature(from: statePublicKeys)
+// Verify that the state's signature on the elided card is still valid.
+try elidedCredential.validateSignature(from: statePublicKeys)
 ```
 
 ### Envelope Notation for Redacted Credential
@@ -754,8 +754,8 @@ try redactedCredential.validateSignature(from: statePublicKeys)
 ```
 {
     CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        REDACTED: REDACTED
-        REDACTED: REDACTED
+        ELIDED
+        ELIDED
         holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
             "familyName": "SMITH"
             "givenName": "JOHN"
@@ -763,14 +763,14 @@ try redactedCredential.validateSignature(from: statePublicKeys)
                 dereferenceVia: "https://exampleledger.com/digest/4d55aabd82301eaa2d6b0a96c00c93e5535e82967f057fd1c99bee94ffcdad54"
                 note: "This is an image of John Smith."
             ]
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
-            REDACTED: REDACTED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
+            ELIDED
         ]
         isA: "credential"
         issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
