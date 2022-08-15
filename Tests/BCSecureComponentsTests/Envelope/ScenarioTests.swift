@@ -248,6 +248,7 @@ class ScenarioTests: XCTestCase {
             .add(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
             .enclose()
             .sign(with: statePrivateKeys, note: "Made by the State of Example.")
+            .checkEncoding()
 
         // Validate the state's signature
         try johnSmithResidentCard.validateSignature(from: statePublicKeys)
@@ -333,7 +334,7 @@ class ScenarioTests: XCTestCase {
         try target.insert(holderObject.assertion(predicate: "image").deepDigests)
         
         // Perform the redaction
-        let redactedCredential = top.redact(revealing: target)
+        let redactedCredential = try top.redact(revealing: target).checkEncoding()
         
         // Verify that the redacted credential compares equal to the original credential.
         XCTAssertEqual(redactedCredential, johnSmithResidentCard)

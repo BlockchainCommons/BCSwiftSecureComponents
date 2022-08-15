@@ -15,6 +15,20 @@ public extension Subject {
         let digest = Digest(predicate.digest + object.digest)
         self = .assertion(predicate: predicate, object: object, digest: digest)
     }
+
+    init(plaintext: CBOREncodable) {
+        if let envelope = plaintext as? Envelope {
+            self = .envelope(envelope)
+        } else {
+            let cbor = plaintext.cbor
+            let encodedCBOR = cbor.cborEncode
+            self = .leaf(cbor, Digest(encodedCBOR))
+        }
+    }
+    
+    init(predicate: KnownPredicate) {
+        self = .knownPredicate(predicate, predicate.digest)
+    }
 }
 
 extension Subject: DigestProvider {
@@ -183,22 +197,6 @@ public extension Subject {
 }
 
 public extension Subject {
-    init(plaintext: CBOREncodable) {
-        if let envelope = plaintext as? Envelope {
-            self = .envelope(envelope)
-        } else {
-            let cbor = plaintext.cbor
-            let encodedCBOR = cbor.cborEncode
-            self = .leaf(cbor, Digest(encodedCBOR))
-        }
-    }
-    
-    init(predicate: KnownPredicate) {
-        self = .knownPredicate(predicate, predicate.digest)
-    }
-}
-
-public extension Subject {
     var plaintext: CBOR? {
         guard case let .leaf(plaintext, _) = self else {
             return nil
@@ -259,7 +257,7 @@ public extension Subject {
         case .encrypted(let message, _):
             return message.taggedCBOR
         case .redacted(let digest):
-            return digest.taggedCBOR
+            return CBOR.tagged(.redacted, digest.taggedCBOR)
         }
     }
     
@@ -284,8 +282,8 @@ public extension Subject {
         } else if case CBOR.tagged(URType.message.tag, _) = cbor {
             let message = try EncryptedMessage(taggedCBOR: cbor)
             self = try .encrypted(message, message.digest)
-        } else if case CBOR.tagged(URType.digest.tag, _) = cbor {
-            self = try .redacted(Digest(taggedCBOR: cbor))
+        } else if case CBOR.tagged(.redacted, let digest) = cbor {
+            self = try .redacted(Digest(taggedCBOR: digest))
         } else {
             self = .leaf(cbor, Digest(cbor.cborEncode))
         }

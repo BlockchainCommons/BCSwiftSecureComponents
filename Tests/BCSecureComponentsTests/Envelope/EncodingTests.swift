@@ -3,6 +3,10 @@ import BCSecureComponents
 import WolfBase
 
 class EncodingTests: XCTestCase {
+    func testDigest() throws {
+        try Envelope(Digest("Hello.")).checkEncoding()
+    }
+
     func test1() throws {
         let e = try Envelope(plaintextHello).checkEncoding()
         XCTAssertEqual(e.taggedCBOR.diagAnnotated,
@@ -10,10 +14,12 @@ class EncodingTests: XCTestCase {
             200("Hello.")   ; envelope
             """
         )
-
+    }
+    
+    func test2() throws {
         let array: CBOR = [1, 2, 3]
-        let e2 = try Envelope(array).checkEncoding()
-        XCTAssertEqual(e2.taggedCBOR.diagAnnotated,
+        let e = try Envelope(array).checkEncoding()
+        XCTAssertEqual(e.taggedCBOR.diagAnnotated,
             """
             200(   ; envelope
                220(   ; leaf

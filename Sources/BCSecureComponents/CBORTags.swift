@@ -48,6 +48,7 @@ public extension CBOR.Tag {
     static let signature = CBOR.Tag(222, "signature")
     static let knownPredicate = CBOR.Tag(223, "known-predicate")
     static let enclosedEnvelope = CBOR.Tag(224, "enclosed-envelope")
+    static let redacted = CBOR.Tag(225, "redacted")
     
     static let agreementPublicKey = CBOR.Tag(230, "agreement-public-key")
 }

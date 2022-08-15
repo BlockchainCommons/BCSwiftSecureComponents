@@ -42,6 +42,14 @@ public extension Envelope {
         let o = object as? Envelope ?? Envelope(object)
         self.init(subject: Subject(predicate: p, object: o))
     }
+
+    init(_ plaintext: CBOREncodable) {
+        self.init(subject: Subject(plaintext: plaintext))
+    }
+    
+    init(predicate: KnownPredicate) {
+        self.init(subject: Subject(predicate: predicate))
+    }
 }
 
 public extension Envelope {
@@ -79,14 +87,6 @@ extension Envelope: CBORDecodable {
 }
 
 public extension Envelope {
-    init(_ plaintext: CBOREncodable) {
-        self.init(subject: Subject(plaintext: plaintext))
-    }
-    
-    init(predicate: KnownPredicate) {
-        self.init(subject: Subject(predicate: predicate))
-    }
-    
     func extract<T>(_ type: T.Type) throws -> T where T: CBORDecodable {
         guard let cbor = self.plaintext else {
             throw CBORError.invalidFormat
