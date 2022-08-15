@@ -12,7 +12,7 @@ class NestingTests: XCTestCase {
         let b = Envelope("B")
 
         let knowsBob = Envelope(predicate: knows, object: bob)
-        print(knowsBob.taggedCBOR.diagAnnotated)
+//        print(knowsBob.taggedCBOR.diagAnnotated)
         XCTAssertEqual(knowsBob.format,
             """
             "knows": "Bob"
@@ -128,7 +128,7 @@ class NestingTests: XCTestCase {
             .add(ab)
             .add(Envelope(predicate: knows.add(ab), object: bob.add(ab)))
             .checkEncoding()
-        print(aliceABKnowsABBobAB.format)
+//        print(aliceABKnowsABBobAB.format)
         XCTAssertEqual(aliceABKnowsABBobAB.format,
             """
             "Alice" [

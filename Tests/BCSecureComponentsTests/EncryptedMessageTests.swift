@@ -44,7 +44,7 @@ class EncryptedMessageTests: XCTestCase {
     }
     
     func testUR() {
-        print(secureMessage.ur)
+//        print(secureMessage.ur)
         let expectedUR = try! UR(urString: "ur:crypto-msg/lrhdjptecylgeeiemnhnuykglnperfguwskbsaoxpmwegydtjtayzeptvoreosenwyidtbfsrnoxhylkptiobglfzszointnmojplucyjsuebknnambddtahtbonrpkbsnfrenmoutrylbdpktlulkmkaxplvldeascwhdzsqddkvezstbkpmwgolplalufdehtsrffhwkuewtmngrknntvwkotdihlntoswgrhscmgsataeaeaefzfpfwfxfyfefgflgdcyvybdhkgwasvoimkbmhdmsbtihnammegsgdgygmgurtsesasrssskswstcfnbpdct")
         XCTAssertEqual(secureMessage.ur, expectedUR)
     }
