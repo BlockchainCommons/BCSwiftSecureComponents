@@ -34,7 +34,7 @@ class CryptoTests: XCTestCase {
             .checkEncoding()
         let ur = envelope.ur
 
-//        print(envelope.taggedCBOR.diag)
+//        print(envelope.taggedCBOR.diagAnnotated)
 //        print(envelope.taggedCBOR.dump)
 //        print(envelope.ur)
 
@@ -416,10 +416,10 @@ class CryptoTests: XCTestCase {
         
         // Dan sends one envelope to each of Alice, Bob, and Carol.
 
-        print(sentEnvelopes[0].format)
-        print(sentEnvelopes[0].taggedCBOR.diag)
-        print(sentEnvelopes[0].taggedCBOR.dump)
-        print(sentEnvelopes[0].ur)
+//        print(sentEnvelopes[0].format)
+//        print(sentEnvelopes[0].taggedCBOR.diag)
+//        print(sentEnvelopes[0].taggedCBOR.dump)
+//        print(sentEnvelopes[0].ur)
 
         // Dan ➡️ ☁️ ➡️ Alice
         // Dan ➡️ ☁️ ➡️ Bob

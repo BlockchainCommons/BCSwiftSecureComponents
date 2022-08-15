@@ -15,12 +15,6 @@ public extension Subject {
         let digest = Digest(predicate.digest + object.digest)
         self = .assertion(predicate: predicate, object: object, digest: digest)
     }
-    
-//    init(predicate: CBOR, object: CBOR) throws {
-//        let predicate = try Envelope(taggedCBOR: predicate)
-//        let object = try Envelope(taggedCBOR: object)
-//        self.init(predicate: predicate, object: object)
-//    }
 }
 
 extension Subject: DigestProvider {
@@ -200,7 +194,7 @@ public extension Subject {
     }
     
     init(predicate: KnownPredicate) {
-        self.init(plaintext: CBOR.tagged(.knownPredicate, CBOR.unsignedInt(predicate.rawValue)))
+        self = .knownPredicate(predicate, predicate.digest)
     }
 }
 

@@ -115,13 +115,13 @@ A string has been signed by Alice.
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpuoiyfdihjzjzjldmtputlftpuotpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkftgtatpauo
+ur:envelope/lftpuoiyfdihjzjzjldmtputlftpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkftstgmurwk
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c882d8dc6648656c6c6f2ed8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
+d8c882d8dc6648656c6c6f2ed8dd82d8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -132,9 +132,7 @@ d8c882d8dc6648656c6c6f2ed8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853
       220("Hello.")   ; leaf,
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             220(   ; leaf
                222(   ; signature
                   h'77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a'
@@ -156,9 +154,8 @@ d8 c8                                    # tag(200)   ; envelope
             48656c6c6f2e                 # "Hello."
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             d8 dc                        # tag(220)   ; leaf
                d8 de                     # tag(222)   ; signature
                   5840                   # bytes(64)
@@ -185,13 +182,13 @@ Alice and Carol jointly send a signed plaintext message to Bob.
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpuoiyfdihjzjzjldmtputlftpuotpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkfttputlftpuotpuraxtpuotpuehdfzceoxaemteepkgwbzeylgplplsehlurstinjtcmrthfhginuesamoktpllrwlgooyrfcpeofrhfztyljydycpmwfmoshdkgdsotamieleaamkylghsfgtvoasdijoropaurglgdbd
+ur:envelope/lstpuoiyfdihjzjzjldmtputlftpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkfttputlftpuraxtpuotpuehdfzceoxaemteepkgwbzeylgplplsehlurstinjtcmrthfhginuesamoktpllrwlgooyrfcpeofrhfztyljydycpmwfmoshdkgdsotamieleaamkylghsfgtvoasdijoropaosclwlcl
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c883d8dc6648656c6c6f2ed8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3ad8dd82d8dcd8df03d8dcd8de58401ca4009634aa4f15328daeaec15ddfc7696e16c0565769dec29277ae84e955a1bc22333b56fcf7743022943ea7587b26a306648a0498f754cc4de2092770b8b1
+d8c883d8dc6648656c6c6f2ed8dd82d8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3ad8dd82d8df03d8dcd8de58401ca4009634aa4f15328daeaec15ddfc7696e16c0565769dec29277ae84e955a1bc22333b56fcf7743022943ea7587b26a306648a0498f754cc4de2092770b8b1
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -202,9 +199,7 @@ d8c883d8dc6648656c6c6f2ed8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853
       220("Hello.")   ; leaf,
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             220(   ; leaf
                222(   ; signature
                   h'77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a'
@@ -214,9 +209,7 @@ d8c883d8dc6648656c6c6f2ed8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             220(   ; leaf
                222(   ; signature
                   h'1ca4009634aa4f15328daeaec15ddfc7696e16c0565769dec29277ae84e955a1bc22333b56fcf7743022943ea7587b26a306648a0498f754cc4de2092770b8b1'
@@ -238,18 +231,16 @@ d8 c8                                    # tag(200)   ; envelope
             48656c6c6f2e                 # "Hello."
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             d8 dc                        # tag(220)   ; leaf
                d8 de                     # tag(222)   ; signature
                   5840                   # bytes(64)
                      77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             d8 dc                        # tag(220)   ; leaf
                d8 de                     # tag(222)   ; signature
                   5840                   # bytes(64)
@@ -330,13 +321,13 @@ EncryptedMessage
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/tpsolrhdhtaslkgafwdagysfsrghkofptifrsabtihgdwppykptpdskgfhkowtayrponyksriolddlmnbeasztcspdoecaaojstipsfyonfyecnlwypltysffhbncaluatcaweammkaybntdetkigstngmvadtguykvamdgufgfrrheodlbtuemupldtnbgsgtkshfhdwfjzcpzohtweftrtgdjoeowtoychzsrfflnsdpdlltynlsfrtkhddktpsbhdcxwmfmlybkwnhfqdckdrfxgmrpecrhfxmwckkivafdimrtytoysegaztcwyarybnzoenzeyacx
+ur:envelope/tpsolrhdhdaslkgafwdagysfsrghkofptifrsabtihguempspktpdkzooyhkcyhlasnelnwlzmmovdrsjsgayalnzclgswylmwcacmgyknrygwhfhnzobbguzsjnkedphepfrtwftsinrsaadwzcqztpsrlyiostfgmwadbesornynahwlfrwdgsyngsgtkshfhdwfjzcpzohtweftrtgdwynyonmndtfglkwysomeinuyrpgtpenyhddktpsbhdcxwmfmlybkwnhfqdckdrfxgmrpecrhfxmwckkivafdimrtytoysegaztcwyarybnzojovoguds
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c8d8c984585a098c49422551ccc3547641d03bc20d6550ecab75d8267b3f76f008b6a5f5c367892f8e1009fc18a8a21d0271d0ac44a5443599eeaed4cc3f0c1d8b071ded0698080cd2387d4cda52e62953f5e69553463bb9332f0dde93ae29a04c4d785658f36c22fb5aed3ac0507033f0a117fabc479c2d2f87f6833bcf5824d8cb5820eb3e810af156b31e2a4352b635b943941e7de6486ac0f9a1c149fc1bf8bd0cfb
+d8c8d8c9845858098c49422551ccc3547641d03bc20d655337acaad824fba1591a5d099f86e9ff92e7bf7149f886fd8dc6f7941d16517abd4f5660fb1453fa6d7c2d5fb0c0f3d769bf042cfdb4d8c38167c746940110c9bef605e93bea4cf64c4d785658f36c22fb5aed3ac050ee9aa58e29468ceec99169dbb64daf9a5824d8cb5820eb3e810af156b31e2a4352b635b943941e7de6486ac0f9a1c149fc1bf8bd0cfb
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -345,9 +336,9 @@ d8c8d8c984585a098c49422551ccc3547641d03bc20d6550ecab75d8267b3f76f008b6a5f5c36789
 200(   ; envelope
    201(   ; crypto-msg
       [
-         h'098c49422551ccc3547641d03bc20d6550ecab75d8267b3f76f008b6a5f5c367892f8e1009fc18a8a21d0271d0ac44a5443599eeaed4cc3f0c1d8b071ded0698080cd2387d4cda52e62953f5e69553463bb9332f0dde93ae29a0',
+         h'098c49422551ccc3547641d03bc20d655337acaad824fba1591a5d099f86e9ff92e7bf7149f886fd8dc6f7941d16517abd4f5660fb1453fa6d7c2d5fb0c0f3d769bf042cfdb4d8c38167c746940110c9bef605e93bea4cf6',
          h'4d785658f36c22fb5aed3ac0',
-         h'7033f0a117fabc479c2d2f87f6833bcf',
+         h'ee9aa58e29468ceec99169dbb64daf9a',
          h'd8cb5820eb3e810af156b31e2a4352b635b943941e7de6486ac0f9a1c149fc1bf8bd0cfb'
       ]
    )
@@ -360,12 +351,12 @@ d8c8d8c984585a098c49422551ccc3547641d03bc20d6550ecab75d8267b3f76f008b6a5f5c36789
 d8 c8                                    # tag(200)   ; envelope
    d8 c9                                 # tag(201)   ; crypto-msg
       84                                 # array(4)
-         585a                            # bytes(90)
-            098c49422551ccc3547641d03bc20d6550ecab75d8267b3f76f008b6a5f5c367892f8e1009fc18a8a21d0271d0ac44a5443599eeaed4cc3f0c1d8b071ded0698080cd2387d4cda52e62953f5e69553463bb9332f0dde93ae29a0
+         5858                            # bytes(88)
+            098c49422551ccc3547641d03bc20d655337acaad824fba1591a5d099f86e9ff92e7bf7149f886fd8dc6f7941d16517abd4f5660fb1453fa6d7c2d5fb0c0f3d769bf042cfdb4d8c38167c746940110c9bef605e93bea4cf6
          4c                              # bytes(12)
             4d785658f36c22fb5aed3ac0
          50                              # bytes(16)
-            7033f0a117fabc479c2d2f87f6833bcf
+            ee9aa58e29468ceec99169dbb64daf9a
          5824                            # bytes(36)
             d8cb5820eb3e810af156b31e2a4352b635b943941e7de6486ac0f9a1c149fc1bf8bd0cfb
 ```
@@ -389,13 +380,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpuotpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkftlaosdytt
+ur:envelope/lftpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkftflztrfyk
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c882d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
+d8c882d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -413,9 +404,7 @@ d8c882d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             220(   ; leaf
                222(   ; signature
                   h'77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a'
@@ -444,9 +433,8 @@ d8 c8                                    # tag(200)   ; envelope
                d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             d8 dc                        # tag(220)   ; leaf
                d8 de                     # tag(222)   ; signature
                   5840                   # bytes(64)
@@ -473,13 +461,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpuotpurahtpuotptklftpsolshddkjppfbsdnqdatsprsaxbytojllnkohytnnyiewdftdwntnnesqzcnrplskngshlbneminpeeegsgtkshfhdwfjzcpzohtweftrtgdmndphhdyplnsfrmwrsbgfefxmkrdplrltpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjztputlftpuotpurahtpuotptklftpsolshddkfgwlwybnaaurnsrlvlwekkdtiochbbdtspceoxwfcttletfwihamcsahdmhdwsldswgukeoegsgtkshfhdwfjzcpzohtweftrtgdtkostlwkbadknsjodwztflbnhldetkjktpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjzpaoxjswz
+ur:envelope/lstpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpurahtpuotptklftpsolshddkjppfbsdnqdatsprsaxbytojllnkohytnnyiewdftdwntnnesqzcnrplskngshlbneminpeeegsgtkshfhdwfjzcpzohtweftrtgdmndphhdyplnsfrmwrsbgfefxmkrdplrltpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjztputlftpurahtpuotptklftpsolshddkfgwlwybnaaurnsrlvlwekkdtiochbbdtspceoxwfcttletfwihamcsahdmhdwsldswgukeoegsgtkshfhdwfjzcpzohtweftrtgdtkostlwkbadknsjodwztflbnhldetkjktpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjzlapacxvt
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c883d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8dcd8df05d8dcd8cf82d8c983582472b00f2bb307c8bf0311ce6f86765eda9a64ea3a2c9d9e39b423b6837a4c5d0c3769af344c4d785658f36c22fb5aed3ac0508e2d5c30ae9c3b94bf12454398baaeb7d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546cd8dd82d8dcd8df05d8dcd8cf82d8c983582446e9ee0c04df9cb7e3ed792967171429c81ca4f31fd53842650618052e58ef89c6537ca24c4d785658f36c22fb5aed3ac050cfa7d5f40e249c702cfc470c5d28cf73d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
+d8c883d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8df05d8dcd8cf82d8c983582472b00f2bb307c8bf0311ce6f86765eda9a64ea3a2c9d9e39b423b6837a4c5d0c3769af344c4d785658f36c22fb5aed3ac0508e2d5c30ae9c3b94bf12454398baaeb7d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546cd8dd82d8df05d8dcd8cf82d8c983582446e9ee0c04df9cb7e3ed792967171429c81ca4f31fd53842650618052e58ef89c6537ca24c4d785658f36c22fb5aed3ac050cfa7d5f40e249c702cfc470c5d28cf73d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -497,9 +485,7 @@ d8c883d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(5)   ; known-predicate
-            ),
+            223(5)   ; known-predicate,
             220(   ; leaf
                207(   ; crypto-sealed
                   [
@@ -520,9 +506,7 @@ d8c883d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(5)   ; known-predicate
-            ),
+            223(5)   ; known-predicate,
             220(   ; leaf
                207(   ; crypto-sealed
                   [
@@ -562,9 +546,8 @@ d8 c8                                    # tag(200)   ; envelope
                d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  05                     # unsigned(5)
+            d8 df                        # tag(223)   ; known-predicate
+               05                        # unsigned(5)
             d8 dc                        # tag(220)   ; leaf
                d8 cf                     # tag(207)   ; crypto-sealed
                   82                     # array(2)
@@ -581,9 +564,8 @@ d8 c8                                    # tag(200)   ; envelope
                            4c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  05                     # unsigned(5)
+            d8 df                        # tag(223)   ; known-predicate
+               05                        # unsigned(5)
             d8 dc                        # tag(220)   ; leaf
                d8 cf                     # tag(207)   ; crypto-sealed
                   82                     # array(2)
@@ -621,13 +603,13 @@ EncryptedMessage [
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lrtpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpuotpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkfttputlftpuotpurahtpuotptklftpsolshddkjppfbsdnqdatsprsaxbytojllnkohytnnyiewdftdwntnnesqzcnrplskngshlbneminpeeegsgtkshfhdwfjzcpzohtweftrtgdmndphhdyplnsfrmwrsbgfefxmkrdplrltpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjztputlftpuotpurahtpuotptklftpsolshddkfgwlwybnaaurnsrlvlwekkdtiochbbdtspceoxwfcttletfwihamcsahdmhdwsldswgukeoegsgtkshfhdwfjzcpzohtweftrtgdtkostlwkbadknsjodwztflbnhldetkjktpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjzdswkcnta
+ur:envelope/lrtpsolrflrlbnplynmdhdpkgsgtkshfhdwfjzcpzohtweftrtgdhsdieccwswlyjtrhbawzgulpnbierebghddktpsbhdcxloimbnlplsdloycftluoftcfguayrsbwghlbctcmplwteyynsawsnlbgsnhkmovwtputlftpuraxtpuotpuehdfzktpkcpbzcsiyeyzedtencshghdguswamwlutceetttlfsshlfsdiwzptosinetpshksnzmmdgmroosylswfybegdmhpdmoesykkthsssbwgdgdurtlmhvlhftlidbkfttputlftpurahtpuotptklftpsolshddkjppfbsdnqdatsprsaxbytojllnkohytnnyiewdftdwntnnesqzcnrplskngshlbneminpeeegsgtkshfhdwfjzcpzohtweftrtgdmndphhdyplnsfrmwrsbgfefxmkrdplrltpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjztputlftpurahtpuotptklftpsolshddkfgwlwybnaaurnsrlvlwekkdtiochbbdtspceoxwfcttletfwihamcsahdmhdwsldswgukeoegsgtkshfhdwfjzcpzohtweftrtgdtkostlwkbadknsjodwztflbnhldetkjktpvahdcxgsgdldnevokicpsgledwwefesnstolnnvtisfzrfrtcamkahlecpmnaxrpmsghjzcpvwrkbs
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c884d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8dcd8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3ad8dd82d8dcd8df05d8dcd8cf82d8c983582472b00f2bb307c8bf0311ce6f86765eda9a64ea3a2c9d9e39b423b6837a4c5d0c3769af344c4d785658f36c22fb5aed3ac0508e2d5c30ae9c3b94bf12454398baaeb7d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546cd8dd82d8dcd8df05d8dcd8cf82d8c983582446e9ee0c04df9cb7e3ed792967171429c81ca4f31fd53842650618052e58ef89c6537ca24c4d785658f36c22fb5aed3ac050cfa7d5f40e249c702cfc470c5d28cf73d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
+d8c884d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385a064b5125824d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5d8dd82d8df03d8dcd8de584077aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3ad8dd82d8df05d8dcd8cf82d8c983582472b00f2bb307c8bf0311ce6f86765eda9a64ea3a2c9d9e39b423b6837a4c5d0c3769af344c4d785658f36c22fb5aed3ac0508e2d5c30ae9c3b94bf12454398baaeb7d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546cd8dd82d8df05d8dcd8cf82d8c983582446e9ee0c04df9cb7e3ed792967171429c81ca4f31fd53842650618052e58ef89c6537ca24c4d785658f36c22fb5aed3ac050cfa7d5f40e249c702cfc470c5d28cf73d8e658204c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -645,9 +627,7 @@ d8c884d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             220(   ; leaf
                222(   ; signature
                   h'77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a'
@@ -657,9 +637,7 @@ d8c884d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(5)   ; known-predicate
-            ),
+            223(5)   ; known-predicate,
             220(   ; leaf
                207(   ; crypto-sealed
                   [
@@ -680,9 +658,7 @@ d8c884d8c98447b70caef69558aa4c4d785658f36c22fb5aed3ac0506127351bc6816eb90ef25385
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(5)   ; known-predicate
-            ),
+            223(5)   ; known-predicate,
             220(   ; leaf
                207(   ; crypto-sealed
                   [
@@ -722,18 +698,16 @@ d8 c8                                    # tag(200)   ; envelope
                d8cb5820886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             d8 dc                        # tag(220)   ; leaf
                d8 de                     # tag(222)   ; signature
                   5840                   # bytes(64)
                      77aa2215186632fe293618575853c606e9dd1c38d182c45d3d27f2a9a76938ac59cdff9552b8a7f7c644105090a89239f57761c4135050dfd590e356d5620a3a
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  05                     # unsigned(5)
+            d8 df                        # tag(223)   ; known-predicate
+               05                        # unsigned(5)
             d8 dc                        # tag(220)   ; leaf
                d8 cf                     # tag(207)   ; crypto-sealed
                   82                     # array(2)
@@ -750,9 +724,8 @@ d8 c8                                    # tag(200)   ; envelope
                            4c50899fe27d22ca8a2ced45cdc7a69ee06840bcc01d98058a228e03b697546c
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  05                     # unsigned(5)
+            d8 df                        # tag(223)   ; known-predicate
+               05                        # unsigned(5)
             d8 dc                        # tag(220)   ; leaf
                d8 cf                     # tag(207)   ; crypto-sealed
                   82                     # array(2)
@@ -818,13 +791,13 @@ John Smith is issued a Permanent Resident Card signed by the State of Example
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpvtlntpuotpsghdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosptputlftpuotpuraatpuoksfxghisihcxgujyhsjyihcxjliycxfekshsjnjojzihcxjpihiajliojtinknihjkcxgegwfdglcxgugtgaghfdcxhsjkcxhscxgdihjpjnhsjtihjtjycxgmihjkinieihjtjydmtputlftpuoimiehsjyihgajkjkkpihietpuosecyidisltlatputlftpuotpurbalktpuotpsghdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguotputlftpuotpuraotpuojpgdihjpjnhsjtihjtjycxgmihjkinieihjtjytputlftpuoiajkihkstpuoiegtfpgsfetputlftpuojzidinjpjyisfxjlkpjtjyjpkklftpuoididjktputlftpuotpuraatpuojeghisihcxfwhsishsjnhsjktputlftpuojnjpihjkinieihjtjyguinjtiaihtpuosecyhtgyiaaetputlftpuoinidinjpjyisfyhsjyihtpuosecyatskiolatputlftpuoimiyhsjninjzkkglhsjnihtpuoihgugtgaghfdtputlftpuoihinjnhsioihlstpuotpsbhdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonltputlftpuotpurastpuokshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaesesestputlftpuotpuraatpuoksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmtputlftpuojejzjojpfxhsjyihiojljpkktpuoiafxdyestputlftpuotpuraotpuoiygdihjpjkjljttputlftpuoinjzjojpglkpjnidihjptpuojeesesesdpesesesdpesesestputlftpuoinioinkoihjtglhsjnihtpuoiegegwfdgltputlftpuotpuraotpuoimiajpihieihjtjyinhsjztputlftpuotpurbtlstpuotpsghdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvstputlftpuotpuraatpuoksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihtputlftpuotpurastpuotpcxkshyisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndliainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihettputlftpuotpuraxlftpuotpuehdfzosjsmohhmspluylelykphyehgeqdgavyfrurammukninhtykpenycpmkwlswtdzsdslemyotlpkgoewkdyssfyztfemdmycyfzasreknplytdlcfpsjtzmamfriodpchtputlftpuotpuraatpuokscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmlaecbeme
+ur:envelope/lftpvtlntpuotpsghdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosptputlftpuraatpuoksfxghisihcxgujyhsjyihcxjliycxfekshsjnjojzihcxjpihiajliojtinknihjkcxgegwfdglcxgugtgaghfdcxhsjkcxhscxgdihjpjnhsjtihjtjycxgmihjkinieihjtjydmtputlftpuoimiehsjyihgajkjkkpihietpuosecyidisltlatputlftpurbalktpuotpsghdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguotputlftpuraotpuojpgdihjpjnhsjtihjtjycxgmihjkinieihjtjytputlftpuoiajkihkstpuoiegtfpgsfetputlftpuojzidinjpjyisfxjlkpjtjyjpkklftpuoididjktputlftpuraatpuojeghisihcxfwhsishsjnhsjktputlftpuojnjpihjkinieihjtjyguinjtiaihtpuosecyhtgyiaaetputlftpuoinidinjpjyisfyhsjyihtpuosecyatskiolatputlftpuoimiyhsjninjzkkglhsjnihtpuoihgugtgaghfdtputlftpuoihinjnhsioihlstpuotpsbhdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonltputlftpurastpuokshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaesesestputlftpuraatpuoksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmtputlftpuojejzjojpfxhsjyihiojljpkktpuoiafxdyestputlftpuraotpuoiygdihjpjkjljttputlftpuoinjzjojpglkpjnidihjptpuojeesesesdpesesesdpesesestputlftpuoinioinkoihjtglhsjnihtpuoiegegwfdgltputlftpuraotpuoimiajpihieihjtjyinhsjztputlftpurbtlstpuotpsghdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvstputlftpuraatpuoksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihtputlftpurastpuotpcxkshyisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndliainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihettputlftpuraxlftpuotpuehdfzosjsmohhmspluylelykphyehgeqdgavyfrurammukninhtykpenycpmkwlswtdzsdslemyotlpkgoewkdyssfyztfemdmycyfzasreknplytdlcfpsjtzmamfriodpchtputlftpuraatpuokscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmhpidchcs
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8d8dd82d8dcd8df04d8dc7843546865205374617465206f66204578616d706c65207265636f676e697a6573204a4f484e20534d4954482061732061205065726d616e656e74205265736964656e742ed8dd82d8dc6a64617465497373756564d8dcc11a62688780d8dd82d8dcd8df0e8cd8dcd8ca582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadcd8dd82d8dcd8df02d8dc725065726d616e656e74205265736964656e74d8dd82d8dc63736578d8dc644d414c45d8dd82d8dc6c6269727468436f756e74727982d8dc626273d8dd82d8dcd8df04d8dc6b54686520426168616d6173d8dd82d8dc6d7265736964656e7453696e6365d8dcc11a5a516300d8dd82d8dc69626972746844617465d8dcc11a07c56780d8dd82d8dc6a66616d696c794e616d65d8dc65534d495448d8dd82d8dc65696d61676583d8dcd8cb582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999d8dd82d8dcd8df09d8dc786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939d8dd82d8dcd8df04d8dc781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682ed8dd82d8dc6b6c707243617465676f7279d8dc63433039d8dd82d8dcd8df02d8dc66506572736f6ed8dd82d8dc696c70724e756d626572d8dc6b3939392d3939392d393939d8dd82d8dc69676976656e4e616d65d8dc644a4f484ed8dd82d8dcd8df02d8dc6a63726564656e7469616cd8dd82d8dcd8df0d83d8dcd8ca582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8d8dd82d8dcd8df04d8dc781e49737375656420627920746865205374617465206f66204578616d706c65d8dd82d8dcd8df09d8dcd820785e68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538d8dd82d8dcd8df0382d8dcd8de5840a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17d8dd82d8dcd8df04d8dc781d4d61646520627920746865205374617465206f66204578616d706c652e
+d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8d8dd82d8df04d8dc7843546865205374617465206f66204578616d706c65207265636f676e697a6573204a4f484e20534d4954482061732061205065726d616e656e74205265736964656e742ed8dd82d8dc6a64617465497373756564d8dcc11a62688780d8dd82d8df0e8cd8dcd8ca582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadcd8dd82d8df02d8dc725065726d616e656e74205265736964656e74d8dd82d8dc63736578d8dc644d414c45d8dd82d8dc6c6269727468436f756e74727982d8dc626273d8dd82d8df04d8dc6b54686520426168616d6173d8dd82d8dc6d7265736964656e7453696e6365d8dcc11a5a516300d8dd82d8dc69626972746844617465d8dcc11a07c56780d8dd82d8dc6a66616d696c794e616d65d8dc65534d495448d8dd82d8dc65696d61676583d8dcd8cb582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999d8dd82d8df09d8dc786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939d8dd82d8df04d8dc781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682ed8dd82d8dc6b6c707243617465676f7279d8dc63433039d8dd82d8df02d8dc66506572736f6ed8dd82d8dc696c70724e756d626572d8dc6b3939392d3939392d393939d8dd82d8dc69676976656e4e616d65d8dc644a4f484ed8dd82d8df02d8dc6a63726564656e7469616cd8dd82d8df0d83d8dcd8ca582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8d8dd82d8df04d8dc781e49737375656420627920746865205374617465206f66204578616d706c65d8dd82d8df09d8dcd820785e68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538d8dd82d8df0382d8dcd8de5840a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17d8dd82d8df04d8dc781d4d61646520627920746865205374617465206f66204578616d706c652e
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -841,9 +814,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(4)   ; known-predicate
-                  ),
+                  223(4)   ; known-predicate,
                   220(   ; leaf
                      "The State of Example recognizes JOHN SMITH as a Permanent Resident."
                   )
@@ -859,9 +830,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(14)   ; known-predicate
-                  ),
+                  223(14)   ; known-predicate,
                   [
                      220(   ; leaf
                         202(   ; crypto-cid
@@ -870,9 +839,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(2)   ; known-predicate
-                           ),
+                           223(2)   ; known-predicate,
                            220("Permanent Resident")   ; leaf
                         ]
                      ),
@@ -889,9 +856,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                               220("bs")   ; leaf,
                               221(   ; assertion
                                  [
-                                    220(   ; leaf
-                                       223(4)   ; known-predicate
-                                    ),
+                                    223(4)   ; known-predicate,
                                     220("The Bahamas")   ; leaf
                                  ]
                               )
@@ -931,9 +896,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                               ),
                               221(   ; assertion
                                  [
-                                    220(   ; leaf
-                                       223(9)   ; known-predicate
-                                    ),
+                                    223(9)   ; known-predicate,
                                     220(   ; leaf
                                        "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                                     )
@@ -941,9 +904,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                               ),
                               221(   ; assertion
                                  [
-                                    220(   ; leaf
-                                       223(4)   ; known-predicate
-                                    ),
+                                    223(4)   ; known-predicate,
                                     220(   ; leaf
                                        "This is an image of John Smith."
                                     )
@@ -960,9 +921,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(2)   ; known-predicate
-                           ),
+                           223(2)   ; known-predicate,
                            220("Person")   ; leaf
                         ]
                      ),
@@ -983,17 +942,13 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(2)   ; known-predicate
-                  ),
+                  223(2)   ; known-predicate,
                   220("credential")   ; leaf
                ]
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(13)   ; known-predicate
-                  ),
+                  223(13)   ; known-predicate,
                   [
                      220(   ; leaf
                         202(   ; crypto-cid
@@ -1002,9 +957,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(4)   ; known-predicate
-                           ),
+                           223(4)   ; known-predicate,
                            220(   ; leaf
                               "Issued by the State of Example"
                            )
@@ -1012,9 +965,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(9)   ; known-predicate
-                           ),
+                           223(9)   ; known-predicate,
                            220(   ; leaf
                               32(   ; uri
                                  "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
@@ -1029,9 +980,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             [
                220(   ; leaf
                   222(   ; signature
@@ -1040,9 +989,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                ),
                221(   ; assertion
                   [
-                     220(   ; leaf
-                        223(4)   ; known-predicate
-                     ),
+                     223(4)   ; known-predicate,
                      220(   ; leaf
                         "Made by the State of Example."
                      )
@@ -1068,9 +1015,8 @@ d8 c8                                    # tag(200)   ; envelope
                      174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        04               # unsigned(4)
+                  d8 df                  # tag(223)   ; known-predicate
+                     04                  # unsigned(4)
                   d8 dc                  # tag(220)   ; leaf
                      78 43               # text(67)
                         546865205374617465206f66204578616d706c65207265636f676e697a6573204a4f484e20534d4954482061732061205065726d616e656e74205265736964656e742e # "The State of Example recognizes JOHN SMITH as a Permanent Resident."
@@ -1083,9 +1029,8 @@ d8 c8                                    # tag(200)   ; envelope
                      c1 1a62688780       # date(2022-04-27 00:00:00 +0000)
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        0e               # unsigned(14)
+                  d8 df                  # tag(223)   ; known-predicate
+                     0e                  # unsigned(14)
                   8c                     # array(12)
                      d8 dc               # tag(220)   ; leaf
                         d8 ca            # tag(202)   ; crypto-cid
@@ -1093,9 +1038,8 @@ d8 c8                                    # tag(200)   ; envelope
                               78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 02      # unsigned(2)
+                           d8 df         # tag(223)   ; known-predicate
+                              02         # unsigned(2)
                            d8 dc         # tag(220)   ; leaf
                               72         # text(18)
                                  5065726d616e656e74205265736964656e74 # "Permanent Resident"
@@ -1118,9 +1062,8 @@ d8 c8                                    # tag(200)   ; envelope
                                     6273 # "bs"
                               d8 dd      # tag(221)   ; assertion
                                  82      # array(2)
-                                    d8 dc # tag(220)   ; leaf
-                                       d8 df # tag(223)   ; known-predicate
-                                          04 # unsigned(4)
+                                    d8 df # tag(223)   ; known-predicate
+                                       04 # unsigned(4)
                                     d8 dc # tag(220)   ; leaf
                                        6b # text(11)
                                           54686520426168616d6173 # "The Bahamas"
@@ -1158,17 +1101,15 @@ d8 c8                                    # tag(200)   ; envelope
                                        36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999
                               d8 dd      # tag(221)   ; assertion
                                  82      # array(2)
-                                    d8 dc # tag(220)   ; leaf
-                                       d8 df # tag(223)   ; known-predicate
-                                          09 # unsigned(9)
+                                    d8 df # tag(223)   ; known-predicate
+                                       09 # unsigned(9)
                                     d8 dc # tag(220)   ; leaf
                                        78 61 # text(97)
                                           68747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939 # "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                               d8 dd      # tag(221)   ; assertion
                                  82      # array(2)
-                                    d8 dc # tag(220)   ; leaf
-                                       d8 df # tag(223)   ; known-predicate
-                                          04 # unsigned(4)
+                                    d8 df # tag(223)   ; known-predicate
+                                       04 # unsigned(4)
                                     d8 dc # tag(220)   ; leaf
                                        78 1f # text(31)
                                           5468697320697320616e20696d616765206f66204a6f686e20536d6974682e # "This is an image of John Smith."
@@ -1182,9 +1123,8 @@ d8 c8                                    # tag(200)   ; envelope
                                  433039  # "C09"
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 02      # unsigned(2)
+                           d8 df         # tag(223)   ; known-predicate
+                              02         # unsigned(2)
                            d8 dc         # tag(220)   ; leaf
                               66         # text(6)
                                  506572736f6e # "Person"
@@ -1206,17 +1146,15 @@ d8 c8                                    # tag(200)   ; envelope
                                  4a4f484e # "JOHN"
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        02               # unsigned(2)
+                  d8 df                  # tag(223)   ; known-predicate
+                     02                  # unsigned(2)
                   d8 dc                  # tag(220)   ; leaf
                      6a                  # text(10)
                         63726564656e7469616c # "credential"
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        0d               # unsigned(13)
+                  d8 df                  # tag(223)   ; known-predicate
+                     0d                  # unsigned(13)
                   83                     # array(3)
                      d8 dc               # tag(220)   ; leaf
                         d8 ca            # tag(202)   ; crypto-cid
@@ -1224,26 +1162,23 @@ d8 c8                                    # tag(200)   ; envelope
                               04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 04      # unsigned(4)
+                           d8 df         # tag(223)   ; known-predicate
+                              04         # unsigned(4)
                            d8 dc         # tag(220)   ; leaf
                               78 1e      # text(30)
                                  49737375656420627920746865205374617465206f66204578616d706c65 # "Issued by the State of Example"
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 09      # unsigned(9)
+                           d8 df         # tag(223)   ; known-predicate
+                              09         # unsigned(9)
                            d8 dc         # tag(220)   ; leaf
                               d8 20      # tag(32)   ; uri
                                  78 5e   # text(94)
                                     68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538 # "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             82                           # array(2)
                d8 dc                     # tag(220)   ; leaf
                   d8 de                  # tag(222)   ; signature
@@ -1251,9 +1186,8 @@ d8 c8                                    # tag(200)   ; envelope
                         a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17
                d8 dd                     # tag(221)   ; assertion
                   82                     # array(2)
-                     d8 dc               # tag(220)   ; leaf
-                        d8 df            # tag(223)   ; known-predicate
-                           04            # unsigned(4)
+                     d8 df               # tag(223)   ; known-predicate
+                        04               # unsigned(4)
                      d8 dc               # tag(220)   ; leaf
                         78 1d            # text(29)
                            4d61646520627920746865205374617465206f66204578616d706c652e # "Made by the State of Example."
@@ -1306,13 +1240,13 @@ John wishes to identify himself to a third party using his government-issued cre
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpvtlntpuotpsghdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosptpsbhdcxvsqdrtsntkbaosismhttbbmdlptolftbylbbbgsgpfeecycldmtkytwpnlptwtcstpsbhdcxcskkguyaflmdtilghyzeteahqzmnlbbtoectwlutmwastytyfxwtheryemhkkeettputlftpuotpurbalktpuotpsghdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguotpsbhdcxeebnspoyckfebydrtehfjedymnaeahlsecbtzodlbnfdcyptgmuyzosrahisrpoltpsbhdcxmypeoxotdieopaimtnpdbbnymyheykwtbeylvyoxwpurcfwmksamkscatdkghynetpsbhdcxbtnnethkfliylyjnzsryfywlesfrfzwpntdsndmwstgujkfwfekgfmtawzhevtdttpsbhdcxcfctlpnbtojlbdgrwpmhhgoeinlbwpaechbthgiywszowpghgeotgoidkbmdionttpsbhdcxnlpkgsqzuylpgysbieltetiyfhkgctadpedscwwzldrncnotcslymycavsgrcpnttputlftpuoimiyhsjninjzkkglhsjnihtpuoihgugtgaghfdtputlftpuoihinjnhsioihlstpuotpsbhdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonltputlftpuotpurastpuokshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaesesestputlftpuotpuraatpuoksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmtpsbhdcxvwgmjtftoycngesffpkofntlspmnasbdgsfmimsstbcndrztzmdetakicwcwykahtpsbhdcxgmzedsdlmwwemdpepfdywypasalodyaabgaysowenyglrhtnhgcfrejofzhgzmrstpsbhdcxlgrensuyvdskgsdktnurwnbnaeldcslbtkatdwjofmttswwfldvtcmrpaepdvepytputlftpuoinioinkoihjtglhsjnihtpuoiegegwfdgltputlftpuotpuraotpuoimiajpihieihjtjyinhsjztputlftpuotpurbtlstpuotpsghdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvstputlftpuotpuraatpuoksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihtputlftpuotpurastpuotpcxkshyisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndliainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihettputlftpuotpuraxlftpuotpuehdfzosjsmohhmspluylelykphyehgeqdgavyfrurammukninhtykpenycpmkwlswtdzsdslemyotlpkgoewkdyssfyztfemdmycyfzasreknplytdlcfpsjtzmamfriodpchtputlftpuotpuraatpuokscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmtbtnaepe
+ur:envelope/lftpvtlntpuotpsghdcxchfdfwwdsrzofytsyndsvetsndkbbelbtdmuskhfdtyntbcprocktyatktaxaosptpsbhdcxvsqdrtsntkbaosismhttbbmdlptolftbylbbbgsgpfeecycldmtkytwpnlptwtcstpsbhdcxcskkguyaflmdtilghyzeteahqzmnlbbtoectwlutmwastytyfxwtheryemhkkeettputlftpurbalktpuotpsghdcxksrfdyaeflkootmhhpsfrhronbeytkjpdwwdwtrkzocygawdwfcshepyhdaysguotpsbhdcxeebnspoyckfebydrtehfjedymnaeahlsecbtzodlbnfdcyptgmuyzosrahisrpoltpsbhdcxmypeoxotdieopaimtnpdbbnymyheykwtbeylvyoxwpurcfwmksamkscatdkghynetpsbhdcxbtnnethkfliylyjnzsryfywlesfrfzwpntdsndmwstgujkfwfekgfmtawzhevtdttpsbhdcxcfctlpnbtojlbdgrwpmhhgoeinlbwpaechbthgiywszowpghgeotgoidkbmdionttpsbhdcxnlpkgsqzuylpgysbieltetiyfhkgctadpedscwwzldrncnotcslymycavsgrcpnttputlftpuoimiyhsjninjzkkglhsjnihtpuoihgugtgaghfdtputlftpuoihinjnhsioihlstpuotpsbhdcxenrndyjpjewsrphhoyfrbwimvontlalyynflmosajodkbzwmhnpmcehfweeosonltputlftpurastpuokshsisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndlieinioihjkjydleoenidiheodyemeyenidihiyideneciahseheoideheoenhsiheyesieetdyetehiyeneeemeseyiaeyemdyeyeeehecihidendyhsieehiaecenihieeoeoiaesesestputlftpuraatpuoksctghisinjkcxinjkcxhsjtcxinjnhsioihcxjliycxgejlisjtcxgujninjyisdmtpsbhdcxvwgmjtftoycngesffpkofntlspmnasbdgsfmimsstbcndrztzmdetakicwcwykahtpsbhdcxgmzedsdlmwwemdpepfdywypasalodyaabgaysowenyglrhtnhgcfrejofzhgzmrstpsbhdcxlgrensuyvdskgsdktnurwnbnaeldcslbtkatdwjofmttswwfldvtcmrpaepdvepytputlftpuoinioinkoihjtglhsjnihtpuoiegegwfdgltputlftpuraotpuoimiajpihieihjtjyinhsjztputlftpurbtlstpuotpsghdcxaaenfsheytmseorfbsbzktrdrdfybkwntkeegetaveghzstattdertbswsihahvstputlftpuraatpuoksckgajkjkkpihiecxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihtputlftpurastpuotpcxkshyisjyjyjojkftdldlihkshsjnjojzihjzihieioihjpdmiajljndliainiedldyeeeoeneoieeciyiyesesemeoeoidiadyiyehecememidhsidhseeeedyhsiyehiaiyeoeeeehsieesiheeeceeiyhsieesieeheyetiadydyiyihiyenecdyecihettputlftpuraxlftpuotpuehdfzosjsmohhmspluylelykphyehgeqdgavyfrurammukninhtykpenycpmkwlswtdzsdslemyotlpkgoewkdyssfyztfemdmycyfzasreknplytdlcfpsjtzmamfriodpchtputlftpuraatpuokscagthsieihcxidkkcxjyisihcxgujyhsjyihcxjliycxfekshsjnjojzihdmmtemztee
 ```
 
 ### Tagged CBOR Binary
 
 ```
-d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8d8cb5820e8b3c0cdcf0ea76890d1149585ce82d6f71412cab0341a212ecff9ec99a9f018d8cb5820187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38d8dd82d8dcd8df0e8cd8dcd8ca582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadcd8cb5820340cc8a11e45112ad3566b308e000583350dfb2f0c481aa952dbfbc30568b6a6d8cb58208fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9fd8cb58200d9e38594766816dfabd44e9393b40ec9d269b94c7537342457b3ed9f25fe029d8cb5820191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679dd8cb582099aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229dd8dd82d8dc6a66616d696c794e616d65d8dc65534d495448d8dd82d8dc65696d61676583d8dcd8cb582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999d8dd82d8dcd8df09d8dc786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939d8dd82d8dcd8df04d8dc781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682ed8cb5820e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505d8cb582052fe262f94ed95afb030eeb1c28830041208c9ed9a4eb9da5719b5704057ffbfd8cb58208db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4abd8dd82d8dc69676976656e4e616d65d8dc644a4f484ed8dd82d8dcd8df02d8dc6a63726564656e7469616cd8dd82d8dcd8df0d83d8dcd8ca582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8d8dd82d8dcd8df04d8dc781e49737375656420627920746865205374617465206f66204578616d706c65d8dd82d8dcd8df09d8dcd820785e68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538d8dd82d8dcd8df0382d8dcd8de5840a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17d8dd82d8dcd8df04d8dc781d4d61646520627920746865205374617465206f66204578616d706c652e
+d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8d8cb5820e8b3c0cdcf0ea76890d1149585ce82d6f71412cab0341a212ecff9ec99a9f018d8cb5820187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38d8dd82d8df0e8cd8dcd8ca582078bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadcd8cb5820340cc8a11e45112ad3566b308e000583350dfb2f0c481aa952dbfbc30568b6a6d8cb58208fafa4a32733b16adaa8149a8f5ff5f010f7e1a4ecdf19eb7806781dd27b5e9fd8cb58200d9e38594766816dfabd44e9393b40ec9d269b94c7537342457b3ed9f25fe029d8cb5820191f85a0ce6f0b4bec9057a2697fec00170d5766effbec544aa355627e95679dd8cb582099aa4cb4db8551cb648738663f7b1f01af261bf289be23a318818f1de84b229dd8dd82d8dc6a66616d696c794e616d65d8dc65534d495448d8dd82d8dc65696d61676583d8dcd8cb582036be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999d8dd82d8df09d8dc786168747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939d8dd82d8df04d8dc781f5468697320697320616e20696d616765206f66204a6f686e20536d6974682ed8cb5820e5526e3aa1234acc41763cd5c88e090b4c3e6ac4d6232afcff28d97d1b1bf505d8cb582052fe262f94ed95afb030eeb1c28830041208c9ed9a4eb9da5719b5704057ffbfd8cb58208db59cdbe7c54c24dadff10c0089187fcf072c703ed1c6f389e016b600a8e4abd8dd82d8dc69676976656e4e616d65d8dc644a4f484ed8dd82d8df02d8dc6a63726564656e7469616cd8dd82d8df0d83d8dcd8ca582004363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8d8dd82d8df04d8dc781e49737375656420627920746865205374617465206f66204578616d706c65d8dd82d8df09d8dcd820785e68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538d8dd82d8df0382d8dcd8de5840a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17d8dd82d8df04d8dc781d4d61646520627920746865205374617465206f66204578616d706c652e
 ```
 
 ### Tagged CBOR Diagnostic Notation
@@ -1335,9 +1269,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(14)   ; known-predicate
-                  ),
+                  223(14)   ; known-predicate,
                   [
                      220(   ; leaf
                         202(   ; crypto-cid
@@ -1376,9 +1308,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                               ),
                               221(   ; assertion
                                  [
-                                    220(   ; leaf
-                                       223(9)   ; known-predicate
-                                    ),
+                                    223(9)   ; known-predicate,
                                     220(   ; leaf
                                        "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                                     )
@@ -1386,9 +1316,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                               ),
                               221(   ; assertion
                                  [
-                                    220(   ; leaf
-                                       223(4)   ; known-predicate
-                                    ),
+                                    223(4)   ; known-predicate,
                                     220(   ; leaf
                                        "This is an image of John Smith."
                                     )
@@ -1417,17 +1345,13 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(2)   ; known-predicate
-                  ),
+                  223(2)   ; known-predicate,
                   220("credential")   ; leaf
                ]
             ),
             221(   ; assertion
                [
-                  220(   ; leaf
-                     223(13)   ; known-predicate
-                  ),
+                  223(13)   ; known-predicate,
                   [
                      220(   ; leaf
                         202(   ; crypto-cid
@@ -1436,9 +1360,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(4)   ; known-predicate
-                           ),
+                           223(4)   ; known-predicate,
                            220(   ; leaf
                               "Issued by the State of Example"
                            )
@@ -1446,9 +1368,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                      ),
                      221(   ; assertion
                         [
-                           220(   ; leaf
-                              223(9)   ; known-predicate
-                           ),
+                           223(9)   ; known-predicate,
                            220(   ; leaf
                               32(   ; uri
                                  "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
@@ -1463,9 +1383,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
       ),
       221(   ; assertion
          [
-            220(   ; leaf
-               223(3)   ; known-predicate
-            ),
+            223(3)   ; known-predicate,
             [
                220(   ; leaf
                   222(   ; signature
@@ -1474,9 +1392,7 @@ d8c882d8e086d8dcd8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407
                ),
                221(   ; assertion
                   [
-                     220(   ; leaf
-                        223(4)   ; known-predicate
-                     ),
+                     223(4)   ; known-predicate,
                      220(   ; leaf
                         "Made by the State of Example."
                      )
@@ -1508,9 +1424,8 @@ d8 c8                                    # tag(200)   ; envelope
                   187953f84795d08d5efed305b48e7f0da21fe9dd9409d4d443f05fbd37597c38
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        0e               # unsigned(14)
+                  d8 df                  # tag(223)   ; known-predicate
+                     0e                  # unsigned(14)
                   8c                     # array(12)
                      d8 dc               # tag(220)   ; leaf
                         d8 ca            # tag(202)   ; crypto-cid
@@ -1551,17 +1466,15 @@ d8 c8                                    # tag(200)   ; envelope
                                        36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999
                               d8 dd      # tag(221)   ; assertion
                                  82      # array(2)
-                                    d8 dc # tag(220)   ; leaf
-                                       d8 df # tag(223)   ; known-predicate
-                                          09 # unsigned(9)
+                                    d8 df # tag(223)   ; known-predicate
+                                       09 # unsigned(9)
                                     d8 dc # tag(220)   ; leaf
                                        78 61 # text(97)
                                           68747470733a2f2f6578616d706c656c65646765722e636f6d2f6469676573742f33366265333037323662656662363563613133623133366165323964383038316636343739326332373032343135656236306164316335366564333363393939 # "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                               d8 dd      # tag(221)   ; assertion
                                  82      # array(2)
-                                    d8 dc # tag(220)   ; leaf
-                                       d8 df # tag(223)   ; known-predicate
-                                          04 # unsigned(4)
+                                    d8 df # tag(223)   ; known-predicate
+                                       04 # unsigned(4)
                                     d8 dc # tag(220)   ; leaf
                                        78 1f # text(31)
                                           5468697320697320616e20696d616765206f66204a6f686e20536d6974682e # "This is an image of John Smith."
@@ -1584,17 +1497,15 @@ d8 c8                                    # tag(200)   ; envelope
                                  4a4f484e # "JOHN"
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        02               # unsigned(2)
+                  d8 df                  # tag(223)   ; known-predicate
+                     02                  # unsigned(2)
                   d8 dc                  # tag(220)   ; leaf
                      6a                  # text(10)
                         63726564656e7469616c # "credential"
             d8 dd                        # tag(221)   ; assertion
                82                        # array(2)
-                  d8 dc                  # tag(220)   ; leaf
-                     d8 df               # tag(223)   ; known-predicate
-                        0d               # unsigned(13)
+                  d8 df                  # tag(223)   ; known-predicate
+                     0d                  # unsigned(13)
                   83                     # array(3)
                      d8 dc               # tag(220)   ; leaf
                         d8 ca            # tag(202)   ; crypto-cid
@@ -1602,26 +1513,23 @@ d8 c8                                    # tag(200)   ; envelope
                               04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 04      # unsigned(4)
+                           d8 df         # tag(223)   ; known-predicate
+                              04         # unsigned(4)
                            d8 dc         # tag(220)   ; leaf
                               78 1e      # text(30)
                                  49737375656420627920746865205374617465206f66204578616d706c65 # "Issued by the State of Example"
                      d8 dd               # tag(221)   ; assertion
                         82               # array(2)
-                           d8 dc         # tag(220)   ; leaf
-                              d8 df      # tag(223)   ; known-predicate
-                                 09      # unsigned(9)
+                           d8 df         # tag(223)   ; known-predicate
+                              09         # unsigned(9)
                            d8 dc         # tag(220)   ; leaf
                               d8 20      # tag(32)   ; uri
                                  78 5e   # text(94)
                                     68747470733a2f2f6578616d706c656c65646765722e636f6d2f6369642f30343336336435666639393733336263306631353737626162613434306166316366333434616439653435346661643964313238633030666566363530356538 # "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8"
       d8 dd                              # tag(221)   ; assertion
          82                              # array(2)
-            d8 dc                        # tag(220)   ; leaf
-               d8 df                     # tag(223)   ; known-predicate
-                  03                     # unsigned(3)
+            d8 df                        # tag(223)   ; known-predicate
+               03                        # unsigned(3)
             82                           # array(2)
                d8 dc                     # tag(220)   ; leaf
                   d8 de                  # tag(222)   ; signature
@@ -1629,9 +1537,8 @@ d8 c8                                    # tag(200)   ; envelope
                         a771925c97aedb8a81755e314ab349e13bdf06937a695af5af9a2298e9c6d2fa268a8fa3857ba2f430c444fc45958f1a4009b57aaef92f19ac6eff063b672d17
                d8 dd                     # tag(221)   ; assertion
                   82                     # array(2)
-                     d8 dc               # tag(220)   ; leaf
-                        d8 df            # tag(223)   ; known-predicate
-                           04            # unsigned(4)
+                     d8 df               # tag(223)   ; known-predicate
+                        04               # unsigned(4)
                      d8 dc               # tag(220)   ; leaf
                         78 1d            # text(29)
                            4d61646520627920746865205374617465206f66204578616d706c652e # "Made by the State of Example."
