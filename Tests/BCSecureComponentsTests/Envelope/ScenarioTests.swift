@@ -300,7 +300,7 @@ class ScenarioTests: XCTestCase {
         """
         XCTAssertEqual(johnSmithResidentCard.format, expectedFormat)
         
-        print(johnSmithResidentCard.taggedCBOR.diagAnnotated)
+        //print(johnSmithResidentCard.taggedCBOR.diagAnnotated)
         
         // John wishes to identify himself to a third party using his government-issued
         // credential, but does not wish to reveal more than his name, his photo, and the
