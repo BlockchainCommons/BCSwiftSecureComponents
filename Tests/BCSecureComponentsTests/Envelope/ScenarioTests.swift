@@ -7,10 +7,11 @@ class ScenarioTests: XCTestCase {
         // Assertions made about an CID are considered part of a distributed set. Which
         // assertions are returned depends on who resolves the CID and when it is
         // resolved. In other words, the referent of a CID is mutable.
-        let author = Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
+        let author = try Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
             .add(.dereferenceVia, "LibraryOfCongress")
             .add(.hasName, "Ayn Rand")
-        
+            .checkEncoding()
+
         // Assertions made on a literal value are considered part of the same set of
         // assertions made on the digest of that value.
         let name_en = Envelope("Atlas Shrugged")
@@ -19,22 +20,24 @@ class ScenarioTests: XCTestCase {
         let name_es = Envelope("La rebelión de Atlas")
             .add(.language, "es")
         
-        let work = Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
+        let work = try Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
             .add(.isA, "novel")
             .add("isbn", "9780451191144")
             .add("author", author)
             .add(.dereferenceVia, "LibraryOfCongress")
             .add(.hasName, name_en)
             .add(.hasName, name_es)
+            .checkEncoding()
 
         let bookData = "This is the entire book “Atlas Shrugged” in EPUB format."
         // Assertions made on a digest are considered associated with that specific binary
         // object and no other. In other words, the referent of a Digest is immutable.
-        let bookMetadata = Envelope(Digest(bookData))
+        let bookMetadata = try Envelope(Digest(bookData))
             .add("work", work)
             .add("format", "EPUB")
             .add(.dereferenceVia, "IPFS")
-        
+            .checkEncoding()
+
         let expectedFormat =
         """
         Digest(e8aa201db4044168d05b77d7b36648fb7a97db2d3e72f5babba9817911a52809) [
@@ -65,14 +68,16 @@ class ScenarioTests: XCTestCase {
         // document itself can be referred to by its CID, while the signed document
         // can be referred to by its digest.
         
-        let aliceUnsignedDocument = Envelope(aliceIdentifier)
+        let aliceUnsignedDocument = try Envelope(aliceIdentifier)
             .add(.controller, aliceIdentifier)
             .add(.publicKeys, alicePublicKeys)
+            .checkEncoding()
         
-        let aliceSignedDocument = aliceUnsignedDocument
+        let aliceSignedDocument = try aliceUnsignedDocument
             .enclose()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
-        
+            .checkEncoding()
+
         let expectedFormat =
         """
         {
@@ -93,9 +98,10 @@ class ScenarioTests: XCTestCase {
         // twice with the same private key will not compare as equal. This means that each
         // signing is a particular event that can never be repeated.
 
-        let aliceSignedDocument2 = aliceUnsignedDocument
+        let aliceSignedDocument2 = try aliceUnsignedDocument
             .enclose()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
+            .checkEncoding()
 
         XCTAssertNotEqual(aliceSignedDocument, aliceSignedDocument2)
         
@@ -112,12 +118,13 @@ class ScenarioTests: XCTestCase {
         // The registrar creates its own registration document using Alice's CID as the
         // subject, incorporating Alice's signed document, and adding its own signature.
         let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
-        let aliceRegistration = Envelope(aliceCID)
+        let aliceRegistration = try Envelope(aliceCID)
             .add(.entity, aliceSignedDocument)
             .add(.dereferenceVia, aliceURL)
             .enclose()
             .sign(with: exampleLedgerPrivateKeys, note: "Made by ExampleLedger.")
-        
+            .checkEncoding()
+
         let expectedRegistrationFormat =
         """
         {
@@ -152,9 +159,10 @@ class ScenarioTests: XCTestCase {
         
         // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
         // identifier. Bob sends a challenge:
-        let aliceChallenge = Envelope(Nonce())
+        let aliceChallenge = try Envelope(Nonce())
             .add(.note, "Challenge to Alice from Bob.")
-        
+            .checkEncoding()
+
         let aliceChallengeExpectedFormat =
         """
         Nonce [
@@ -164,12 +172,13 @@ class ScenarioTests: XCTestCase {
         XCTAssertEqual(aliceChallenge.format, aliceChallengeExpectedFormat)
 
         // Alice responds by adding her registered URI to the nonce, and signing it.
-        let aliceChallengeResponse = aliceChallenge
+        let aliceChallengeResponse = try aliceChallenge
             .enclose()
             .add(.dereferenceVia, aliceURI)
             .enclose()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
-        
+            .checkEncoding()
+
         let aliceChallengeResponseExpectedFormat =
         """
         {
