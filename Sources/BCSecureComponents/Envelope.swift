@@ -655,11 +655,15 @@ public extension Envelope {
 
 public extension Envelope {
     init(function: FunctionIdentifier) {
-        self.init(function.cbor)
+        self.init(function)
     }
     
     init(function name: String) {
-        self.init(FunctionIdentifier.tagged(name: name))
+        self.init(function: FunctionIdentifier(name))
+    }
+    
+    init(function value: Int, name: String? = nil) {
+        self.init(function: FunctionIdentifier(value, name))
     }
     
     init(request id: CID, body: CBOREncodable) {

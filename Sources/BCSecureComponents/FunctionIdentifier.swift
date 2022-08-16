@@ -1,60 +1,64 @@
 import Foundation
 
-public struct FunctionIdentifier: RawRepresentable, Equatable, Hashable {
-    public let rawValue: Int
-    public let name: String?
-    
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-        self.name = nil
-    }
-    
-    public init(_ rawValue: Int, _ name: String) {
-        self.rawValue = rawValue
-        self.name = name
-    }
+public enum FunctionIdentifier: Hashable {
+    case known(value: Int, name: String?)
+    case named(name: String)
+}
 
-    public var hashValue : Int {
-        return rawValue.hashValue
+public extension FunctionIdentifier {
+    init(_ value: Int, _ name: String? = nil) {
+        self = .known(value: value, name: name)
     }
     
-    public static func ==(lhs: FunctionIdentifier, rhs: FunctionIdentifier) -> Bool {
-        lhs.rawValue == rhs.rawValue
+    init(_ name: String) {
+        self = .named(name: name)
     }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(rawValue)
-    }
+}
 
-    public static func knownIdentifier(for rawValue: Int) -> FunctionIdentifier {
-        knownFunctionIdentifiersByRawValue[rawValue] ?? FunctionIdentifier(rawValue: rawValue)
+public extension FunctionIdentifier {
+    var isKnown: Bool {
+        guard case .known = self else {
+            return false
+        }
+        return true
     }
     
-    public static func setKnownIdentifier(_ identifier: FunctionIdentifier) {
-        knownFunctionIdentifiersByRawValue[identifier.rawValue] = identifier
+    var isNamed: Bool {
+        guard case .named = self else {
+            return false
+        }
+        return true
     }
     
-    public var cbor: CBOR {
-        CBOR.tagged(.function, CBOR.unsignedInt(UInt64(self.rawValue)))
-    }
-    
-    public static func nameString(for cbor: CBOR) -> String {
-        switch cbor {
-        case CBOR.unsignedInt(let rawValue):
-            if let identifier = knownFunctionIdentifiersByRawValue[Int(rawValue)] {
-                return identifier.name ?? String(rawValue)
-            } else {
-                return String(rawValue)
-            }
-        case CBOR.utf8String(let string):
-            return string.flanked("\"")
-        default:
-            return "CBOR"
+    var name: String? {
+        switch self {
+        case .known(value: _, name: let name):
+            return name
+        case .named(name: let name):
+            return name
         }
     }
     
-    public static func tagged(name: String) -> CBOR {
-        CBOR.tagged(.function, CBOR.utf8String(name))
+    var value: Int? {
+        switch self {
+        case .known(value: let value, name: _):
+            return value
+        case .named(name: _):
+            return nil
+        }
+    }
+}
+
+public extension FunctionIdentifier {
+    static func knownIdentifier(for value: Int) -> FunctionIdentifier {
+        knownFunctionIdentifiersByValue[value] ?? FunctionIdentifier(value)
+    }
+
+    static func setKnownIdentifier(_ identifier: FunctionIdentifier) {
+        guard case .known(value: let value, name: _) = identifier else {
+            preconditionFailure()
+        }
+        knownFunctionIdentifiersByValue[value] = identifier
     }
 }
 
@@ -65,9 +69,12 @@ public extension FunctionIdentifier {
     static let div = FunctionIdentifier(4, "div")
 }
 
-var knownFunctionIdentifiersByRawValue: [Int: FunctionIdentifier] = {
+var knownFunctionIdentifiersByValue: [Int: FunctionIdentifier] = {
     knownFunctionIdentifiers.reduce(into: [Int: FunctionIdentifier]()) {
-        $0[$1.rawValue] = $1
+        guard case FunctionIdentifier.known(value: let value, name: _) = $1 else {
+            preconditionFailure()
+        }
+        $0[value] = $1
     }
 }()
 
@@ -77,3 +84,49 @@ var knownFunctionIdentifiers: [FunctionIdentifier] = [
     .mul,
     .div
 ]
+
+extension FunctionIdentifier: CBORCodable {
+    public static func cborDecode(_ cbor: CBOR) throws -> FunctionIdentifier {
+        try FunctionIdentifier(taggedCBOR: cbor)
+    }
+
+    public var cbor: CBOR {
+        switch self {
+        case .known(value: let value, name: _):
+            return CBOR.tagged(.function, CBOR.unsignedInt(UInt64(value)))
+        case .named(name: let name):
+            return CBOR.tagged(.function, CBOR.utf8String(name))
+        }
+    }
+}
+
+public extension FunctionIdentifier {
+    init(taggedCBOR cbor: CBOR) throws {
+        guard case CBOR.tagged(.function, let item) = cbor else {
+            throw CBORError.invalidTag
+        }
+        switch item {
+        case CBOR.unsignedInt(let value):
+            if let knownIdentifier = knownFunctionIdentifiersByValue[Int(value)] {
+                self = knownIdentifier
+            } else {
+                self.init(Int(value))
+            }
+        case CBOR.utf8String(let name):
+            self.init(name)
+        default:
+            throw CBORError.invalidFormat
+        }
+    }
+}
+
+extension FunctionIdentifier: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .known(value: let value, name: let name):
+            return name ?? String(value)
+        case .named(name: let name):
+            return name.flanked("\"")
+        }
+    }
+}
