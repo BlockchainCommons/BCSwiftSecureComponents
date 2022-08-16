@@ -30,7 +30,7 @@ final class EnvelopeTestVectors: XCTestCase {
             name: "Symmetric Encryption",
             explanation: "Alice and Bob have agreed to use a symmetric key.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
         )
         
         let signThenEncrypt = TestCase(
@@ -38,15 +38,15 @@ final class EnvelopeTestVectors: XCTestCase {
             explanation: "A message is first signed, then encrypted. Its signature can only be checked once the envelope is decrypted.",
             envelope: try Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
-                .enclose()
-                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .wrap()
+                .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
         )
         
         let encryptThenSign = TestCase(
             name: "Encrypt Then Sign",
             explanation: "A message is first encrypted, then signed. Its signature may be checked before the envelope is decrypted.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
         )
         
@@ -54,7 +54,7 @@ final class EnvelopeTestVectors: XCTestCase {
             name: "Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload.",
             envelope: try Envelope(plaintextHello)
-                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
@@ -64,7 +64,7 @@ final class EnvelopeTestVectors: XCTestCase {
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload. Alice then signs the envelope so her signature may be verified by anyone with her public key.",
             envelope: try Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
-                .encrypt(with: fakeContentKey, testNonce: fakeNonce)
+                .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
@@ -198,31 +198,31 @@ final class EnvelopeTestVectors: XCTestCase {
 
     // A photo of John Smith
     static let johnSmithImage = Envelope(Digest("John Smith smiling"))
-        .add(.note, "This is an image of John Smith.")
-        .add(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
+        .addAssertion(.note, "This is an image of John Smith.")
+        .addAssertion(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
 
     static let johnSmithResidentCard = try! Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
-        .add(.isA, "credential")
-        .add("dateIssued", Date(iso8601: "2022-04-27"))
-        .add(.issuer, Envelope(stateIdentifier)
-            .add(.note, "Issued by the State of Example")
-            .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
+        .addAssertion(.isA, "credential")
+        .addAssertion("dateIssued", Date(iso8601: "2022-04-27"))
+        .addAssertion(.issuer, Envelope(stateIdentifier)
+            .addAssertion(.note, "Issued by the State of Example")
+            .addAssertion(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
         )
-        .add(.holder, Envelope(johnSmithIdentifier)
-            .add(.isA, "Person")
-            .add(.isA, "Permanent Resident")
-            .add("givenName", "JOHN")
-            .add("familyName", "SMITH")
-            .add("sex", "MALE")
-            .add("birthDate", Date(iso8601: "1974-02-18"))
-            .add("image", johnSmithImage)
-            .add("lprCategory", "C09")
-            .add("lprNumber", "999-999-999")
-            .add("birthCountry", Envelope("bs").add(.note, "The Bahamas"))
-            .add("residentSince", Date(iso8601: "2018-01-07"))
+        .addAssertion(.holder, Envelope(johnSmithIdentifier)
+            .addAssertion(.isA, "Person")
+            .addAssertion(.isA, "Permanent Resident")
+            .addAssertion("givenName", "JOHN")
+            .addAssertion("familyName", "SMITH")
+            .addAssertion("sex", "MALE")
+            .addAssertion("birthDate", Date(iso8601: "1974-02-18"))
+            .addAssertion("image", johnSmithImage)
+            .addAssertion("lprCategory", "C09")
+            .addAssertion("lprNumber", "999-999-999")
+            .addAssertion("birthCountry", Envelope("bs").addAssertion(.note, "The Bahamas"))
+            .addAssertion("residentSince", Date(iso8601: "2018-01-07"))
         )
-        .add(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
-        .enclose()
+        .addAssertion(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
+        .wrap()
         .sign(with: statePrivateKeys, note: "Made by the State of Example.", randomGenerator: generateFakeRandomNumbers)
     
     static let johnSmithRedactedCredential: Envelope = {
@@ -233,28 +233,28 @@ final class EnvelopeTestVectors: XCTestCase {
         target.insert(top)
 
         // Reveal everything about the state's signature on the card
-        try! target.insert(top.assertion(predicate: .verifiedBy).deepDigests)
+        try! target.insert(top.assertion(withPredicate: .verifiedBy).deepDigests)
 
         // Reveal the top level subject of the card. This is John Smith's CID.
-        let topContent = top.subject.envelope!
+        let topContent = top.envelope!
         target.insert(topContent.shallowDigests)
 
         // Reveal everything about the `isA` and `issuer` assertions at the top level of the card.
-        try! target.insert(topContent.assertion(predicate: .isA).deepDigests)
-        try! target.insert(topContent.assertion(predicate: .issuer).deepDigests)
+        try! target.insert(topContent.assertion(withPredicate: .isA).deepDigests)
+        try! target.insert(topContent.assertion(withPredicate: .issuer).deepDigests)
 
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
-        let holder = try! topContent.assertion(predicate: .holder)
+        let holder = try! topContent.assertion(withPredicate: .holder)
         target.insert(holder.shallowDigests)
         
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
         let holderObject = holder.object!
-        try! target.insert(holderObject.assertion(predicate: "givenName").deepDigests)
-        try! target.insert(holderObject.assertion(predicate: "familyName").deepDigests)
-        try! target.insert(holderObject.assertion(predicate: "image").deepDigests)
+        try! target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
+        try! target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
+        try! target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
         
         // Perform the elision
-        let elidedCredential = top.elide(revealing: target)
+        let elidedCredential = top.elideRevealing(target)
         
         // Verify that the elided credential compares equal to the original credential.
         XCTAssertEqual(elidedCredential, johnSmithResidentCard)

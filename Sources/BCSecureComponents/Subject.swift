@@ -10,7 +10,7 @@ public indirect enum Subject {
     case elided(Digest)
 }
 
-public extension Subject {
+extension Subject {
     init(predicate: Envelope, object: Envelope) {
         let digest = Digest(predicate.digest + object.digest)
         self = .assertion(predicate: predicate, object: object, digest: digest)
@@ -50,7 +50,7 @@ extension Subject: DigestProvider {
     }
 }
 
-public extension Subject {
+extension Subject {
     var shallowDigests: Set<Digest> {
         switch self {
         case .leaf(_, let digest):
@@ -92,7 +92,7 @@ extension Subject: Equatable {
     }
 }
 
-public extension Subject {
+extension Subject {
     var isLeaf: Bool {
         if case .leaf = self { return true }
         return false
@@ -119,7 +119,7 @@ public extension Subject {
     }
 }
 
-public extension Subject {
+extension Subject {
     func elide() -> Subject {
         switch self {
         case .leaf(_, let digest):
@@ -137,7 +137,7 @@ public extension Subject {
         }
     }
     
-    func elide(removing target: Set<Digest>) -> Subject {
+    func elideRemoving(_ target: Set<Digest>) -> Subject {
         if target.contains(digest) {
             return .elided(digest)
         }
@@ -146,12 +146,12 @@ public extension Subject {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.elide(removing: target))
+            return .envelope(envelope.elideRemoving(target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             if target.contains(digest) {
                 return .elided(digest)
             } else {
-                return .assertion(predicate: predicate.elide(removing: target), object: object.elide(removing: target), digest: digest)
+                return .assertion(predicate: predicate.elideRemoving(target), object: object.elideRemoving(target), digest: digest)
             }
         case .knownPredicate(_, let digest):
             if target.contains(digest) {
@@ -166,7 +166,7 @@ public extension Subject {
         }
     }
     
-    func elide(revealing target: Set<Digest>) -> Subject {
+    func elideRevealing(_ target: Set<Digest>) -> Subject {
         if !target.contains(digest) {
             return .elided(digest)
         }
@@ -175,12 +175,12 @@ public extension Subject {
         case .leaf(_, _):
             return self
         case .envelope(let envelope):
-            return .envelope(envelope.elide(revealing: target))
+            return .envelope(envelope.elideRevealing(target))
         case .assertion(predicate: let predicate, object: let object, digest: let digest):
             if !target.contains(digest) {
                 return .elided(digest)
             } else {
-                return .assertion(predicate: predicate.elide(revealing: target), object: object.elide(revealing: target), digest: digest)
+                return .assertion(predicate: predicate.elideRevealing(target), object: object.elideRevealing(target), digest: digest)
             }
         case .knownPredicate(_, let digest):
             if !target.contains(digest) {
@@ -196,12 +196,12 @@ public extension Subject {
     }
 }
 
-public extension Subject {
-    var plaintext: CBOR? {
-        guard case let .leaf(plaintext, _) = self else {
+extension Subject {
+    var leaf: CBOR? {
+        guard case let .leaf(leaf, _) = self else {
             return nil
         }
-        return plaintext
+        return leaf
     }
 
     var envelope: Envelope? {
@@ -226,20 +226,14 @@ public extension Subject {
     }
     
     var knownPredicate: KnownPredicate? {
-        guard
-            let predicate = predicate,
-            let plaintext = predicate.plaintext,
-            case CBOR.tagged(.knownPredicate, let value) = plaintext,
-            case CBOR.unsignedInt(let rawValue) = value
-        else {
+        guard case let .knownPredicate(knownPredicate, _) = self else {
             return nil
         }
-        
-        return KnownPredicate(rawValue: rawValue)
+        return knownPredicate
     }
 }
 
-public extension Subject {
+extension Subject {
     var cbor: CBOR {
         switch self {
         case .envelope(let envelope):
@@ -290,7 +284,7 @@ public extension Subject {
     }
 }
 
-public extension Subject {
+extension Subject {
     func encrypt(with key: SymmetricKey, nonce: Nonce? = nil) throws -> Subject {
         let encodedCBOR: Data
         let digest: Digest

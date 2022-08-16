@@ -740,7 +740,7 @@ try revealSet.insert(holder.assertion(predicate: "familyName").deepDigests)
 try revealSet.insert(holder.assertion(predicate: "image").deepDigests)
 
 // Perform the elision
-let elidedCredential = top.elide(revealing: revealSet)
+let elidedCredential = top.elideRevealing(revealSet)
 
 // Verify that the elided credential compares equal to the original credential.
 XCTAssertEqual(elidedCredential, johnSmithResidentCard)

@@ -26,7 +26,7 @@ class NestingTests: XCTestCase {
             """
         )
 
-        let knowsABBob = try Envelope(predicate: knows.add(ab), object: bob).checkEncoding()
+        let knowsABBob = try Envelope(predicate: knows.addAssertion(ab), object: bob).checkEncoding()
         XCTAssertEqual(knowsABBob.format,
             """
             "knows" [
@@ -36,7 +36,7 @@ class NestingTests: XCTestCase {
             """
         )
 
-        let knowsBobAB = try Envelope(predicate: knows, object: bob.add(ab)).checkEncoding()
+        let knowsBobAB = try Envelope(predicate: knows, object: bob.addAssertion(ab)).checkEncoding()
         XCTAssertEqual(knowsBobAB.format,
             """
             "knows": "Bob" [
@@ -46,7 +46,7 @@ class NestingTests: XCTestCase {
         )
         
         let knowsBobEncloseAB = try knowsBob
-            .add(ab)
+            .addAssertion(ab)
             .checkEncoding()
         XCTAssertEqual(knowsBobEncloseAB.format,
             """
@@ -59,7 +59,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsBob = try alice
-            .add(knowsBob)
+            .addAssertion(knowsBob)
             .checkEncoding()
         XCTAssertEqual(aliceKnowsBob.format,
             """
@@ -70,7 +70,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceABKnowsBob = try aliceKnowsBob
-            .add(ab)
+            .addAssertion(ab)
             .checkEncoding()
         XCTAssertEqual(aliceABKnowsBob.format,
             """
@@ -82,7 +82,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsABBob = try alice
-            .add(Envelope(predicate: knows.add(ab), object: bob))
+            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsABBob.format,
             """
@@ -96,7 +96,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsBobAB = try alice
-            .add(Envelope(predicate: knows, object: bob.add(ab)))
+            .addAssertion(Envelope(predicate: knows, object: bob.addAssertion(ab)))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsBobAB.format,
             """
@@ -109,7 +109,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsABBobAB = try alice
-            .add(Envelope(predicate: knows.add(ab), object: bob.add(ab)))
+            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab)))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsABBobAB.format,
             """
@@ -125,8 +125,8 @@ class NestingTests: XCTestCase {
         )
 
         let aliceABKnowsABBobAB = try alice
-            .add(ab)
-            .add(Envelope(predicate: knows.add(ab), object: bob.add(ab)))
+            .addAssertion(ab)
+            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab)))
             .checkEncoding()
 //        print(aliceABKnowsABBobAB.format)
         XCTAssertEqual(aliceABKnowsABBobAB.format,
@@ -144,10 +144,10 @@ class NestingTests: XCTestCase {
         )
 
         let aliceABKnowsABBobABEncloseAB = try alice
-            .add(ab)
-            .add(
-                Envelope(predicate: knows.add(ab), object: bob.add(ab))
-                    .add(ab)
+            .addAssertion(ab)
+            .addAssertion(
+                Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab))
+                    .addAssertion(ab)
             )
             .checkEncoding()
         XCTAssertEqual(aliceABKnowsABBobABEncloseAB.format,
@@ -178,7 +178,7 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
         
-        let elidedEnvelope = envelope.elide()
+        let elidedEnvelope = envelope.elideSubject()
         XCTAssertEqual(elidedEnvelope, envelope)
 
         let expectedElidedFormat =
@@ -190,7 +190,7 @@ class NestingTests: XCTestCase {
     
     func testNestingOnce() throws {
         let envelope = try Envelope(plaintextHello)
-            .enclose()
+            .wrap()
             .checkEncoding()
 
         let expectedFormat =
@@ -202,8 +202,8 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let elidedEnvelope = try Envelope(plaintextHello)
-            .elide()
-            .enclose()
+            .elideSubject()
+            .wrap()
             .checkEncoding()
 
         XCTAssertEqual(elidedEnvelope, envelope)
@@ -219,8 +219,8 @@ class NestingTests: XCTestCase {
     
     func testNestingTwice() throws {
         let envelope = try Envelope(plaintextHello)
-            .enclose()
-            .enclose()
+            .wrap()
+            .wrap()
             .checkEncoding()
 
         let expectedFormat =
@@ -233,8 +233,8 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let target = try envelope.extract().extract()
-        let elidedEnvelope = envelope.elide(removing: target)
+        let target = try envelope.unwrap().unwrap()
+        let elidedEnvelope = envelope.elideRemoving(target)
         
         let expectedElidedFormat =
         """
@@ -244,7 +244,7 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
         XCTAssertEqual(envelope.digest, elidedEnvelope.digest)
-        try XCTAssertEqual(envelope.extract().digest, elidedEnvelope.extract().digest)
+        try XCTAssertEqual(envelope.unwrap().digest, elidedEnvelope.unwrap().digest)
     }
     
     func testNestingSigned() throws {
@@ -261,7 +261,7 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let target = envelope.subject
-        let elidedEnvelope = try envelope.elide(removing: target).checkEncoding()
+        let elidedEnvelope = try envelope.elideRemoving(target).checkEncoding()
         try elidedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedElidedFormat =
         """
@@ -274,7 +274,7 @@ class NestingTests: XCTestCase {
     
     func testNestingEncloseThenSign() throws {
         let envelope = try Envelope(plaintextHello)
-            .enclose()
+            .wrap()
             .sign(with: alicePrivateKeys)
             .checkEncoding()
 
@@ -288,8 +288,8 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
 
-        let target = try envelope.extract().subject
-        let elidedEnvelope = try envelope.elide(removing: target).checkEncoding()
+        let target = try envelope.unwrap().subject
+        let elidedEnvelope = try envelope.elideRemoving(target).checkEncoding()
         XCTAssertEqual(elidedEnvelope, envelope)
         try elidedEnvelope.validateSignature(from: alicePublicKeys)
         let expectedElidedFormat =
@@ -303,9 +303,9 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
         
         let p1 = envelope
-        let p2 = try p1.extract()
+        let p2 = try p1.unwrap()
         let p3 = p2.subject
-        let revealedEnvelope = try envelope.elide(revealing: [p1, p2, p3]).checkEncoding()
+        let revealedEnvelope = try envelope.elideRevealing([p1, p2, p3]).checkEncoding()
         XCTAssertEqual(revealedEnvelope, envelope)
         let expectedRevealedFormat =
         """
@@ -321,7 +321,7 @@ class NestingTests: XCTestCase {
     func testNestingSignThenEnclose() {
         let envelope = Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
-            .enclose()
+            .wrap()
 
         let expectedFormat =
         """
@@ -336,11 +336,11 @@ class NestingTests: XCTestCase {
 
     func testAssertionsOnAllPartsOfEnvelope() throws {
         let predicate = Envelope("predicate")
-            .add("predicate-predicate", "predicate-object")
+            .addAssertion("predicate-predicate", "predicate-object")
         let object = Envelope("object")
-            .add("object-predicate", "object-object")
+            .addAssertion("object-predicate", "object-object")
         let envelope = try Envelope("subject")
-            .add(predicate, object)
+            .addAssertion(predicate, object)
             .checkEncoding()
 
         let expectedFormat =

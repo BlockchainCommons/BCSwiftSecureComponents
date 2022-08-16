@@ -23,7 +23,7 @@ class CryptoTests: XCTestCase {
         // Bob receives the envelope and reads the message.
         let receivedPlaintext = try Envelope(ur: ur)
             .checkEncoding()
-            .extract(String.self)
+            .extractSubject(String.self)
         XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
 
@@ -53,7 +53,7 @@ class CryptoTests: XCTestCase {
         
         // Bob receives the message, validates Alice's signature, and reads the message.
         let receivedPlaintext = try receivedEnvelope.validateSignature(from: alicePublicKeys)
-            .extract(String.self)
+            .extractSubject(String.self)
         XCTAssertEqual(receivedPlaintext, plaintextHello)
 
         // Confirm that it wasn't signed by Carol.
@@ -92,7 +92,7 @@ class CryptoTests: XCTestCase {
         let receivedPlaintext = try Envelope(ur: ur)
             .checkEncoding()
             .validateSignatures(from: [alicePublicKeys, carolPublicKeys])
-            .extract(String.self)
+            .extractSubject(String.self)
 
         // Bob reads the message.
         XCTAssertEqual(receivedPlaintext, plaintextHello)
@@ -104,7 +104,7 @@ class CryptoTests: XCTestCase {
 
         // Alice sends a message encrypted with the key to Bob.
         let envelope = try Envelope(plaintextHello).checkEncoding()
-            .encrypt(with: key).checkEncoding()
+            .encryptSubject(with: key).checkEncoding()
         let ur = envelope.ur
 
 //        print(envelope.taggedCBOR.diag)
@@ -124,25 +124,25 @@ class CryptoTests: XCTestCase {
         
         // Bob decrypts and reads the message.
         let receivedPlaintext = try receivedEnvelope
-            .decrypt(with: key)
-            .extract(String.self)
+            .decryptSubject(with: key)
+            .extractSubject(String.self)
         XCTAssertEqual(receivedPlaintext, plaintextHello)
 
         // Can't read with no key.
-        try XCTAssertThrowsError(receivedEnvelope.extract(String.self))
+        try XCTAssertThrowsError(receivedEnvelope.extractSubject(String.self))
         
         // Can't read with incorrect key.
-        try XCTAssertThrowsError(receivedEnvelope.decrypt(with: SymmetricKey()))
+        try XCTAssertThrowsError(receivedEnvelope.decryptSubject(with: SymmetricKey()))
     }
     
     func testEncryptDecrypt() throws {
         let key = SymmetricKey()
         let plaintextEnvelope = try Envelope(plaintextHello).checkEncoding()
 //        print(plaintextEnvelope.format)
-        let encryptedEnvelope = try plaintextEnvelope.encrypt(with: key).checkEncoding()
+        let encryptedEnvelope = try plaintextEnvelope.encryptSubject(with: key).checkEncoding()
 //        print(encryptedEnvelope.format)
         XCTAssertEqual(plaintextEnvelope, encryptedEnvelope)
-        let plaintextEnvelope2 = try encryptedEnvelope.decrypt(with: key).checkEncoding()
+        let plaintextEnvelope2 = try encryptedEnvelope.decryptSubject(with: key).checkEncoding()
 //        print(plaintextEnvelope2.format)
         XCTAssertEqual(encryptedEnvelope, plaintextEnvelope2)
     }
@@ -154,8 +154,8 @@ class CryptoTests: XCTestCase {
         // Alice signs a plaintext message, then encrypts it.
         let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys).checkEncoding()
-            .enclose().checkEncoding()
-            .encrypt(with: key).checkEncoding()
+            .wrap().checkEncoding()
+            .encryptSubject(with: key).checkEncoding()
         let ur = envelope.ur
 
         let expectedFormat =
@@ -172,10 +172,10 @@ class CryptoTests: XCTestCase {
 
         // Bob receives the envelope, decrypts it using the shared key, and then validates Alice's signature.
         let receivedPlaintext = try Envelope(ur: ur).checkEncoding()
-            .decrypt(with: key).checkEncoding()
-            .extract().checkEncoding()
+            .decryptSubject(with: key).checkEncoding()
+            .unwrap().checkEncoding()
             .validateSignature(from: alicePublicKeys)
-            .extract(String.self)
+            .extractSubject(String.self)
         // Bob reads the message.
         XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
@@ -209,7 +209,7 @@ class CryptoTests: XCTestCase {
         // With this order of operations, the presence of signatures is known before
         // decryption, and may be checked before or after decryption.
         let envelope = try Envelope(plaintextHello)
-            .encrypt(with: key).checkEncoding()
+            .encryptSubject(with: key).checkEncoding()
             .sign(with: alicePrivateKeys).checkEncoding()
         let ur = envelope.ur
 
@@ -230,8 +230,8 @@ class CryptoTests: XCTestCase {
         // Bob receives the envelope, validates Alice's signature, then decrypts the message.
         let receivedPlaintext = try Envelope(ur: ur).checkEncoding()
             .validateSignature(from: alicePublicKeys)
-            .decrypt(with: key).checkEncoding()
-            .extract(String.self)
+            .decryptSubject(with: key).checkEncoding()
+            .extractSubject(String.self)
         // Bob reads the message.
         XCTAssertEqual(receivedPlaintext, plaintextHello)
     }
@@ -240,7 +240,7 @@ class CryptoTests: XCTestCase {
         // Alice encrypts a message so that it can only be decrypted by Bob or Carol.
         let contentKey = SymmetricKey()
         let envelope = try Envelope(plaintextHello)
-            .encrypt(with: contentKey).checkEncoding()
+            .encryptSubject(with: contentKey).checkEncoding()
             .addRecipient(bobPublicKeys, contentKey: contentKey).checkEncoding()
             .addRecipient(carolPublicKeys, contentKey: contentKey).checkEncoding()
         let ur = envelope.ur
@@ -266,18 +266,18 @@ class CryptoTests: XCTestCase {
         
         // Bob decrypts and reads the message
         let bobReceivedPlaintext = try receivedEnvelope
-            .decrypt(to: bobPrivateKeys).checkEncoding()
-            .extract(String.self)
+            .decryptSubject(to: bobPrivateKeys).checkEncoding()
+            .extractSubject(String.self)
         XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Alice decrypts and reads the message
         let carolReceivedPlaintext = try receivedEnvelope
-            .decrypt(to: carolPrivateKeys).checkEncoding()
-            .extract(String.self)
+            .decryptSubject(to: carolPrivateKeys).checkEncoding()
+            .extractSubject(String.self)
         XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
         
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decryptSubject(to: alicePrivateKeys))
     }
     
     func testVisibleSignatureMultiRecipient() throws {
@@ -285,7 +285,7 @@ class CryptoTests: XCTestCase {
         let contentKey = SymmetricKey()
         let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
-            .encrypt(with: contentKey)
+            .encryptSubject(with: contentKey)
             .addRecipient(bobPublicKeys, contentKey: contentKey)
             .addRecipient(carolPublicKeys, contentKey: contentKey)
         let ur = envelope.ur
@@ -313,19 +313,19 @@ class CryptoTests: XCTestCase {
         // Bob validates Alice's signature, then decrypts and reads the message
         let bobReceivedPlaintext = try receivedEnvelope
             .validateSignature(from: alicePublicKeys)
-            .decrypt(to: bobPrivateKeys)
-            .extract(String.self)
+            .decryptSubject(to: bobPrivateKeys)
+            .extractSubject(String.self)
         XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Carol validates Alice's signature, then decrypts and reads the message
         let carolReceivedPlaintext = try receivedEnvelope
             .validateSignature(from: alicePublicKeys)
-            .decrypt(to: carolPrivateKeys)
-            .extract(String.self)
+            .decryptSubject(to: carolPrivateKeys)
+            .extractSubject(String.self)
         XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
 
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decryptSubject(to: alicePrivateKeys))
     }
     
     func testHiddenSignatureMultiRecipient() throws {
@@ -336,8 +336,8 @@ class CryptoTests: XCTestCase {
         let contentKey = SymmetricKey()
         let envelope = try Envelope(plaintextHello)
             .sign(with: alicePrivateKeys)
-            .enclose()
-            .encrypt(with: contentKey)
+            .wrap()
+            .encryptSubject(with: contentKey)
             .addRecipient(bobPublicKeys, contentKey: contentKey)
             .addRecipient(carolPublicKeys, contentKey: contentKey).checkEncoding()
         let ur = envelope.ur
@@ -364,23 +364,23 @@ class CryptoTests: XCTestCase {
         // Bob decrypts the envelope, then extracts the inner envelope and validates
         // Alice's signature, then reads the message
         let bobReceivedPlaintext = try receivedEnvelope
-            .decrypt(to: bobPrivateKeys)
-            .extract().checkEncoding()
+            .decryptSubject(to: bobPrivateKeys)
+            .unwrap().checkEncoding()
             .validateSignature(from: alicePublicKeys)
-            .extract(String.self)
+            .extractSubject(String.self)
         XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Carol decrypts the envelope, then extracts the inner envelope and validates
         // Alice's signature, then reads the message
         let carolReceivedPlaintext = try receivedEnvelope
-            .decrypt(to: carolPrivateKeys)
-            .extract().checkEncoding()
+            .decryptSubject(to: carolPrivateKeys)
+            .unwrap().checkEncoding()
             .validateSignature(from: alicePublicKeys)
-            .extract(String.self)
+            .extractSubject(String.self)
         XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
 
         // Alice didn't encrypt it to herself, so she can't read it.
-        XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
+        XCTAssertThrowsError(try receivedEnvelope.decryptSubject(to: alicePrivateKeys))
     }
     
     func testSSKR() throws {
@@ -398,7 +398,7 @@ class CryptoTests: XCTestCase {
         // seed and a single share.
         let contentKey = SymmetricKey()
         let envelopes = try Envelope(danSeed)
-            .encrypt(with: contentKey)
+            .encryptSubject(with: contentKey)
             .split(groupThreshold: 1, groups: [(2, 3)], contentKey: contentKey)
         
         // Flattening the array of arrays gives just a single array of all the envelopes
@@ -432,7 +432,7 @@ class CryptoTests: XCTestCase {
         // At some future point, Dan retrieves two of the three envelopes so he can recover his seed.
         let recoveredEnvelopes = [bobEnvelope, carolEnvelope]
         let recoveredSeed = try Envelope(shares: recoveredEnvelopes)
-            .extract(Seed.self)
+            .extractSubject(Seed.self)
 
         // The recovered seed is correct.
         XCTAssertEqual(danSeed.data, recoveredSeed.data)

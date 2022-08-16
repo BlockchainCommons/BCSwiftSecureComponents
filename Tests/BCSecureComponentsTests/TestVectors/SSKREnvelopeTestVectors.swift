@@ -123,7 +123,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             // Enclose the payload in an envelope.
             self.envelopeWithPayload = Envelope(payload)
             if let vendorNote {
-                envelopeWithPayload = envelopeWithPayload.add(.note, vendorNote)
+                envelopeWithPayload = envelopeWithPayload.addAssertion(.note, vendorNote)
             }
 
             self.groupedShares = try generateShares()
@@ -148,14 +148,14 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             let joinedEnvelope = try Envelope(shares: recoveredShares)
             
             // Extract the original payload from the envelope.
-            return try joinedEnvelope.extract(T.self)
+            return try joinedEnvelope.extractSubject(T.self)
         }
 
         func generateShares() throws -> [[Envelope]] {
             let fakeRandomGenerator = makeFakeRandomGenerator()
             
             // Encrypt the envelope with the content key. This is the key that will be split below using SSKR.
-            let encryptedEnvelope = try envelopeWithPayload.encrypt(with: fakeContentKey, testNonce: fakeNonce)
+            let encryptedEnvelope = try envelopeWithPayload.encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
             
             // Split the encrypted envelope into shares.
             let shares = encryptedEnvelope.split(

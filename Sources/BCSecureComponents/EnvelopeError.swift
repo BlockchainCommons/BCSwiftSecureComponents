@@ -8,5 +8,7 @@ public enum EnvelopeError: Error {
     case invalidFormat
     case invalidRecipient
     case invalidShares
+    case nonexistentPredicate
+    case ambiguousPredicate
     case elided
 }

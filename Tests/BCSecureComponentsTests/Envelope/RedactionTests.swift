@@ -11,7 +11,7 @@ class RedactionTests: XCTestCase {
         let knowsBob = try Envelope(predicate: knows, object: bob).checkEncoding()
 
         let aliceKnowsBob = try alice
-            .add(knowsBob)
+            .addAssertion(knowsBob)
         XCTAssertEqual(aliceKnowsBob.format,
         """
         "Alice" [
@@ -21,8 +21,8 @@ class RedactionTests: XCTestCase {
         )
         
         let allElided = try aliceKnowsBob
-            .enclose()
-            .elide()
+            .wrap()
+            .elideSubject()
             .checkEncoding()
         XCTAssertEqual(allElided.format,
         """
@@ -31,7 +31,7 @@ class RedactionTests: XCTestCase {
         )
         
         let aliceElided = try aliceKnowsBob
-            .elide(removing: aliceKnowsBob.subject)
+            .elideRemoving(aliceKnowsBob.subject)
             .checkEncoding()
         XCTAssertEqual(aliceElided.format,
         """
@@ -41,9 +41,9 @@ class RedactionTests: XCTestCase {
         """
         )
         
-        let assertion = try aliceKnowsBob.assertion(predicate: "knows")
+        let assertion = try aliceKnowsBob.assertion(withPredicate: "knows")
         let assertionElided = try aliceKnowsBob
-            .elide(removing: assertion)
+            .elideRemoving(assertion)
             .checkEncoding()
         XCTAssertEqual(assertionElided.format,
         """
@@ -55,7 +55,7 @@ class RedactionTests: XCTestCase {
         
         let predicate = assertion.predicate!
         let predicateElided = try aliceKnowsBob
-            .elide(removing: predicate)
+            .elideRemoving(predicate)
             .checkEncoding()
         XCTAssertEqual(predicateElided.format,
         """
@@ -67,7 +67,7 @@ class RedactionTests: XCTestCase {
         
         let object = assertion.object!
         let objectElided = try aliceKnowsBob
-            .elide(removing: object)
+            .elideRemoving(object)
             .checkEncoding()
         XCTAssertEqual(objectElided.format,
         """
@@ -78,7 +78,7 @@ class RedactionTests: XCTestCase {
         )
         
         let predicateObjectElided = try aliceKnowsBob
-            .elide(removing: [predicate, object])
+            .elideRemoving([predicate, object])
             .checkEncoding()
         XCTAssertEqual(predicateObjectElided.format,
         """

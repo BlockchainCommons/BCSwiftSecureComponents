@@ -7,7 +7,7 @@ class NonCorrelationTests: XCTestCase {
         let e1 = Envelope("Hello.")
         
         // e1 correlates with its elision
-        XCTAssertEqual(e1, e1.elide())
+        XCTAssertEqual(e1, e1.elideSubject())
 
         // e2 is the same message, but with random salt
         let e2 = try e1.addSalt().checkEncoding()
@@ -23,14 +23,14 @@ class NonCorrelationTests: XCTestCase {
         XCTAssertNotEqual(e1, e2)
 
         // And of course, neither does its elision.
-        XCTAssertNotEqual(e1, e2.elide())
+        XCTAssertNotEqual(e1, e2.elideSubject())
     }
     
     func testPredicateCorrelation() throws {
         let e1 = try Envelope("Foo")
-            .add(.note, "Bar").checkEncoding()
+            .addAssertion(.note, "Bar").checkEncoding()
         let e2 = try Envelope("Baz")
-            .add(.note, "Quux").checkEncoding()
+            .addAssertion(.note, "Quux").checkEncoding()
 
         let e1ExpectedFormat = """
         "Foo" [
@@ -44,7 +44,7 @@ class NonCorrelationTests: XCTestCase {
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.
-        let e1Elided = try e1.elide(revealing: e1).checkEncoding()
+        let e1Elided = try e1.elideRevealing(e1).checkEncoding()
         
         let redactedExpectedFormat = """
         ELIDED [
@@ -57,7 +57,7 @@ class NonCorrelationTests: XCTestCase {
     func testAddSalt() throws {
         // Add salt to every part of an envelope.
         let e1 = try Envelope(Envelope("Alpha").addSalt().checkEncoding()).checkEncoding()
-            .add(Envelope(predicate: .note).addSalt().checkEncoding(), Envelope("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.").addSalt().checkEncoding())
+            .addAssertion(Envelope(predicate: .note).addSalt().checkEncoding(), Envelope("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.").addSalt().checkEncoding())
         let e1ExpectedFormat = """
         {
             "Alpha" [
@@ -74,7 +74,7 @@ class NonCorrelationTests: XCTestCase {
         """
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
-        let e1Elided = try e1.elide(revealing: e1).checkEncoding()
+        let e1Elided = try e1.elideRevealing(e1).checkEncoding()
         
         let redactedExpectedFormat = """
         ELIDED [

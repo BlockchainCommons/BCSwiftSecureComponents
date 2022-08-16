@@ -8,34 +8,34 @@ class ScenarioTests: XCTestCase {
         // assertions are returned depends on who resolves the CID and when it is
         // resolved. In other words, the referent of a CID is mutable.
         let author = try Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
-            .add(.dereferenceVia, "LibraryOfCongress")
-            .add(.hasName, "Ayn Rand")
+            .addAssertion(.dereferenceVia, "LibraryOfCongress")
+            .addAssertion(.hasName, "Ayn Rand")
             .checkEncoding()
 
         // Assertions made on a literal value are considered part of the same set of
         // assertions made on the digest of that value.
         let name_en = Envelope("Atlas Shrugged")
-            .add(.language, "en")
+            .addAssertion(.language, "en")
 
         let name_es = Envelope("La rebelión de Atlas")
-            .add(.language, "es")
+            .addAssertion(.language, "es")
         
         let work = try Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
-            .add(.isA, "novel")
-            .add("isbn", "9780451191144")
-            .add("author", author)
-            .add(.dereferenceVia, "LibraryOfCongress")
-            .add(.hasName, name_en)
-            .add(.hasName, name_es)
+            .addAssertion(.isA, "novel")
+            .addAssertion("isbn", "9780451191144")
+            .addAssertion("author", author)
+            .addAssertion(.dereferenceVia, "LibraryOfCongress")
+            .addAssertion(.hasName, name_en)
+            .addAssertion(.hasName, name_es)
             .checkEncoding()
 
         let bookData = "This is the entire book “Atlas Shrugged” in EPUB format."
         // Assertions made on a digest are considered associated with that specific binary
         // object and no other. In other words, the referent of a Digest is immutable.
         let bookMetadata = try Envelope(Digest(bookData))
-            .add("work", work)
-            .add("format", "EPUB")
-            .add(.dereferenceVia, "IPFS")
+            .addAssertion("work", work)
+            .addAssertion("format", "EPUB")
+            .addAssertion(.dereferenceVia, "IPFS")
             .checkEncoding()
 
         let expectedFormat =
@@ -69,12 +69,12 @@ class ScenarioTests: XCTestCase {
         // can be referred to by its digest.
         
         let aliceUnsignedDocument = try Envelope(aliceIdentifier)
-            .add(.controller, aliceIdentifier)
-            .add(.publicKeys, alicePublicKeys)
+            .addAssertion(.controller, aliceIdentifier)
+            .addAssertion(.publicKeys, alicePublicKeys)
             .checkEncoding()
         
         let aliceSignedDocument = try aliceUnsignedDocument
-            .enclose()
+            .wrap()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
             .checkEncoding()
 
@@ -99,7 +99,7 @@ class ScenarioTests: XCTestCase {
         // signing is a particular event that can never be repeated.
 
         let aliceSignedDocument2 = try aliceUnsignedDocument
-            .enclose()
+            .wrap()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
             .checkEncoding()
 
@@ -111,17 +111,17 @@ class ScenarioTests: XCTestCase {
         // performs any other necessary validity checks, and then extracts her CID from
         // it.
         let aliceCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
-            .extract()
+            .unwrap()
             // other validity checks here
-            .extract(CID.self)
+            .extractSubject(CID.self)
         
         // The registrar creates its own registration document using Alice's CID as the
         // subject, incorporating Alice's signed document, and adding its own signature.
         let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
         let aliceRegistration = try Envelope(aliceCID)
-            .add(.entity, aliceSignedDocument)
-            .add(.dereferenceVia, aliceURL)
-            .enclose()
+            .addAssertion(.entity, aliceSignedDocument)
+            .addAssertion(.dereferenceVia, aliceURL)
+            .wrap()
             .sign(with: exampleLedgerPrivateKeys, note: "Made by ExampleLedger.")
             .checkEncoding()
 
@@ -153,14 +153,14 @@ class ScenarioTests: XCTestCase {
         // extracts the URI that now points to her record.
         let aliceURI = try aliceRegistration
             .validateSignature(from: exampleLedgerPublicKeys)
-            .extract()
-            .extract(URL.self, predicate: .dereferenceVia)
+            .unwrap()
+            .extractObject(URL.self, forPredicate: .dereferenceVia)
         XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
         // identifier. Bob sends a challenge:
         let aliceChallenge = try Envelope(Nonce())
-            .add(.note, "Challenge to Alice from Bob.")
+            .addAssertion(.note, "Challenge to Alice from Bob.")
             .checkEncoding()
 
         let aliceChallengeExpectedFormat =
@@ -173,9 +173,9 @@ class ScenarioTests: XCTestCase {
 
         // Alice responds by adding her registered URI to the nonce, and signing it.
         let aliceChallengeResponse = try aliceChallenge
-            .enclose()
-            .add(.dereferenceVia, aliceURI)
-            .enclose()
+            .wrap()
+            .addAssertion(.dereferenceVia, aliceURI)
+            .wrap()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
             .checkEncoding()
 
@@ -199,14 +199,14 @@ class ScenarioTests: XCTestCase {
 
         // Bob receives Alice's response, and first checks that the nonce is the once he sent.
         let responseNonce = try aliceChallengeResponse
-            .extract()
-            .extract()
+            .unwrap()
+            .unwrap()
         XCTAssertEqual(aliceChallenge, responseNonce)
         
         // Bob then extracts Alice's registered URI
         let responseURI = try aliceChallengeResponse
-            .extract()
-            .extract(URL.self, predicate: .dereferenceVia)
+            .unwrap()
+            .extractObject(URL.self, forPredicate: .dereferenceVia)
         XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
         
         // Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
@@ -215,10 +215,10 @@ class ScenarioTests: XCTestCase {
         // consistency, and instead goes ahead and extracts Alice's public keys from it.
         let aliceDocumentPublicKeys = try aliceRegistration
             .validateSignature(from: exampleLedgerPublicKeys)
-            .extract()
-            .extract(predicate: .entity)
-            .extract()
-            .extract(PublicKeyBase.self, predicate: .publicKeys)
+            .unwrap()
+            .extractObject(forPredicate: .entity)
+            .unwrap()
+            .extractObject(PublicKeyBase.self, forPredicate: .publicKeys)
         
         // Finally, Bob uses Alice's public keys to validate the challenge he sent her.
         try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
@@ -230,32 +230,32 @@ class ScenarioTests: XCTestCase {
 
         // A photo of John Smith
         let johnSmithImage = Envelope(Digest("John Smith smiling"))
-            .add(.note, "This is an image of John Smith.")
-            .add(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
+            .addAssertion(.note, "This is an image of John Smith.")
+            .addAssertion(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
         
         // John Smith's Permanent Resident Card issued by the State of Example
         let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
-            .add(.isA, "credential")
-            .add("dateIssued", Date(iso8601: "2022-04-27"))
-            .add(.issuer, Envelope(stateIdentifier)
-                .add(.note, "Issued by the State of Example")
-                .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
+            .addAssertion(.isA, "credential")
+            .addAssertion("dateIssued", Date(iso8601: "2022-04-27"))
+            .addAssertion(.issuer, Envelope(stateIdentifier)
+                .addAssertion(.note, "Issued by the State of Example")
+                .addAssertion(.dereferenceVia, URL(string: "https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8")!)
             )
-            .add(.holder, Envelope(johnSmithIdentifier)
-                .add(.isA, "Person")
-                .add(.isA, "Permanent Resident")
-                .add("givenName", "JOHN")
-                .add("familyName", "SMITH")
-                .add("sex", "MALE")
-                .add("birthDate", Date(iso8601: "1974-02-18"))
-                .add("image", johnSmithImage)
-                .add("lprCategory", "C09")
-                .add("lprNumber", "999-999-999")
-                .add("birthCountry", Envelope("bs").add(.note, "The Bahamas"))
-                .add("residentSince", Date(iso8601: "2018-01-07"))
+            .addAssertion(.holder, Envelope(johnSmithIdentifier)
+                .addAssertion(.isA, "Person")
+                .addAssertion(.isA, "Permanent Resident")
+                .addAssertion("givenName", "JOHN")
+                .addAssertion("familyName", "SMITH")
+                .addAssertion("sex", "MALE")
+                .addAssertion("birthDate", Date(iso8601: "1974-02-18"))
+                .addAssertion("image", johnSmithImage)
+                .addAssertion("lprCategory", "C09")
+                .addAssertion("lprNumber", "999-999-999")
+                .addAssertion("birthCountry", Envelope("bs").addAssertion(.note, "The Bahamas"))
+                .addAssertion("residentSince", Date(iso8601: "2018-01-07"))
             )
-            .add(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
-            .enclose()
+            .addAssertion(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
+            .wrap()
             .sign(with: statePrivateKeys, note: "Made by the State of Example.")
             .checkEncoding()
 
@@ -322,28 +322,28 @@ class ScenarioTests: XCTestCase {
         target.insert(top)
 
         // Reveal everything about the state's signature on the card
-        try target.insert(top.assertion(predicate: .verifiedBy).deepDigests)
+        try target.insert(top.assertion(withPredicate: .verifiedBy).deepDigests)
 
         // Reveal the top level subject of the card. This is John Smith's CID.
-        let topContent = top.subject.envelope!
+        let topContent = top.envelope!
         target.insert(topContent.shallowDigests)
 
         // Reveal everything about the `isA` and `issuer` assertions at the top level of the card.
-        try target.insert(topContent.assertion(predicate: .isA).deepDigests)
-        try target.insert(topContent.assertion(predicate: .issuer).deepDigests)
+        try target.insert(topContent.assertion(withPredicate: .isA).deepDigests)
+        try target.insert(topContent.assertion(withPredicate: .issuer).deepDigests)
 
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
-        let holder = try topContent.assertion(predicate: .holder)
+        let holder = try topContent.assertion(withPredicate: .holder)
         target.insert(holder.shallowDigests)
 
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
         let holderObject = holder.object!
-        try target.insert(holderObject.assertion(predicate: "givenName").deepDigests)
-        try target.insert(holderObject.assertion(predicate: "familyName").deepDigests)
-        try target.insert(holderObject.assertion(predicate: "image").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
         
         // Perform the elision
-        let elidedCredential = try top.elide(revealing: target).checkEncoding()
+        let elidedCredential = try top.elideRevealing(target).checkEncoding()
         
         // Verify that the elided credential compares equal to the original credential.
         XCTAssertEqual(elidedCredential, johnSmithResidentCard)
@@ -404,25 +404,28 @@ class ScenarioTests: XCTestCase {
 //        let acmeCorpPrivateKeys = PrivateKeyBase(Seed(data: ‡"3e9271f46cdb85a3b584e7220b976918")!)
 //        let acmeCorpPublicKeys = acmeCorpPrivateKeys.publicKeys
         let acmeCorpIdentifier = CID(‡"361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!
-        let acmeCorpDocument = Envelope(acmeCorpIdentifier)
-            .add(.hasName, "Acme Corp.")
-            .add(.dereferenceVia, URL(string: "https://exampleledger.com/cid/361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!)
+        let acmeCorpDocument = try Envelope(acmeCorpIdentifier)
+            .addAssertion(.hasName, "Acme Corp.")
+            .addAssertion(.dereferenceVia, URL(string: "https://exampleledger.com/cid/361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!)
+            .checkEncoding()
         
         //
         // Declare Products
         //
 
-        let qualityProduct = Envelope(CID(‡"5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1")!)
-            .add(.isA, "Product")
-            .add(.hasName, "Quality Widget")
-            .add("seller", acmeCorpDocument)
-            .add("priceEach", "10.99")
+        let qualityProduct = try Envelope(CID(‡"5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1")!)
+            .addAssertion(.isA, "Product")
+            .addAssertion(.hasName, "Quality Widget")
+            .addAssertion("seller", acmeCorpDocument)
+            .addAssertion("priceEach", "10.99")
+            .checkEncoding()
 
-        let cheapProduct = Envelope(CID(‡"ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64")!)
-            .add(.isA, "Product")
-            .add(.hasName, "Cheap Widget")
-            .add("seller", acmeCorpDocument)
-            .add("priceEach", "4.99")
+        let cheapProduct = try Envelope(CID(‡"ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64")!)
+            .addAssertion(.isA, "Product")
+            .addAssertion(.hasName, "Cheap Widget")
+            .addAssertion("seller", acmeCorpDocument)
+            .addAssertion("priceEach", "4.99")
+            .checkEncoding()
 
         //
         // Declare a Purchase Order
@@ -431,9 +434,10 @@ class ScenarioTests: XCTestCase {
         // Since the line items of a PurchaseOrder may be mutated before being finalized,
         // they are not declared as part of the creation of the PurchaseOrder itself.
         
-        let purchaseOrder = Envelope(CID(‡"1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625")!)
-            .add(.isA, "PurchaseOrder")
-            .add(.hasName, "PO 123")
+        let purchaseOrder = try Envelope(CID(‡"1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625")!)
+            .addAssertion(.isA, "PurchaseOrder")
+            .addAssertion(.hasName, "PO 123")
+            .checkEncoding()
         
         //
         // Add Line Items to the Purchase Order
@@ -449,18 +453,20 @@ class ScenarioTests: XCTestCase {
         // document in its priceEach assertion.
         
         let line1 = try Envelope(purchaseOrder.digest)
-            .add(.isA, "PurchaseOrderLineItem")
-            .add("product", qualityProduct.extract(CID.self))
-            .add(.hasName, qualityProduct.extract(predicate: .hasName))
-            .add("priceEach", qualityProduct.extract(predicate: "priceEach"))
-            .add("quantity", 4)
+            .addAssertion(.isA, "PurchaseOrderLineItem")
+            .addAssertion("product", qualityProduct.extractSubject(CID.self))
+            .addAssertion(.hasName, qualityProduct.extractObject(forPredicate: .hasName))
+            .addAssertion("priceEach", qualityProduct.extractObject(forPredicate: "priceEach"))
+            .addAssertion("quantity", 4)
+            .checkEncoding()
 
         let line2 = try Envelope(purchaseOrder.digest)
-            .add(.isA, "PurchaseOrderLineItem")
-            .add("product", cheapProduct.extract(CID.self))
-            .add(.hasName, cheapProduct.extract(predicate: .hasName))
-            .add("priceEach", cheapProduct.extract(predicate: "priceEach"))
-            .add("quantity", 3)
+            .addAssertion(.isA, "PurchaseOrderLineItem")
+            .addAssertion("product", cheapProduct.extractSubject(CID.self))
+            .addAssertion(.hasName, cheapProduct.extractObject(forPredicate: .hasName))
+            .addAssertion("priceEach", cheapProduct.extractObject(forPredicate: "priceEach"))
+            .addAssertion("quantity", 3)
+            .checkEncoding()
 
         let line2ExpectedFormat =
         """
@@ -478,10 +484,11 @@ class ScenarioTests: XCTestCase {
 //            .add(Assertion(revoke: Reference(digest: line1.digest)))
 //        print(revokeLine1.format)
         
-        let purchaseOrderProjection = purchaseOrder
-            .add("lineItem", line1)
-            .add("lineItem", line2)
+        let purchaseOrderProjection = try purchaseOrder
+            .addAssertion("lineItem", line1)
+            .addAssertion("lineItem", line2)
 //            .revoke(line1.digest)
+            .checkEncoding()
         
         let purchaseOrderProjectionExpectedFormat =
         """

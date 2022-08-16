@@ -35,8 +35,8 @@ class EncodingTests: XCTestCase {
         let e2 = Envelope(predicate: "C", object: "D")
         let e3 = Envelope(predicate: "E", object: "F")
         
-        let e4 = try e2.add(e3)
-        let e5 = try e1.add(e4)
+        let e4 = try e2.addAssertion(e3)
+        let e5 = try e1.addAssertion(e4)
         
         XCTAssertEqual(e5.format,
             """
