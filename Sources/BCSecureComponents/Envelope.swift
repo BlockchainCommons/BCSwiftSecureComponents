@@ -194,7 +194,7 @@ public extension Envelope {
         try extractObject(type, forPredicate: Envelope(predicate))
     }
     
-    func extractObject<T>(_ type: T.Type, forParameter parameter: FunctionParameter) throws -> T where T: CBORDecodable {
+    func extractObject<T>(_ type: T.Type, forParameter parameter: ParameterIdentifier) throws -> T where T: CBORDecodable {
         try extractObject(type, forPredicate: parameter)
     }
 }
@@ -315,15 +315,15 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    static func parameter(_ param: FunctionParameter, value: CBOREncodable) -> Envelope {
+    static func parameter(_ param: ParameterIdentifier, value: CBOREncodable) -> Envelope {
         Envelope(predicate: param.cbor, object: Envelope(value))
     }
 
     static func parameter(_ name: String, value: CBOREncodable) -> Envelope {
-        parameter(FunctionParameter(name), value: value)
+        parameter(ParameterIdentifier(name), value: value)
     }
     
-    func addParameter(_ param: FunctionParameter, value: CBOREncodable) -> Envelope {
+    func addParameter(_ param: ParameterIdentifier, value: CBOREncodable) -> Envelope {
         try! addAssertion(.parameter(param, value: value))
     }
     

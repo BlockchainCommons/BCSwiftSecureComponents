@@ -1,11 +1,11 @@
 import Foundation
 
-public enum FunctionParameter: Hashable {
+public enum ParameterIdentifier: Hashable {
     case known(value: Int, name: String?)
     case named(name: String)
 }
 
-public extension FunctionParameter {
+public extension ParameterIdentifier {
     init(_ value: Int, _ name: String? = nil) {
         self = .known(value: value, name: name)
     }
@@ -15,7 +15,7 @@ public extension FunctionParameter {
     }
 }
 
-public extension FunctionParameter {
+public extension ParameterIdentifier {
     var isKnown: Bool {
         guard case .known = self else {
             return false
@@ -49,12 +49,12 @@ public extension FunctionParameter {
     }
 }
 
-public extension FunctionParameter {
-    static func knownParameter(for value: Int) -> FunctionParameter {
-        knownFunctionParametersByValue[value] ?? FunctionParameter(value)
+public extension ParameterIdentifier {
+    static func knownParameter(for value: Int) -> ParameterIdentifier {
+        knownFunctionParametersByValue[value] ?? ParameterIdentifier(value)
     }
 
-    static func setKnownParameter(_ parameter: FunctionParameter) {
+    static func setKnownParameter(_ parameter: ParameterIdentifier) {
         guard case .known(value: let value, name: _) = parameter else {
             preconditionFailure()
         }
@@ -62,9 +62,9 @@ public extension FunctionParameter {
     }
 }
 
-extension FunctionParameter: CBORCodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> FunctionParameter {
-        try FunctionParameter(taggedCBOR: cbor)
+extension ParameterIdentifier: CBORCodable {
+    public static func cborDecode(_ cbor: CBOR) throws -> ParameterIdentifier {
+        try ParameterIdentifier(taggedCBOR: cbor)
     }
 
     public var cbor: CBOR {
@@ -77,7 +77,7 @@ extension FunctionParameter: CBORCodable {
     }
 }
 
-public extension FunctionParameter {
+public extension ParameterIdentifier {
     init(taggedCBOR cbor: CBOR) throws {
         guard case CBOR.tagged(.parameter, let item) = cbor else {
             throw CBORError.invalidTag
@@ -97,7 +97,7 @@ public extension FunctionParameter {
     }
 }
 
-extension FunctionParameter: CustomStringConvertible {
+extension ParameterIdentifier: CustomStringConvertible {
     public var description: String {
         switch self {
         case .known(value: let value, name: let name):
@@ -108,8 +108,8 @@ extension FunctionParameter: CustomStringConvertible {
     }
 }
 
-var knownFunctionParametersByValue: [Int: FunctionParameter] = {
-    knownFunctionParameters.reduce(into: [Int: FunctionParameter]()) {
+var knownFunctionParametersByValue: [Int: ParameterIdentifier] = {
+    knownFunctionParameters.reduce(into: [Int: ParameterIdentifier]()) {
         guard case .known(value: let value, name: _) = $1 else {
             preconditionFailure()
         }
@@ -117,13 +117,13 @@ var knownFunctionParametersByValue: [Int: FunctionParameter] = {
     }
 }()
 
-extension FunctionParameter {
-    public static let blank = FunctionParameter(1, "_")
-    public static let lhs = FunctionParameter(2, "lhs")
-    public static let rhs = FunctionParameter(3, "rhs")
+extension ParameterIdentifier {
+    public static let blank = ParameterIdentifier(1, "_")
+    public static let lhs = ParameterIdentifier(2, "lhs")
+    public static let rhs = ParameterIdentifier(3, "rhs")
 }
 
-var knownFunctionParameters: [FunctionParameter] = [
+var knownFunctionParameters: [ParameterIdentifier] = [
     .blank,
     .lhs,
     .rhs
