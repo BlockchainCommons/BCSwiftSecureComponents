@@ -662,12 +662,12 @@ public extension Envelope {
         self.init(FunctionIdentifier.tagged(name: name))
     }
     
-    init(request id: UUID, body: CBOREncodable) {
+    init(request id: CID, body: CBOREncodable) {
         self = Envelope(CBOR.tagged(.request, id.taggedCBOR))
             .add(.body, body)
     }
     
-    init(response id: UUID, result: CBOREncodable) {
+    init(response id: CID, result: CBOREncodable) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .add(.result, result)
     }

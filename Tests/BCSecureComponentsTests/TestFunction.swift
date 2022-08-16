@@ -35,11 +35,11 @@ class TestFunction: XCTestCase {
     }
     
     func testRequest() {
-        let uuid = UUID(uuidString: "F741A43F-6091-456D-A0DD-6108651DF751")!
+        let uuid = CID(‡"c66be27dbad7cd095ca77647406d07976dc0f35f0d4d654bb0e96dd227a1e9fc")!
         
         let requestEnvelope = Envelope(request: uuid, body: twoPlusThree())
         let expectedRequestFormat = """
-        request(UUID(F741A43F-6091-456D-A0DD-6108651DF751)) [
+        request(CID(c66be27dbad7cd095ca77647406d07976dc0f35f0d4d654bb0e96dd227a1e9fc)) [
             body: «add» [
                 ❰lhs❱: 2
                 ❰rhs❱: 3
@@ -50,7 +50,7 @@ class TestFunction: XCTestCase {
 
         let responseEnvelope = Envelope(response: uuid, result: 5)
         let expectedResponseFormat = """
-        response(UUID(F741A43F-6091-456D-A0DD-6108651DF751)) [
+        response(CID(c66be27dbad7cd095ca77647406d07976dc0f35f0d4d654bb0e96dd227a1e9fc)) [
             result: 5
         ]
         """
