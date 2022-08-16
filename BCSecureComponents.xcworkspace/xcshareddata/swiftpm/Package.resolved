@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/blake3-swift.git",
       "state" : {
-        "revision" : "632c0d1315e2c2d33c279499e140f5690d96f1c2",
-        "version" : "0.1.1"
+        "revision" : "5f3724ced3696abc60938b421b35cf16e77170d1",
+        "version" : "0.1.3"
       }
     },
     {
@@ -75,10 +75,10 @@
     {
       "identity" : "wolfbase",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/wolfmcnally/WolfBase",
+      "location" : "https://github.com/WolfMcNally/WolfBase",
       "state" : {
-        "revision" : "7791f91841795939eb43a33950d08d142b7df558",
-        "version" : "4.4.0"
+        "revision" : "ad3bef161fe0f1f2b41389a4ff8a831409bd2ec6",
+        "version" : "4.5.0"
       }
     }
   ],
