@@ -64,8 +64,8 @@ extension CBOR: EnvelopeFormat {
                 return try .item(CID(taggedCBOR: self)†)
             case CBOR.tagged(CBOR.Tag.function, _):
                 return try .item(FunctionIdentifier(taggedCBOR: self)†.flanked("«", "»"))
-            case CBOR.tagged(CBOR.Tag.parameter, let cbor):
-                return .item(FunctionParameter.nameString(for: cbor).flanked("❰", "❱"))
+            case CBOR.tagged(CBOR.Tag.parameter, _):
+                return try .item(FunctionParameter(taggedCBOR: self)†.flanked("❰", "❱"))
             case CBOR.tagged(CBOR.Tag.request, let cbor):
                 return .item(Envelope(cbor).format.flanked("request(", ")"))
             case CBOR.tagged(CBOR.Tag.response, let cbor):

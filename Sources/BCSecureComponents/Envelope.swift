@@ -335,7 +335,7 @@ public extension Envelope {
     }
 
     static func parameter(_ name: String, value: CBOREncodable) -> Envelope {
-        Envelope(predicate: FunctionParameter.tagged(name: name), object: value)
+        parameter(FunctionParameter(name), value: value)
     }
     
     func addParameter(_ param: FunctionParameter, value: CBOREncodable) -> Envelope {

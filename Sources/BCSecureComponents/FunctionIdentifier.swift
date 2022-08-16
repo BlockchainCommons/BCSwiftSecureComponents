@@ -62,29 +62,6 @@ public extension FunctionIdentifier {
     }
 }
 
-public extension FunctionIdentifier {
-    static let add = FunctionIdentifier(1, "add")
-    static let sub = FunctionIdentifier(2, "sub")
-    static let mul = FunctionIdentifier(3, "mul")
-    static let div = FunctionIdentifier(4, "div")
-}
-
-var knownFunctionIdentifiersByValue: [Int: FunctionIdentifier] = {
-    knownFunctionIdentifiers.reduce(into: [Int: FunctionIdentifier]()) {
-        guard case FunctionIdentifier.known(value: let value, name: _) = $1 else {
-            preconditionFailure()
-        }
-        $0[value] = $1
-    }
-}()
-
-var knownFunctionIdentifiers: [FunctionIdentifier] = [
-    .add,
-    .sub,
-    .mul,
-    .div
-]
-
 extension FunctionIdentifier: CBORCodable {
     public static func cborDecode(_ cbor: CBOR) throws -> FunctionIdentifier {
         try FunctionIdentifier(taggedCBOR: cbor)
@@ -130,3 +107,26 @@ extension FunctionIdentifier: CustomStringConvertible {
         }
     }
 }
+
+var knownFunctionIdentifiersByValue: [Int: FunctionIdentifier] = {
+    knownFunctionIdentifiers.reduce(into: [Int: FunctionIdentifier]()) {
+        guard case .known(value: let value, name: _) = $1 else {
+            preconditionFailure()
+        }
+        $0[value] = $1
+    }
+}()
+
+public extension FunctionIdentifier {
+    static let add = FunctionIdentifier(1, "add")
+    static let sub = FunctionIdentifier(2, "sub")
+    static let mul = FunctionIdentifier(3, "mul")
+    static let div = FunctionIdentifier(4, "div")
+}
+
+var knownFunctionIdentifiers: [FunctionIdentifier] = [
+    .add,
+    .sub,
+    .mul,
+    .div
+]
