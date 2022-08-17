@@ -66,8 +66,6 @@ public extension URType {
     static let sskrShare = URType(type: "crypto-sskr", tag: 309)
     static let psbt = URType(type: "crypto-psbt", tag: 310)
     static let account = URType(type: "crypto-account", tag: 311)
-    static let transactionRequest = URType(type: "crypto-request", tag: 312)
-    static let transactionResponse = URType(type: "crypto-response", tag: 313)
 }
 
 /// Tags for subtypes specific to AccountBundle (crypto-output).
@@ -86,14 +84,10 @@ public extension CBOR.Tag {
     static let outputCosigner = CBOR.Tag(410, "output-cosigner")
 }
 
-/// Tags for subtypes specific to crypto-request.
+/// Tags for subtypes specific to requests and responses.
 /// These tags use three-byte encoding.
 public extension CBOR.Tag {
-    static let seedRequestBody = CBOR.Tag(500, "seed-request-body")
-    static let keyRequestBody = CBOR.Tag(501, "key-request-body")
-    static let psbtSignatureRequestBody = CBOR.Tag(502, "psbt-signature-request-body")
-    static let outputDescriptorRequestBody = CBOR.Tag(503, "output-descriptor-request-body")
-    static let outputDescriptorResponseBody = CBOR.Tag(504, "output-descriptor-response-body")
+    static let outputDescriptorResponse = CBOR.Tag(500, "output-descriptor-response")
 }
 
 /// These tags use three-byte encoding.
