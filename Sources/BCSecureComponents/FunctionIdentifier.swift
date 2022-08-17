@@ -1,4 +1,5 @@
 import Foundation
+import URKit
 
 public enum FunctionIdentifier: Hashable {
     case known(value: Int, name: String?)

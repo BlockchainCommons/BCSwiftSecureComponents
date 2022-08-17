@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/blake3-swift.git",
       "state" : {
-        "branch" : "0.1.2",
-        "revision" : "716fadb800a1a3292838fc2b52bf19df5dc8125a"
+        "revision" : "5f3724ced3696abc60938b421b35cf16e77170d1",
+        "version" : "0.1.3"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nixberg/endianbytes-swift",
       "state" : {
-        "branch" : "0.4.0",
-        "revision" : "c09b87de7948c2e95d2a9c3faba34ab2cb24ba3b"
+        "revision" : "c09b87de7948c2e95d2a9c3faba34ab2cb24ba3b",
+        "version" : "0.4.0"
       }
     },
     {

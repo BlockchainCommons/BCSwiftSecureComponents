@@ -3,6 +3,7 @@ import URKit
 import WolfBase
 import CryptoKit
 import SSKR
+import URKit
 
 public struct Envelope: DigestProvider {
     public let subject: Subject
