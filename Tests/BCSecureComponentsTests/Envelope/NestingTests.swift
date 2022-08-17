@@ -3,6 +3,25 @@ import BCSecureComponents
 import WolfBase
 
 class NestingTests: XCTestCase {
+    func testBasicElision() throws {
+        let e = Envelope("Alice")
+            .addAssertion("knows", "Bob")
+            .addAssertion("knows", "Carol")
+        print(e.format)
+        
+        let target2: [DigestProvider] = [Envelope("knows")]
+        let e2 = e.elideRemoving(target2)
+        print(e2.format)
+
+        let target3: [DigestProvider] = [Envelope(predicate: "knows", object: "Bob")]
+        let e3 = e.elideRemoving(target3)
+        print(e3.format)
+
+        let target4: [DigestProvider] = []
+        let e4 = e.elideRevealing(target4)
+        print(e4.format)
+    }
+    
     func testPredicateEnclosures() throws {
         let alice = Envelope("Alice")
         let knows = Envelope("knows")

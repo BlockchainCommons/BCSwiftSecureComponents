@@ -17,6 +17,7 @@
 * [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * Noncorrelation: This document
+* [Elision and Redaction](10-ELISION-REDACTION.md)
 
 ---
 
@@ -57,7 +58,7 @@ In Secure Components, a `Signature` is produced using:
 * a private key, and
 * entropy
 
-Because of the use of entropy, two such `Signature`s produced from a single image will contain entirely different bit sequences, and yet both will still validate against the image. Furthermore, all signatures are the same size regardless of the size of the image: 64 bytes, so the size of the signature provides no clue as to the contents of the image. Therefore there is no way, without the image and the public corresponding to the private key used to produce it, for a third-party to determine that the two signatures were derived from that image, or even that they were derived from the same image. Therefore, `Signature`s are noncorrelatable.
+Because of the use of entropy, two such `Signature`s produced from a single image will contain entirely different bit sequences, and yet both will still validate against the image. Furthermore, all signatures are the same size regardless of the size of the image: 64 bytes, so the size of the signature provides no clue as to the contents of the image. Therefore there is no way, without the image and the public key corresponding to the private key used to produce it, for a third-party to determine that the two signatures were derived from that image, or even that they were derived from the same image. Therefore, `Signature`s are noncorrelatable.
 
 ## Digests are Correlatable
 
@@ -71,7 +72,7 @@ Decorrelation of an `EncryptedMessage` could be accomplished by adding some numb
 
 ## SSKRShares are Correlatable
 
-SSKR breaks (*shards*) a fixed-length (32 byte) secret into a number of *shares*, a threshold of which can be used to recover the secret. Because the secret is always of a fixed, predermined length, the shares produced by SSKR are, by themselves, noncorrelatable. However, each SSKR share contains metadata that can be used for correlation, and in particular, a 16-bit session ID that identifies each share as having been produced by the same sharding session.
+SSKR breaks (*shards*) a fixed-length (32 byte) secret into a number of *shares*, a threshold of which can be used to recover the secret. Because the secret is always of a fixed, predermined length, the shares produced by SSKR are, by themselves, noncorrelatable. However, each SSKR share contains metadata that can be used for correlation, and in particular, a 16-bit session ID that identifies each share as having been produced by the same sharding operation.
 
 This correlatability is inherited by the set of `Envelope`s produced by the `Envelope.split` function, as each envelope carries an assertion with an `SSKRShare` produced by sharding an ephemeral symmertric content key.
 
@@ -79,7 +80,7 @@ Furthermore, the payload itself is encrypted into an `EncryptedMessage` using th
 
 To mitigate this:
 
-* The SSKR algorithm would have to be enhanced to make its shares non-correlatable. Removing the session ID is the obvious first step, but doing this has downsides. The session ID is a check on foreign shares being introduced into the recovery process, and removing the session ID would make it impossible for an SSKR decoder to reject a share interactively: only upon receiving a quorum of shares and performing the secret recovery could the secret be checked for validity, for example by attempting to use the secret as a key for decoding the payload. Even if the session ID were removed, an SSKR share contains other metadata such as the share index, member threshold, group index, group count, and group threshold that could still be used to (more weakly) correlate a set of shares.
+* The SSKR algorithm would have to be enhanced to make its shares non-correlatable. Removing the session ID is the obvious first step, but doing this has downsides. The session ID is a check on foreign shares being introduced into the recovery process, and removing the session ID would make it impossible for an SSKR decoder to reject a share interactively: only upon receiving a quorum of shares and performing the secret recovery could the secret be checked for validity, for example by attempting to use the possibly-recovered secret as a key for decoding the payload. Even if the session ID were removed, an SSKR share contains other metadata such as the share index, member threshold, group index, group count, and group threshold that could still be used to (more weakly) correlate a set of shares.
 * Rather than including the identical `EncryptedMessage` in every `Envelope`, they would each contain a unique `EncryptedMessage`, produced by the same key, but from a plaintext that has undergone decorrelation.
 
 Combining a noncorrelatable SSKR share with a decorrelated encrypted payload would maximize noncorrelation for sharded payloads of arbitrary size.
@@ -89,14 +90,14 @@ Combining a noncorrelatable SSKR share with a decorrelated encrypted payload wou
 In Secure Components, an `Envelope` is a Merkle tree, where every element produces its own `Digest`:
 
 * The `Envelope` as a whole,
-* The `subject` of the `Envelope`,
-* Each `Assertion` on the `subject`,
+* The `subject` of the `Envelope`, which *may* be an `Envelope`,
+* Each `Assertion` on the `subject`, which is itself an `Envelope`,
 * Each `predicate` of each `Assertion`, which is itself an `Envelope`,
 * Each `object` of each `Assertion`, which is itself an `Envelope`.
 
 Each of these element `Digest`s is rolled up into the next higher `Digest` in the tree:
 
-* each `predicate` digest and `object` digest are used to form the `Assertion` digest,
+* each `predicate` digest and `object` digest are used to form the `assertion` digest,
 * All the assertion digests (in sorted order) and the `subject` digest are used to form the `Envelope` digest.
 
 Therefore, a change to any element of an `Envelope` propagates upwards and impacts every digest up that branch of the tree.
@@ -117,7 +118,7 @@ In the above:
 * the `verifiedBy` predicate is correlatable, because it is a well-known value, and
 * the `Signature` is noncorrelatable, because it was constructed with entropy.
 
-If the asserion is elided, we get:
+If the assertion is elided, we get:
 
 ```
 EncryptedMessage [

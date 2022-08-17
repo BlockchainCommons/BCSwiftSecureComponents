@@ -17,6 +17,7 @@
 * [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * [Noncorrelation](9-NONCORRELATION.md)
+* [Elision and Redaction](10-ELISION-REDACTION.md)
 
 ---
 
