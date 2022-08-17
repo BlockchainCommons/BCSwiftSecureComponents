@@ -17,6 +17,24 @@ public extension FunctionIdentifier {
 }
 
 public extension FunctionIdentifier {
+    static func ==(lhs: FunctionIdentifier, rhs: FunctionIdentifier) -> Bool {
+        if
+            case .known(let lValue, _) = lhs,
+            case .known(let rValue, _) = rhs
+        {
+            return lValue == rValue
+        } else if
+            case .named(let lName) = lhs,
+            case .named(let rName) = rhs
+        {
+            return lName == rName
+        } else {
+            return false
+        }
+    }
+}
+
+public extension FunctionIdentifier {
     var isKnown: Bool {
         guard case .known = self else {
             return false

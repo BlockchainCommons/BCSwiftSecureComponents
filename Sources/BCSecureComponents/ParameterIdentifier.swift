@@ -17,6 +17,24 @@ public extension ParameterIdentifier {
 }
 
 public extension ParameterIdentifier {
+    static func ==(lhs: ParameterIdentifier, rhs: ParameterIdentifier) -> Bool {
+        if
+            case .known(let lValue, _) = lhs,
+            case .known(let rValue, _) = rhs
+        {
+            return lValue == rValue
+        } else if
+            case .named(let lName) = lhs,
+            case .named(let rName) = rhs
+        {
+            return lName == rName
+        } else {
+            return false
+        }
+    }
+}
+
+public extension ParameterIdentifier {
     var isKnown: Bool {
         guard case .known = self else {
             return false
