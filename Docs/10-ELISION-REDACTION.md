@@ -164,14 +164,13 @@ And here it is in Envelope Notation:
 Here is a representation of the Merkle Tree for that `Envelope`. Each line represents a unique digest, and therefore a potential *elision point*.
 
 ```
-Envelope
-    Subject
-    Assertion
-        Predicate
-        Object
-    Assertion
-        Predicate
-        Object
+Subject
+Assertion
+    Predicate
+    Object
+Assertion
+    Predicate
+    Object
 ```
 
 By selecting a set of elision points, or *target*, Secure Components can perform automatic elision, either by eliding everything identified in the target, or *not* eliding (revealing) everything not in the target.
