@@ -9,9 +9,11 @@ class EncodingTests: XCTestCase {
 
     func test1() throws {
         let e = try Envelope(plaintextHello).checkEncoding()
-        XCTAssertEqual(e.taggedCBOR.diagAnnotated,
+        XCTAssertEqual(e.diagAnnotated,
             """
-            200("Hello.")   ; envelope
+            200(   ; envelope
+               220("Hello.")   ; leaf
+            )
             """
         )
     }
@@ -19,7 +21,7 @@ class EncodingTests: XCTestCase {
     func test2() throws {
         let array: CBOR = [1, 2, 3]
         let e = try Envelope(array).checkEncoding()
-        XCTAssertEqual(e.taggedCBOR.diagAnnotated,
+        XCTAssertEqual(e.diagAnnotated,
             """
             200(   ; envelope
                220(   ; leaf
@@ -36,6 +38,48 @@ class EncodingTests: XCTestCase {
         let e3 = Envelope(predicate: "E", object: "F")
         
         let e4 = try e2.addAssertion(e3)
+        XCTAssertEqual(e4.format,
+        """
+        {
+            "C": "D"
+        } [
+            "E": "F"
+        ]
+        """
+        )
+        
+        XCTAssertEqual(e4.diagAnnotated,
+        """
+        200(   ; envelope
+           [
+              200(   ; envelope
+                 221(   ; assertion
+                    [
+                       200(   ; envelope
+                          220("C")   ; leaf
+                       ),
+                       200(   ; envelope
+                          220("D")   ; leaf
+                       )
+                    ]
+                 )
+              ),
+              200(   ; envelope
+                 221(   ; assertion
+                    [
+                       200(   ; envelope
+                          220("E")   ; leaf
+                       ),
+                       200(   ; envelope
+                          220("F")   ; leaf
+                       )
+                    ]
+                 )
+              )
+           ]
+        )
+        """)
+        
         let e5 = try e1.addAssertion(e4)
         
         XCTAssertEqual(e5.format,
@@ -52,21 +96,50 @@ class EncodingTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(e5.taggedCBOR.diagAnnotated,
+        XCTAssertEqual(e5.diagAnnotated,
             """
             200(   ; envelope
                [
-                  221(   ; assertion
-                     ["A", "B"]
-                  ),
-                  [
+                  200(   ; envelope
                      221(   ; assertion
-                        ["C", "D"]
-                     ),
-                     221(   ; assertion
-                        ["E", "F"]
+                        [
+                           200(   ; envelope
+                              220("A")   ; leaf
+                           ),
+                           200(   ; envelope
+                              220("B")   ; leaf
+                           )
+                        ]
                      )
-                  ]
+                  ),
+                  200(   ; envelope
+                     [
+                        200(   ; envelope
+                           221(   ; assertion
+                              [
+                                 200(   ; envelope
+                                    220("C")   ; leaf
+                                 ),
+                                 200(   ; envelope
+                                    220("D")   ; leaf
+                                 )
+                              ]
+                           )
+                        ),
+                        200(   ; envelope
+                           221(   ; assertion
+                              [
+                                 200(   ; envelope
+                                    220("E")   ; leaf
+                                 ),
+                                 200(   ; envelope
+                                    220("F")   ; leaf
+                                 )
+                              ]
+                           )
+                        )
+                     ]
+                  )
                ]
             )
             """

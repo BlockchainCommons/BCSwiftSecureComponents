@@ -1,5 +1,6 @@
 import Foundation
 import BCSecureComponents
+import WolfBase
 
 /// This is a mostly-duplicate of the `Seed` struct from BCSwiftFoundation, used here for demonstration and testing purposes only.
 struct Seed {
@@ -42,11 +43,11 @@ extension Seed {
     }
 
     public var taggedCBOR: CBOR {
-        return CBOR.tagged(URType.seed.tag, untaggedCBOR)
+        return CBOR.tagged(.seed, untaggedCBOR)
     }
 
     public var ur: UR {
-        return try! UR(type: URType.seed.type, cbor: untaggedCBOR)
+        return try! UR(.seed, untaggedCBOR)
     }
 }
 
@@ -64,9 +65,7 @@ extension Seed: CBORDecodable {
 
 extension Seed {
     public init(ur: UR) throws {
-        guard ur.type == URType.seed.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.seed)
         try self.init(cborData: ur.cbor)
     }
 
@@ -81,10 +80,11 @@ extension Seed {
     }
 
     public init(untaggedCBOR: CBOR) throws {
-        guard case let CBOR.map(pairs) = untaggedCBOR else {
+        guard case CBOR.orderedMap(let orderedMap) = untaggedCBOR else {
             // CBOR doesn't contain a map.
             throw CBORError.invalidFormat
         }
+        let pairs = try orderedMap.valuesByIntKey()
         guard
             let dataItem = pairs[1],
             case let CBOR.data(bytes) = dataItem,
@@ -94,7 +94,7 @@ extension Seed {
             throw CBORError.invalidFormat
         }
         let data = bytes.data
-        
+
         let creationDate: Date?
         if let dateItem = pairs[2] {
             guard case let CBOR.date(d) = dateItem else {
@@ -131,7 +131,7 @@ extension Seed {
     }
 
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(tag, content) = taggedCBOR, tag == URType.seed.tag else {
+        guard case let CBOR.tagged(tag, content) = taggedCBOR, tag == .seed else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: content)

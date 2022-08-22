@@ -1,8 +1,8 @@
 import Foundation
 
 public enum EnvelopeError: Error {
-    case invalidOperation
     case invalidKey
+    case missingDigest
     case invalidDigest
     case invalidSignature
     case invalidFormat
@@ -10,5 +10,8 @@ public enum EnvelopeError: Error {
     case invalidShares
     case nonexistentPredicate
     case ambiguousPredicate
+    case alreadyEncrypted
+    case notEncrypted
+    case notWrapped
     case elided
 }

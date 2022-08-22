@@ -27,7 +27,7 @@ extension PublicKeyBase {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.publicKeyBase.tag, untaggedCBOR)
+        CBOR.tagged(.publicKeyBase, untaggedCBOR)
     }
     
     public init(untaggedCBOR: CBOR) throws {
@@ -45,7 +45,7 @@ extension PublicKeyBase {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.publicKeyBase.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.publicKeyBase, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
@@ -58,13 +58,11 @@ extension PublicKeyBase {
 
 extension PublicKeyBase {
     public var ur: UR {
-        return try! UR(type: URType.publicKeyBase.type, cbor: untaggedCBOR)
+        return try! UR(.publicKeyBase, untaggedCBOR)
     }
     
     public init(ur: UR) throws {
-        guard ur.type == URType.publicKeyBase.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.publicKeyBase)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }

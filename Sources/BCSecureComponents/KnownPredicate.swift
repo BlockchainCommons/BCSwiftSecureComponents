@@ -67,6 +67,12 @@ fileprivate var knownPredicatesByRawValue: [UInt64: KnownPredicate] = {
     return result
 }()
 
+extension KnownPredicate: Equatable {
+    public static func ==(lhs: KnownPredicate, rhs: KnownPredicate) -> Bool {
+        lhs.rawValue == rhs.rawValue
+    }
+}
+
 extension KnownPredicate: CustomStringConvertible {
     public var description: String {
         name
@@ -104,5 +110,21 @@ public extension KnownPredicate {
 extension KnownPredicate: DigestProvider {
     public var digest: Digest {
         Digest(taggedCBOR)
+    }
+}
+
+extension KnownPredicate: CBORCodable {
+    public var cbor: CBOR {
+        taggedCBOR
+    }
+    
+    public static func cborDecode(_ cbor: CBOR) throws -> KnownPredicate {
+        return try KnownPredicate(taggedCBOR: cbor)
+    }
+}
+
+extension KnownPredicate {
+    var formatItem: EnvelopeFormatItem {
+        .item(name)
     }
 }

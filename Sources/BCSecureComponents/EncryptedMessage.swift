@@ -63,10 +63,8 @@ extension EncryptedMessage {
 }
 
 extension EncryptedMessage {
-    public var digest: Digest {
-        get throws {
-            try Digest(taggedCBOR: CBOR(aad))
-        }
+    public var digest: Digest? {
+        try? Digest(taggedCBOR: CBOR(aad, orderedKeys: true))
     }
 }
 
@@ -80,7 +78,7 @@ extension EncryptedMessage {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.message.tag, untaggedCBOR)
+        CBOR.tagged(.message, untaggedCBOR)
     }
     
     public init(untaggedCBOR: CBOR) throws {
@@ -89,7 +87,7 @@ extension EncryptedMessage {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.message.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.message, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
@@ -127,7 +125,7 @@ extension EncryptedMessage {
     }
     
     public static func decode(taggedCBOR: CBOR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
-        guard case let CBOR.tagged(URType.message.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.message, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         return try decode(cbor: untaggedCBOR)
@@ -136,21 +134,17 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var ur: UR {
-        return try! UR(type: URType.message.type, cbor: untaggedCBOR)
+        return try! UR(.message, untaggedCBOR)
     }
     
     public init(ur: UR) throws {
-        guard ur.type == URType.message.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.message)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
     
     public static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
-        guard ur.type == URType.message.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.message)
         let cbor = try CBOR(ur.cbor)
         return try Self.decode(cbor: cbor)
     }
@@ -159,5 +153,11 @@ extension EncryptedMessage {
 extension EncryptedMessage: CBOREncodable {
     public var cbor: CBOR {
         taggedCBOR
+    }
+}
+
+extension EncryptedMessage {
+    var formatItem: EnvelopeFormatItem {
+        .item("EncryptedMessage")
     }
 }

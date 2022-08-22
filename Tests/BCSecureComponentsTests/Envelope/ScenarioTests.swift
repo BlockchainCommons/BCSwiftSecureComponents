@@ -300,7 +300,7 @@ class ScenarioTests: XCTestCase {
         """
         XCTAssertEqual(johnSmithResidentCard.format, expectedFormat)
         
-        //print(johnSmithResidentCard.taggedCBOR.diagAnnotated)
+        //print(johnSmithResidentCard.diagAnnotated)
         
         // John wishes to identify himself to a third party using his government-issued
         // credential, but does not wish to reveal more than his name, his photo, and the
@@ -324,16 +324,19 @@ class ScenarioTests: XCTestCase {
         // Reveal everything about the state's signature on the card
         try target.insert(top.assertion(withPredicate: .verifiedBy).deepDigests)
 
-        // Reveal the top level subject of the card. This is John Smith's CID.
-        let topContent = top.envelope!
-        target.insert(topContent.shallowDigests)
+        // Reveal the top level of the card.
+        target.insert(top.shallowDigests)
+
+        let card = try top.unwrap()
+        target.insert(card)
+        target.insert(card.subject)
 
         // Reveal everything about the `isA` and `issuer` assertions at the top level of the card.
-        try target.insert(topContent.assertion(withPredicate: .isA).deepDigests)
-        try target.insert(topContent.assertion(withPredicate: .issuer).deepDigests)
+        try target.insert(card.assertion(withPredicate: .isA).deepDigests)
+        try target.insert(card.assertion(withPredicate: .issuer).deepDigests)
 
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
-        let holder = try topContent.assertion(withPredicate: .holder)
+        let holder = try card.assertion(withPredicate: .holder)
         target.insert(holder.shallowDigests)
 
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
@@ -470,7 +473,7 @@ class ScenarioTests: XCTestCase {
 
         let line2ExpectedFormat =
         """
-        Digest(1f18068a4cd7302d52541b1000d6266e57b707adcaa6958e2d1c042df956e161) [
+        Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
             "priceEach": "4.99"
             "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
             "quantity": 3
@@ -493,14 +496,14 @@ class ScenarioTests: XCTestCase {
         let purchaseOrderProjectionExpectedFormat =
         """
         CID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [
-            "lineItem": Digest(1f18068a4cd7302d52541b1000d6266e57b707adcaa6958e2d1c042df956e161) [
+            "lineItem": Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
                 "priceEach": "10.99"
                 "product": CID(5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1)
                 "quantity": 4
                 hasName: "Quality Widget"
                 isA: "PurchaseOrderLineItem"
             ]
-            "lineItem": Digest(1f18068a4cd7302d52541b1000d6266e57b707adcaa6958e2d1c042df956e161) [
+            "lineItem": Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
                 "priceEach": "4.99"
                 "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
                 "quantity": 3

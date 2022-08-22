@@ -26,7 +26,7 @@ extension CID {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.cid.tag, untaggedCBOR)
+        CBOR.tagged(.cid, untaggedCBOR)
     }
     
     public init(untaggedCBOR: CBOR) throws {
@@ -40,7 +40,7 @@ extension CID {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.cid.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.cid, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
@@ -53,13 +53,11 @@ extension CID {
 
 extension CID {
     public var ur: UR {
-        return try! UR(type: URType.cid.type, cbor: untaggedCBOR)
+        return try! UR(.cid, untaggedCBOR)
     }
     
     public init(ur: UR) throws {
-        guard ur.type == URType.cid.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.cid)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }

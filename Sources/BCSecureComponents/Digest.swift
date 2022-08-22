@@ -58,7 +58,7 @@ extension Digest {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.digest.tag, untaggedCBOR)
+        CBOR.tagged(.digest, untaggedCBOR)
     }
     
     public static func optionalTaggedCBOR(_ digest: Digest?) -> CBOR {
@@ -79,7 +79,7 @@ extension Digest {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.digest.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.digest, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
@@ -99,13 +99,11 @@ extension Digest {
 
 extension Digest {
     public var ur: UR {
-        return try! UR(type: URType.digest.type, cbor: untaggedCBOR)
+        return try! UR(.digest, untaggedCBOR)
     }
     
     public init(ur: UR) throws {
-        guard ur.type == URType.digest.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.digest)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }

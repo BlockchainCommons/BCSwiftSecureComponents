@@ -174,10 +174,10 @@ final class EnvelopeTestVectors: XCTestCase {
             monospaced(envelope.taggedCBOR.hex)
             
             header3("Tagged CBOR Diagnostic Notation")
-            monospaced(envelope.taggedCBOR.diagAnnotated)
+            monospaced(envelope.diagAnnotated)
             
             header3("Tagged CBOR Annotated Binary")
-            monospaced(envelope.taggedCBOR.dump)
+            monospaced(envelope.dump)
             
             divider()
         }
@@ -225,7 +225,7 @@ final class EnvelopeTestVectors: XCTestCase {
         .wrap()
         .sign(with: statePrivateKeys, note: "Made by the State of Example.", randomGenerator: generateFakeRandomNumbers)
     
-    static let johnSmithRedactedCredential: Envelope = {
+    static let johnSmithRedactedCredential: Envelope = try! {
         var target: Set<Digest> = []
 
         // Reveal the card. Without this, everything about the card would be elided.
@@ -233,29 +233,32 @@ final class EnvelopeTestVectors: XCTestCase {
         target.insert(top)
 
         // Reveal everything about the state's signature on the card
-        try! target.insert(top.assertion(withPredicate: .verifiedBy).deepDigests)
+        try target.insert(top.assertion(withPredicate: .verifiedBy).deepDigests)
 
-        // Reveal the top level subject of the card. This is John Smith's CID.
-        let topContent = top.envelope!
-        target.insert(topContent.shallowDigests)
+        // Reveal the top level of the card.
+        target.insert(top.shallowDigests)
+
+        let card = try top.unwrap()
+        target.insert(card)
+        target.insert(card.subject)
 
         // Reveal everything about the `isA` and `issuer` assertions at the top level of the card.
-        try! target.insert(topContent.assertion(withPredicate: .isA).deepDigests)
-        try! target.insert(topContent.assertion(withPredicate: .issuer).deepDigests)
+        try target.insert(card.assertion(withPredicate: .isA).deepDigests)
+        try target.insert(card.assertion(withPredicate: .issuer).deepDigests)
 
         // Reveal the `holder` assertion on the card, but not any of its sub-assertions.
-        let holder = try! topContent.assertion(withPredicate: .holder)
+        let holder = try card.assertion(withPredicate: .holder)
         target.insert(holder.shallowDigests)
-        
+
         // Within the `holder` assertion, reveal everything about just the `givenName`, `familyName`, and `image` assertions.
         let holderObject = holder.object!
-        try! target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
-        try! target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
-        try! target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
+        try target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
         
         // Perform the elision
-        let elidedCredential = top.elideRevealing(target)
-        
+        let elidedCredential = try top.elideRevealing(target).checkEncoding()
+
         // Verify that the elided credential compares equal to the original credential.
         XCTAssertEqual(elidedCredential, johnSmithResidentCard)
         

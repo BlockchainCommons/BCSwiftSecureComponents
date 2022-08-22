@@ -32,7 +32,7 @@ extension CBOR: EnvelopeFormat {
                     s = s.prefix(count: 10)
                 }
                 return .item(s)
-            case CBOR.tagged(URType.envelope.tag, _):
+            case CBOR.tagged(.envelope, _):
                 return try Envelope(taggedCBOR: cbor).formatItem
             case CBOR.tagged(.knownPredicate, let cbor):
                 guard
@@ -46,21 +46,21 @@ extension CBOR: EnvelopeFormat {
                 return "Signature"
             case CBOR.tagged(.nonce, _):
                 return "Nonce"
-            case CBOR.tagged(URType.sealedMessage.tag, _):
+            case CBOR.tagged(.sealedMessage, _):
                 return "SealedMessage"
-            case CBOR.tagged(URType.sskrShare.tag, _):
+            case CBOR.tagged(.sskrShare, _):
                 return "SSKRShare"
-            case CBOR.tagged(URType.publicKeyBase.tag, _):
+            case CBOR.tagged(.publicKeyBase, _):
                 return "PublicKeyBase"
-            case CBOR.tagged(URType.cid.tag, _):
+            case CBOR.tagged(.cid, _):
                 return try .item(CID(taggedCBOR: self)†)
             case CBOR.tagged(.uri, _):
                 return try .item(URL(taggedCBOR: self)†.flanked("URI(", ")"))
             case CBOR.tagged(.uuid, _):
                 return try .item(UUID(taggedCBOR: self)†.flanked("UUID(", ")"))
-            case CBOR.tagged(URType.digest.tag, _):
+            case CBOR.tagged(.digest, _):
                 return try .item(Digest(taggedCBOR: self)†)
-            case CBOR.tagged(URType.cid.tag, _):
+            case CBOR.tagged(.cid, _):
                 return try .item(CID(taggedCBOR: self)†)
             case CBOR.tagged(CBOR.Tag.function, _):
                 return try .item(FunctionIdentifier(taggedCBOR: self)†.flanked("«", "»"))
@@ -79,74 +79,47 @@ extension CBOR: EnvelopeFormat {
     }
 }
 
-extension Subject: EnvelopeFormat {
-    var formatItem: EnvelopeFormatItem {
-        switch self {
-        case .leaf(let cbor, _):
-            return cbor.formatItem
-        case .envelope(let envelope):
-            return envelope.formatItem
-        case .assertion(predicate: let predicate, object: let object, digest: _):
-            return .list([predicate.formatItem, ": ", object.formatItem])
-        case .knownPredicate(let predicate, _):
-            return .item(predicate.description)
-        case .encrypted(_, _):
-            return "EncryptedMessage"
-        case .elided(_):
-            return "ELIDED"
-        }
-    }
-}
-
-//extension Assertion: EnvelopeFormat {
-//    var formatItem: EnvelopeFormatItem {
-//        envelope.formatItem
-//    }
-//}
-
 extension Envelope: EnvelopeFormat {
     public var format: String {
         formatItem.format.trim()
     }
-    
+
     var formatItem: EnvelopeFormatItem {
-        let subjectItem = subject.formatItem
-        let isList: Bool
-        if case .list(_) = subjectItem {
-            isList = true
-        } else {
-            isList = false
-        }
+        switch self {
+        case .cbor(let cbor, _):
+            return cbor.formatItem
+        case .knownPredicate(let predicate, _):
+            return predicate.formatItem
+        case .wrapped(let envelope, _):
+            return .list([.begin("{"), envelope.formatItem, .end("}")])
+        case .assertion(let assertion):
+            return assertion.formatItem
+        case .encrypted(let message):
+            return message.formatItem
+        case .node(subject: let subject, assertions: let assertions, digest: _):
+            var items: [EnvelopeFormatItem] = []
 
-        let isAssertion = subject.isAssertion
+            let subjectItem = subject.formatItem
+            let assertionsItems = assertions.map { [$0.formatItem] }.sorted()
+            let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
 
-        let assertionsItems = assertions.map { [$0.formatItem] }.sorted()
-        let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
-        let hasAssertions = !joinedAssertionsItems.isEmpty
-        var items: [EnvelopeFormatItem] = []
-
-        let needsBraces = (isAssertion && hasAssertions) || (!isAssertion && isList)
-
-        if needsBraces {
-            items.append(.begin("{"))
-        }
-        items.append(subjectItem)
-        if needsBraces {
-            if hasAssertions {
-                items.append(.end("} ["))
-                items.append(.begin(""))
-            } else {
+            let needsBraces: Bool = subject.isAssertion
+            
+            if needsBraces {
+                items.append(.begin("{"))
+            }
+            items.append(subjectItem)
+            if needsBraces {
                 items.append(.end("}"))
             }
-        }
-        if hasAssertions {
-            if !isList {
-                items.append(.begin("["))
-            }
+            items.append(.begin("["))
             items.append(.list(joinedAssertionsItems))
             items.append(.end("]"))
+
+            return .list(items)
+        case .elided:
+            return .item("ELIDED")
         }
-        return .list(items)
     }
 }
 
@@ -190,6 +163,32 @@ extension EnvelopeFormatItem {
         }
     }
     
+    func nicen(_ items: [EnvelopeFormatItem]) -> [EnvelopeFormatItem] {
+        var input = items
+        var result: [EnvelopeFormatItem] = []
+        
+        while !input.isEmpty {
+            let current = input.removeFirst()
+            if input.isEmpty {
+                result.append(current)
+                break
+            }
+            if case .end(let endString) = current {
+                if case .begin(let beginString) = input.first! {
+                    result.append(.end("\(endString) \(beginString)"))
+                    result.append(.begin(""))
+                    input.removeFirst()
+                } else {
+                    result.append(current)
+                }
+            } else {
+                result.append(current)
+            }
+        }
+        
+        return result
+    }
+    
     func indent(_ level: Int) -> String {
         String(repeating: " ", count: level * 4)
     }
@@ -209,7 +208,7 @@ extension EnvelopeFormatItem {
         var lines: [String] = []
         var level = 0
         var currentLine = ""
-        let items = flatten
+        let items = nicen(flatten)
         for item in items {
             switch item {
             case .begin(let string):

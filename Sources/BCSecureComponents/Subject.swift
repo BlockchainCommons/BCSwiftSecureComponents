@@ -1,352 +1,66 @@
 import Foundation
 import URKit
 
-public indirect enum Subject {
-    case leaf(CBOR, Digest)
-    case envelope(Envelope)
-    case assertion(predicate: Envelope, object: Envelope, digest: Digest)
-    case knownPredicate(KnownPredicate, Digest)
-    case encrypted(EncryptedMessage, Digest)
-    case elided(Digest)
+public struct Assertion: DigestProvider {
+    public let predicate: Envelope
+    public let object: Envelope
+    public let digest: Digest
+    
+    public init(predicate: Any, object: Any) {
+        let p: Envelope
+        if let predicate = predicate as? Envelope {
+            p = predicate
+        } else {
+            p = Envelope(predicate)
+        }
+        let o: Envelope
+        if let object = object as? Envelope {
+            o = object
+        } else {
+            o = Envelope(object)
+        }
+        self.predicate = p
+        self.object = o
+        self.digest = Digest(p.digest + o.digest)
+    }
 }
 
-extension Subject {
-    init(predicate: Envelope, object: Envelope) {
-        let digest = Digest(predicate.digest + object.digest)
-        self = .assertion(predicate: predicate, object: object, digest: digest)
-    }
-
-    init(plaintext: CBOREncodable) {
-        if let envelope = plaintext as? Envelope {
-            self = .envelope(envelope)
-        } else {
-            let cbor = plaintext.cbor
-            let encodedCBOR = cbor.cborEncode
-            self = .leaf(cbor, Digest(encodedCBOR))
-        }
+extension Assertion {
+    var untaggedCBOR: CBOR {
+        [predicate.cbor, object.cbor]
     }
     
-    init(predicate: KnownPredicate) {
-        self = .knownPredicate(predicate, predicate.digest)
+    var taggedCBOR: CBOR {
+        CBOR.tagged(.assertion, untaggedCBOR)
+    }
+    
+    init(untaggedCBOR: CBOR) throws {
+        guard
+            case CBOR.array(let array) = untaggedCBOR,
+            array.count == 2
+        else {
+            throw CBORError.invalidFormat
+        }
+        let predicate = try Envelope.cborDecode(array[0])
+        let object = try Envelope.cborDecode(array[1])
+        self.init(predicate: predicate, object: object)
     }
 }
 
-extension Subject: DigestProvider {
-    public var digest: Digest {
-        switch self {
-        case .leaf(_, let digest):
-            return digest
-        case .envelope(let envelope):
-            return envelope.digest
-        case .assertion(predicate: _, object: _, digest: let digest):
-            return digest
-        case .knownPredicate(_, let digest):
-            return digest
-        case .encrypted(_, let digest):
-            return digest
-        case .elided(let digest):
-            return digest
-        }
-    }
-}
-
-extension Subject {
-    var shallowDigests: Set<Digest> {
-        switch self {
-        case .leaf(_, let digest):
-            return [digest]
-        case .envelope(let envelope):
-            return envelope.shallowDigests
-        case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            return [digest, predicate.digest, predicate.subject.digest, object.digest, object.subject.digest]
-        case .knownPredicate(_, let digest):
-            return [digest]
-        case .encrypted(_, let digest):
-            return [digest]
-        case .elided(let digest):
-            return [digest]
-        }
-    }
-
-    var deepDigests: Set<Digest> {
-        switch self {
-        case .leaf(_, let digest):
-            return [digest]
-        case .envelope(let envelope):
-            return envelope.deepDigests
-        case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            return predicate.deepDigests.union(object.deepDigests).union([digest])
-        case .knownPredicate(_, let digest):
-            return [digest]
-        case .encrypted(_, let digest):
-            return [digest]
-        case .elided(let digest):
-            return [digest]
-        }
-    }
-}
-
-extension Subject: Equatable {
-    public static func ==(lhs: Subject, rhs: Subject) -> Bool {
+extension Assertion: Equatable {
+    public static func ==(lhs: Assertion, rhs: Assertion) -> Bool {
         lhs.digest == rhs.digest
     }
 }
 
-extension Subject {
-    var isLeaf: Bool {
-        if case .leaf = self { return true }
-        return false
-    }
-    
-    var isEnvelope: Bool {
-        if case .envelope = self { return true }
-        return false
-    }
-    
-    var isAssertion: Bool {
-        if case .assertion = self { return true }
-        return false
-    }
-    
-    var isEncrypted: Bool {
-        if case .encrypted = self { return true }
-        return false
-    }
-    
-    var isElided: Bool {
-        if case .elided = self { return true }
-        return false
+extension Assertion {
+    var hasAssertions: Bool {
+        predicate.hasAssertions || object.hasAssertions
     }
 }
 
-extension Subject {
-    func elide() -> Subject {
-        switch self {
-        case .leaf(_, let digest):
-            return .elided(digest)
-        case .envelope(let envelope):
-            return .elided(envelope.digest)
-        case .assertion(predicate: _, object: _, digest: let digest):
-            return .elided(digest)
-        case .knownPredicate(_, let digest):
-            return .elided(digest)
-        case .encrypted(_, let digest):
-            return .elided(digest)
-        case .elided(_):
-            return self
-        }
-    }
-    
-    func elideRemoving(_ target: Set<Digest>) -> Subject {
-        if target.contains(digest) {
-            return .elided(digest)
-        }
-        
-        switch self {
-        case .leaf(_, _):
-            return self
-        case .envelope(let envelope):
-            return .envelope(envelope.elideRemoving(target))
-        case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            if target.contains(digest) {
-                return .elided(digest)
-            } else {
-                return .assertion(predicate: predicate.elideRemoving(target), object: object.elideRemoving(target), digest: digest)
-            }
-        case .knownPredicate(_, let digest):
-            if target.contains(digest) {
-                return .elided(digest)
-            } else {
-                return self
-            }
-        case .encrypted(_, _):
-            return self
-        case .elided(_):
-            return self
-        }
-    }
-    
-    func elideRevealing(_ target: Set<Digest>) -> Subject {
-        if !target.contains(digest) {
-            return .elided(digest)
-        }
-        
-        switch self {
-        case .leaf(_, _):
-            return self
-        case .envelope(let envelope):
-            return .envelope(envelope.elideRevealing(target))
-        case .assertion(predicate: let predicate, object: let object, digest: let digest):
-            if !target.contains(digest) {
-                return .elided(digest)
-            } else {
-                return .assertion(predicate: predicate.elideRevealing(target), object: object.elideRevealing(target), digest: digest)
-            }
-        case .knownPredicate(_, let digest):
-            if !target.contains(digest) {
-                return .elided(digest)
-            } else {
-                return self
-            }
-        case .encrypted(_, _):
-            return self
-        case .elided(_):
-            return self
-        }
-    }
-}
-
-extension Subject {
-    var leaf: CBOR? {
-        guard case let .leaf(leaf, _) = self else {
-            return nil
-        }
-        return leaf
-    }
-
-    var envelope: Envelope? {
-        guard case let .envelope(envelope) = self else {
-            return nil
-        }
-        return envelope
-    }
-
-    var predicate: Envelope? {
-        guard case let .assertion(predicate, _, _) = self else {
-            return nil
-        }
-        return predicate
-    }
-    
-    var object: Envelope? {
-        guard case let .assertion(_, object, _) = self else {
-            return nil
-        }
-        return object
-    }
-    
-    var knownPredicate: KnownPredicate? {
-        guard case let .knownPredicate(knownPredicate, _) = self else {
-            return nil
-        }
-        return knownPredicate
-    }
-}
-
-extension Subject {
-    var cbor: CBOR {
-        switch self {
-        case .envelope(let envelope):
-            return CBOR.tagged(.enclosedEnvelope, envelope.untaggedCBOR)
-        case .leaf(let leaf, _):
-            if case CBOR.array(_) = leaf {
-                return CBOR.tagged(.leaf, leaf)
-            } else {
-                return leaf
-            }
-        case .assertion(predicate: let predicate, object: let object, digest: _):
-            return CBOR.tagged(.assertion, [predicate.untaggedCBOR, object.untaggedCBOR])
-        case .knownPredicate(let predicate, _):
-            return CBOR.tagged(.knownPredicate, CBOR.unsignedInt(predicate.rawValue))
-        case .encrypted(let message, _):
-            return message.taggedCBOR
-        case .elided(let digest):
-            return CBOR.tagged(.elided, digest.taggedCBOR)
-        }
-    }
-    
-    init(cbor: CBOR) throws {
-        if case CBOR.tagged(.enclosedEnvelope, let envelopeItem) = cbor {
-            self = try .envelope(Envelope(untaggedCBOR: envelopeItem))
-        } else if case CBOR.tagged(.leaf, let leaf) = cbor {
-            self = .leaf(leaf, Digest(leaf.cborEncode))
-        } else if case CBOR.tagged(.assertion, let assertion) = cbor {
-            guard
-                case let CBOR.array(array) = assertion,
-                array.count == 2
-            else {
-                throw EnvelopeError.invalidFormat
-            }
-            let predicate = try Envelope(untaggedCBOR: array[0])
-            let object = try Envelope(untaggedCBOR: array[1])
-            self.init(predicate: predicate, object: object)
-        } else if case CBOR.tagged(.knownPredicate, _) = cbor {
-            let predicate = try KnownPredicate(taggedCBOR: cbor)
-            self = .knownPredicate(predicate, predicate.digest)
-        } else if case CBOR.tagged(URType.message.tag, _) = cbor {
-            let message = try EncryptedMessage(taggedCBOR: cbor)
-            self = try .encrypted(message, message.digest)
-        } else if case CBOR.tagged(.elided, let digest) = cbor {
-            self = try .elided(Digest(taggedCBOR: digest))
-        } else {
-            self = .leaf(cbor, Digest(cbor.cborEncode))
-        }
-    }
-}
-
-extension Subject {
-    func encrypt(with key: SymmetricKey, nonce: Nonce? = nil) throws -> Subject {
-        let encodedCBOR: Data
-        let digest: Digest
-        switch self {
-        case .leaf(let c, _):
-            encodedCBOR = c.cborEncode
-            digest = Digest(encodedCBOR)
-        case .envelope(let s):
-            encodedCBOR = s.taggedCBOR.cborEncode
-            digest = s.digest
-        case .assertion(predicate: let predicate, object: let object, digest: let _digest):
-            encodedCBOR = CBOR.array([predicate.taggedCBOR, object.taggedCBOR]).cborEncode
-            digest = _digest
-        case .knownPredicate(let predicate, let _digest):
-            encodedCBOR = predicate.taggedCBOR.cborEncode
-            digest = _digest
-        case .encrypted(_, _):
-            throw EnvelopeError.invalidOperation
-        case .elided(_):
-            throw EnvelopeError.invalidOperation
-        }
-        
-        let encryptedMessage = key.encrypt(plaintext: encodedCBOR, digest: digest, nonce: nonce)
-        return Subject.encrypted(encryptedMessage, digest)
-    }
-    
-    func decrypt(with key: SymmetricKey) throws -> Subject {
-        guard
-            case let .encrypted(encryptedMessage, _) = self
-        else {
-            throw EnvelopeError.invalidOperation
-        }
-        
-        guard
-            let encodedCBOR = key.decrypt(message: encryptedMessage)
-        else {
-            throw EnvelopeError.invalidKey
-        }
-        
-        let cbor = try CBOR(encodedCBOR)
-        if case CBOR.tagged(URType.envelope.tag, _) = cbor {
-            let envelope = try Envelope(taggedCBOR: cbor)
-            guard envelope.digest == digest else {
-                throw EnvelopeError.invalidDigest
-            }
-            return .envelope(envelope)
-        } else if case CBOR.array(let array) = cbor {
-            guard array.count == 2 else {
-                throw EnvelopeError.invalidFormat
-            }
-            let predicate = try Envelope(untaggedCBOR: array[0])
-            let object = try Envelope(untaggedCBOR: array[1])
-            let assertion = Subject(predicate: predicate, object: object)
-            guard assertion.digest == digest else {
-                throw EnvelopeError.invalidDigest
-            }
-            return assertion
-        } else {
-            guard try Digest.validate(encodedCBOR, digest: encryptedMessage.digest) else {
-                throw EnvelopeError.invalidDigest
-            }
-            return .leaf(cbor, digest)
-        }
+extension Assertion {
+    var formatItem: EnvelopeFormatItem {
+        .list([predicate.formatItem, ": ", object.formatItem])
     }
 }

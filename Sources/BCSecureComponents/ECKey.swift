@@ -28,7 +28,7 @@ extension ECKey {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.ecKey.tag, untaggedCBOR)
+        CBOR.tagged(.ecKey, untaggedCBOR)
     }
 }
 

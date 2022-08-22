@@ -47,7 +47,7 @@ extension SealedMessage {
     }
     
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.sealedMessage.tag, untaggedCBOR)
+        CBOR.tagged(.sealedMessage, untaggedCBOR)
     }
     
     public init(untaggedCBOR: CBOR) throws {
@@ -64,7 +64,7 @@ extension SealedMessage {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.sealedMessage.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.sealedMessage, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)

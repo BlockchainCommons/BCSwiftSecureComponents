@@ -61,7 +61,7 @@ extension SymmetricKey {
     }
 
     public var taggedCBOR: CBOR {
-        CBOR.tagged(URType.symmetricKey.tag, untaggedCBOR)
+        CBOR.tagged(.symmetricKey, untaggedCBOR)
     }
     
     public init(untaggedCBOR: CBOR) throws {
@@ -74,7 +74,7 @@ extension SymmetricKey {
     }
     
     public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(URType.symmetricKey.tag, untaggedCBOR) = taggedCBOR else {
+        guard case let CBOR.tagged(.symmetricKey, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
@@ -87,13 +87,11 @@ extension SymmetricKey {
 
 extension SymmetricKey {
     public var ur: UR {
-        return try! UR(type: URType.symmetricKey.type, cbor: untaggedCBOR)
+        return try! UR(.symmetricKey, untaggedCBOR)
     }
     
     public init(ur: UR) throws {
-        guard ur.type == URType.symmetricKey.type else {
-            throw URError.unexpectedType
-        }
+        try ur.checkType(.symmetricKey)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }

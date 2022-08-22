@@ -17,27 +17,17 @@ import URKit
 /// Currently Secure Components would benefit from having 17 of these tags.
 /// As we expect to file a specification at some point, we are choosing tags from 200 up for our highest-frequency tags.
 
-public struct URType {
-    public let type: String
-    public let tag: CBOR.Tag
-    
-    public init(type: String, tag: UInt64) {
-        self.type = type
-        self.tag = CBOR.Tag(tag, type)
-    }
-}
-
 /// UR types and CBOR tags for objects that can be top-level.
 /// These tags use two-byte encoding.
-public extension URType {
-    static let envelope = URType(type: "envelope", tag: 200)
-    static let message = URType(type: "crypto-msg", tag: 201)
-    static let cid = URType(type: "crypto-cid", tag: 202)
-    static let digest = URType(type: "crypto-digest", tag: 203)
-    static let symmetricKey = URType(type: "crypto-key", tag: 204)
-    static let privateKeyBase = URType(type: "crypto-prvkeys", tag: 205)
-    static let publicKeyBase = URType(type: "crypto-pubkeys", tag: 206)
-    static let sealedMessage = URType(type: "crypto-sealed", tag: 207)
+public extension CBOR.Tag {
+    static let envelope = CBOR.Tag(200, "envelope")
+    static let message = CBOR.Tag(201, "crypto-msg")
+    static let cid = CBOR.Tag(202, "crypto-cid")
+    static let digest = CBOR.Tag(203, "crypto-digest")
+    static let symmetricKey = CBOR.Tag(204, "crypto-key")
+    static let privateKeyBase = CBOR.Tag(205, "crypto-prvkeys")
+    static let publicKeyBase = CBOR.Tag(206, "crypto-pubkeys")
+    static let sealedMessage = CBOR.Tag(207, "crypto-sealed")
 }
 
 /// Tags for subtypes specific to Secure Components.
@@ -47,7 +37,7 @@ public extension CBOR.Tag {
     static let assertion = CBOR.Tag(221, "assertion")
     static let signature = CBOR.Tag(222, "signature")
     static let knownPredicate = CBOR.Tag(223, "known-predicate")
-    static let enclosedEnvelope = CBOR.Tag(224, "enclosed-envelope")
+    static let wrappedEnvelope = CBOR.Tag(224, "wrapped-envelope")
     static let elided = CBOR.Tag(225, "elided")
     
     static let agreementPublicKey = CBOR.Tag(230, "agreement-public-key")
@@ -55,17 +45,17 @@ public extension CBOR.Tag {
 
 /// UR types and CBOR tags for objects that can be top-level.
 /// These tags use three-byte encoding.
-public extension URType {
-    static let seed = URType(type: "crypto-seed", tag: 300)
-    static let hdKey = URType(type: "crypto-hdkey", tag: 303)
-    static let derivationPath = URType(type: "crypto-keypath", tag: 304)
-    static let useInfo = URType(type: "crypto-coin-info", tag: 305)
-    static let ecKey = URType(type: "crypto-eckey", tag: 306)
-    static let address = URType(type: "crypto-address", tag: 307)
-    static let output = URType(type: "crypto-output", tag: 308)
-    static let sskrShare = URType(type: "crypto-sskr", tag: 309)
-    static let psbt = URType(type: "crypto-psbt", tag: 310)
-    static let account = URType(type: "crypto-account", tag: 311)
+public extension CBOR.Tag {
+    static let seed = CBOR.Tag(300, "crypto-seed")
+    static let hdKey = CBOR.Tag(303, "crypto-hdkey")
+    static let derivationPath = CBOR.Tag(304, "crypto-keypath")
+    static let useInfo = CBOR.Tag(305, "crypto-coin-info")
+    static let ecKey = CBOR.Tag(306, "crypto-eckey")
+    static let address = CBOR.Tag(307, "crypto-address")
+    static let output = CBOR.Tag(308, "crypto-output")
+    static let sskrShare = CBOR.Tag(309, "crypto-sskr")
+    static let psbt = CBOR.Tag(310, "crypto-psbt")
+    static let account = CBOR.Tag(311, "crypto-account")
 }
 
 /// Tags for subtypes specific to AccountBundle (crypto-output).
@@ -112,4 +102,88 @@ public extension CBOR.Tag {
     static let signingPrivateKey = CBOR.Tag(704, "signing-private-key")
     static let signingPublicKey = CBOR.Tag(705, "signing-public-key")
     static let nonce = CBOR.Tag(707, "nonce")
+}
+
+var knownTags: [CBOR.Tag] = [
+    .envelope,
+    .message,
+    .cid,
+    .digest,
+    .symmetricKey,
+    .privateKeyBase,
+    .publicKeyBase,
+    .sealedMessage,
+    
+    .leaf,
+    .assertion,
+    .signature,
+    .knownPredicate,
+    .wrappedEnvelope,
+    .elided,
+    
+    .agreementPublicKey,
+
+    .seed,
+    .hdKey,
+    .derivationPath,
+    .useInfo,
+    .ecKey,
+    .address,
+    .output,
+    .sskrShare,
+    .psbt,
+    .account,
+
+    .outputScriptHash,
+    .outputWitnessScriptHash,
+    .outputPublicKey,
+    .outputPublicKeyHash,
+    .outputWitnessPublicKeyHash,
+    .outputCombo,
+    .outputMultisig,
+    .outputSortedMultisig,
+    .outputRawScript,
+    .outputTaproot,
+    .outputCosigner,
+]
+
+public func addKnownTags() {
+    for tag in knownTags {
+        CBOR.Tag.setKnownTag(tag)
+    }
+}
+
+public extension UR {
+    init(_ tag: CBOR.Tag, _ cbor: CBOR) throws {
+        guard let name = tag.name else {
+            preconditionFailure()
+        }
+        try self.init(type: name, cbor: cbor)
+    }
+    
+    func checkType(_ tag: CBOR.Tag) throws {
+        guard let name = tag.name else {
+            preconditionFailure()
+        }
+        guard type == name else {
+            throw URError.unexpectedType
+        }
+    }
+}
+
+public extension OrderedMap {
+    func valuesByIntKey() throws -> [UInt64: CBOR] {
+        var result: [UInt64: CBOR] = [:]
+        for (keyItem, value) in self {
+            guard
+                case CBOR.unsignedInt(let key) = keyItem,
+                result[key] == nil
+            else {
+                throw CBORError.invalidFormat
+            }
+
+            result[key] = value
+        }
+        return result
+    }
 }

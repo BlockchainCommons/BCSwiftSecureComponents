@@ -22,7 +22,7 @@ class RedactionTests: XCTestCase {
         
         let allElided = try aliceKnowsBob
             .wrap()
-            .elideSubject()
+            .elide()
             .checkEncoding()
         XCTAssertEqual(allElided.format,
         """
