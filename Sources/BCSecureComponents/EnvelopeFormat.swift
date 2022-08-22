@@ -22,6 +22,8 @@ extension CBOR: EnvelopeFormat {
     var formatItem: EnvelopeFormatItem {
         do {
             switch self {
+            case .boolean(let b):
+                return .item(b.description)
             case .unsignedInt(let n):
                 return .item(String(n))
             case .utf8String(let string):
@@ -100,7 +102,21 @@ extension Envelope: EnvelopeFormat {
             var items: [EnvelopeFormatItem] = []
 
             let subjectItem = subject.formatItem
-            let assertionsItems = assertions.map { [$0.formatItem] }.sorted()
+            var elidedCount = 0
+            var assertionsItems: [[EnvelopeFormatItem]] = []
+            assertions.forEach {
+                if $0.isElided {
+                    elidedCount += 1
+                } else {
+                    assertionsItems.append([$0.formatItem])
+                }
+            }
+            assertionsItems.sort()
+            if elidedCount > 1 {
+                assertionsItems.append([.item("ELIDED (\(elidedCount))")])
+            } else if elidedCount > 0 {
+                assertionsItems.append([.item("ELIDED")])
+            }
             let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
 
             let needsBraces: Bool = subject.isAssertion

@@ -509,8 +509,8 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e6.format,
         """
         "Alice" [
-            ELIDED
             "knows": "Carol"
+            ELIDED
         ]
         """
         )
@@ -611,8 +611,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e3.format,
         """
         ELIDED [
-            ELIDED
-            ELIDED
+            ELIDED (2)
         ]
         """
         )
@@ -622,8 +621,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e4.format,
         """
         "Alice" [
-            ELIDED
-            ELIDED
+            ELIDED (2)
         ]
         """
         )
@@ -633,8 +631,8 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e5.format,
         """
         ELIDED [
-            ELIDED
             ELIDED: ELIDED
+            ELIDED
         ]
         """
         )
@@ -644,8 +642,8 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e6.format,
         """
         ELIDED [
-            ELIDED
             "knows": ELIDED
+            ELIDED
         ]
         """
         )
@@ -655,8 +653,8 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e7.format,
         """
         ELIDED [
-            ELIDED
             ELIDED: "Bob"
+            ELIDED
         ]
         """
         )
@@ -684,8 +682,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e3.format,
         """
         ELIDED [
-            ELIDED
-            ELIDED
+            ELIDED (2)
         ]
         """
         )
@@ -737,9 +734,9 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e2.format,
         """
         "Alice" [
-            ELIDED
             "knows": "Bob"
             "livesAt": "123 Main St."
+            ELIDED
         ]
         """
         )
@@ -765,9 +762,9 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e2.format,
         """
         "Alice" [
-            ELIDED
             "knows": "Carol"
             "livesAt": "123 Main St."
+            ELIDED
         ]
         """
         )
@@ -779,9 +776,9 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e3.format,
         """
         "Alice" [
-            ELIDED
             "knows": "Bob"
             "knows": "Carol"
+            ELIDED
         ]
         """
         )
