@@ -18,18 +18,6 @@ extension Data: PrivateKeysDataProvider {
     }
 }
 
-//extension Seed: PrivateKeysDataProvider {
-//    public var privateKeysData: Data {
-//        data
-//    }
-//}
-//
-//extension HDKey: PrivateKeysDataProvider {
-//    public var privateKeysData: Data {
-//        keyData
-//    }
-//}
-
 /// Holds unique data from which keys for signing and encryption can be derived and
 /// a field of random salt used in the key derivation process.
 ///

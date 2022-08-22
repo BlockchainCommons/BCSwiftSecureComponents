@@ -230,30 +230,6 @@ public extension Envelope {
     var shallowDigests: Set<Digest> {
         digests(levels: 2)
     }
-
-//
-//    var shallowDigests: Set<Digest> {
-//        var result: Set<Digest> = [digest]
-//
-//        switch self {
-//        case .node(let subject, let assertions, _):
-//            result.insert(subject)
-//            for assertion in assertions {
-//                result.insert(assertion)
-//            }
-//        case .assertion(let assertion):
-//            result.insert(assertion.predicate)
-//            result.insert(assertion.predicate.subject)
-//            result.insert(assertion.object)
-//            result.insert(assertion.object.subject)
-//        case .wrapped(let envelope, _):
-//            result.insert(envelope)
-//        default:
-//            break
-//        }
-//
-//        return result
-//    }
 }
 
 extension Envelope: CBORCodable {
@@ -333,20 +309,6 @@ extension Envelope: ExpressibleByIntegerLiteral {
         self.init(value)
     }
 }
-
-//public extension Envelope {
-//    func isPredicate(_ predicate: Envelope) -> Bool {
-//        self.predicate == predicate
-//    }
-//
-//    func isPredicate(_ predicate: KnownPredicate) -> Bool {
-//        isPredicate(Envelope(predicate: predicate))
-//    }
-//
-//    func isPredicate(_ predicate: CBOREncodable) -> Bool {
-//        isPredicate(Envelope(predicate))
-//    }
-//}
 
 public extension Envelope {
     func assertions(withPredicate predicate: Envelope) -> [Envelope] {
