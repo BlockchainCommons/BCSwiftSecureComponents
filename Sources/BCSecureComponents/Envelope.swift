@@ -726,7 +726,7 @@ public extension Envelope {
             throw EnvelopeError.missingDigest
         }
 
-        let cbor = try CBOR(encodedCBOR, orderedKeys: true)
+        let cbor = try CBOR(encodedCBOR)
         let resultSubject = try Envelope(untaggedCBOR: cbor).subject
         
         guard resultSubject.digest == subjectDigest else {
@@ -761,7 +761,7 @@ public extension Envelope {
             throw EnvelopeError.invalidRecipient
         }
         
-        let cbor = try CBOR(contentKeyData, orderedKeys: true)
+        let cbor = try CBOR(contentKeyData)
         let contentKey = try SymmetricKey(taggedCBOR: cbor)
         return try decryptSubject(with: contentKey).subject
     }
@@ -946,7 +946,7 @@ public extension Envelope {
     
     init(ur: UR) throws {
         try ur.checkType(.envelope)
-        let cbor = try CBOR(ur.cbor, orderedKeys: true)
+        let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
     

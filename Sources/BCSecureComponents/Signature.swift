@@ -95,7 +95,7 @@ extension Signature {
     }
     
     public init(taggedCBOR: Data) throws {
-        try self.init(taggedCBOR: CBOR(taggedCBOR, orderedKeys: true))
+        try self.init(taggedCBOR: CBOR(taggedCBOR))
     }
 }
 

@@ -99,7 +99,7 @@ extension SSKRShare {
     
     public init(ur: UR) throws {
         try ur.checkType(.sskrShare)
-        let cbor = try CBOR(ur.cbor, orderedKeys: true)
+        let cbor = try CBOR(ur.cbor)
         self = try SSKRShare(untaggedCBOR: cbor)
     }
     

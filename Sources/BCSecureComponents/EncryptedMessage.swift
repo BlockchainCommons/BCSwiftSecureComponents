@@ -64,7 +64,7 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var digest: Digest? {
-        try? Digest(taggedCBOR: CBOR(aad, orderedKeys: true))
+        try? Digest(taggedCBOR: CBOR(aad))
     }
 }
 
@@ -139,13 +139,13 @@ extension EncryptedMessage {
     
     public init(ur: UR) throws {
         try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor, orderedKeys: true)
+        let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
     
     public static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
         try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor, orderedKeys: true)
+        let cbor = try CBOR(ur.cbor)
         return try Self.decode(cbor: cbor)
     }
 }

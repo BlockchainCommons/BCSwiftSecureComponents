@@ -63,7 +63,7 @@ extension PublicKeyBase {
     
     public init(ur: UR) throws {
         try ur.checkType(.publicKeyBase)
-        let cbor = try CBOR(ur.cbor, orderedKeys: true)
+        let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
 }
