@@ -7,7 +7,7 @@ import URKit
 
 public indirect enum Envelope: DigestProvider {
     case node(subject: Envelope, assertions: [Envelope], digest: Digest)
-    case cbor(CBOR, Digest)
+    case leaf(CBOR, Digest)
     case wrapped(Envelope, Digest)
     case knownPredicate(KnownPredicate, Digest)
     case assertion(Assertion)
@@ -20,7 +20,7 @@ public extension Envelope {
         switch self {
         case .node(subject: _, assertions: _, digest: let digest):
             return digest
-        case .cbor(_, let digest):
+        case .leaf(_, let digest):
             return digest
         case .wrapped(_, let digest):
             return digest
@@ -65,6 +65,13 @@ public extension Envelope {
             return nil
         }
         return assertion.object
+    }
+    
+    var leaf: CBOR? {
+        guard case .leaf(let cbor, _) = subject else {
+            return nil
+        }
+        return cbor
     }
 }
 
@@ -151,7 +158,7 @@ private extension Envelope {
     
     init(cbor: CBOR) {
         let digest = Digest(cbor.cborEncode)
-        self = .cbor(cbor, digest)
+        self = .leaf(cbor, digest)
     }
 
     init(cborEncodable item: CBOREncodable) {
@@ -252,7 +259,7 @@ public extension Envelope {
             return result
         case .node(let subject, _, _):
             return try subject.extractSubject(type)
-        case .cbor(let cbor, _):
+        case .leaf(let cbor, _):
             let t = (type.self as! CBORDecodable.Type)
             return try t.cborDecode(cbor) as! T
         case .knownPredicate(let knownPredicate, _):
@@ -673,7 +680,7 @@ public extension Envelope {
             let encryptedSubject = try Envelope(encryptedMessage: encryptedMessage)
             result = Envelope(subject: encryptedSubject, uncheckedAssertions: assertions)
             originalDigest = envelopeDigest
-        case .cbor(let cbor, let envelopeDigest):
+        case .leaf(let cbor, let envelopeDigest):
             let encodedCBOR = CBOR.tagged(.leaf, cbor).cborEncode
             let encryptedMessage = key.encrypt(plaintext: encodedCBOR, digest: envelopeDigest, nonce: testNonce)
             result = try Envelope(encryptedMessage: encryptedMessage)
@@ -875,7 +882,7 @@ public extension Envelope {
                 }
                 return CBOR.array(result)
             }
-        case .cbor(let cbor, _):
+        case .leaf(let cbor, _):
             return CBOR.tagged(.leaf, cbor)
         case .wrapped(let envelope, _):
             return CBOR.tagged(.wrappedEnvelope, envelope.untaggedCBOR)
@@ -934,7 +941,7 @@ public extension Envelope {
 
 public extension Envelope {
     var ur: UR {
-        return try! UR(.envelope, untaggedCBOR)
+        return try! UR(type: .envelope, cbor: untaggedCBOR)
     }
     
     init(ur: UR) throws {
@@ -1017,7 +1024,7 @@ extension Envelope: CustomStringConvertible {
         switch self {
         case .node(subject: let subject, assertions: let assertions, digest: _):
             return ".node(\(subject), \(assertions))"
-        case .cbor(let cbor, _):
+        case .leaf(let cbor, _):
             return ".cbor(\(cbor.formatItem.description))"
         case .wrapped(let envelope, _):
             return ".wrapped(\(envelope))"

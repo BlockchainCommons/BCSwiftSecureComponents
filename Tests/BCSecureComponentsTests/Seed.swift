@@ -47,7 +47,7 @@ extension Seed {
     }
 
     public var ur: UR {
-        return try! UR(.seed, untaggedCBOR)
+        return try! UR(type: .seed, cbor: untaggedCBOR)
     }
 }
 

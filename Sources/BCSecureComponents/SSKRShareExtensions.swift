@@ -94,12 +94,12 @@ extension SSKRShare {
 
 extension SSKRShare {
     public var ur: UR {
-        return try! UR(.sskrShare, untaggedCBOR)
+        return try! UR(type: .sskrShare, cbor: untaggedCBOR)
     }
     
     public init(ur: UR) throws {
         try ur.checkType(.sskrShare)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         self = try SSKRShare(untaggedCBOR: cbor)
     }
     

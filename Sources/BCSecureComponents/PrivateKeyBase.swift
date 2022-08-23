@@ -79,12 +79,12 @@ extension PrivateKeyBase {
 
 extension PrivateKeyBase {
     public var ur: UR {
-        return try! UR(.privateKeyBase, untaggedCBOR)
+        return try! UR(type: .privateKeyBase, cbor: untaggedCBOR)
     }
     
     public init(ur: UR) throws {
         try ur.checkType(.privateKeyBase)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         try self.init(untaggedCBOR: cbor)
     }
 }

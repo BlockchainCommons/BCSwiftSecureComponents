@@ -53,12 +53,12 @@ extension CID {
 
 extension CID {
     public var ur: UR {
-        return try! UR(.cid, untaggedCBOR)
+        return try! UR(type: .cid, cbor: untaggedCBOR)
     }
     
     public init(ur: UR) throws {
         try ur.checkType(.cid)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         try self.init(untaggedCBOR: cbor)
     }
 }

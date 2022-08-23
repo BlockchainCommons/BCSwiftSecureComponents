@@ -58,12 +58,12 @@ extension PublicKeyBase {
 
 extension PublicKeyBase {
     public var ur: UR {
-        return try! UR(.publicKeyBase, untaggedCBOR)
+        return try! UR(type: .publicKeyBase, cbor: untaggedCBOR)
     }
     
     public init(ur: UR) throws {
         try ur.checkType(.publicKeyBase)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         try self.init(untaggedCBOR: cbor)
     }
 }

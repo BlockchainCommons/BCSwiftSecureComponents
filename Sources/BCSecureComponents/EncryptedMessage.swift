@@ -134,18 +134,18 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var ur: UR {
-        return try! UR(.message, untaggedCBOR)
+        return try! UR(type: .message, cbor: untaggedCBOR)
     }
     
     public init(ur: UR) throws {
         try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         try self.init(untaggedCBOR: cbor)
     }
     
     public static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
         try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor)
+        let cbor = try CBOR(ur.cbor, orderedKeys: true)
         return try Self.decode(cbor: cbor)
     }
 }

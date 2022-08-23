@@ -113,16 +113,13 @@ var knownTags: [CBOR.Tag] = [
     .privateKeyBase,
     .publicKeyBase,
     .sealedMessage,
-    
     .leaf,
     .assertion,
     .signature,
     .knownPredicate,
     .wrappedEnvelope,
     .elided,
-    
     .agreementPublicKey,
-
     .seed,
     .hdKey,
     .derivationPath,
@@ -133,7 +130,6 @@ var knownTags: [CBOR.Tag] = [
     .sskrShare,
     .psbt,
     .account,
-
     .outputScriptHash,
     .outputWitnessScriptHash,
     .outputPublicKey,
@@ -145,45 +141,21 @@ var knownTags: [CBOR.Tag] = [
     .outputRawScript,
     .outputTaproot,
     .outputCosigner,
+    .outputDescriptorResponse,
+    .seedDigest,
+    .function,
+    .parameter,
+    .request,
+    .response,
+    .password,
+    .agreementPrivateKey,
+    .signingPrivateKey,
+    .signingPublicKey,
+    .nonce,
 ]
 
 public func addKnownTags() {
     for tag in knownTags {
         CBOR.Tag.setKnownTag(tag)
-    }
-}
-
-public extension UR {
-    init(_ tag: CBOR.Tag, _ cbor: CBOR) throws {
-        guard let name = tag.name else {
-            preconditionFailure()
-        }
-        try self.init(type: name, cbor: cbor)
-    }
-    
-    func checkType(_ tag: CBOR.Tag) throws {
-        guard let name = tag.name else {
-            preconditionFailure()
-        }
-        guard type == name else {
-            throw URError.unexpectedType
-        }
-    }
-}
-
-public extension OrderedMap {
-    func valuesByIntKey() throws -> [UInt64: CBOR] {
-        var result: [UInt64: CBOR] = [:]
-        for (keyItem, value) in self {
-            guard
-                case CBOR.unsignedInt(let key) = keyItem,
-                result[key] == nil
-            else {
-                throw CBORError.invalidFormat
-            }
-
-            result[key] = value
-        }
-        return result
     }
 }

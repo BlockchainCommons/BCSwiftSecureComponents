@@ -88,7 +88,7 @@ extension Envelope: EnvelopeFormat {
 
     var formatItem: EnvelopeFormatItem {
         switch self {
-        case .cbor(let cbor, _):
+        case .leaf(let cbor, _):
             return cbor.formatItem
         case .knownPredicate(let predicate, _):
             return predicate.formatItem
