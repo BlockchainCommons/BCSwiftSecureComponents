@@ -25,11 +25,7 @@
 
 ## Introduction
 
-The Secure Components suite provides tools for easily implementing encryption (symmetric or public key), signing, and sharding of messages, and representation of knowledge graphs, including serialization to and from [CBOR](https://cbor.io/) and [UR](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md) formats.
-
-## Status
-
-**DRAFT.** There is a reference implementation of parts of this document in [BCSwiftFoundation](https://github.com/blockchaincommons/BCSwiftFoundation), but everything is still fluid and subject to change.
+...
 
 ## Reserved CBOR Tags
 
@@ -56,41 +52,7 @@ Currently Secure Components would benefit from having 17 of these tags. As we ex
 
 Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
 
-## Goals
 
-The goal is to create a general purpose, composable suite of data types that:
-
-* Are based on object-centric architecture
-* Make it easy to represent common encryption constructions
-* Are based on algorithms and constructs that are considered best practices.
-* Allow for the future extension of functionality to include additional cryptographic algorithms and methods.
-* Represent structured data using [CBOR](https://cbor.io/) and [UR](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md).
-* Support innovative constructs like [Sharded Secret Key Reconstruction (SSKR)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md).
-* Interoperate with structures of particular interest to blockchain and cryptocurrency developers, such as [seeds](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-006-urtypes.md#cryptographic-seed-crypto-seed) and [HD keys](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-007-hdkey.md).
-* Support protocols like [Distributed Identifiers](https://www.w3.org/TR/did-core/).
-* Support complex metadata (assertions about assertions).
-* Support semantic knowledge graphs.
-* Support mutable and immutable architectures.
-* Provide a reference API implementation in Swift that is easy to use and hard to abuse.
-
-Other goals we are considering include:
-
-* Support eventual consistency using [conflict-free replicated datatypes (CRDTs)](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type).
-* Minimize opportunities for correlation without first demonstrating ability to decrypt or provide an adapter signature.
-* Correlation resistance leveraging similarities between UUIDs, nonces, hashes, content addressable hashes, signatures, etc.
-* Focus first on peer-based, web-of-trust, self-sovereign key models for roots of trust, where peers may be groups.
-* Support “Progressive Trust” models:
-    * Progressive trust is the ability of an individual to gradually increase the amount of relevant data revealed as trust is built or value generated.
-    * [W3C Data Minimization](https://w3c-ccg.github.io/data-minimization/#progressive-trust)
-    * [Original concept](http://www.lifewithalacrity.com/2004/08/progressive_tru.html)
-* Default and fundamental support of aggregated group multisig signatures, in particular prime-order curves like secp256k1, or point-compressed cofactor solutions like [ristretto255](https://www.ietf.org/archive/id/draft-irtf-cfrg-ristretto255-00.html):
-    * Reason? Multisig attacks:
-        * [Prime, Order Please! - Revisiting Small Subgroup and Invalid Curve Attacks on Protocols using Diffie-Hellman](https://eprint.iacr.org/2019/526.pdf)
-        * [Cofactor Explained: Clearing Elliptic Curves' dirty little secret](https://loup-vaillant.fr/tutorials/cofactor)
-        * [Attack on Monero using 25519](https://jonasnick.github.io/blog/2017/05/23/exploiting-low-order-generators-in-one-time-ring-signatures/)
-* Fundamental support for redactable signatures, possibly:
-    * Bauer, Blough, Cash - [Minimal Information Disclosure with Efficiently Verifiable Credentials](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.153.8662&rep=rep1&type=pdf)
-* Support for various modern techniques like signature aggregation (Musig2 m of m), threshold signatures (FROST n of m), adapter signatures, scriptless scripts, discrete log contracts, Brandian blind signatures (and improvements), smart signature scripts, distributed key generation & verifiable secret sharing
 
 ---
 
