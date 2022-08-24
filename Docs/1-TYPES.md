@@ -25,34 +25,7 @@
 
 ## Introduction
 
-...
-
-## Reserved CBOR Tags
-
-Lower-numbered CBOR tags take fewer bytes to encode, and are hence more desirable "real estate."
-
-* Tags in the range 0-23 require one byte to encode.
-* Tags in the range 24-255 require two bytes to encode.
-* Tags from 256 and above require three or more bytes to encode.
-
-Although there is no technical restriction on using any tag to represent anything, [tags are assigned by IANA](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) to represent many common data types, and avoiding tag collision is generally desirable to facilitate interoperability.
-
-As there are fewer lowered-number tags, IANA has different requirements for recognizing tags reserved in different ranges.
-
-* Tags in the range 0-23 require standards action.
-* Tags in the range 24-32767 require a specification.
-* Tags in the range 32768 and above are first come, first served.
-
-As of the date of this document, the [IANA Registry of CBOR Tags](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) shows the following low-numbered tags as unassigned.
-
-* One byte encoding: 6-15, 19-20
-* Two byte encoding: 48-51, 53, 55-60, 62, 88-95, 99, 102, 105-109, 113-119, 128-255
-
-Currently Secure Components would benefit from having 17 of these tags. As we expect to file a specification at some point, we are choosing tags starting at #6.200 for highest-frequency tags.
-
-Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
-
-
+One of the key design elements in Blockchain Commons' overarcing Gordian system is that elements be self-identifying. This helps to ensure that all data is self-identifying, thus dramatically reducing the possibility of vendor lock-in: even if an app becomes obsolete, the data can be read by another app that follows the same specifications. This self-identification is maintained in large part through the careful and consistent use of data typing.
 
 ---
 
@@ -111,3 +84,33 @@ A number of types are simply serialized as untagged CBOR byte strings. They do n
 * `Tag`
 
 For example, a field called `Auth` is currently only used in the context of the IETF-ChaCha20-Poly1305 encryption algorithm, and therefore does not need to be specifically tagged. If another algorithm also needed a field called `Auth`, it would be used in the context of *that* algorithm, and the two fields would not be considered interchangeable.
+
+---
+
+## Reserved CBOR Tags
+
+Lower-numbered CBOR tags take fewer bytes to encode, and are hence more desirable "real estate."
+
+* Tags in the range 0-23 require one byte to encode.
+* Tags in the range 24-255 require two bytes to encode.
+* Tags from 256 and above require three or more bytes to encode.
+
+Although there is no technical restriction on using any tag to represent anything, [tags are assigned by IANA](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) to represent many common data types, and avoiding tag collision is generally desirable to facilitate interoperability.
+
+As there are fewer lowered-number tags, IANA has different requirements for recognizing tags reserved in different ranges.
+
+* Tags in the range 0-23 require standards action.
+* Tags in the range 24-32767 require a specification.
+* Tags in the range 32768 and above are first come, first served.
+
+As of the date of this document, the [IANA Registry of CBOR Tags](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) shows the following low-numbered tags as unassigned.
+
+* One byte encoding: 6-15, 19-20
+* Two byte encoding: 48-51, 53, 55-60, 62, 88-95, 99, 102, 105-109, 113-119, 128-255
+
+Currently Secure Components would benefit from having 17 of these tags. As we expect to file a specification at some point, we are choosing tags starting at #6.200 for highest-frequency tags.
+
+Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
+
+---
+
