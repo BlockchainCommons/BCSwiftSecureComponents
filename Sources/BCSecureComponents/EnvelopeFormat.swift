@@ -26,6 +26,12 @@ extension CBOR: EnvelopeFormat {
                 return .item(b.description)
             case .unsignedInt(let n):
                 return .item(String(n))
+            case .negativeInt(let n):
+                return .item(String(n))
+            case .float(let n):
+                return .item(String(n))
+            case .double(let n):
+                return .item(String(n))
             case .utf8String(let string):
                 return .item(string.flanked(.quote))
             case .date(let date):
@@ -34,6 +40,8 @@ extension CBOR: EnvelopeFormat {
                     s = s.prefix(count: 10)
                 }
                 return .item(s)
+            case .data(_):
+                return .item("Data")
             case CBOR.tagged(.envelope, _):
                 return try Envelope(taggedCBOR: cbor).formatItem
             case CBOR.tagged(.knownPredicate, let cbor):

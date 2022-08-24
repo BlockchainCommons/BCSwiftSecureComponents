@@ -23,12 +23,12 @@
 
 ## Introduction
 
-The `Envelope` type efficiently supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs. Here is its (slightly simplified) definition in Swift:
+The `Envelope` type efficiently supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs. Here is its notional definition in Swift:
 
 ```swift
 struct Envelope {
-    let subject: Subject
-    let assertions: [Envelope]
+    let subject: Envelope
+    let assertions: [Assertion]
 }
 ```
 

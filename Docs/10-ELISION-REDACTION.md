@@ -25,58 +25,84 @@
 
 One common use case for a general hierarchical container structure such as `Envelope` is *data minimization*, which is the privacy-preserving practice of only revealing what is necessary and sufficient for parties to trust each other and transact together.
 
-One way of providing data minimization is *selective disclosure*. If I wish to prove my birth date to you, I could show you my drivers license:
+One way of providing data minimization is *selective disclosure*. For example, an employer may have an employee with a particular continuing education credential:
 
 ```
 {
     CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
-        "address": "123 Main St."
-        "birthDate": 1970-01-01
-        "dlNumber": "123-456-789"
-        "firstName": "John"
-        "lastName": "Smith"
-        "motorocycleEndorsement": true
-        "nonCommercialVehicleEndorsement": true
-        "photo": "This is John Smith's photo."
-        controller: "State of Example"
-        issuer: "State of Example"
+        "certificateNumber": "123-456-789"
+        "continuingEducationUnits": 1.5
+        "expirationDate": 2028-01-01
+        "firstName": "James"
+        "issueDate": 2020-01-01
+        "lastName": "Maxwell"
+        "photo": "This is James Maxwell's photo."
+        "professionalDevelopmentHours": 15
+        "subject": "RF and Microwave Engineering"
+        "topics": CBOR
+        controller: "Example Electrical Engineering Board"
+        isA: "Certificate of Completion"
+        issuer: "Example Electrical Engineering Board"
     ]
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
 
-If you trust the authenticity of the document (i.e., that it is not forged and that it is issued by an authority you trust), you can indeed verify my birth date by correlating that fact in the document with my photograph in the document. However, showing you my drivers license also unintentionally reveals other information such as my name, home address, and drivers license number that can potentially be used to correlate even more information held by third parties. However, selective disclosure would be like being able to hand you my authentic drivers license where you could see the issuing authority, my photograph, my birth date, and nothing else; not even my name.
+Using elision, the employer of an employee with this credential could warrant to a third-party that their employee has such a credential, without revealing anything else about the employee. This is done as follows:
+
+1. Elide privileged information from the certificate, while keeping only necessary information.
+2. Enclose the envelope in another envelope to which the employer adds its own assertions that need to be non-repudiable; this is the employer's *warranty*.
+3. Enclose the warranty in another envelope, which is then signed by the employer.
 
 ```
 {
-    ELIDED [
-        "birthDate": 1970-01-01
-        "photo": "This is John Smith's photo."
-        ELIDED (8)
+    {
+        {
+            CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+                "expirationDate": 2028-01-01
+                "firstName": "James"
+                "lastName": "Maxwell"
+                "subject": "RF and Microwave Engineering"
+                isA: "Certificate of Completion"
+                issuer: "Example Electrical Engineering Board"
+                ELIDED (7)
+            ]
+        } [
+            note: "Signed by Example Electrical Engineering Board"
+            verifiedBy: Signature
+        ]
+    } [
+        "employeeHiredDate": 2022-01-01
+        "employeeStatus": "active"
     ]
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Employer Corp."
     verifiedBy: Signature
 ]
 ```
+
+Note that in this example the elision was performed by a the employer, who possesses a copy of the `Envelope`-based certificate, but who is neither the holder of the certificate (the employee), not the original issuer (the certification board). The ability for anyone to perform elision on any document is one of the major advantages of elision over more complex methodologies such as Zero-Knowledge Proofs.
 
 The Blockchain Commons `Envelope` type is designed for the construction of verifiable digital documents that can be as long-lived as a blockchain transaction or government-issued credential, or as ephemeral as a function call. Among its capabilities, `Envelope` includes affordances for `elision`, which is the selective withholding of specified information in a document, while still maintaining its integrity and verifiability.
 
 # Use Cases for Elision
 
-The term "elide" means "to leave out." In an `Envelope`, elided items are replaced by their merkle tree digest, therefore allowing the same digests to be calculated for the entire tree.
+The term *elide* means "to leave out." In an `Envelope`, elided items are replaced by their Merkle tree digest, therefore allowing the same digests to be calculated for the entire tree despite those absences.
 
-The difference between "elision" and "redaction" is not functional, but semantic: elision is *what* is accomplished, while *redaction* is one purpose for which data might be elided. When one *redacts*, one is choosing to withhold information with no affordance or expectation that the receiving party can or will recover it.
+The term *redaction* is often used interchangably with *elision*. There is, however, a crucial semantic difference between the two terms: elision is *what* is accomplished, while *redaction* is one purpose for which data might be elided.
 
-There is another common use case for elision: *referencing*. In this case, information is elided with every affordance and expectation that the receiving party can and might choose to recover the elided information.
+In fact, when eliding data there are at least two major goals that can be accomplished:
 
-My photo might be embedded as a JPG within my digital drivers license. Embedding has the advantage that it's right there to be interpreted by anyone who reads the document. In this case there are two reasons I might want a version of my credential with the photo elided.
+* **Redaction.** When one *redacts*, one is choosing to withhold information with no affordance or expectation that the receiving party can or will recover it.
+* **Referencing.** When one *references*, one withholds information with every affordance and expectation that the receiving party can and might choose to recover the elided information.
 
-First, I might redact it because it is priviledged or irrelevant to the transaction I want to perform.
+For example, my photo might be embedded as a JPG within a verifiable credential. Embedding has the advantage that it's right there to be interpreted by anyone who receives the document. In this case, there are two reasons I might want a version of my credential with the photo elided.
 
-Alternatively, I might want the data to be smaller, while still allowing the retrieval of the photo by interested parties. In this case, a *dereferencing method* would need to be included that shows *how* to retrieve the information:
+First, I might *redact* it because it is priviledged or irrelevant to the transaction I want to perform.
+
+Alternatively, I might want the data to be smaller, while still allowing the retrieval of the photo by interested parties. In this case, a *dereferencing method* would need to be included that shows *how* to retrieve the information. This method can either be built into the verifiable credential by the issuer:
 
 ```
 {
@@ -113,6 +139,10 @@ But even if the issuer didn't provide a way to retrieve the photo, I can still e
 ]
 ```
 
+Either way, anyone who retrieves the photo can absolutely know it is correct because it exactly matches the elided element's digest in the document's signed Merkle tree. In this sense, elision and unelision are *isomorphic* and *reversible*.
+
+Encryption might be seen as a special kind of redaction, where the original message is still present as ciphertext, and may only be "unredacted" (unencrypted) using the proper key. In this way, encryption is also isomorphic and reversible, and even interchangeable with elision.
+
 ## Immutable References
 
 When an element of an `Envelope` is elided for the purpose of referencing, the only object that can be used to dereference it the identical image from which the digest was generated. This means that *a digest's referent is immutable*: every time a particular digest is dereferenced, the exact same referent must be returned.
@@ -133,7 +163,7 @@ So since CIDs are not tied to a specific binary object, dereferencing a CID may 
 
 # Performing Elision - A Worked Example
 
-This section works through the example above: a drivers license that is redacted to reveal only the holder's birth date and photograph, but which can still be verified as being issued by a particular authority, and unaltered in the revealed particulars.
+This section works through the example above: a continuing education credential that is redacted by an employer to reveal and warrant that their employee has such a credential, and which can still be verified.
 
 ## Creating the Credential
 
@@ -142,24 +172,22 @@ This is the Swift code to create our example credential:
 ```swift
 // The subject of the envelope is a CID that represents the holder.
 let credential = try Envelope(CID(‡"4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d")!)
-    // Add the holder's information:
-    .addAssertion("firstName", "John")
-    .addAssertion("lastName", "Smith")
-    .addAssertion("address", "123 Main St.")
-    .addAssertion("birthDate", Date(iso8601: "1970-01-01"))
-    .addAssertion("photo", "This is John Smith's photo.")
-    .addAssertion("dlNumber", "123-456-789")
-    .addAssertion("nonCommercialVehicleEndorsement", true)
-    .addAssertion("motorocycleEndorsement", true)
-    .addAssertion(.issuer, "State of Example")
-    .addAssertion(.controller, "State of Example")
-    // Wrap the envelope in another envelope so we can sign it:
+    .addAssertion(.isA, "Certificate of Completion")
+    .addAssertion(.issuer, "Example Electrical Engineering Board")
+    .addAssertion(.controller, "Example Electrical Engineering Board")
+    .addAssertion("firstName", "James")
+    .addAssertion("lastName", "Maxwell")
+    .addAssertion("issueDate", Date(iso8601: "2020-01-01"))
+    .addAssertion("expirationDate", Date(iso8601: "2028-01-01"))
+    .addAssertion("photo", "This is James Maxwell's photo.")
+    .addAssertion("certificateNumber", "123-456-789")
+    .addAssertion("subject", "RF and Microwave Engineering")
+    .addAssertion("continuingEducationUnits", 1.5)
+    .addAssertion("professionalDevelopmentHours", 15)
+    .addAssertion("topics", ["Subject 1", "Subject 2"])
     .wrap()
-    // Sign the inner envelope
-    .sign(with: stateOfExamplePrivateKeys)
-    // Add a note about the signing. Be aware that the note itself is outside
-    // the signed part of the envelope, and is therefore not itself signed.
-    .addAssertion(.note, "Signed by the State of Example")
+    .sign(with: alicePrivateKeys)
+    .addAssertion(.note, "Signed by Example Electrical Engineering Board")
 ```
 
 If we print the credential in Envelope Notation, we get:
@@ -167,19 +195,22 @@ If we print the credential in Envelope Notation, we get:
 ```
 {
     CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
-        "address": "123 Main St."
-        "birthDate": 1970-01-01
-        "dlNumber": "123-456-789"
-        "firstName": "John"
-        "lastName": "Smith"
-        "motorocycleEndorsement": true
-        "nonCommercialVehicleEndorsement": true
-        "photo": "This is John Smith's photo."
-        controller: "State of Example"
-        issuer: "State of Example"
+        "certificateNumber": "123-456-789"
+        "continuingEducationUnits": 1.5
+        "expirationDate": 2028-01-01
+        "firstName": "James"
+        "issueDate": 2020-01-01
+        "lastName": "Maxwell"
+        "photo": "This is James Maxwell's photo."
+        "professionalDevelopmentHours": 15
+        "subject": "RF and Microwave Engineering"
+        "topics": CBOR
+        controller: "Example Electrical Engineering Board"
+        isA: "Certificate of Completion"
+        issuer: "Example Electrical Engineering Board"
     ]
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
@@ -241,7 +272,7 @@ for assertion in credential.assertions {
 
 ```
 ELIDED [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
@@ -260,7 +291,7 @@ target.insert(credential.subject)
 {
     ELIDED
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
@@ -279,41 +310,105 @@ target.insert(content)
 ```
 {
     ELIDED [
-        ELIDED (10)
+        ELIDED (13)
     ]
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
 
 Now it looks like we're getting somewhere! The wrapped envelope has a still-elided subject (the holder's CID) and ten assertions, all of which are still currently elided.
 
-We don't need or want to reveal the holder's CID, we just want to reveal the claims that prove his birth date and photo.
+## Revealing the CID
 
-## Revealing the Claims
-
-The only actual assertions we want to reveal are `birthDate` and `photo`, so we do this by finding those specific assertions by their predicate. In keeping with data minimization, the `shallowDigests` attribute returns just a necessary set of attributes to reveal: 1) the assertion, 2) its predicate, and 3) its object (yes, all three of them need to be revealed) but *not* any deeper assertions on them.
+We want to reveal the CID representing the issuing authority's unique reference to the credential holder. This is because the warranty the employer is making is that a specific identifiable employee has the credential, *without* actually revealing their identity. This allows the entire document to be identified and unredacted should a dispute ever arise.
 
 ```swift
-target.insert(try content.assertion(withPredicate: "birthDate").shallowDigests)
-target.insert(try content.assertion(withPredicate: "photo").shallowDigests)
+target.insert(content.subject)
 ```
 
 ```
 {
-    ELIDED [
-        "birthDate": 1970-01-01
-        "photo": "This is John Smith's photo."
-        ELIDED (8)
+    CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+        ELIDED (13)
     ]
 } [
-    note: "Signed by the State of Example"
+    note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
 ```
 
-Success! This redacted credential may now be provided to the receiver, who can use it to verify the signature and thus prove the holder's selected claims.
+## Revealing the Claims
+
+The only actual assertions we want to reveal are `firstName`, `lastName`, `.isA`, `issuer`, `subject` and `expirationDate`, so we do this by finding those specific assertions by their predicate. The `shallowDigests` attribute returns just a necessary set of attributes to reveal the assertion, its predicate, and its object (yes, all three of them need to be revealed) but *not* any deeper assertions on them.
+
+```swift
+target.insert(try content.assertion(withPredicate: "firstName").shallowDigests)
+target.insert(try content.assertion(withPredicate: "lastName").shallowDigests)
+target.insert(try content.assertion(withPredicate: .isA).shallowDigests)
+target.insert(try content.assertion(withPredicate: .issuer).shallowDigests)
+target.insert(try content.assertion(withPredicate: "subject").shallowDigests)
+target.insert(try content.assertion(withPredicate: "expirationDate").shallowDigests)
+```
+
+```
+{
+    CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+        "expirationDate": 2028-01-01
+        "firstName": "James"
+        "lastName": "Maxwell"
+        "subject": "RF and Microwave Engineering"
+        isA: "Certificate of Completion"
+        issuer: "Example Electrical Engineering Board"
+        ELIDED (7)
+    ]
+} [
+    note: "Signed by Example Electrical Engineering Board"
+    verifiedBy: Signature
+]
+```
+
+Finally, the employer wants to enclose this envelope, add some non-repudiable assertions of it's own, then sign it. This is the employer's *warranty*.
+
+```swift
+let warranty = try redactedCredential
+    .wrap()
+    .addAssertion("employeeHiredDate", Date(iso8601: "2022-01-01"))
+    .addAssertion("employeeStatus", "active")
+    .wrap()
+    .addAssertion(.note, "Signed by Employer Corp.")
+    .sign(with: bobPrivateKeys)
+```
+
+```
+{
+    {
+        {
+            CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+                "expirationDate": 2028-01-01
+                "firstName": "James"
+                "lastName": "Maxwell"
+                "subject": "RF and Microwave Engineering"
+                isA: "Certificate of Completion"
+                issuer: "Example Electrical Engineering Board"
+                ELIDED (7)
+            ]
+        } [
+            note: "Signed by Example Electrical Engineering Board"
+            verifiedBy: Signature
+        ]
+    } [
+        "employeeHiredDate": 2022-01-01
+        "employeeStatus": "active"
+    ]
+} [
+    note: "Signed by Employer Corp."
+    verifiedBy: Signature
+]
+```
+
+Success! This warranty, including the redacted credential may now be provided to the receiver, who can use it to verify the signature of both the issuing authority and the corporation, and thus hold the warrantor accountable.
 
 ## Recap
 
@@ -333,11 +428,25 @@ target.insert(credential.subject)
 let content = try credential.subject.unwrap()
 target.insert(content)
 
-target.insert(try content.assertion(withPredicate: "birthDate").shallowDigests)
-target.insert(try content.assertion(withPredicate: "photo").shallowDigests)
+target.insert(content.subject)
+
+target.insert(try content.assertion(withPredicate: "firstName").shallowDigests)
+target.insert(try content.assertion(withPredicate: "lastName").shallowDigests)
+target.insert(try content.assertion(withPredicate: .isA).shallowDigests)
+target.insert(try content.assertion(withPredicate: .issuer).shallowDigests)
+target.insert(try content.assertion(withPredicate: "subject").shallowDigests)
+target.insert(try content.assertion(withPredicate: "expirationDate").shallowDigests)
+
+let warranty = try redactedCredential
+    .wrap()
+    .addAssertion("employeeHiredDate", Date(iso8601: "2022-01-01"))
+    .addAssertion("employeeStatus", "active")
+    .wrap()
+    .addAssertion(.note, "Signed by Employer Corp.")
+    .sign(with: bobPrivateKeys)
 ```
 
-In this example case, the target set would contain 15 digests.
+In this example case, the target set would contain 28 digests.
 
 # The Structure of an Envelope
 
@@ -346,15 +455,17 @@ Understanding the structure of `Envelope` is essential to understanding how to n
 The essential structure is:
 
 ```
-subject [
-    assertion1(predicate1: object1)
-    assertion2(predicate2: object2)
-    ...
-    assertionN(predicateN: objectN)
-]
+envelope {
+    subject [
+        assertion1(predicate1: object1)
+        assertion2(predicate2: object2)
+        ...
+        assertionN(predicateN: objectN)
+    ]
+}
 ```
 
-...where all of the symbols shown above, e.g. `envelope`, `subject`, `assertion1`, and `predicate2` are called *positions*. Each position is *itself* an `Envelope`, and therefore may carry its own assertions, recursively. Each position carries a digest, which may be used to refer to the object at that position. In addition, there is one position above `subject` that refers to the entirety of the `Envelope` including the subject and all its assertions.
+...where all of the symbols shown above, e.g. `envelope`, `subject`, `assertion1`, and `predicate2` are called *positions*. Each position is *itself* an `Envelope`, and therefore may carry its own assertions, recursively. Each position carries a digest, which may be used to refer to the object at that position.
 
 ## A Tour of the Positions
 

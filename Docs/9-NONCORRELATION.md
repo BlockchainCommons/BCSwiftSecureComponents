@@ -177,7 +177,6 @@ let e1 = Envelope(Envelope("Hello").addSalt())
         salt: CBOR
     ]
 ]
-"""
 ```
 
 Any or all elements of this salted `Envelope` could be elided with a high degree of noncorrelatability..
