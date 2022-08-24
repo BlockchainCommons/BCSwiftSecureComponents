@@ -88,11 +88,11 @@ The algorithms that Secure Components currently incorporates are listed below. T
 * **Hashing and Key Derivation:** [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf)
 * **Symmetric Encryption:** [IETF-ChaCha20-Poly1305](https://datatracker.ietf.org/doc/html/rfc8439)
 * **Curve:** [Secp256k1](https://en.bitcoin.it/wiki/Secp256k1)
-* **Signing:** [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki) or [ECDSA-25519-doublesha256](https://en.bitcoin.it/wiki/BIP_0137)
+* **Signing:** [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki)
+* **Public Key Encryption:** Schnorr with Secp256k1
 * **Sharding**: [SSKR (Sharded Secret Key Reconstruction)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md)
-* **Public Key Encryption:** [X25519](https://datatracker.ietf.org/doc/html/rfc7748)
 * **Password-Based Key Derivation**: [scrypt](https://datatracker.ietf.org/doc/html/rfc7914)
 * **Selective Disclosure:** Redaction
-* **Data Architecture:** DIrected Graph
+* **Data Architecture:** Directed Graph
 
 Please see [Appendix A](A-ALGORITHMS.md) for the reasons behind these decisions.
