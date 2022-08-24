@@ -1,4 +1,4 @@
-# Secure Components - Overview
+# Secure Components - Types
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
 **Revised:** Aug 13, 2022</br>
@@ -8,7 +8,8 @@
 
 ## Contents
 
-* Overview: This document
+* [Envelope Introduction](0-INTRODUCTION.md)
+* Types: This document
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
