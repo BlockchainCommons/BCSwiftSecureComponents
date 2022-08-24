@@ -41,7 +41,15 @@ Following an architectural review, we will then support the production of code f
 
 ## Overview
 
-[future-proofing]
+The core of the Secure Components capability suite is the `Envelope`. This is a smart-document structure that allows for the easy representation of common cryptographic design patterns, with efficient binary formatting, strong interoperability, and the ability to support the cutting edge of cryptographic and decentralized identity specifications.
+
+The prime attributes of an Envelope include:
+
+* The ability to safely encrypt and store seeds and other secrets.
+* The possibility to store metadata with those secrets.
+* The ability to lock those envelopes with permits that may be opened in a variety of ways, including with SSKR shares and with public-key cryptography.
+
+Secure Components including the `Envelope` are being built so that they are future-proofed as much as possible. Though initial algorithm choices are slightly conservative and though initial capabilities are purposefully limited, everything is being designed so that it can be expanded in the future, particularly via newer algorithms that are already known today but which are not sufficiently mature for usage.
 
 ## Goals
 
