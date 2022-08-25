@@ -29,7 +29,7 @@ This section describes each component, and provides its CDDL definition for CBOR
 
 ## Envelope
 
-Please see [here](3-ENVELOPE.md) for a full description.
+Please see [here](2-ENVELOPE.md) for a full description.
 
 ### Envelope: Swift Definition
 
