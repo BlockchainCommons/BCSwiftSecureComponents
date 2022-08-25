@@ -1,4 +1,4 @@
-# Secure Components - Envelope Introduction
+# Secure Components Appendix A: MVA Algorithm Suite
 
 **Authors:** Wolf McNally, Christopher Allen, Shannon Appelcline, Blockchain Commons</br>
 **Revised:** Aug 24, 2022</br>
