@@ -308,6 +308,8 @@ The holder of a credential can then selectively reveal any of the micro-claims i
 
 Elision is performed by building a target set of `Digest`s that will be revealed. All digests not present in the target will be replaced with elision markers containing only the digest of what has been elided, thus preserving the Merkle tree including revealed signatures. If a higher-level object is elided, then everything it contains will also be elided, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
 
+See [Elision & Redaction](10-ELISION-REDACTION.md) for more on this topic.
+
 ```
 {
     CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
