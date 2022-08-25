@@ -1,7 +1,7 @@
 # Secure Components - Types
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 13, 2022</br>
+**Revised:** Aug 24, 2022</br>
 **Status:** DRAFT
 
 ---
@@ -25,7 +25,7 @@
 
 ## Introduction
 
-One of the key design elements in Blockchain Commons' overarcing Gordian system is that elements be self-identifying. This helps to ensure that all data is self-identifying, thus dramatically reducing the possibility of vendor lock-in: even if an app becomes obsolete, the data can be read by another app that follows the same specifications. This self-identification is maintained in large part through the careful and consistent use of data typing.
+One of the key design elements in Blockchain Commons' overarcing Gordian system is that data be self-identifying. This dramatically reduces the possibility of vendor lock-in: even if an app becomes obsolete, the data can be read by another app that follows the same specifications. This self-identification is maintained in large part through the careful and consistent use of data typing.
 
 ---
 
@@ -87,7 +87,7 @@ For example, a field called `Auth` is currently only used in the context of the 
 
 ---
 
-## Reserved CBOR Tags
+## Reservation of CBOR Tags
 
 Lower-numbered CBOR tags take fewer bytes to encode, and are hence more desirable "real estate."
 
