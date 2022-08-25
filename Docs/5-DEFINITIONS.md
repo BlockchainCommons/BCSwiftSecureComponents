@@ -281,7 +281,7 @@ A Digest is a cryptographic hash of some source data. Currently Secure Component
 |---|---|
 |56|`Digest`|
 
-### CDDL for Digest
+### Digest: CDDL
 
 ```
 digest = #6.56(blake3-digest)
