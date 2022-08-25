@@ -41,7 +41,7 @@ Following an architectural review, we will then support the production of code f
 
 ## Overview
 
-The core of the Secure Components capability suite is the `Envelope`. This is a smart-document structure that allows for the easy representation of common cryptographic design patterns, with efficient binary formatting, strong interoperability, and the ability to support the cutting edge of cryptographic and decentralized identity specifications.
+The core of the Secure Components capability suite is the `Envelope`. This is a smart-document structure that allows for the easy representation of common cryptographic design patterns, with efficient binary formatting, strong interoperability, and the ability to support cutting-edge cryptographic and decentralized identity specifications.
 
 The prime attributes of an Envelope include:
 
@@ -49,7 +49,7 @@ The prime attributes of an Envelope include:
 * The possibility to store metadata with those secrets.
 * The ability to lock those envelopes with permits that may be opened in a variety of ways, including with SSKR shares and with public-key cryptography.
 
-Secure Components including the `Envelope` are being built so that they are future-proofed as much as possible. Though initial algorithm choices are slightly conservative and though initial capabilities are purposefully limited, everything is being designed so that it can be expanded in the future, particularly via newer algorithms that are already known today but which are not sufficiently mature for usage.
+Secure Components, including the `Envelope`, is being built so that it is future-proofed (as much as is possible). Though initial algorithm choices are slightly conservative and though initial capabilities are purposefully limited, everything is being designed so that it can be expanded in the future, particularly via newer algorithms that are already known today but which are not sufficiently mature for usage.
 
 ## Goals
 
@@ -78,7 +78,7 @@ Other goals we are considering include:
     * Progressive trust is the ability of an individual to gradually increase the amount of relevant data revealed as trust is built or value generated.
     * [W3C Data Minimization](https://w3c-ccg.github.io/data-minimization/#progressive-trust)
     * [Original concept](http://www.lifewithalacrity.com/2004/08/progressive_tru.html)
-* Default and fundamental support of aggregated group multisig signatures, in particular prime-order curves like secp256k1, or point-compressed cofactor solutions like [ristretto255](https://www.ietf.org/archive/id/draft-irtf-cfrg-ristretto255-00.html):
+* Default and fundamental support for aggregated group multisig signatures, in particular prime-order curves such as secp256k1, or point-compressed cofactor solutions such as [ristretto255](https://www.ietf.org/archive/id/draft-irtf-cfrg-ristretto255-00.html):
     * Reason? Multisig attacks:
         * [Prime, Order Please! - Revisiting Small Subgroup and Invalid Curve Attacks on Protocols using Diffie-Hellman](https://eprint.iacr.org/2019/526.pdf)
         * [Cofactor Explained: Clearing Elliptic Curves' dirty little secret](https://loup-vaillant.fr/tutorials/cofactor)
@@ -89,7 +89,7 @@ Other goals we are considering include:
 
 ## Algorithms
 
-The algorithms that Secure Components currently incorporates are listed below. The components include provisions for the future inclusion of additional algorithms and methods.
+The algorithms that Secure Components currently incorporates are listed below. The future-proofing of Secure Components also allows for the future inclusion of additional algorithms and methods.
 
 * **Organization:** Suites
 * **Data Size:** 256 Bit
@@ -103,4 +103,4 @@ The algorithms that Secure Components currently incorporates are listed below. T
 * **Selective Disclosure:** Redaction
 * **Data Architecture:** Directed Graph
 
-Please see [Appendix A](A-ALGORITHMS.md) for the reasons behind these decisions.
+Please see [Appendix A](A-ALGORITHMS.md) for the reasons behind these algorithmic decisions.
