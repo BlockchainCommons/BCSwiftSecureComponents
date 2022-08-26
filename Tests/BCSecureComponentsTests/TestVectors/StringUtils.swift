@@ -117,3 +117,9 @@ func link(title: String, target: String) -> String {
         target.flanked("(", ")")
     ].joined()
 }
+
+extension DefaultStringInterpolation {
+    mutating func appendInterpolation(pad value: Int, toWidth width: Int, using paddingCharacter: Character = "0") {
+        appendInterpolation(String(format: "%\(paddingCharacter)\(width)d", value))
+    }
+}

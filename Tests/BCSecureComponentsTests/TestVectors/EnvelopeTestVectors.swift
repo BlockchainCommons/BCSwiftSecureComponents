@@ -2,7 +2,7 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-fileprivate let chapterNumber = 7
+fileprivate let chapterNumber = 10
 
 final class EnvelopeTestVectors: XCTestCase {
     func testGenerateEnvelopeTestVectors() throws {

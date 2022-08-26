@@ -3,26 +3,29 @@ import XCTest
 
 final class TableOfContents: XCTestCase {
     func testGenerateTableOfContents() {
-        (1...tocItems.count).forEach {
+        (0..<tocItems.count).forEach {
             print(formatTableOfContents(itemIndex: $0))
         }
     }
 }
 
 let tocItems: [(title: String, filename: String)] = [
-    ("Overview", "OVERVIEW.md"),
+    ("Envelope Introduction", "INTRODUCTION.md"),
+    ("Types", "TYPES.md"),
     ("Envelope Overview", "ENVELOPE.md"),
     ("Envelope Notation", "ENVELOPE-NOTATION.md"),
     ("Envelope Expressions", "ENVELOPE-EXPRESSIONS.md"),
     ("Definitions", "DEFINITIONS.md"),
     ("Examples", "EXAMPLES.md"),
-    ("Envelope Test Vectors", "ENVELOPE-TEST-VECTORS.md"),
-    ("Envelope SSKR Test Vectors", "ENVELOPE-SSKR-TEST-VECTORS.md"),
     ("Noncorrelation", "NONCORRELATION.md"),
+    ("Elision and Redaction", "ELISION-REDACTION.md"),
+    ("Appendix A: MVA Algorithm Suite", "A-ALGORITHMS.md"),
+    ("Appendix B: Envelope Test Vectors", "B-ENVELOPE-TEST-VECTORS.md"),
+    ("Appendix C: Envelope SSKR Test Vectors", "C-ENVELOPE-SSKR-TEST-VECTORS.md"),
 ]
 
 func tocFilename(at index: Int) -> String {
-    "\(index)-\(tocItems[index - 1].filename)"
+    "\(pad: index, toWidth: 2)-\(tocItems[index].filename)"
 }
 
 @StringBuilder
@@ -30,7 +33,7 @@ func formatTableOfContents(itemIndex: Int) -> String {
     header2("Contents")
 
     list(
-        (1...tocItems.count).map {
+        (0..<tocItems.count).map {
             item(itemIndex: itemIndex, index: $0)
         }
     )
@@ -39,7 +42,7 @@ func formatTableOfContents(itemIndex: Int) -> String {
 }
 
 fileprivate func item(itemIndex: Int, index: Int) -> String {
-    let title = tocItems[index - 1].title
+    let title = tocItems[index].title
     let target = tocFilename(at: index)
     if index == itemIndex {
         return "\(title): This document"

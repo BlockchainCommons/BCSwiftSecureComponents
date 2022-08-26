@@ -1,25 +1,25 @@
 # Secure Components - Envelope Expressions
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** May 16, 2022</br>
+**Revised:** Aug 26, 2022</br>
 **Status:** DRAFT
 
 ---
 
 ## Contents
 
-* [Envelope Introduction](0-INTRODUCTION.md)
-* [Types](1-TYPES.md)
-* [Envelope Overview](2-ENVELOPE.md)
-* [Envelope Notation](3-ENVELOPE-NOTATION.md)
+* [Envelope Introduction](00-INTRODUCTION.md)
+* [Types](01-TYPES.md)
+* [Envelope Overview](02-ENVELOPE.md)
+* [Envelope Notation](03-ENVELOPE-NOTATION.md)
 * Envelope Expressions: This document
-* [Definitions](5-DEFINITIONS.md)
-* [Examples](6-EXAMPLES.md)
-* [Envelope Test Vectors](7-ENVELOPE-TEST-VECTORS.md)
-* [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
-* [Noncorrelation](9-NONCORRELATION.md)
-* [Elision and Redaction](10-ELISION-REDACTION.md)
-* [Appendix A: MVA Algorithm Suite](A-ALGORITHMS.md)
+* [Definitions](05-DEFINITIONS.md)
+* [Examples](06-EXAMPLES.md)
+* [Noncorrelation](07-NONCORRELATION.md)
+* [Elision and Redaction](08-ELISION-REDACTION.md)
+* [Appendix A: MVA Algorithm Suite](09-A-ALGORITHMS.md)
+* [Appendix B: Envelope Test Vectors](10-B-ENVELOPE-TEST-VECTORS.md)
+* [Appendix C: Envelope SSKR Test Vectors](11-C-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 

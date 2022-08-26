@@ -2,7 +2,7 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-fileprivate let chapterNumber = 8
+fileprivate let chapterNumber = 11
 
 fileprivate let seedPayload: Seed = {
     var seed = Seed(data: ‡"59f2293a5bce7d4de59e71b4207ac5d2")!
