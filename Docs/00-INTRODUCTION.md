@@ -41,15 +41,15 @@ Following an architectural review, we will then support the production of code f
 
 ## Overview
 
-The core of the Secure Components capability suite is the `Envelope`. This is a smart-document structure that allows for the easy representation of common cryptographic design patterns, with efficient binary formatting, strong interoperability, and the ability to support cutting-edge cryptographic and decentralized identity specifications.
+The core of the Secure Components capability suite is the `Envelope` type. This is a smart-document structure that allows for the easy representation of common cryptographic design patterns, with efficient binary formatting, strong interoperability, and the ability to support cutting-edge cryptographic and decentralized identity specifications.
 
 The prime attributes of an Envelope include:
 
 * The ability to safely encrypt and store seeds and other secrets.
 * The possibility to store metadata with those secrets.
-* The ability to lock those envelopes with permits that may be opened in a variety of ways, including with SSKR shares and with public-key cryptography.
+* The ability to lock those envelopes with permits that may be opened in a variety of ways, including with SSKR shares and public-key cryptography.
 
-Secure Components, including the `Envelope`, is being built so that it is future-proofed (as much as is possible). Though initial algorithm choices are slightly conservative and though initial capabilities are purposefully limited, everything is being designed so that it can be expanded in the future, particularly via newer algorithms that are already known today but which are not sufficiently mature for usage.
+Secure Components, including `Envelope`, is being built so that it is future-proofed (as much as is possible). Though initial algorithm choices are slightly conservative and though initial capabilities are purposefully limited, everything is being designed so that it can be expanded in the future, particularly via newer algorithms that are already known today but which are not sufficiently mature for usage.
 
 ## Goals
 
@@ -100,7 +100,7 @@ The algorithms that Secure Components currently incorporates are listed below. T
 * **Public Key Encryption:** Schnorr with Secp256k1
 * **Sharding**: [SSKR (Sharded Secret Key Reconstruction)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-011-sskr.md)
 * **Password-Based Key Derivation**: [scrypt](https://datatracker.ietf.org/doc/html/rfc7914)
-* **Selective Disclosure:** Redaction
+* **Selective Disclosure:** Elision
 * **Data Architecture:** Directed Graph
 
-Please see [Appendix A](A-ALGORITHMS.md) for the reasons behind these algorithmic decisions.
+Please see [Appendix A](09-A-ALGORITHMS.md) for the reasons behind these algorithmic decisions.

@@ -38,7 +38,7 @@ Ideally the method of encoding would have the following traits:
 
 ## Status
 
-This document is an early draft. While there is a reference implementation of `Envelope` in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents), there is currently no reference implementation of Envelope Expressions.
+This document is an early draft. While there is a reference implementation of `Envelope` in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents), there is currently no general reference implementation of Envelope Expressions. There is an implementation of distributed function calls using Envelope Expressions in the [BCSwiftFoundation](https://github.com/blockchaincommons/BCSwiftFoundation) framework.
 
 **NOTE:** None of the function names defined in this document are normative. The goal of this document is to explore and define the structure of how expressions may be evaluated in the context of `Envelope`, and not to define specific functions.
 
@@ -46,7 +46,7 @@ This document is an early draft. While there is a reference implementation of `E
 
 Since every Envelope has a unique digest, any Envelope expression can be replaced by its digest as long as the expression can be found that matches it. In some cases, certain expressions may be so common as to be designated "well known". In this case they can be represented by their digest alone or even a small tagged integer, trusting that the recipient of a Envelope can resolve the expression should they wish to evaluate it. Expressions that solve problems in specific domains and include placeholders for their arguments may be good candidates for this, one example being common cryptocurrency spending conditions.
 
-Even for expressions that are not "well known," like any other `Envelope`, an expression could appear as a reference to a `Digest` with one or more `dereferenceBy` assertions that tell the evaluator how to retrieve the expression that belongs in that place.
+Even for expressions that are not "well known," like any other `Envelope`, an expression could appear as a reference to a `Digest` with one or more `dereferenceVia` assertions that tell the evaluator how to retrieve the expression that belongs in that place.
 
 ## Example Expressions
 
@@ -84,7 +84,7 @@ An error in a sub-expression likewise causes the containing expression to fail a
 
 ## Binary Operator
 
-The subject of an Envelope that may be evaluated as an expression is tagged `func`, and each parameter to the function is a predicate tagged `param` with the object that supplies the argument. The Envelope expression language therefore uses a form of named parameters, although it is not limited to this paradigm. The purpose of tagging functions and parameters is to make them easily machine-distinguishable from other metadata.
+The `subject` of an `Envelope` that may be evaluated as an expression is tagged `func`, and each parameter to the function is a predicate tagged `param` with the object that supplies the argument. The Envelope expression language therefore uses a form of named parameters, although it is not limited to this paradigm. The purpose of tagging functions and parameters is to make them easily machine-distinguishable from other metadata.
 
 Assertions that are not tagged as parameters are ignored by the expression evaluator. Assertions that are tagged as parameters but are either not expected by the function, or have duplicate predicates are an error. Functions may have parameters that are required or optional, and not supplying all required parameters is an error.
 
@@ -185,14 +185,14 @@ FooBarBaz
 
 ## Distributed Function Calls
 
-A distributed function call (also known as a "remote procedure call") is a call invoked on systems that do not reside in the same process as the caller. This is one of the most common use-cases for `Envelope`.
+A distributed function call (also known as a "remote procedure call") is a call invoked on systems that do not reside in the same process as the caller.
 
 Due to latency and availability, all distributed function calls are by nature asynchronous, and any distributed function call may fail. The caller of a function may expect a particular result of that call, and that result needs to be routed back to the calling process.
 
-To facilitate this, we generate a unique UUID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(UUID)` provides a unique identifier used to route the result of the request back to the caller:
+To facilitate this, we generate a unique CID and tag it `request`. This becomes the `subject` of an envelope that must contain an assertion with `body` as the `predicate`, and the `object` must be an envelope expression as described herein. The wrapping `request(CID)` provides a unique identifier used to route the result of the request back to the caller:
 
 ```
-request(UUID(27A2977C-0A63-46E8-A009-D403E19496B9)) [
+request(CID(a5d19014d54d40a9ed03ca9bc487a2729271c43811a4d5a4247e704f2c61ae3e)) [
 	body: «add» [
 	    ❰lhs❱: 2
 	    ❰rhs❱: 3
@@ -200,22 +200,22 @@ request(UUID(27A2977C-0A63-46E8-A009-D403E19496B9)) [
 ]
 ```
 
-Once the expression has been evaluated, its result is returned in an envelope with `response(UUID)` as the subject. The response UUID must match the request UUID. The returned envelope contains must contain an assertion with the predicate `result` and the object being the result of the evaluation, which may be an Error as described above.
+Once the expression has been evaluated, its result is returned in an envelope with `response(CID)` as the subject. The response CID must match the request CID. The returned envelope must contain an assertion with the predicate `result` and the object being the result of the evaluation, which may be an Error as described above.
 
 ```
-response(UUID(27A2977C-0A63-46E8-A009-D403E19496B9)) [
+response(CID(a5d19014d54d40a9ed03ca9bc487a2729271c43811a4d5a4247e704f2c61ae3e)) [
 	result: 5
 ]
 ```
 
-Any party to a request/response may use the UUID as a way of discarding duplicates or avoiding replays.
+Any party to a request/response may use the CID as a way of discarding duplicates, avoiding replays, or as input to a cryptographic algorithm. See the [CID specification](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2022-002-cid-common-identifier.md) for more information.
 
 Because the functionality of `Envelope` is composable, the outer envelope of a request or a response can be signed as a way of authenticating the request, and if necessary the request and/or response can be encrypted by any of the available methods.
 
 A request may contain further instructions on the channels via which it may be responded to. For example, a request may be scanned with a QR code, and that request may include a URL with a REST endpoint via which to return the result:
 
 ```
-request(UUID(01D32CD0-F3D6-415A-A960-EC36C2B5A56D)) [
+request(CID(a5d19014d54d40a9ed03ca9bc487a2729271c43811a4d5a4247e704f2c61ae3e)) [
 	body: «add» [
 	    ❰lhs❱: 2
 	    ❰rhs❱: 3

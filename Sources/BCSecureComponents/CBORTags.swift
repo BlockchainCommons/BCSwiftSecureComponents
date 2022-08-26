@@ -38,7 +38,6 @@ public extension CBOR.Tag {
     static let signature = CBOR.Tag(222, "signature")
     static let knownPredicate = CBOR.Tag(223, "known-predicate")
     static let wrappedEnvelope = CBOR.Tag(224, "wrapped-envelope")
-    static let elided = CBOR.Tag(225, "elided")
     
     static let agreementPublicKey = CBOR.Tag(230, "agreement-public-key")
 }
@@ -92,6 +91,8 @@ public extension CBOR.Tag {
     static let parameter = CBOR.Tag(214, "parameter")
     static let request = CBOR.Tag(215, "request")
     static let response = CBOR.Tag(216, "response")
+    static let placeholder = CBOR.Tag(217, "placeholder")
+    static let replacement = CBOR.Tag(218, "replacement")
 }
 
 /// Tags for subtypes specific to Secure Components.
@@ -118,7 +119,6 @@ var knownTags: [CBOR.Tag] = [
     .signature,
     .knownPredicate,
     .wrappedEnvelope,
-    .elided,
     .agreementPublicKey,
     .seed,
     .hdKey,

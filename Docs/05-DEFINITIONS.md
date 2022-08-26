@@ -29,101 +29,92 @@ This section describes each component, and provides its CDDL definition for CBOR
 
 ## Envelope
 
-Please see [here](2-ENVELOPE.md) for a full description.
+Please see [here](02-ENVELOPE.md) for a full description.
 
 ### Envelope: Swift Definition
 
-For clarity, the Swift definitions here may be slightly simplifed from the reference implementation.
-
-An Envelope consists of a `subject` and a list of zero or more `assertion`s.
+An Envelope consists of a `subject` and a list of zero or more `assertion`s. Here is its notional definition in Swift:
 
 ```swift
 struct Envelope {
     let subject: Subject
     let assertions: [Assertion]
 }
-```
 
-The `Subject` of an `Envelope` is an enumerated type. `.leaf` represents any terminal CBOR object. `.envelope` represents a nested `Envelope`, `.encrypted` represents an `EncryptedMessage` that could be a `.leaf` or a `.envelope`, and `.elided` represents a value that has been elided with its place held by its `Digest`.
-
-```swift
-enum Subject {
-    case leaf(CBOR)
-    case envelope(Envelope)
-    case encrypted(EncryptedMessage)
-    case elided(Digest)
-}
-```
-
-An assertion is a `predicate`-`object` pair, each of which is also an `Envelope`.
-
-```swift
 struct Assertion {
     let predicate: Envelope
     let object: Envelope
 }
 ```
 
+The *actual* definition of `Envelope` is an enumerated type. Every case stores a precalculated `Digest` as part of its associated data, either directly or within its other objects:
+
+```swift
+public indirect enum Envelope: DigestProvider {
+    case node(subject: Envelope, assertions: [Envelope], digest: Digest)
+    case leaf(CBOR, Digest)
+    case wrapped(Envelope, Digest)
+    case knownPredicate(KnownPredicate, Digest)
+    case assertion(Assertion)
+    case encrypted(EncryptedMessage)
+    case elided(Digest)
+}
+
+public struct Assertion: DigestProvider {
+    public let predicate: Envelope
+    public let object: Envelope
+    public let digest: Digest
+}
+```
+
+The cases of `Envelope` are as follows. Except for `.node`, each case represents a "bare subject," i.e., a subject with no assertions. When a subject has at least one assertion, it is wrapped in a `.node` case.
+
+* `.node` A subject with one or more assertions.
+* `.leaf` A terminal CBOR object.
+* `.wrapped` An enclosed `Envelope`.
+* `.knownPredicate` An integer tagged as a predicate and typically used in the `predicate` position of an assertion.
+* `.assertion` A (predicate, object) pair.
+* `.encrypted` A subject that has been encrypted.
+* `.elided` A subject that has been elided.
+
 ### Envelope: CDDL
 
-|CBOR Tag|UR Type|Type|
-|---|---|---|
-|49|`envelope`|`Envelope`|
-|60||`plaintext`|
-
-If the `Envelope` has no assertions, the encoding is simply the `subject`. If the `Envelope` has one or more assertions, then the encoding is an array of two or more elements with the `subject` as the first element, followed by the assertions threaded into the array.
+|Tag|Type|
+|---|---|
+|200|`envelope`|
+|220|`leaf`|
+|221|`assertion`|
+|223|`knownPredicate`|
+|224|`wrappedEnvelope`|
 
 ```
-envelope = #6.49(
-    subject /
-    [ subject, ~assertions ]
+envelope = #6.200(
+    envelope-content
 )
-```
 
-The `assertions` are a sequence of one or more `assertion`.
-
-```
-assertions = [ 1* assertion ]
-```
-
-A subject can be a `envelope` as define above, or one of three other types defined below.
-
-```
-subject =
-    envelope /
+envelope-content(
+    node /
     leaf /
+    wrapped-envelope /
+    known-predicate /
+    assertion /
     encrypted /
     elided
-```
+)
 
-A `leaf` is any CBOR-encoded object tagged with #6.60 (`plaintext`).
+node = [envelope-content, + assertion]
 
-```
-leaf = #6.60(<<any>>)
-```
+leaf = #6.220(<<any>>)
 
-An `encrypted` is a tagged `EncryptedMessage`. The `Digest` of the encrypted plaintext is encoded in the `aad` (additional authenticated data) field of the message.
+wrapped-envelope = #6.224(envelope-content)
 
-```
+known-predicate = #6.223(uint)
+
+assertion = #6.221([envelope, envelope])
+
 encrypted = crypto-msg
-```
 
-An `elided` is the `Digest` of the elided item.
-
-```
 elided = digest
-```
-
-An `assertion` is a two-element array with the `predicate` as its first element and the `object` as its second. The `predicate` and `object` are `envelope`es as defined above.
-
-```
-assertion = [
-    predicate,
-    object
-]
-
-predicate = envelope
-object = envelope
 ```
 
 ---

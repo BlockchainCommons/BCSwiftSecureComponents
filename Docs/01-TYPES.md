@@ -25,7 +25,7 @@
 
 ## Introduction
 
-One of the key design elements in Blockchain Commons' overarcing Gordian system is that data be self-identifying. This dramatically reduces the possibility of vendor lock-in: even if an app becomes obsolete, the data can be read by another app that follows the same specifications. This self-identification is maintained in large part through the careful and consistent use of data typing.
+One of the key design elements in Blockchain Commons' overarching Gordian system is that data be self-identifying. This dramatically reduces the possibility of vendor lock-in: even if an app becomes obsolete, the data can be read by another app that follows the same specifications. This self-identification is maintained in large part through the careful and consistent use of data typing.
 
 ---
 
@@ -56,21 +56,28 @@ Many of the types defined herein are assigned CBOR tags for use when encoding th
 
 ## Tagged Types
 
-Types that do not define a UR type generally would never be serialized as a top-level object, but are frequently serialized as part of a larger structure. Some of the types below have a single-byte CBOR tag due to their frequency of use in the `Envelope` type.
+Types that do not define a UR type generally would never be serialized as a top-level object, but are frequently serialized as part of a larger structure.
 
-|CBOR Tag|Swift Type|
+|CBOR Tag|type|
 |---|---|
-|220|`Plaintext`|
-|221|`Assertion`|
-|222|`Signature`|
-|223|`KnownPredicate`|
-|230|`AgreementPublicKey`|
-|700|`Password`|
-|701|`Permit`|
-|702|`AgreementPrivateKey`|
-|704|`SigningPrivateKey`|
-|705|`SigningPublicKey`|
-|707|`Nonce`|
+|213|`function`|
+|214|`parameter`|
+|215|`request`|
+|216|`response`|
+|217|`placeholder`|
+|218|`replacement`|
+|220|`leaf`|
+|221|`assertion`|
+|222|`signature`|
+|223|`knownPredicate`|
+|224|`wrappedEnvelope`|
+|225|`elided`|
+|230|`agreementPublicKey`|
+|700|`password`|
+|702|`agreementPrivateKey`|
+|704|`signingPrivateKey`|
+|705|`signingPublicKey`|
+|707|`nonce`|
 
 ## Untagged Types
 
@@ -97,7 +104,7 @@ Lower-numbered CBOR tags take fewer bytes to encode, and are hence more desirabl
 
 Although there is no technical restriction on using any tag to represent anything, [tags are assigned by IANA](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml) to represent many common data types, and avoiding tag collision is generally desirable to facilitate interoperability.
 
-As there are fewer lowered-number tags, IANA has different requirements for recognizing tags reserved in different ranges.
+As there are fewer lowered-number tags, IANA has different requirements for recognizing tags reserved in different ranges:
 
 * Tags in the range 0-23 require standards action.
 * Tags in the range 24-32767 require a specification.
@@ -108,7 +115,7 @@ As of the date of this document, the [IANA Registry of CBOR Tags](https://www.ia
 * One byte encoding: 6-15, 19-20
 * Two byte encoding: 48-51, 53, 55-60, 62, 88-95, 99, 102, 105-109, 113-119, 128-255
 
-Currently Secure Components would benefit from having 17 of these tags. As we expect to file a specification at some point, we are choosing tags starting at #6.200 for highest-frequency tags.
+Currently Secure Components would benefit from having 21 of these tags. As we expect to file a specification at some point, we are choosing tags starting at #6.200 for highest-frequency tags.
 
 Blockchain Commons is applying for these numbers to be assigned to the CBOR specification herein, but because these numbers are in a range that is open to other applications, it may change. For now, these low-numbered tags MUST be understood as provisional and subject to change by all implementors.
 
