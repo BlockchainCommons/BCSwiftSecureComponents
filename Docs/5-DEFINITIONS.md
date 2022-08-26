@@ -8,7 +8,8 @@
 
 ## Contents
 
-* [Overview](1-OVERVIEW.md)
+* [Envelope Introduction](0-INTRODUCTION.md)
+* [Types](1-TYPES.md)
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
@@ -18,6 +19,7 @@
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * [Noncorrelation](9-NONCORRELATION.md)
 * [Elision and Redaction](10-ELISION-REDACTION.md)
+* [Appendix A: MVA Algorithm Suite](A-ALGORITHMS.md)
 
 ---
 
@@ -27,7 +29,7 @@ This section describes each component, and provides its CDDL definition for CBOR
 
 ## Envelope
 
-Please see [here](3-ENVELOPE.md) for a full description.
+Please see [here](2-ENVELOPE.md) for a full description.
 
 ### Envelope: Swift Definition
 
@@ -279,7 +281,7 @@ A Digest is a cryptographic hash of some source data. Currently Secure Component
 |---|---|
 |56|`Digest`|
 
-### CDDL for Digest
+### Digest: CDDL
 
 ```
 digest = #6.56(blake3-digest)

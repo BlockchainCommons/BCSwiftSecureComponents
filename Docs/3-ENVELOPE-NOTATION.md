@@ -8,7 +8,8 @@
 
 ## Contents
 
-* [Overview](1-OVERVIEW.md)
+* [Envelope Introduction](0-INTRODUCTION.md)
+* [Types](1-TYPES.md)
 * [Envelope Overview](2-ENVELOPE.md)
 * Envelope Notation: This document
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
@@ -18,6 +19,8 @@
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * [Noncorrelation](9-NONCORRELATION.md)
 * [Elision and Redaction](10-ELISION-REDACTION.md)
+* [Appendix A: MVA Algorithm Suite](A-ALGORITHMS.md)
+
 
 ---
 
@@ -304,6 +307,8 @@ A government wishes to issue a verifiable credential for permanent residency to 
 The holder of a credential can then selectively reveal any of the micro-claims in this document. For instance, the holder could reveal just their name, their photo, and the issuer's signature, thereby proving that the issuer did indeed certify those facts.
 
 Elision is performed by building a target set of `Digest`s that will be revealed. All digests not present in the target will be replaced with elision markers containing only the digest of what has been elided, thus preserving the Merkle tree including revealed signatures. If a higher-level object is elided, then everything it contains will also be elided, so if a deeper object is to be revealed, all of its parent objects up to the level of the verifying signature also need to be revealed, even though not everything *about* the parent objects must be revealed.
+
+See [Elision & Redaction](10-ELISION-REDACTION.md) for more on this topic.
 
 ```
 {

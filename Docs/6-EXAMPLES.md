@@ -8,7 +8,8 @@
 
 ## Contents
 
-* [Overview](1-OVERVIEW.md)
+* [Envelope Introduction](0-INTRODUCTION.md)
+* [Types](1-TYPES.md)
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * [Envelope Expressions](4-ENVELOPE-EXPRESSIONS.md)
@@ -18,6 +19,8 @@
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * [Noncorrelation](9-NONCORRELATION.md)
 * [Elision and Redaction](10-ELISION-REDACTION.md)
+* [Appendix A: MVA Algorithm Suite](A-ALGORITHMS.md)
+
 
 ---
 
@@ -88,6 +91,8 @@ XCTAssertEqual(receivedPlaintext, plaintext)
 
 ## Example 2: Signed Plaintext
 
+This example demonstrates the signature of a plaintext message.
+
 ```swift
 // Alice sends a signed plaintext message to Bob.
 let envelope = Envelope(plaintext)
@@ -124,6 +129,8 @@ XCTAssertThrowsError(try receivedEnvelope.verifySignatures(from: [alicePublicKey
 
 ## Example 3: Multisigned Plaintext
 
+This example demonstrates a plaintext message signed by more than one party.
+
 ```swift
 // Alice and Carol jointly send a signed plaintext message to Bob.
 let envelope = Envelope(plaintext)
@@ -151,6 +158,8 @@ XCTAssertEqual(receivedPlaintext, plaintext)
 ```
 
 ## Example 4: Symmetric Encryption
+
+This examples debuts the idea of an encrypted message, based on a symmetric key shared between two parties.
 
 ```swift
         // Alice and Bob have agreed to use this key.
@@ -186,6 +195,8 @@ EncryptedMessage
 ```
 
 ## Example 5: Sign-Then-Encrypt
+
+This example combines the previous ones, first signing, then encrypting a message with a symmetric key.
 
 ```swift
 // Alice and Bob have agreed to use this key.
@@ -257,6 +268,8 @@ EncryptedMessage [
 
 ## Example 7: Multi-Recipient Encryption
 
+This example demonstrates an encrypted message sent to multiple parties.
+
 ```swift
 // Alice encrypts a message so that it can only be decrypted by Bob or Carol.
 let contentKey = SymmetricKey()
@@ -298,6 +311,8 @@ EncryptedMessage [
 ```
 
 ## Example 8: Signed Multi-Recipient Encryption
+
+This example demonstrates a signed, then encrypted message, sent to multiple parties.
 
 ```swift
 // Alice signs a message, and then encrypts it so that it can only be decrypted by Bob or Carol.
@@ -345,6 +360,8 @@ EncryptedMessage [
 ```
 
 ## Example 9: Sharding a Secret using SSKR
+
+This example demonstrates the use of SSKR to shard a symmetric key that encrypted a message. The shares are then enclosed in individual envelopes and the seed can be recovered from those shares, allowing the future decryption of the message.
 
 ```swift
 // Dan has a cryptographic seed he wants to backup using a social recovery scheme.
@@ -401,6 +418,8 @@ EncryptedMessage [
 ```
 
 ## Example 10: Complex Metadata
+
+Complex, tiered metadata can be added to an envelope.
 
 ```swift
 // Assertions made about an CID are considered part of a distributed set. Which
@@ -462,7 +481,7 @@ Digest(886d35d99ded5e20c61868e57af2f112700b73f1778d48284b0e078503d00ac1) [
 
 ## Example 11: Common Identifier
 
-An analogue of a DID document, which identifies an entity. The document itself can be referred to by its CID, while the signed document can be referred to by its digest.
+This example offers an analogue of a DID document, which identifies an entity. The document itself can be referred to by its CID, while the signed document can be referred to by its digest.
 
 ```swift
 let aliceUnsignedDocument = Envelope(aliceIdentifier)
@@ -623,6 +642,8 @@ try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
 ```
 
 ## Example 12: Verifiable Credential
+
+Envelopes can also be built to support verifiable credentials, supporting the core functionality of CIDs.
 
 ```swift
 // John Smith's identifier

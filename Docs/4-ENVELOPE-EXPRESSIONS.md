@@ -8,7 +8,8 @@
 
 ## Contents
 
-* [Overview](1-OVERVIEW.md)
+* [Envelope Introduction](0-INTRODUCTION.md)
+* [Types](1-TYPES.md)
 * [Envelope Overview](2-ENVELOPE.md)
 * [Envelope Notation](3-ENVELOPE-NOTATION.md)
 * Envelope Expressions: This document
@@ -18,6 +19,7 @@
 * [Envelope SSKR Test Vectors](8-ENVELOPE-SSKR-TEST-VECTORS.md)
 * [Noncorrelation](9-NONCORRELATION.md)
 * [Elision and Redaction](10-ELISION-REDACTION.md)
+* [Appendix A: MVA Algorithm Suite](A-ALGORITHMS.md)
 
 ---
 
