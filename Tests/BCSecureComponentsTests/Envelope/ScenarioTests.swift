@@ -314,7 +314,7 @@ class ScenarioTests: XCTestCase {
         // revealed, all of its parent objects also need to be revealed, even though not
         // everything *about* the parent objects must be revealed.
 
-        // Start a reveal-set
+        // Start a target set
         var target: Set<Digest> = []
 
         // Reveal the card. Without this, everything about the card would be elided.

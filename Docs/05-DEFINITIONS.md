@@ -23,9 +23,123 @@
 
 ---
 
+## Sections of this Document
+
+* [AgreementPrivateKey](#agreementprivatekey)
+* [AgreementPublicKey](#agreementpublickey)
+* [CID](#cid)
+* [Digest](#digest)
+* [Envelope](#envelope)
+* [EncryptedMessage](#encryptedmessage)
+* [Nonce](#nonce)
+* [Password](#password)
+* [PrivateKeyBase](#privatekeybase)
+* [PublicKeyBase](#publickeybase)
+* [SealedMessage](#sealedmessage)
+* [Signature](#signature)
+* [SigningPrivateKey](#signingprivatekey)
+* [SigningPublicKey](#signingpublickey)
+* [SymmetricKey](#symmetrickey)
+
+---
+
 ## Introduction
 
 This section describes each component, and provides its CDDL definition for CBOR serialization.
+
+---
+
+## AgreementPrivateKey
+
+A Curve25519 private key used for [X25519 key agreement](https://datatracker.ietf.org/doc/html/rfc7748).
+
+### AgreementPrivateKey: Swift Definition
+
+```swift
+struct AgreementPrivateKey {
+    let data: Data
+}
+```
+
+### AgreementPrivateKey: CDDL
+
+|CBOR Tag|Swift Type|
+|---|---|
+|702|`AgreementPrivateKey`|
+
+```
+agreement-private-key = #6.702(key)
+
+key: bytes .size 32
+```
+
+---
+
+## AgreementPublicKey
+
+A Curve25519 public key used for [X25519 key agreement](https://datatracker.ietf.org/doc/html/rfc7748).
+
+### AgreementPublicKey: Swift Definition
+
+```swift
+struct AgreementPublicKey {
+    let data: Data
+}
+```
+
+### AgreementPublicKey: CDDL
+
+|CBOR Tag|Swift Type|
+|---|---|
+|230|`AgreementPublicKey`|
+
+```
+agreement-public-key = #6.62(key)
+
+key: bytes .size 230
+```
+
+---
+
+## CID
+
+A Common Identifier (CID) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `CID` or when it is resolved. In other words, the referent of a `CID` may be considered mutable.
+
+### CID: Swift Defintion
+
+```swift
+struct CID {
+    let data: Data
+}
+```
+
+### CID: CDDL
+
+```
+cid = #6.202(cid-data)
+
+cid-data = bytes .size 32
+```
+
+---
+
+## Digest
+
+A Digest is a cryptographic hash of some source data. Currently Secure Components specifies the use of [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf), but more algorithms may be supported in the future.
+
+|CBOR Tag|Swift Type|
+|---|---|
+|203|`Digest`|
+
+### Digest: CDDL
+
+```
+digest = #6.203(blake3-digest)
+
+blake3-digest: bytes .size 32
+```
+
+---
 
 ## Envelope
 
@@ -119,33 +233,11 @@ elided = digest
 
 ---
 
-## CID
-
-A Common Identifier (CID) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `CID` or when. In other words, the referent of a `CID` may be considered mutabled.
-
-### CID: Swift Defintion
-
-```swift
-struct CID {
-    let data: Data
-}
-```
-
-### CID: CDDL
-
-```
-cid = #6.58(cid-data)
-
-cid-data = bytes .size 32
-```
-
----
-
 ## EncryptedMessage
 
 `EncryptedMessage` is a symmetrically-encrypted message and is specified in full in [BCR-2022-001](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2022-001-secure-message.md).
 
-When used as part of Secure Components, and particularly with `Envelope`, the `aad` field contains the `Digest` of the encrypted plaintext. If non-correlation is necessary, then add random salt to the CBOR plaintext before encrypting.
+When used as part of Secure Components, and particularly with `Envelope`, the `aad` field contains the `Digest` of the encrypted plaintext. If non-correlation is necessary, then add random salt to the plaintext before encrypting.
 
 ### EncryptedMessage: Swift Definition
 
@@ -162,17 +254,69 @@ struct EncryptedMessage {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|48|`crypto-msg`|`EncryptedMessage`|
+|201|`crypto-msg`|`EncryptedMessage`|
 
 A `crypto-msg` is an array containing either 3 or 4 elements. If additional authenticated data `aad` is non-empty, it is included as the fourth element, and omitted otherwise. `aad` MUST NOT be present and non-empty.
 
 ```
-crypto-msg = #6.48([ ciphertext, nonce, auth, ? aad ])
+crypto-msg = #6.201([ ciphertext, nonce, auth, ? aad ])
 
 ciphertext: bytes       ; encrypted using ChaCha20
 aad: bytes              ; Additional Authenticated Data
 nonce: bytes .size 12   ; Random, generated at encryption-time
 auth: bytes .size 16    ; Authentication tag created by Poly1305
+```
+
+---
+
+## Nonce
+
+A `Nonce` is a cryptographically strong random "number used once" and is frequently used in algorithms where a random value is needed that should never be reused. Secure Components uses 12-byte nonces.
+
+```swift
+struct Nonce {
+    let data: Data
+}
+```
+
+## Nonce: CDDL
+
+```
+nonce = #6.707(bytes .size 12)
+```
+
+---
+
+## Password
+
+`Password` is a password that has been salted and hashed using [scrypt](https://datatracker.ietf.org/doc/html/rfc7914), and is thereofore suitable for storage and use for authenticating users via password. To validate an entered password, the same hashing algorithm using the same parameters and salt must be performed again, and the hashes compared to determine validity. This way the authenticator never needs to store the password. The processor and memory intensive design of the scrypt algorithm makes such hashes resistant to brute-force attacks.
+
+### Password: Swift Definition
+
+```swift
+struct Password {
+    let n: Int
+    let r: Int
+    let p: Int
+    let salt: Data
+    let data: Data
+}
+```
+
+### Password: CDDL
+
+|CBOR Tag|Swift Type|
+|---|---|
+|700|`Password`|
+
+```
+password = #6.700([n, r, p, salt, hashed-password])
+
+n: uint                             ; iterations
+r: uint                             ; block size
+p: uint                             ; parallelism factor
+salt: bytes                         ; random salt (16 bytes recommended)
+hashed-password: bytes              ; 32 bytes recommended
 ```
 
 ---
@@ -183,7 +327,7 @@ auth: bytes .size 16    ; Authentication tag created by Poly1305
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|50|`crypto-prvkeys`|`PrivateKeyBase`|
+|205|`crypto-prvkeys`|`PrivateKeyBase`|
 
 ### PrivateKeyBase: Swift Definition
 
@@ -196,7 +340,7 @@ struct PrivateKeyBase {
 ### PrivateKeyBase: CDDL
 
 ```
-crypto-prvkeys = #6.50([key-material])
+crypto-prvkeys = #6.205([key-material])
 
 key-material: bytes
 ```
@@ -227,12 +371,12 @@ struct PublicKeyBase {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|51|`crypto-pubkeys`|`PublicKeyBase`|
+|206|`crypto-pubkeys`|`PublicKeyBase`|
 
 A `crypto-pubkeys` is a two-element array with the first element being the `signing-public-key` and the second being the `agreement-public-key`.
 
 ```
-crypto-pubkeys = #6.51([signing-public-key, agreement-public-key])
+crypto-pubkeys = #6.206([signing-public-key, agreement-public-key])
 ```
 
 ---
@@ -254,116 +398,54 @@ struct SealedMessage {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|55|`crypto-sealed`|`SealedMessage`|
+|207|`crypto-sealed`|`SealedMessage`|
 
 ```
-crypto-sealed = #6.55([crypto-message, ephemeral-public-key])
+crypto-sealed = #6.207([crypto-message, ephemeral-public-key])
 
 ephemeral-public-key: agreement-public-key
 ```
 
 ---
 
-## Digest
+## Signature
 
-A Digest is a cryptographic hash of some source data. Currently Secure Components specifies the use of [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf), but more algorithms may be supported in the future.
+A cryptographic signature. It has two variants:
 
-|CBOR Tag|Swift Type|
-|---|---|
-|56|`Digest`|
+* A [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki) signature.
+* An ECDSA signature [ECDSA-25519-doublesha256](https://en.bitcoin.it/wiki/BIP_0137) signatures.
 
-### Digest: CDDL
-
-```
-digest = #6.56(blake3-digest)
-
-blake3-digest: bytes .size 32
-```
-
----
-
-## Password
-
-`Password` is a password that has been salted and hashed using [scrypt](https://datatracker.ietf.org/doc/html/rfc7914), and is thereofore suitable for storage and use for authenticating users via password. To validate an entered password, the same hashing algorithm using the same parameters and salt must be performed again, and the hashes compared to determine validity. This way the authenticator never needs to store the password. The processor and memory intensive design of the scrypt algorithm makes such hashes resistant to brute-force attacks.
-
-### Password: Swift Definition
+### Signature: Swift Definition
 
 ```swift
-struct Password {
-    let n: Int
-    let r: Int
-    let p: Int
-    let salt: Data
-    let data: Data
+public enum Signature {
+    case schnorr(data: Data, tag: Data)
+    case ecdsa(data: Data)
 }
 ```
 
-### Password: CDDL
+### Signature: CDDL
 
 |CBOR Tag|Swift Type|
 |---|---|
-|701|`Password`|
+|222|`Signature`|
+
+A `signature` has two variants. The Schnorr variant is preferred. Schnorr signatures may include tag data of arbitrary length.
+
+If the `signature-variant-schnorr` is selected and has no tag, it will appear directly as a byte string of length 64. If it includes tag data, it will appear as a two-element array where the first element is the signature and the second element is the tag. The second form MUST NOT be used if the tag data is empty.
+
+If the `signature-variant-ecdsa` is selected, it will appear as a two-element array where the first element is `1` and the second element is a byte string of length 64.
 
 ```
-password = #6.701([n, r, p, salt, hashed-password])
+signature = #6.222([ signature-variant-schnorr / signature-variant-ecdsa ])
 
-n: uint                             ; iterations
-r: uint                             ; block size
-p: uint                             ; parallelism factor
-salt: bytes                         ; random salt (16 bytes recommended)
-hashed-password: bytes              ; 32 bytes recommended
-```
+signature-variant-schnorr = signature-schnorr / signature-schnorr-tagged
+signature-schnorr: bytes .size 64
+signature-schnorr-tagged: [signature-schnorr, schnorr-tag]
+schnorr-tag: bytes .size ne 0
 
----
-
-## AgreementPrivateKey
-
-A Curve25519 private key used for [X25519 key agreement](https://datatracker.ietf.org/doc/html/rfc7748).
-
-### AgreementPrivateKey: Swift Definition
-
-```swift
-struct AgreementPrivateKey {
-    let data: Data
-}
-```
-
-### AgreementPrivateKey: CDDL
-
-|CBOR Tag|Swift Type|
-|---|---|
-|702|`AgreementPrivateKey`|
-
-```
-agreement-private-key = #6.702(key)
-
-key: bytes .size 32
-```
-
----
-
-## AgreementPublicKey
-
-A Curve25519 public key used for [X25519 key agreement](https://datatracker.ietf.org/doc/html/rfc7748).
-
-### AgreementPublicKey: Swift Definition
-
-```swift
-struct AgreementPublicKey {
-    let data: Data
-}
-```
-
-### AgreementPublicKey: CDDL
-
-|CBOR Tag|Swift Type|
-|---|---|
-|62|`AgreementPublicKey`|
-
-```
-agreement-public-key = #6.62(key)
-
-key: bytes .size 32
+signature-variant-ecdsa = [ 1, signature-ecdsa ]
+signature-ecdsa: bytes .size 64
 ```
 
 ---
@@ -430,48 +512,6 @@ key-ecdsa: bytes .size 33
 
 ---
 
-## Signature
-
-A cryptographic signature. It has two variants:
-
-* A [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki) signature.
-* An ECDSA signature [ECDSA-25519-doublesha256](https://en.bitcoin.it/wiki/BIP_0137) signatures.
-
-### Signature: Swift Definition
-
-```swift
-public enum Signature {
-    case schnorr(data: Data, tag: Data)
-    case ecdsa(data: Data)
-}
-```
-
-### Signature: CDDL
-
-|CBOR Tag|Swift Type|
-|---|---|
-|61|`Signature`|
-
-A `signature` has two variants. The Schnorr variant is preferred. Schnorr signatures may include tag data of arbitrary length.
-
-If the `signature-variant-schnorr` is selected and has no tag, it will appear directly as a byte string of length 64. If it includes tag data, it will appear as a two-element array where the first element is the signature and the second element is the tag. The second form MUST NOT be used if the tag data is empty.
-
-If the `signature-variant-ecdsa` is selected, it will appear as a two-element array where the first element is `1` and the second element is a byte string of length 64.
-
-```
-signature = #6.61([ signature-variant-schnorr / signature-variant-ecdsa ])
-
-signature-variant-schnorr = signature-schnorr / signature-schnorr-tagged
-signature-schnorr: bytes .size 64
-signature-schnorr-tagged: [signature-schnorr, schnorr-tag]
-schnorr-tag: bytes .size ne 0
-
-signature-variant-ecdsa = [ 1, signature-ecdsa ]
-signature-ecdsa: bytes .size 64
-```
-
----
-
 ## SymmetricKey
 
 A symmetric key for encryption and decryption of [IETF-ChaCha20-Poly1305](https://datatracker.ietf.org/doc/html/rfc8439) messages.
@@ -488,9 +528,9 @@ public struct SymmetricKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|57|`SymmetricKey`|
+|204|`SymmetricKey`|
 
 ```
-symmetric-key = #6.57( symmetric-key-data )
+symmetric-key = #6.204( symmetric-key-data )
 symmetric-key-data: bytes .size 32
 ```

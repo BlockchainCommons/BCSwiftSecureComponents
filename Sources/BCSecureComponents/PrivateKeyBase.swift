@@ -18,8 +18,7 @@ extension Data: PrivateKeysDataProvider {
     }
 }
 
-/// Holds unique data from which keys for signing and encryption can be derived and
-/// a field of random salt used in the key derivation process.
+/// Holds unique data from which keys for signing and encryption can be derived.
 ///
 /// Derivation is performed used BLAKE3.
 ///
