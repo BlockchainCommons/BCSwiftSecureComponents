@@ -23,7 +23,7 @@ public struct Digest: CustomStringConvertible, Hashable {
         self.init(data, digestLength: digestLength)
     }
     
-    init?(rawValue: Data, digestLength: Int = defaultDigestLength) {
+    public init?(rawValue: Data, digestLength: Int = defaultDigestLength) {
         guard rawValue.count == digestLength else {
             return nil
         }
