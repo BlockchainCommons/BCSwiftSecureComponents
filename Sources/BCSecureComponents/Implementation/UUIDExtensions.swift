@@ -29,3 +29,13 @@ extension UUID {
         try self.init(untaggedCBOR: untaggedCBOR)
     }
 }
+
+extension UUID: CBORCodable {
+    public static func cborDecode(_ cbor: CBOR) throws -> UUID {
+        try UUID(taggedCBOR: cbor)
+    }
+    
+    public var cbor: CBOR {
+        taggedCBOR
+    }
+}
