@@ -950,6 +950,10 @@ public extension Envelope {
         try self.init(untaggedCBOR: cbor)
     }
     
+    init(urString: String) throws {
+        try self.init(ur: UR(urString: urString))
+    }
+    
     init?(taggedCBOR: Data) {
         try? self.init(taggedCBOR: CBOR(taggedCBOR))
     }
