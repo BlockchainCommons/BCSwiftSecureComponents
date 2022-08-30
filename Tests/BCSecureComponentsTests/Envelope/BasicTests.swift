@@ -18,6 +18,48 @@ class BasicTests: XCTestCase {
         addKnownTags()
     }
     
+    func testIntSubject() throws {
+        let e = try Envelope(42).checkEncoding()
+        
+        XCTAssertEqual(e.diagAnnotated,
+        """
+        200(   ; envelope
+           220(42)   ; leaf
+        )
+        """)
+
+        XCTAssertEqual(e.digest†, "Digest(b828e7bda50941d5618ae287093288dd06a229250fca262764a408defd29f91c)")
+
+        XCTAssertEqual(e.format,
+        """
+        42
+        """
+        )
+
+        XCTAssertEqual(try e.extractSubject(Int.self), 42)
+    }
+    
+    func testNegativeIntSubject() throws {
+        let e = try Envelope(-42).checkEncoding()
+        
+        XCTAssertEqual(e.diagAnnotated,
+        """
+        200(   ; envelope
+           220(-42)   ; leaf
+        )
+        """)
+
+        XCTAssertEqual(e.digest†, "Digest(a5deb6e4c1b034cfc4027271e4a2c777f08ced8060fa77156c4f0e494b03b741)")
+
+        XCTAssertEqual(e.format,
+        """
+        -42
+        """
+        )
+
+        XCTAssertEqual(try e.extractSubject(Int.self), -42)
+    }
+
     func testCBOREncodableSubject() throws {
         let e = try Self.basicEnvelope.checkEncoding()
         
@@ -35,7 +77,8 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e.format,
         """
         "Hello."
-        """)
+        """
+        )
         
         XCTAssertEqual(try e.extractSubject(String.self), "Hello.")
     }

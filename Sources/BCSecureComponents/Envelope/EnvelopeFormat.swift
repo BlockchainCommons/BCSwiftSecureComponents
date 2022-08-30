@@ -27,7 +27,7 @@ extension CBOR: EnvelopeFormat {
             case .unsignedInt(let n):
                 return .item(String(n))
             case .negativeInt(let n):
-                return .item(String(n))
+                return .item(String(-Int(n) - 1))
             case .float(let n):
                 return .item(String(n))
             case .double(let n):
