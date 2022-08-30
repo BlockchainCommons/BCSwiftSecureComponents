@@ -23,7 +23,7 @@ extension CID: CustomStringConvertible {
 }
 
 public extension CID {
-    init?(_ hex: String) {
+    init?(hex: String) {
         guard let data = Data(hex: hex) else {
             return nil
         }

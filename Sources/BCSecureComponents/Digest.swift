@@ -29,20 +29,35 @@ public struct Digest: CustomStringConvertible, Hashable {
         }
         self.data = rawValue
     }
-    
-    public var description: String {
+}
+
+public extension Digest {
+    var description: String {
         "Digest(\(data.hex))"
     }
     
-    public func validate(_ data: DataProvider) -> Bool {
+    func validate(_ data: DataProvider) -> Bool {
         self == Digest(data, digestLength: self.data.count)
     }
     
-    public static func validate(_ data: DataProvider, digest: Digest?) -> Bool {
+    static func validate(_ data: DataProvider, digest: Digest?) -> Bool {
         guard let digest else {
             return true
         }
         return digest.validate(data)
+    }
+}
+
+public extension Digest {
+    init?(hex: String) {
+        guard let data = Data(hex: hex) else {
+            return nil
+        }
+        self.init(data)
+    }
+    
+    var hex: String {
+        data.hex
     }
 }
 
@@ -52,23 +67,23 @@ extension Digest: Comparable {
     }
 }
 
-extension Digest {
-    public var untaggedCBOR: CBOR {
+public extension Digest {
+    var untaggedCBOR: CBOR {
         CBOR.data(self.data)
     }
     
-    public var taggedCBOR: CBOR {
+    var taggedCBOR: CBOR {
         CBOR.tagged(.digest, untaggedCBOR)
     }
     
-    public static func optionalTaggedCBOR(_ digest: Digest?) -> CBOR {
+    static func optionalTaggedCBOR(_ digest: Digest?) -> CBOR {
         guard let digest else {
             return CBOR.null
         }
         return digest.taggedCBOR
     }
     
-    public init(untaggedCBOR: CBOR) throws {
+    init(untaggedCBOR: CBOR) throws {
         guard
             case let CBOR.data(data) = untaggedCBOR,
             let digest = Digest(rawValue: data)
@@ -78,18 +93,18 @@ extension Digest {
         self = digest
     }
     
-    public init(taggedCBOR: CBOR) throws {
+    init(taggedCBOR: CBOR) throws {
         guard case let CBOR.tagged(.digest, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
     }
     
-    public init?(taggedCBOR: Data) {
+    init?(taggedCBOR: Data) {
         try? self.init(taggedCBOR: CBOR(taggedCBOR))
     }
     
-    public init?(optionalTaggedCBOR cbor: CBOR) throws {
+    init?(optionalTaggedCBOR cbor: CBOR) throws {
         guard cbor != .null else {
             return nil
         }
@@ -97,12 +112,12 @@ extension Digest {
     }
 }
 
-extension Digest {
-    public var ur: UR {
+public extension Digest {
+    var ur: UR {
         return try! UR(type: .digest, cbor: untaggedCBOR)
     }
     
-    public init(ur: UR) throws {
+    init(ur: UR) throws {
         try ur.checkType(.digest)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
