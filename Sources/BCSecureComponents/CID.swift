@@ -1,7 +1,7 @@
 import Foundation
 import URKit
 
-public struct CID: CustomStringConvertible, Equatable, Hashable {
+public struct CID: Equatable, Hashable {
     public let data: Data
     
     public init?(_ data: Data) {
@@ -14,22 +14,37 @@ public struct CID: CustomStringConvertible, Equatable, Hashable {
     public init() {
         self.init(SecureRandomNumberGenerator.shared.data(count: 32))!
     }
-    
+}
+
+extension CID: CustomStringConvertible {
     public var description: String {
         data.hex.flanked("CID(", ")")
     }
 }
 
-extension CID {
-    public var untaggedCBOR: CBOR {
+public extension CID {
+    init?(_ hex: String) {
+        guard let data = Data(hex: hex) else {
+            return nil
+        }
+        self.init(data)
+    }
+    
+    var hex: String {
+        data.hex
+    }
+}
+
+public extension CID {
+    var untaggedCBOR: CBOR {
         CBOR.data(data)
     }
     
-    public var taggedCBOR: CBOR {
+    var taggedCBOR: CBOR {
         CBOR.tagged(.cid, untaggedCBOR)
     }
     
-    public init(untaggedCBOR: CBOR) throws {
+    init(untaggedCBOR: CBOR) throws {
         guard
             case let CBOR.data(data) = untaggedCBOR,
             let value = CID(data)
@@ -39,24 +54,24 @@ extension CID {
         self = value
     }
     
-    public init(taggedCBOR: CBOR) throws {
+    init(taggedCBOR: CBOR) throws {
         guard case let CBOR.tagged(.cid, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
         try self.init(untaggedCBOR: untaggedCBOR)
     }
     
-    public init?(taggedCBOR: Data) {
+    init?(taggedCBOR: Data) {
         try? self.init(taggedCBOR: CBOR(taggedCBOR))
     }
 }
 
-extension CID {
-    public var ur: UR {
+public extension CID {
+    var ur: UR {
         return try! UR(type: .cid, cbor: untaggedCBOR)
     }
     
-    public init(ur: UR) throws {
+    init(ur: UR) throws {
         try ur.checkType(.cid)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
