@@ -109,7 +109,11 @@ extension Digest {
     }
 }
 
-extension Digest: CBOREncodable {
+extension Digest: CBORCodable {
+    public static func cborDecode(_ cbor: URKit.CBOR) throws -> Digest {
+        try Digest(taggedCBOR: cbor)
+    }
+    
     public var cbor: CBOR {
         taggedCBOR
     }
