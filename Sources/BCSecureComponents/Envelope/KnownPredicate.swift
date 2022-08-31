@@ -3,16 +3,16 @@ import URKit
 
 public struct KnownPredicate {
     public let rawValue: UInt64
-    public let name: String
+    public let assignedName: String?
     
-    public init(_ rawValue: UInt64, _ name: String) {
+    public init(_ rawValue: UInt64, _ name: String?) {
         self.rawValue = rawValue
-        self.name = name
+        self.assignedName = name
     }
     
     public init(rawValue: UInt64) {
         guard let p = knownPredicatesByRawValue[rawValue] else {
-            self = KnownPredicate(rawValue, "UNKNOWN")
+            self = KnownPredicate(rawValue, nil)
             return
         }
         self = p
@@ -23,6 +23,10 @@ public struct KnownPredicate {
             return nil
         }
         self = p
+    }
+    
+    public var name: String {
+        return assignedName ?? String(rawValue)
     }
 }
 
@@ -77,8 +81,8 @@ fileprivate var knownPredicatesByRawValue: [UInt64: KnownPredicate] = {
 fileprivate var knownPredicatesByName: [String: KnownPredicate] = {
     var result: [String: KnownPredicate] = [:]
     knownPredicates.forEach {
-        if !$0.name.isEmpty {
-            result[$0.name] = $0
+        if let name = $0.assignedName {
+            result[name] = $0
         }
     }
     return result
@@ -92,7 +96,7 @@ extension KnownPredicate: Equatable {
 
 extension KnownPredicate: CustomStringConvertible {
     public var description: String {
-        name
+        assignedName ?? String(rawValue)
     }
 }
 
