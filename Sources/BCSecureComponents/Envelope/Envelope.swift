@@ -53,18 +53,19 @@ public extension Envelope {
         !assertions.isEmpty
     }
     
-    var predicate: Envelope? {
+    var assertion: Assertion? {
         guard case .assertion(let assertion) = self else {
             return nil
         }
-        return assertion.predicate
+        return assertion
+    }
+    
+    var predicate: Envelope? {
+        assertion?.predicate
     }
     
     var object: Envelope? {
-        guard case .assertion(let assertion) = self else {
-            return nil
-        }
-        return assertion.object
+        assertion?.object
     }
     
     var leaf: CBOR? {
