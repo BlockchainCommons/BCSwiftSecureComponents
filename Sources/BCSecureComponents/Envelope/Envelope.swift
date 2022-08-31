@@ -73,6 +73,13 @@ public extension Envelope {
         }
         return cbor
     }
+    
+    var knownPredicate: KnownPredicate? {
+        guard case .knownPredicate(let knownPredicate, _) = self else {
+            return nil
+        }
+        return knownPredicate
+    }
 }
 
 public extension Envelope {
@@ -113,6 +120,13 @@ public extension Envelope {
     
     var isWrapped: Bool {
         guard case .wrapped = self else {
+            return false
+        }
+        return true
+    }
+    
+    var isKnownPredicate: Bool {
+        guard case .knownPredicate = self else {
             return false
         }
         return true
