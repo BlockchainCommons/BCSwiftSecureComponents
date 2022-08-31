@@ -17,6 +17,13 @@ public struct KnownPredicate {
         }
         self = p
     }
+    
+    public init?(name: String) {
+        guard let p = knownPredicatesByName[name] else {
+            return nil
+        }
+        self = p
+    }
 }
 
 public extension KnownPredicate {
@@ -63,6 +70,16 @@ fileprivate var knownPredicatesByRawValue: [UInt64: KnownPredicate] = {
     var result: [UInt64: KnownPredicate] = [:]
     knownPredicates.forEach {
         result[$0.rawValue] = $0
+    }
+    return result
+}()
+
+fileprivate var knownPredicatesByName: [String: KnownPredicate] = {
+    var result: [String: KnownPredicate] = [:]
+    knownPredicates.forEach {
+        if !$0.name.isEmpty {
+            result[$0.name] = $0
+        }
     }
     return result
 }()
