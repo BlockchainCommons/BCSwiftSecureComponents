@@ -66,6 +66,10 @@ extension PublicKeyBase {
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
+    
+    init(urString: String) throws {
+        try self.init(ur: UR(urString: urString))
+    }
 }
 
 extension PublicKeyBase: CBOREncodable {

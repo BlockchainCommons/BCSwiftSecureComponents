@@ -70,8 +70,7 @@ extension Seed {
     }
 
     public init(urString: String) throws {
-        let ur = try URDecoder.decode(urString)
-        try self.init(ur: ur)
+        try self.init(ur: UR(urString: urString))
     }
 
     public init(cborData: Data) throws {

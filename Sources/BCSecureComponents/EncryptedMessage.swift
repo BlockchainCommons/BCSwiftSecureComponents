@@ -143,6 +143,10 @@ extension EncryptedMessage {
         try self.init(untaggedCBOR: cbor)
     }
     
+    init(urString: String) throws {
+        try self.init(ur: UR(urString: urString))
+    }
+
     public static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
         try ur.checkType(.message)
         let cbor = try CBOR(ur.cbor)
