@@ -85,12 +85,12 @@ extension SymmetricKey {
     }
 }
 
-extension SymmetricKey {
-    public var ur: UR {
+public extension SymmetricKey {
+    var ur: UR {
         return try! UR(type: .symmetricKey, cbor: untaggedCBOR)
     }
     
-    public init(ur: UR) throws {
+    init(ur: UR) throws {
         try ur.checkType(.symmetricKey)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)

@@ -132,12 +132,12 @@ extension EncryptedMessage {
     }
 }
 
-extension EncryptedMessage {
-    public var ur: UR {
+public extension EncryptedMessage {
+    var ur: UR {
         return try! UR(type: .message, cbor: untaggedCBOR)
     }
     
-    public init(ur: UR) throws {
+    init(ur: UR) throws {
         try ur.checkType(.message)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
@@ -147,7 +147,7 @@ extension EncryptedMessage {
         try self.init(ur: UR(urString: urString))
     }
 
-    public static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
+    static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
         try ur.checkType(.message)
         let cbor = try CBOR(ur.cbor)
         return try Self.decode(cbor: cbor)

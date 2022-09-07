@@ -76,12 +76,12 @@ extension PrivateKeyBase {
     }
 }
 
-extension PrivateKeyBase {
-    public var ur: UR {
+public extension PrivateKeyBase {
+    var ur: UR {
         return try! UR(type: .privateKeyBase, cbor: untaggedCBOR)
     }
     
-    public init(ur: UR) throws {
+    init(ur: UR) throws {
         try ur.checkType(.privateKeyBase)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
