@@ -294,7 +294,7 @@ let bobReceivedPlaintext = try receivedEnvelope
     .extractSubject(String.self)
 XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
-// Alice decrypts and reads the message
+// Carol decrypts and reads the message
 let carolReceivedPlaintext = try receivedEnvelope
     .decrypt(to: carolPrivateKeys)
     .extractSubject(String.self)
