@@ -11,28 +11,28 @@ final class EnvelopeTestVectors: XCTestCase {
             explanation: "The simplest case: encoding a plaintext string as the envelope's `subject`. The `subject` can be any CBOR-encodable structure.",
             envelope: Envelope(plaintextHello)
         )
-        
+
         let signedPlaintext = TestCase(
             name: "Signed Plaintext",
             explanation: "A string has been signed by Alice.",
             envelope: Envelope(plaintextHello)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
         )
-        
+
         let multisignedPlaintext = TestCase(
             name: "Multisigned Plaintext",
             explanation: "Alice and Carol jointly send a signed plaintext message to Bob.",
             envelope: Envelope(plaintextHello)
                 .sign(with: [alicePrivateKeys, carolPrivateKeys], randomGenerator: generateFakeRandomNumbers)
         )
-        
+
         let symmetricEncryption = TestCase(
             name: "Symmetric Encryption",
             explanation: "Alice and Bob have agreed to use a symmetric key.",
             envelope: try Envelope(plaintextHello)
                 .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
         )
-        
+
         let signThenEncrypt = TestCase(
             name: "Sign Then Encrypt",
             explanation: "A message is first signed, then encrypted. Its signature can only be checked once the envelope is decrypted.",
@@ -41,7 +41,7 @@ final class EnvelopeTestVectors: XCTestCase {
                 .wrap()
                 .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
         )
-        
+
         let encryptThenSign = TestCase(
             name: "Encrypt Then Sign",
             explanation: "A message is first encrypted, then signed. Its signature may be checked before the envelope is decrypted.",
@@ -49,7 +49,7 @@ final class EnvelopeTestVectors: XCTestCase {
                 .encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
                 .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
         )
-        
+
         let multiRecipient = TestCase(
             name: "Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload.",
@@ -58,7 +58,7 @@ final class EnvelopeTestVectors: XCTestCase {
                 .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
-        
+
         let visibleSignatureMultiRecipient = TestCase(
             name: "Visible Signature Multi-Recipient",
             explanation: "Alice encrypts a message using the public keys of Bob and Carol so that it can only be decrypted by the private key of either Bob or Carol. Each of the `SealedMessage` encrypts just the symmetric key used to encrypt the payload. Alice then signs the envelope so her signature may be verified by anyone with her public key.",
@@ -68,13 +68,13 @@ final class EnvelopeTestVectors: XCTestCase {
                 .addRecipient(bobPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
                 .addRecipient(carolPublicKeys, contentKey: fakeContentKey, testKeyMaterial: fakeContentKey, testNonce: fakeNonce)
         )
-        
+
         let verifiableCredential = TestCase(
             name: "Verifiable Credential",
             explanation: "John Smith is issued a Permanent Resident Card signed by the State of Example",
             envelope: Self.johnSmithResidentCard
         )
-        
+
         let elidedCredential = TestCase(
             name: "Redacted Verifiable Credential",
             explanation: "John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity. Despite redacting numerous fields, the overall digest of the elided structure is the same, and the signature still validates.",
@@ -98,7 +98,7 @@ final class EnvelopeTestVectors: XCTestCase {
                 testCase.index = $0.0 + 1
                 return testCase
             }
-        
+
         let text = formatDocument(chapterNumber: chapterNumber, testCases: testCases)
         writeDocFile(tocFilename(at: chapterNumber), text)
     }
@@ -106,26 +106,26 @@ final class EnvelopeTestVectors: XCTestCase {
     @StringBuilder
     private func formatDocument(chapterNumber: Int, testCases: [TestCase]) -> String {
         documentHeader("Envelope Test Vectors")
-        
+
         formatTableOfContents(itemIndex: chapterNumber)
 
         header2("Introduction")
-        
+
         paragraph("This document provides test vectors for `envelope`. It is generated by `EnvelopeTestVectors.testGenerateEnvelopeTestVectors()` in the `BCSwiftSecureComponents` test suite.")
 
         header2("Status")
 
         paragraph("This document is a draft with a reference implementation in [BCSwiftSecureComponents](https://github.com/blockchaincommons/BCSwiftSecureComponents).")
-        
+
         divider()
-        
+
         paragraph("These test vectors use these fixed seed values, from which other key pairs are derived:")
         list([
             "Alice's Seed: `\(aliceSeed.data.hex)`",
             "Bob's Seed: `\(bobSeed.data.hex)`",
             "Carol's Seed: `\(carolSeed.data.hex)`",
         ])
-        
+
         paragraph("These objects are normally random, but they are fixed for these test vectors:")
         list([
             "Symmetric key used for encryption: `\(fakeContentKey.data.hex)`",
@@ -134,7 +134,7 @@ final class EnvelopeTestVectors: XCTestCase {
         ])
 
         formatIndex(testCases)
-        
+
         testCases.map {
             $0.format()
         }.joined(separator: "\n")
@@ -145,40 +145,40 @@ final class EnvelopeTestVectors: XCTestCase {
         var name: String
         var explanation: String
         var envelope: Envelope
-        
+
         init(index: Int = 0, name: String, explanation: String, envelope: Envelope) {
             self.index = index
             self.name = name
             self.explanation = explanation
             self.envelope = envelope
         }
-        
+
         var title: String {
             "TEST VECTOR \(index): \(name)"
         }
-        
+
         @StringBuilder
         func format() -> String {
             header2(title)
-            
+
             paragraph(explanation)
-            
+
             header3("Payload in Envelope Notation")
             monospaced(envelope.format)
-            
+
             header3("UR")
             note("The CBOR in a UR is never tagged, because the UR `type` field serves this purpose.")
             monospaced(envelope.ur†)
-            
+
             header3("Tagged CBOR Binary")
             monospaced(envelope.taggedCBOR.hex)
-            
+
             header3("Tagged CBOR Diagnostic Notation")
             monospaced(envelope.diagAnnotated)
-            
+
             header3("Tagged CBOR Annotated Binary")
             monospaced(envelope.dump)
-            
+
             divider()
         }
     }
@@ -192,7 +192,7 @@ final class EnvelopeTestVectors: XCTestCase {
         result.append(divider())
         return result.joined(separator: "\n")
     }
-    
+
     // John Smith's identifier
     static let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 
@@ -224,7 +224,7 @@ final class EnvelopeTestVectors: XCTestCase {
         .addAssertion(.note, "The State of Example recognizes JOHN SMITH as a Permanent Resident.")
         .wrap()
         .sign(with: statePrivateKeys, note: "Made by the State of Example.", randomGenerator: generateFakeRandomNumbers)
-    
+
     static let johnSmithRedactedCredential: Envelope = try! {
         var target: Set<Digest> = []
 
@@ -255,14 +255,14 @@ final class EnvelopeTestVectors: XCTestCase {
         try target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
         try target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
         try target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
-        
+
         // Perform the elision
         let elidedCredential = try top.elideRevealing(target).checkEncoding()
 
         // Verify that the elided credential compares equal to the original credential.
         XCTAssertEqual(elidedCredential, johnSmithResidentCard)
-        
+
         // Verify that the state's signature on the elided card is still valid.
-        return try! elidedCredential.validateSignature(from: statePublicKeys)
+        return try! elidedCredential.verifySignature(from: statePublicKeys)
     }()
 }

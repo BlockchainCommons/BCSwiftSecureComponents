@@ -8,19 +8,19 @@ class BasicTests: XCTestCase {
     static let wrappedEnvelope = Envelope(basicEnvelope)
     static let doubleWrappedEnvelope = Envelope(wrappedEnvelope)
     static let assertionEnvelope = Envelope(predicate: "knows", object: "Bob")
-    
+
     static let singleAssertionEnvelope = Envelope("Alice")
         .addAssertion("knows", "Bob")
     static let doubleAssertionEnvelope = singleAssertionEnvelope
         .addAssertion("knows", "Carol")
-    
+
     override class func setUp() {
         addKnownTags()
     }
-    
+
     func testIntSubject() throws {
         let e = try Envelope(42).checkEncoding()
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
@@ -38,10 +38,10 @@ class BasicTests: XCTestCase {
 
         XCTAssertEqual(try e.extractSubject(Int.self), 42)
     }
-    
+
     func testNegativeIntSubject() throws {
         let e = try Envelope(-42).checkEncoding()
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
@@ -62,37 +62,37 @@ class BasicTests: XCTestCase {
 
     func testCBOREncodableSubject() throws {
         let e = try Self.basicEnvelope.checkEncoding()
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
            220("Hello.")   ; leaf
         )
         """)
-        
+
         try e.checkEncoding()
-        
+
         XCTAssertEqual(e.digest†, "Digest(886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5)")
-        
+
         XCTAssertEqual(e.format,
         """
         "Hello."
         """
         )
-        
+
         XCTAssertEqual(try e.extractSubject(String.self), "Hello.")
     }
-    
+
     func testKnownPredicateSubject() throws {
         let e = try Self.knownPredicateEnvelope.checkEncoding()
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
            223(4)   ; known-predicate
         )
         """)
-        
+
         try e.checkEncoding()
 
         XCTAssertEqual(e.digest†, "Digest(61fb6a6b9699d363cafbd309506125c95234b64479f5671cb45cbe7013ffdcf5)")
@@ -104,7 +104,7 @@ class BasicTests: XCTestCase {
 
         XCTAssertEqual(try e.extractSubject(KnownPredicate.self), .note)
     }
-    
+
     func testAssertionSubject() throws {
         let e = try Self.assertionEnvelope.checkEncoding()
 
@@ -123,7 +123,7 @@ class BasicTests: XCTestCase {
            )
         )
         """)
-        
+
         try e.checkEncoding()
 
         XCTAssertEqual(e.digest†, "Digest(55560bdf060f1220199c87e84e29cecef96ef811de4f399dab2fde9425d0d418)")
@@ -135,10 +135,10 @@ class BasicTests: XCTestCase {
 
         XCTAssertEqual(try e.extractSubject(Assertion.self), Assertion(predicate: "knows", object: "Bob"))
     }
-    
+
     func testSubjectWithAssertion() throws {
         let e = Self.singleAssertionEnvelope
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
@@ -161,11 +161,11 @@ class BasicTests: XCTestCase {
            ]
         )
         """)
-        
+
         try e.checkEncoding()
 
         XCTAssertEqual(e.digest†, "Digest(e54d6fd38e9952f0d781a08549934cffd28c8e1ef407917fa8e96df69f5f2a90)")
-        
+
         XCTAssertEqual(e.format,
         """
         "Alice" [
@@ -175,10 +175,10 @@ class BasicTests: XCTestCase {
 
         XCTAssertEqual(try e.extractSubject(String.self), "Alice")
     }
-    
+
     func testSubjectWithTwoAssertions() throws {
         let e = Self.doubleAssertionEnvelope
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
@@ -252,7 +252,7 @@ class BasicTests: XCTestCase {
         }
         """)
     }
-    
+
     func testDoubleWrapped() throws {
         let e = try Self.doubleWrappedEnvelope.checkEncoding()
 
@@ -280,24 +280,24 @@ class BasicTests: XCTestCase {
         }
         """)
     }
-    
+
     func encryptedTest(_ e1: Envelope) throws {
         let e2 = try e1
             .encryptSubject(with: symmetricKey, testNonce: fakeNonce)
             .checkEncoding()
-        
+
         XCTAssertEqual(e1, e2)
         XCTAssertEqual(e1.subject.digest, e2.subject.digest)
-        
+
         let encryptedMessage = try e2.extractSubject(EncryptedMessage.self)
         XCTAssertEqual(encryptedMessage.digest, e1.subject.digest)
-        
+
         let e3 = try e2
             .decryptSubject(with: symmetricKey)
 
         XCTAssertEqual(e1, e3)
     }
-    
+
     func testEncrypted() throws {
         try encryptedTest(Self.basicEnvelope)
         try encryptedTest(Self.wrappedEnvelope)
@@ -307,7 +307,7 @@ class BasicTests: XCTestCase {
         try encryptedTest(Self.singleAssertionEnvelope)
         try encryptedTest(Self.doubleAssertionEnvelope)
     }
-    
+
     func testSignWrapEncrypt() throws {
         let e1 = Self.basicEnvelope
         //print(e1.format)
@@ -323,24 +323,24 @@ class BasicTests: XCTestCase {
         let e4 = try e3
             .encryptSubject(with: symmetricKey)
         //print(e4.format)
-        
+
         let d3 = try e4
             .decryptSubject(with: symmetricKey)
         //print(d3.format)
         XCTAssertEqual(d3, e3)
-        
+
         let d2 = try d3
             .unwrap()
         //print(d2.format)
         XCTAssertEqual(d2, e2)
-        
-        try d2.validateSignature(from: alicePublicKeys)
-        
+
+        try d2.verifySignature(from: alicePublicKeys)
+
         let d1 = d2.subject
         //print(d1.format)
         XCTAssertEqual(d1, e1)
     }
-    
+
     func testSignWrapEncryptToRecipient() throws {
         let e1 = Self.basicEnvelope
             .sign(with: alicePrivateKeys)
@@ -354,12 +354,12 @@ class BasicTests: XCTestCase {
         let e3 = e2
             .addRecipient(bobPublicKeys, contentKey: symmetricKey)
         //print(e3.format)
-        
+
         let d1 = try e3.decrypt(to: bobPrivateKeys)
         //print(d1.format)
         XCTAssertEqual(d1, e1)
     }
-    
+
     func testEncryptDecryptWithOrderedMapKeys() throws {
         var danSeed = Seed(data: ‡"59f2293a5bce7d4de59e71b4207ac5d2")!
         danSeed.name = "Dark Purple Aqua Love"
@@ -377,19 +377,19 @@ class BasicTests: XCTestCase {
             .decryptSubject(with: symmetricKey)
         XCTAssertEqual(seedEnvelope, decryptedSeedEnvelope)
     }
-    
+
     func testDigestLeaf() throws {
         let digest = Self.basicEnvelope.digest
         let e = try Envelope(digest).checkEncoding()
-        
+
         XCTAssertEqual(e.format,
         """
         Digest(886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5)
         """
         )
-        
+
         XCTAssertEqual(e.digest†, "Digest(9fbec3ea6c65e4b190ec35c7e461f75285202fe5556cc6a60eccac3d012f01a6)")
-        
+
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
@@ -402,19 +402,19 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testEnvelopeElision() throws {
         let e1 = Self.basicEnvelope
-        
+
         let e2 = e1.elide()
         XCTAssertEqual(e1, e2)
-        
+
         XCTAssertEqual(e2.format,
         """
         ELIDED
         """
         )
-        
+
         XCTAssertEqual(e2.diagAnnotated,
         """
         200(   ; envelope
@@ -424,7 +424,7 @@ class BasicTests: XCTestCase {
         )
         """
         )
-        
+
         let e3 = try e2.unelide(e1)
         XCTAssertEqual(e3, e1)
         XCTAssertEqual(e3.format,
@@ -558,7 +558,7 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testSingleAssertionRevealElision() throws {
         // The original Envelope
         let e1 = Self.singleAssertionEnvelope
@@ -569,7 +569,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         // Elide revealing nothing
         let e2 = try e1.elideRevealing([]).checkEncoding()
         XCTAssertEqual(e2.format,
@@ -577,7 +577,7 @@ class BasicTests: XCTestCase {
         ELIDED
         """
         )
-        
+
         // Reveal just the envelope's structure
         let e3 = try e1.elideRevealing(e1).checkEncoding()
         XCTAssertEqual(e3.format,
@@ -597,7 +597,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         // Reveal just the assertion's structure.
         let e5 = try e1.elideRevealing([e1, Self.assertionEnvelope]).checkEncoding()
         XCTAssertEqual(e5.format,
@@ -628,7 +628,7 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testDoubleAssertionRevealElision() throws {
         // The original Envelope
         let e1 = Self.doubleAssertionEnvelope
@@ -640,7 +640,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         // Elide revealing nothing
         let e2 = try e1.elideRevealing([]).checkEncoding()
         XCTAssertEqual(e2.format,
@@ -648,7 +648,7 @@ class BasicTests: XCTestCase {
         ELIDED
         """
         )
-        
+
         // Reveal just the envelope's structure
         let e3 = try e1.elideRevealing(e1).checkEncoding()
         XCTAssertEqual(e3.format,
@@ -668,7 +668,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         // Reveal just the assertion's structure.
         let e5 = try e1.elideRevealing([e1, Self.assertionEnvelope]).checkEncoding()
         XCTAssertEqual(e5.format,
@@ -702,7 +702,7 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testDigests() throws {
         let e1 = Self.doubleAssertionEnvelope
         XCTAssertEqual(e1.format,
@@ -713,7 +713,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         let e2 = try e1.elideRevealing(e1.digests(levels: 0)).checkEncoding()
         XCTAssertEqual(e2.format,
         """
@@ -750,7 +750,7 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testTargetedReveal() throws {
         let e1 = Self.doubleAssertionEnvelope
             .addAssertion("livesAt", "123 Main St.")
@@ -763,7 +763,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         var target: Set<Digest> = []
         // Reveal the Envelope structure
         target.formUnion(e1.digests(levels: 1))
@@ -784,7 +784,7 @@ class BasicTests: XCTestCase {
         """
         )
     }
-    
+
     func testTargetedRemove() throws {
         let e1 = Self.doubleAssertionEnvelope
             .addAssertion("livesAt", "123 Main St.")
@@ -797,7 +797,7 @@ class BasicTests: XCTestCase {
         ]
         """
         )
-        
+
         var target2: Set<Digest> = []
         // Hide one of the assertions
         target2.formUnion(Self.assertionEnvelope.digests(levels: 1))

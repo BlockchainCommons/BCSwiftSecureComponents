@@ -19,7 +19,7 @@ class ScenarioTests: XCTestCase {
 
         let name_es = Envelope("La rebelión de Atlas")
             .addAssertion(.language, "es")
-        
+
         let work = try Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
             .addAssertion(.isA, "novel")
             .addAssertion("isbn", "9780451191144")
@@ -62,17 +62,17 @@ class ScenarioTests: XCTestCase {
         """
         XCTAssertEqual(bookMetadata.format, expectedFormat)
     }
-    
+
     func testIdentifier() throws {
         // An analogue of a DID document, which identifies an entity. The
         // document itself can be referred to by its CID, while the signed document
         // can be referred to by its digest.
-        
+
         let aliceUnsignedDocument = try Envelope(aliceIdentifier)
             .addAssertion(.controller, aliceIdentifier)
             .addAssertion(.publicKeys, alicePublicKeys)
             .checkEncoding()
-        
+
         let aliceSignedDocument = try aliceUnsignedDocument
             .wrap()
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
@@ -92,7 +92,7 @@ class ScenarioTests: XCTestCase {
         ]
         """
         XCTAssertEqual(aliceSignedDocument.format, expectedFormat)
-        
+
         // Signatures have a random component, so anything with a signature will have a
         // non-deterministic digest. Therefore, the two results of signing the same object
         // twice with the same private key will not compare as equal. This means that each
@@ -104,17 +104,17 @@ class ScenarioTests: XCTestCase {
             .checkEncoding()
 
         XCTAssertNotEqual(aliceSignedDocument, aliceSignedDocument2)
-        
+
         // ➡️ ☁️ ➡️
 
         // A registrar checks the signature on Alice's submitted identifier document,
         // performs any other necessary validity checks, and then extracts her CID from
         // it.
-        let aliceCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
+        let aliceCID = try aliceSignedDocument.verifySignature(from: alicePublicKeys)
             .unwrap()
             // other validity checks here
             .extractSubject(CID.self)
-        
+
         // The registrar creates its own registration document using Alice's CID as the
         // subject, incorporating Alice's signed document, and adding its own signature.
         let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
@@ -148,15 +148,15 @@ class ScenarioTests: XCTestCase {
         ]
         """
         XCTAssertEqual(aliceRegistration.format, expectedRegistrationFormat)
-        
+
         // Alice receives the registration document back, validates its signature, and
         // extracts the URI that now points to her record.
         let aliceURI = try aliceRegistration
-            .validateSignature(from: exampleLedgerPublicKeys)
+            .verifySignature(from: exampleLedgerPublicKeys)
             .unwrap()
             .extractObject(URL.self, forPredicate: .dereferenceVia)
         XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
-        
+
         // Alice wants to introduce herself to Bob, so Bob needs to know she controls her
         // identifier. Bob sends a challenge:
         let aliceChallenge = try Envelope(Nonce())
@@ -202,28 +202,28 @@ class ScenarioTests: XCTestCase {
             .unwrap()
             .unwrap()
         XCTAssertEqual(aliceChallenge, responseNonce)
-        
+
         // Bob then extracts Alice's registered URI
         let responseURI = try aliceChallengeResponse
             .unwrap()
             .extractObject(URL.self, forPredicate: .dereferenceVia)
         XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
-        
+
         // Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
         // checks ExampleLedgers's signature. Bob trusts ExampleLedger's validation of
         // Alice's original document, so doesn't bother to check it for internal
         // consistency, and instead goes ahead and extracts Alice's public keys from it.
         let aliceDocumentPublicKeys = try aliceRegistration
-            .validateSignature(from: exampleLedgerPublicKeys)
+            .verifySignature(from: exampleLedgerPublicKeys)
             .unwrap()
             .extractObject(forPredicate: .entity)
             .unwrap()
             .extractObject(PublicKeyBase.self, forPredicate: .publicKeys)
-        
+
         // Finally, Bob uses Alice's public keys to validate the challenge he sent her.
-        try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
+        try aliceChallengeResponse.verifySignature(from: aliceDocumentPublicKeys)
     }
-    
+
     func testCredential() throws {
         // John Smith's identifier
         let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
@@ -232,7 +232,7 @@ class ScenarioTests: XCTestCase {
         let johnSmithImage = Envelope(Digest("John Smith smiling"))
             .addAssertion(.note, "This is an image of John Smith.")
             .addAssertion(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
-        
+
         // John Smith's Permanent Resident Card issued by the State of Example
         let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
             .addAssertion(.isA, "credential")
@@ -260,8 +260,8 @@ class ScenarioTests: XCTestCase {
             .checkEncoding()
 
         // Validate the state's signature
-        try johnSmithResidentCard.validateSignature(from: statePublicKeys)
-        
+        try johnSmithResidentCard.verifySignature(from: statePublicKeys)
+
         let expectedFormat =
         """
         {
@@ -299,9 +299,9 @@ class ScenarioTests: XCTestCase {
         ]
         """
         XCTAssertEqual(johnSmithResidentCard.format, expectedFormat)
-        
+
         //print(johnSmithResidentCard.diagAnnotated)
-        
+
         // John wishes to identify himself to a third party using his government-issued
         // credential, but does not wish to reveal more than his name, his photo, and the
         // fact that the state has verified his identity.
@@ -344,16 +344,16 @@ class ScenarioTests: XCTestCase {
         try target.insert(holderObject.assertion(withPredicate: "givenName").deepDigests)
         try target.insert(holderObject.assertion(withPredicate: "familyName").deepDigests)
         try target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
-        
+
         // Perform the elision
         let elidedCredential = try top.elideRevealing(target).checkEncoding()
-        
+
         // Verify that the elided credential compares equal to the original credential.
         XCTAssertEqual(elidedCredential, johnSmithResidentCard)
-        
+
         // Verify that the state's signature on the elided card is still valid.
-        try elidedCredential.validateSignature(from: statePublicKeys)
-        
+        try elidedCredential.verifySignature(from: statePublicKeys)
+
         let expectedElidedFormat =
         """
         {
@@ -383,7 +383,7 @@ class ScenarioTests: XCTestCase {
         print(elidedCredential.format)
         XCTAssertEqual(elidedCredential.format, expectedElidedFormat)
     }
-    
+
     /// See [The Art of Immutable Architecture, by Michael L. Perry](https://amzn.to/3Kszr1p).
     func testHistoricalModeling() throws {
         //
@@ -404,7 +404,7 @@ class ScenarioTests: XCTestCase {
             .addAssertion(.hasName, "Acme Corp.")
             .addAssertion(.dereferenceVia, URL(string: "https://exampleledger.com/cid/361235424efc81cedec7eb983a97bbe74d7972f778486f93881e5eed577d0aa7")!)
             .checkEncoding()
-        
+
         //
         // Declare Products
         //
@@ -429,12 +429,12 @@ class ScenarioTests: XCTestCase {
 
         // Since the line items of a PurchaseOrder may be mutated before being finalized,
         // they are not declared as part of the creation of the PurchaseOrder itself.
-        
+
         let purchaseOrder = try Envelope(CID(‡"1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625")!)
             .addAssertion(.isA, "PurchaseOrder")
             .addAssertion(.hasName, "PO 123")
             .checkEncoding()
-        
+
         //
         // Add Line Items to the Purchase Order
         //
@@ -447,7 +447,7 @@ class ScenarioTests: XCTestCase {
         // referencing the product's CID may change over time, for instance the price may
         // be updated. The line item therefore captures the current price from the product
         // document in its priceEach assertion.
-        
+
         let line1 = try Envelope(purchaseOrder.digest)
             .addAssertion(.isA, "PurchaseOrderLineItem")
             .addAssertion("product", qualityProduct.extractSubject(CID.self))
@@ -475,17 +475,17 @@ class ScenarioTests: XCTestCase {
         ]
         """
         XCTAssertEqual(line2.format, line2ExpectedFormat)
-        
+
 //        let revokeLine1 = Envelope(purchaseOrder.digest)
 //            .add(Assertion(revoke: Reference(digest: line1.digest)))
 //        print(revokeLine1.format)
-        
+
         let purchaseOrderProjection = try purchaseOrder
             .addAssertion("lineItem", line1)
             .addAssertion("lineItem", line2)
 //            .revoke(line1.digest)
             .checkEncoding()
-        
+
         let purchaseOrderProjectionExpectedFormat =
         """
         CID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [

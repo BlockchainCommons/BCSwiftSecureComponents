@@ -154,7 +154,7 @@ Envelopes can be be in several forms, for any of these forms, the same digest is
 
 Thus the `Digest` of an `Envelope` identifies the `subject` and its assertions as if they were all present (dereferenced), unelided, and unencrypted. This allows an `Envelope` to be transformed either into or out of the various encrypted/decrypted, local/reference, and elided/unelided forms without changing the cumulative Merkle tree of digests. This also means that any transformations that do not preserve the digest tree invalidate the signatures of any enclosing `Envelope`s.
 
-This architecture supports selective disclosure of contents of nested `Envelope`s by revealing only the minimal objects necessary to traverse to a particular nesting path, and having done so, calculating the hashes back to the root allows verification that the correct and included contents were disclosed. On a structure where only a minimal number of fields have been revealed, a signature can still be validated.
+This architecture supports selective disclosure of contents of nested `Envelope`s by revealing only the minimal objects necessary to traverse to a particular nesting path, and having done so, calculating the hashes back to the root allows verification that the correct and included contents were disclosed. On a structure where only a minimal number of fields have been revealed, a signature can still be verified.
 
 ## CID
 

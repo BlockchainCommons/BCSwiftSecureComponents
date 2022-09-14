@@ -155,7 +155,5 @@ var knownTags: [CBOR.Tag] = [
 ]
 
 public func addKnownTags() {
-    for tag in knownTags {
-        CBOR.Tag.setKnownTag(tag)
-    }
+    CBOR.Tag.setKnownTags(knownTags)
 }

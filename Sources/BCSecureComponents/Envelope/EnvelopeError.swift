@@ -4,7 +4,7 @@ public enum EnvelopeError: Error {
     case invalidKey
     case missingDigest
     case invalidDigest
-    case invalidSignature
+    case unverifiedSignature
     case invalidFormat
     case invalidRecipient
     case invalidShares

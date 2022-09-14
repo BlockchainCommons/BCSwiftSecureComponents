@@ -6,7 +6,7 @@ class CryptoTests: XCTestCase {
     override func setUp() {
         addKnownTags()
     }
-    
+
     func testPlaintext() throws {
         // Alice sends a plaintext message to Bob.
         let envelope = try Envelope(plaintextHello).checkEncoding()
@@ -56,18 +56,18 @@ class CryptoTests: XCTestCase {
         let receivedEnvelope = try Envelope(ur: ur).checkEncoding()
 
         // Bob receives the message, validates Alice's signature, and reads the message.
-        let receivedPlaintext = try receivedEnvelope.validateSignature(from: alicePublicKeys)
+        let receivedPlaintext = try receivedEnvelope.verifySignature(from: alicePublicKeys)
             .extractSubject(String.self)
         XCTAssertEqual(receivedPlaintext, plaintextHello)
 
         // Confirm that it wasn't signed by Carol.
-        XCTAssertThrowsError(try receivedEnvelope.validateSignature(from: carolPublicKeys))
+        XCTAssertThrowsError(try receivedEnvelope.verifySignature(from: carolPublicKeys))
 
         // Confirm that it was signed by Alice OR Carol.
-        try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
+        try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
 
         // Confirm that it was not signed by Alice AND Carol.
-        XCTAssertThrowsError(try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
+        XCTAssertThrowsError(try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
     }
 
     func testMultisignedPlaintext() throws {
@@ -95,7 +95,7 @@ class CryptoTests: XCTestCase {
         // Bob receives the envelope and verifies the message was signed by both Alice and Carol.
         let receivedPlaintext = try Envelope(ur: ur)
             .checkEncoding()
-            .validateSignatures(from: [alicePublicKeys, carolPublicKeys])
+            .verifySignatures(from: [alicePublicKeys, carolPublicKeys])
             .extractSubject(String.self)
 
         // Bob reads the message.
@@ -178,7 +178,7 @@ class CryptoTests: XCTestCase {
         let receivedPlaintext = try Envelope(ur: ur).checkEncoding()
             .decryptSubject(with: key).checkEncoding()
             .unwrap().checkEncoding()
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .extractSubject(String.self)
         // Bob reads the message.
         XCTAssertEqual(receivedPlaintext, plaintextHello)
@@ -197,7 +197,7 @@ class CryptoTests: XCTestCase {
         // `Assertion`.
         //
         // Similarly, the `decrypt` method used below can come before or after the
-        // `validateSignature` method, as `validateSignature` checks the signature against
+        // `verifySignature` method, as `verifySignature` checks the signature against
         // the `subject`'s hash, which is explicitly present when the subject is in
         // `.encrypted` form and can be calculated when the subject is in `.plaintext`
         // form. The `decrypt` method transforms the subject from its `.encrypted` case to
@@ -233,7 +233,7 @@ class CryptoTests: XCTestCase {
 
         // Bob receives the envelope, validates Alice's signature, then decrypts the message.
         let receivedPlaintext = try Envelope(ur: ur).checkEncoding()
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .decryptSubject(with: key).checkEncoding()
             .extractSubject(String.self)
         // Bob reads the message.
@@ -316,14 +316,14 @@ class CryptoTests: XCTestCase {
 
         // Bob validates Alice's signature, then decrypts and reads the message
         let bobReceivedPlaintext = try receivedEnvelope
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .decrypt(to: bobPrivateKeys)
             .extractSubject(String.self)
         XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
         // Carol validates Alice's signature, then decrypts and reads the message
         let carolReceivedPlaintext = try receivedEnvelope
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .decrypt(to: carolPrivateKeys)
             .extractSubject(String.self)
         XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
@@ -370,7 +370,7 @@ class CryptoTests: XCTestCase {
         let bobReceivedPlaintext = try receivedEnvelope
             .decrypt(to: bobPrivateKeys)
             .unwrap().checkEncoding()
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .extractSubject(String.self)
         XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
@@ -379,7 +379,7 @@ class CryptoTests: XCTestCase {
         let carolReceivedPlaintext = try receivedEnvelope
             .decrypt(to: carolPrivateKeys)
             .unwrap().checkEncoding()
-            .validateSignature(from: alicePublicKeys)
+            .verifySignature(from: alicePublicKeys)
             .extractSubject(String.self)
         XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
 
@@ -404,7 +404,7 @@ class CryptoTests: XCTestCase {
         let seedEnvelope = Envelope(danSeed)
         let encryptedSeedEnvelope = try seedEnvelope
             .encryptSubject(with: contentKey)
-        
+
         let envelopes = encryptedSeedEnvelope
             .split(groupThreshold: 1, groups: [(2, 3)], contentKey: contentKey)
 

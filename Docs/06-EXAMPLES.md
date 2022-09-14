@@ -108,19 +108,19 @@ let ur = envelope.ur
 // Bob receives the envelope.
 let receivedEnvelope = try Envelope(ur: ur)
 
-// Bob receives the message, validates Alice's signature, and reads the message.
-let receivedPlaintext = try receivedEnvelope.validateSignature(from: alicePublicKeys)
+// Bob receives the message, verifies Alice's signature, and reads the message.
+let receivedPlaintext = try receivedEnvelope.verifySignature(from: alicePublicKeys)
     .extractSubject(String.self)
 XCTAssertEqual(receivedPlaintext, plaintextHello)
 
 // Confirm that it wasn't signed by Carol.
-XCTAssertThrowsError(try receivedEnvelope.validateSignature(from: carolPublicKeys))
+XCTAssertThrowsError(try receivedEnvelope.verifySignature(from: carolPublicKeys))
 
 // Confirm that it was signed by Alice OR Carol.
-try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
+try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 1)
 
 // Confirm that it was not signed by Alice AND Carol.
-XCTAssertThrowsError(try receivedEnvelope.validateSignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
+XCTAssertThrowsError(try receivedEnvelope.verifySignatures(from: [alicePublicKeys, carolPublicKeys], threshold: 2))
 ```
 
 ### Envelope Notation
@@ -145,7 +145,7 @@ let ur = envelope.ur
 
 // Bob receives the envelope and verifies the message was signed by both Alice and Carol.
 let receivedPlaintext = try Envelope(ur: ur)
-    .validateSignatures(from: [alicePublicKeys, carolPublicKeys])
+    .verifySignatures(from: [alicePublicKeys, carolPublicKeys])
     .extractSubject(String.self)
 
 // Bob reads the message.
@@ -215,11 +215,11 @@ let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the envelope, decrypts it using the shared key, and then validates Alice's signature.
+// Bob receives the envelope, decrypts it using the shared key, and then verifies Alice's signature.
 let receivedPlaintext = try Envelope(ur: ur)
     .decrypt(with: key)
     .extract()
-    .validateSignature(from: alicePublicKeys)
+    .verifySignature(from: alicePublicKeys)
     .extract(String.self)
 // Bob reads the message.
 XCTAssertEqual(receivedPlaintext, plaintext)
@@ -235,7 +235,7 @@ EncryptedMessage
 
 It doesn't actually matter whether the `encrypt` or `sign` method comes first, as the `encrypt` method transforms the `subject` into its `.encrypted` form, which carries a `Digest` of the plaintext `subject`, while the `sign` method only adds an `Assertion` with the signature of the hash as the `object` of the `Assertion`.
 
-Similarly, the `decrypt` method used below can come before or after the `validateSignature` method, as `validateSignature` checks the signature against the `subject`'s hash, which is explicitly present when the subject is in `.encrypted` form and can be calculated when the subject is in `.plaintext` form. The `decrypt` method transforms the subject from its `.encrypted` case to its `.plaintext` case, and also checks that the decrypted plaintext has the same hash as the one associated with the `.encrypted` subject.
+Similarly, the `decrypt` method used below can come before or after the `verifySignature` method, as `verifySignature` checks the signature against the `subject`'s hash, which is explicitly present when the subject is in `.encrypted` form and can be calculated when the subject is in `.plaintext` form. The `decrypt` method transforms the subject from its `.encrypted` case to its `.plaintext` case, and also checks that the decrypted plaintext has the same hash as the one associated with the `.encrypted` subject.
 
 The end result is the same: the `subject` is encrypted and the signature can be checked before or after decryption.
 
@@ -252,9 +252,9 @@ let ur = envelope.ur
 
 // Alice ➡️ ☁️ ➡️ Bob
 
-// Bob receives the envelope, validates Alice's signature, then decrypts the message.
+// Bob receives the envelope, verifies Alice's signature, then decrypts the message.
 let receivedPlaintext = try Envelope(ur: ur)
-    .validateSignature(from: alicePublicKeys)
+    .verifySignature(from: alicePublicKeys)
     .decryptSubject(with: key)
     .extractSubject(String.self)
 // Bob reads the message.
@@ -333,16 +333,16 @@ let ur = envelope.ur
 // The envelope is received
 let receivedEnvelope = try Envelope(ur: ur)
 
-// Bob validates Alice's signature, then decrypts and reads the message
+// Bob verifies Alice's signature, then decrypts and reads the message
 let bobReceivedPlaintext = try receivedEnvelope
-    .validateSignature(from: alicePublicKeys)
+    .verifySignature(from: alicePublicKeys)
     .decrypt(to: bobPrivateKeys)
     .extractSubject(String.self)
 XCTAssertEqual(bobReceivedPlaintext, plaintextHello)
 
-// Carol validates Alice's signature, then decrypts and reads the message
+// Carol verifies Alice's signature, then decrypts and reads the message
 let carolReceivedPlaintext = try receivedEnvelope
-    .validateSignature(from: alicePublicKeys)
+    .verifySignature(from: alicePublicKeys)
     .decrypt(to: carolPrivateKeys)
     .extractSubject(String.self)
 XCTAssertEqual(carolReceivedPlaintext, plaintextHello)
@@ -531,7 +531,7 @@ XCTAssertNotEqual(aliceSignedDocument, aliceSignedDocument2)
 // A registrar checks the signature on Alice's submitted identifier document,
 // performs any other necessary validity checks, and then extracts her CID from
 // it.
-let aliceCID = try aliceSignedDocument.validateSignature(from: alicePublicKeys)
+let aliceCID = try aliceSignedDocument.verifySignature(from: alicePublicKeys)
     .unwrap()
     // other validity checks here
     .extractSubject(CID.self)
@@ -571,10 +571,10 @@ let aliceRegistration = try Envelope(aliceCID)
 ```
 
 ```swift
-// Alice receives the registration document back, validates its signature, and
+// Alice receives the registration document back, verifies its signature, and
 // extracts the URI that now points to her record.
 let aliceURI = try aliceRegistration
-    .validateSignature(from: exampleLedgerPublicKeys)
+    .verifySignature(from: exampleLedgerPublicKeys)
     .unwrap()
     .extractObject(URL.self, forPredicate: .dereferenceVia)
 XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
@@ -638,14 +638,14 @@ XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e
 // Alice's original document, so doesn't bother to check it for internal
 // consistency, and instead goes ahead and extracts Alice's public keys from it.
 let aliceDocumentPublicKeys = try aliceRegistration
-    .validateSignature(from: exampleLedgerPublicKeys)
+    .verifySignature(from: exampleLedgerPublicKeys)
     .unwrap()
     .extractObject(forPredicate: .entity)
     .unwrap()
     .extractObject(PublicKeyBase.self, forPredicate: .publicKeys)
 
 // Finally, Bob uses Alice's public keys to validate the challenge he sent her.
-try aliceChallengeResponse.validateSignature(from: aliceDocumentPublicKeys)
+try aliceChallengeResponse.verifySignature(from: aliceDocumentPublicKeys)
 ```
 
 ## Example 12: Verifiable Credential
@@ -687,7 +687,7 @@ let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107
     .sign(with: statePrivateKeys, note: "Made by the State of Example.")
 
 // Validate the state's signature
-try johnSmithResidentCard.validateSignature(from: statePublicKeys)
+try johnSmithResidentCard.verifySignature(from: statePublicKeys)
 ```
 
 ### Envelope Notation
@@ -779,7 +779,7 @@ let elidedCredential = try top.elideRevealing(target)
 XCTAssertEqual(elidedCredential, johnSmithResidentCard)
 
 // Verify that the state's signature on the elided card is still valid.
-try elidedCredential.validateSignature(from: statePublicKeys)
+try elidedCredential.verifySignature(from: statePublicKeys)
 ```
 
 ### Envelope Notation for Redacted Credential

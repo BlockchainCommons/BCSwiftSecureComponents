@@ -34,47 +34,47 @@ public extension Envelope {
             return digest
         }
     }
-    
+
     var subject: Envelope {
         if case .node(let subject, _, _) = self {
             return subject
         }
         return self
     }
-    
+
     var assertions: [Envelope] {
         guard case .node(_, let assertions, _) = self else {
             return []
         }
         return assertions
     }
-    
+
     var hasAssertions: Bool {
         !assertions.isEmpty
     }
-    
+
     var assertion: Assertion? {
         guard case .assertion(let assertion) = self else {
             return nil
         }
         return assertion
     }
-    
+
     var predicate: Envelope? {
         assertion?.predicate
     }
-    
+
     var object: Envelope? {
         assertion?.object
     }
-    
+
     var leaf: CBOR? {
         guard case .leaf(let cbor, _) = subject else {
             return nil
         }
         return cbor
     }
-    
+
     var knownPredicate: KnownPredicate? {
         guard case .knownPredicate(let knownPredicate, _) = self else {
             return nil
@@ -90,7 +90,7 @@ public extension Envelope {
         }
         return true
     }
-    
+
     var isAssertion: Bool {
         switch self {
         case .assertion:
@@ -104,28 +104,28 @@ public extension Envelope {
             return false
         }
     }
-    
+
     var isEncrypted: Bool {
         guard case .encrypted = self else {
             return false
         }
         return true
     }
-    
+
     var isElided: Bool {
         guard case .elided = self else {
             return false
         }
         return true
     }
-    
+
     var isWrapped: Bool {
         guard case .wrapped = self else {
             return false
         }
         return true
     }
-    
+
     var isKnownPredicate: Bool {
         guard case .knownPredicate = self else {
             return false
@@ -141,10 +141,10 @@ private extension Envelope {
         var digests = [subject.digest]
         digests.append(contentsOf: sortedAssertions.map { $0.digest })
         let digest = Digest(Data(digests.map { $0.data }.joined()))
-        
+
         self = .node(subject: subject, assertions: sortedAssertions, digest: digest)
     }
-    
+
     init(subject: Envelope, assertions: [Envelope]) throws {
         guard assertions.allSatisfy({ $0.isAssertion || $0.isElided }) else {
             throw EnvelopeError.invalidFormat
@@ -166,11 +166,11 @@ private extension Envelope {
         }
         self = .encrypted(encryptedMessage)
     }
-    
+
     init(elided digest: Digest) {
         self = .elided(digest)
     }
-    
+
     init(cbor: CBOR) {
         let digest = Digest(cbor.cborEncode)
         self = .leaf(cbor, digest)
@@ -179,7 +179,7 @@ private extension Envelope {
     init(cborEncodable item: CBOREncodable) {
         self.init(cbor: item.cbor)
     }
-    
+
     init(wrapped envelope: Envelope) {
         let digest = Digest(envelope.digest)
         self = .wrapped(envelope, digest)
@@ -209,7 +209,7 @@ public extension Envelope {
     init(predicate: Any, object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
-    
+
     init(predicate: KnownPredicate, object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
@@ -241,14 +241,14 @@ public extension Envelope {
         default:
             break
         }
-        
+
         return result
     }
-    
+
     var deepDigests: Set<Digest> {
         digests(levels: .max)
     }
-    
+
     var shallowDigests: Set<Digest> {
         digests(levels: 2)
     }
@@ -357,7 +357,7 @@ public extension Envelope {
         }
         return result
     }
-    
+
     func extractObject<T>(_ type: T.Type, forPredicate predicate: Envelope) throws -> T where T: CBORDecodable {
         try extractObject(forPredicate: predicate).extractSubject(type)
     }
@@ -375,11 +375,11 @@ public extension Envelope {
     func extractObject(forPredicate predicate: CBOREncodable) throws -> Envelope {
         try extractObject(forPredicate: Envelope(predicate))
     }
-    
+
     func extractObject<T>(_ type: T.Type, forPredicate predicate: CBOREncodable) throws -> T where T: CBORDecodable {
         try extractObject(type, forPredicate: Envelope(predicate))
     }
-    
+
     func extractObject<T>(_ type: T.Type, forParameter parameter: ParameterIdentifier) throws -> T where T: CBORDecodable {
         try extractObject(type, forPredicate: parameter)
     }
@@ -397,7 +397,7 @@ public extension Envelope {
     func extractObject(forPredicate predicate: KnownPredicate) throws -> Envelope {
         try extractObject(forPredicate: Envelope(knownPredicate: predicate))
     }
-    
+
     func extractObject<T>(_ type: T.Type, forPredicate predicate: KnownPredicate) throws -> T where T: CBORDecodable {
         try extractObject(type, forPredicate: Envelope(knownPredicate: predicate))
     }
@@ -419,15 +419,15 @@ public extension Envelope {
             return Envelope(subject: subject, uncheckedAssertions: [envelope])
         }
     }
-    
+
     func addAssertion(_ assertion: Assertion) -> Envelope {
         try! addAssertion(Envelope(assertion: assertion))
     }
-    
+
     func addAssertion(_ predicate: Any, _ object: Any) -> Envelope {
         addAssertion(Assertion(predicate: predicate, object: object))
     }
-    
+
     func addAssertion(_ predicate: KnownPredicate, _ object: Any) -> Envelope {
         addAssertion(Assertion(predicate: predicate, object: object))
     }
@@ -440,7 +440,7 @@ public extension Envelope {
         }
         return try addAssertion(envelope())
     }
-    
+
     func addAssertion(if condition: Bool, _ assertion: @autoclosure () -> Assertion) -> Envelope {
         guard condition else {
             return self
@@ -454,7 +454,7 @@ public extension Envelope {
         }
         return addAssertion(predicate(), object())
     }
-    
+
     func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any) -> Envelope {
         guard condition else {
             return self
@@ -468,7 +468,7 @@ public extension Envelope {
     func addSalt(_ count: Int) -> Envelope {
         return addAssertion(.salt, SecureRandomNumberGenerator.shared.data(count: count))
     }
-    
+
     /// Add a number of bytes of salt chosen randomly from the given range.
     func addSalt(_ range: ClosedRange<Int>) -> Envelope {
         var s = SecureRandomNumberGenerator.shared
@@ -524,11 +524,11 @@ public extension Envelope {
     static func parameter(_ name: String, value: CBOREncodable) -> Envelope {
         parameter(ParameterIdentifier(name), value: value)
     }
-    
+
     func addParameter(_ param: ParameterIdentifier, value: CBOREncodable) -> Envelope {
         try! addAssertion(.parameter(param, value: value))
     }
-    
+
     func addParameter(_ name: String, value: CBOREncodable) -> Envelope {
         try! addAssertion(.parameter(name, value: value))
     }
@@ -539,7 +539,7 @@ public extension Envelope {
         let signature = privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator)
         return try! addAssertion(.verifiedBy(signature: signature, note: note))
     }
-    
+
     func sign(with privateKeys: [PrivateKeyBase], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
         var result = self
         for keys in privateKeys {
@@ -547,15 +547,15 @@ public extension Envelope {
         }
         return result
     }
-    
+
     func addRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
         try! addAssertion(.hasRecipient(recipient, contentKey: contentKey, testKeyMaterial: testKeyMaterial, testNonce: testNonce))
     }
-    
+
     func addSSKRShare(_ share: SSKRShare) -> Envelope {
         try! addAssertion(.sskrShare(share))
     }
-    
+
     func split(groupThreshold: Int, groups: [(Int, Int)], contentKey: SymmetricKey, testRandomGenerator: ((Int) -> Data)? = nil) -> [[Envelope]] {
         let shares = try! SSKRGenerate(groupThreshold: groupThreshold, groups: groups, secret: contentKey, testRandomGenerator: testRandomGenerator)
         return shares.map { groupShares in
@@ -564,7 +564,7 @@ public extension Envelope {
             }
         }
     }
-    
+
     static func shares(in envelopes: [Envelope]) throws -> [UInt16: [SSKRShare]] {
         var result: [UInt16: [SSKRShare]] = [:]
         for envelope in envelopes {
@@ -603,55 +603,55 @@ public extension Envelope {
                 .map { try $0.object!.extractSubject(Signature.self) }
         }
     }
-    
-    func isValidSignature(_ signature: Signature, key: SigningPublicKey) -> Bool {
+
+    func isVerifiedSignature(_ signature: Signature, key: SigningPublicKey) -> Bool {
         return key.isValidSignature(signature, for: subject.digest)
     }
-    
+
     @discardableResult
-    func validateSignature(_ signature: Signature, key: SigningPublicKey) throws -> Envelope {
-        guard isValidSignature(signature, key: key) else {
-            throw EnvelopeError.invalidSignature
+    func verifySignature(_ signature: Signature, key: SigningPublicKey) throws -> Envelope {
+        guard isVerifiedSignature(signature, key: key) else {
+            throw EnvelopeError.unverifiedSignature
         }
         return self
     }
-    
-    func isValidSignature(_ signature: Signature, publicKeys: PublicKeyBase) -> Bool {
-        isValidSignature(signature, key: publicKeys.signingPublicKey)
+
+    func isVerifiedSignature(_ signature: Signature, publicKeys: PublicKeyBase) -> Bool {
+        isVerifiedSignature(signature, key: publicKeys.signingPublicKey)
     }
-    
+
     @discardableResult
-    func validateSignature(_ signature: Signature, publicKeys: PublicKeyBase) throws -> Envelope {
-        try validateSignature(signature, key: publicKeys.signingPublicKey)
+    func verifySignature(_ signature: Signature, publicKeys: PublicKeyBase) throws -> Envelope {
+        try verifySignature(signature, key: publicKeys.signingPublicKey)
     }
-    
-    func hasValidSignature(key: SigningPublicKey) throws -> Bool {
+
+    func hasVerifiedSignature(key: SigningPublicKey) throws -> Bool {
         let sigs = try signatures
-        return sigs.contains { isValidSignature($0, key: key) }
+        return sigs.contains { isVerifiedSignature($0, key: key) }
     }
-    
+
     @discardableResult
-    func validateSignature(key: SigningPublicKey) throws -> Envelope {
-        guard try hasValidSignature(key: key) else {
-            throw EnvelopeError.invalidSignature
+    func verifySignature(key: SigningPublicKey) throws -> Envelope {
+        guard try hasVerifiedSignature(key: key) else {
+            throw EnvelopeError.unverifiedSignature
         }
         return self
     }
-    
-    func hasValidSignature(from publicKeys: PublicKeyBase) throws -> Bool {
-        try hasValidSignature(key: publicKeys.signingPublicKey)
+
+    func hasVerifiedSignature(from publicKeys: PublicKeyBase) throws -> Bool {
+        try hasVerifiedSignature(key: publicKeys.signingPublicKey)
     }
-    
+
     @discardableResult
-    func validateSignature(from publicKeys: PublicKeyBase) throws -> Envelope {
-        try validateSignature(key: publicKeys.signingPublicKey)
+    func verifySignature(from publicKeys: PublicKeyBase) throws -> Envelope {
+        try verifySignature(key: publicKeys.signingPublicKey)
     }
-    
-    func hasValidSignatures(with keys: [SigningPublicKey], threshold: Int? = nil) throws -> Bool {
+
+    func hasVerifiedSignatures(with keys: [SigningPublicKey], threshold: Int? = nil) throws -> Bool {
         let threshold = threshold ?? keys.count
         var count = 0
         for key in keys {
-            if try hasValidSignature(key: key) {
+            if try hasVerifiedSignature(key: key) {
                 count += 1
                 if count >= threshold {
                     return true
@@ -662,20 +662,20 @@ public extension Envelope {
     }
 
     @discardableResult
-    func validateSignatures(with keys: [SigningPublicKey], threshold: Int? = nil) throws -> Envelope {
-        guard try hasValidSignatures(with: keys, threshold: threshold) else {
-            throw EnvelopeError.invalidSignature
+    func verifySignatures(with keys: [SigningPublicKey], threshold: Int? = nil) throws -> Envelope {
+        guard try hasVerifiedSignatures(with: keys, threshold: threshold) else {
+            throw EnvelopeError.unverifiedSignature
         }
         return self
     }
 
-    func hasValidSignatures(from publicKeysArray: [PublicKeyBase], threshold: Int? = nil) throws -> Bool {
-        try hasValidSignatures(with: publicKeysArray.map { $0.signingPublicKey }, threshold: threshold)
+    func hasVerifiedSignatures(from publicKeysArray: [PublicKeyBase], threshold: Int? = nil) throws -> Bool {
+        try hasVerifiedSignatures(with: publicKeysArray.map { $0.signingPublicKey }, threshold: threshold)
     }
 
     @discardableResult
-    func validateSignatures(from publicKeysArray: [PublicKeyBase], threshold: Int? = nil) throws -> Envelope {
-        try validateSignatures(with: publicKeysArray.map { $0.signingPublicKey }, threshold: threshold)
+    func verifySignatures(from publicKeysArray: [PublicKeyBase], threshold: Int? = nil) throws -> Envelope {
+        try verifySignatures(with: publicKeysArray.map { $0.signingPublicKey }, threshold: threshold)
     }
 }
 
@@ -721,11 +721,11 @@ public extension Envelope {
         case .elided(_):
             throw EnvelopeError.elided
         }
-        
+
         assert(result.digest == originalDigest)
         return result
     }
-    
+
     func decryptSubject(with key: SymmetricKey) throws -> Envelope {
         guard case .encrypted(let message) = subject else {
             throw EnvelopeError.notEncrypted
@@ -736,18 +736,18 @@ public extension Envelope {
         else {
             throw EnvelopeError.invalidKey
         }
-        
+
         guard let subjectDigest = message.digest else {
             throw EnvelopeError.missingDigest
         }
 
         let cbor = try CBOR(encodedCBOR)
         let resultSubject = try Envelope(untaggedCBOR: cbor).subject
-        
+
         guard resultSubject.digest == subjectDigest else {
             throw EnvelopeError.invalidDigest
         }
-        
+
         switch self {
         case .node(subject: _, assertions: let assertions, digest: let originalDigest):
             let result = Envelope(subject: resultSubject, uncheckedAssertions: assertions)
@@ -768,14 +768,14 @@ public extension Envelope {
                 .map { try $0.object!.extractSubject(SealedMessage.self) }
         }
     }
-    
+
     func decrypt(to recipient: PrivateKeyBase) throws -> Envelope {
         guard
             let contentKeyData = try SealedMessage.firstPlaintext(in: recipients, for: recipient)
         else {
             throw EnvelopeError.invalidRecipient
         }
-        
+
         let cbor = try CBOR(contentKeyData)
         let contentKey = try SymmetricKey(taggedCBOR: cbor)
         return try decryptSubject(with: contentKey).subject
@@ -791,7 +791,7 @@ public extension Envelope {
             return Envelope(elided: self.digest)
         }
     }
-    
+
     func unelide(_ envelope: Envelope) throws -> Envelope {
         guard digest == envelope.digest else {
             throw EnvelopeError.invalidDigest
@@ -837,11 +837,11 @@ public extension Envelope {
         assert(result.digest == digest)
         return result
     }
-    
+
     func elideRemoving(_ target: Set<Digest>) -> Envelope {
         elide(target, isRevealing: false)
     }
-    
+
     func elideRevealing(_ target: Set<Digest>) -> Envelope {
         elide(target, isRevealing: true)
     }
@@ -864,7 +864,7 @@ public extension Envelope {
     func elide(_ target: DigestProvider, isRevealing: Bool) -> Envelope {
         elide([target], isRevealing: isRevealing)
     }
-    
+
     func elideRemoving(_ target: DigestProvider) -> Envelope {
         elide(target, isRevealing: false)
     }
@@ -911,11 +911,11 @@ public extension Envelope {
             return digest.taggedCBOR
         }
     }
-    
+
     var taggedCBOR: CBOR {
         CBOR.tagged(.envelope, untaggedCBOR)
     }
-    
+
     init(untaggedCBOR cbor: CBOR) throws {
         switch cbor {
         case CBOR.tagged(.leaf, let item):
@@ -945,7 +945,7 @@ public extension Envelope {
             preconditionFailure()
         }
     }
-    
+
     init(taggedCBOR: CBOR) throws {
         guard case let CBOR.tagged(.envelope, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
@@ -958,17 +958,17 @@ public extension Envelope {
     var ur: UR {
         return try! UR(type: .envelope, cbor: untaggedCBOR)
     }
-    
+
     init(ur: UR) throws {
         try ur.checkType(.envelope)
         let cbor = try CBOR(ur.cbor)
         try self.init(untaggedCBOR: cbor)
     }
-    
+
     init(urString: String) throws {
         try self.init(ur: UR(urString: urString))
     }
-    
+
     init?(taggedCBOR: Data) {
         try? self.init(taggedCBOR: CBOR(taggedCBOR))
     }
@@ -978,20 +978,20 @@ public extension Envelope {
     init(function: FunctionIdentifier) {
         self.init(function)
     }
-    
+
     init(function name: String) {
         self.init(function: FunctionIdentifier(name))
     }
-    
+
     init(function value: Int, name: String? = nil) {
         self.init(function: FunctionIdentifier(value, name))
     }
-    
+
     init(request id: CID, body: CBOREncodable) {
         self = Envelope(CBOR.tagged(.request, id.taggedCBOR))
             .addAssertion(.body, body)
     }
-    
+
     init(response id: CID, result: CBOREncodable) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .addAssertion(.result, result)
@@ -1028,11 +1028,11 @@ public extension Envelope {
     var diag: String {
         taggedCBOR.diag
     }
-    
+
     var diagAnnotated: String {
         taggedCBOR.diagAnnotated
     }
-    
+
     var dump: String {
         taggedCBOR.dump
     }

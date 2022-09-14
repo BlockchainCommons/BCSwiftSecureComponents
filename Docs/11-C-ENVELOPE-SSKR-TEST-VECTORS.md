@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 26, 2022</br>
+**Revised:** Sep 14, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -67,7 +67,7 @@ These objects are normally random, but they are fixed for these test vectors:
 ### Payload Enclosed in Envelope
 
 ```
-CBOR
+CBOR(crypto-seed)
 ```
 
 ### GROUP 1 SHARE 1
@@ -884,7 +884,7 @@ d8 c8                                    # tag(200)   ; envelope
 ### Payload Enclosed in Envelope
 
 ```
-CBOR
+CBOR(crypto-seed)
 ```
 
 ### GROUP 1 SHARE 1
