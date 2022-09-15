@@ -15,26 +15,28 @@ public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider 
     public init() {
         self.init(SecureRandomNumberGenerator.shared.data(count: 12))!
     }
+}
 
-    public var bytes: [UInt8] {
+public extension Nonce {
+    var bytes: [UInt8] {
         data.bytes
     }
     
-    public var description: String {
+    var description: String {
         data.hex.flanked("Nonce(", ")")
     }
     
-    public var providedData: Data {
+    var providedData: Data {
         data
     }
 }
 
-extension Nonce {
-    public var untaggedCBOR: CBOR {
+public extension Nonce {
+    var untaggedCBOR: CBOR {
         CBOR.data(self.data)
     }
     
-    public init(untaggedCBOR: CBOR) throws {
+    init(untaggedCBOR: CBOR) throws {
         guard
             case let CBOR.data(data) = untaggedCBOR,
             let result = Nonce(data)
@@ -44,11 +46,11 @@ extension Nonce {
         self = result
     }
 
-    public var taggedCBOR: CBOR {
+    var taggedCBOR: CBOR {
         CBOR.tagged(.nonce, untaggedCBOR)
     }
 
-    public init(taggedCBOR: CBOR) throws {
+    init(taggedCBOR: CBOR) throws {
         guard case let CBOR.tagged(.nonce, untaggedCBOR) = taggedCBOR else {
             throw CBORError.invalidTag
         }
@@ -65,5 +67,21 @@ extension Nonce: CBOREncodable {
 extension Nonce: CBORDecodable {
     public static func cborDecode(_ cbor: CBOR) throws -> Nonce {
         try Nonce(taggedCBOR: cbor)
+    }
+}
+
+public extension Nonce {
+    var ur: UR {
+        return try! UR(type: .nonce, cbor: untaggedCBOR)
+    }
+    
+    init(ur: UR) throws {
+        try ur.checkType(.nonce)
+        let cbor = try CBOR(ur.cbor)
+        try self.init(untaggedCBOR: cbor)
+    }
+    
+    init(urString: String) throws {
+        try self.init(ur: UR(urString: urString))
     }
 }

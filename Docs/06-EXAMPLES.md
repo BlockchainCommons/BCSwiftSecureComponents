@@ -429,22 +429,31 @@ EncryptedMessage [
 
 Complex, tiered metadata can be added to an envelope.
 
+Assertions made about an CID are considered part of a distributed set. Which assertions are returned depends on who resolves the CID and when it is resolved. In other words, the referent of a CID is mutable.
+
+In this example, we use CIDs to represent an author, whose known works may change over time, and a particular novel written by her, the data returned about which may change over time.
+
+Start by creating an envelope that represents the author and what is known about her, including where to get more information using the author's CID.
+
 ```swift
-// Assertions made about an CID are considered part of a distributed set. Which
-// assertions are returned depends on who resolves the CID and when it is
-// resolved. In other words, the referent of a CID is mutable.
 let author = try Envelope(CID(‡"9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8")!)
     .addAssertion(.dereferenceVia, "LibraryOfCongress")
     .addAssertion(.hasName, "Ayn Rand")
+```
 
-// Assertions made on a literal value are considered part of the same set of
-// assertions made on the digest of that value.
+Create two envelopes representing the name of the novel in two different languages, annotated with assertions that specify the language.
+
+```swift
 let name_en = Envelope("Atlas Shrugged")
     .addAssertion(.language, "en")
 
 let name_es = Envelope("La rebelión de Atlas")
     .addAssertion(.language, "es")
+```
 
+Create an envelope that specifies known information about the novel. This envelope embeds the previous envelopes we created for the author and the names of the work.
+
+```swift
 let work = try Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80")!)
     .addAssertion(.isA, "novel")
     .addAssertion("isbn", "9780451191144")
@@ -452,11 +461,19 @@ let work = try Envelope(CID(‡"7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120
     .addAssertion(.dereferenceVia, "LibraryOfCongress")
     .addAssertion(.hasName, name_en)
     .addAssertion(.hasName, name_es)
+```
 
+Create an envelope that refers to the digest of a particular digital embodiment of the novel, in EPUB format. Unlike CIDs, which refer to mutable objects, this digest can only refer to exactly one unique digital object.
+
+```swift
 let bookData = "This is the entire book “Atlas Shrugged” in EPUB format."
-// Assertions made on a digest are considered associated with that specific binary
-// object and no other. In other words, the referent of a Digest is immutable.
-let bookMetadata = try Envelope(Digest(bookData))
+let bookDigestEnvelope = try Envelope(Digest(bookData))
+```
+
+Create the final metadata object, which provides information about the object to which it refers, both as a general work and as a specific digital embodiment of that work.
+
+```swift
+let bookMetadata = bookDigestEnvelope
     .addAssertion("work", work)
     .addAssertion("format", "EPUB")
     .addAssertion(.dereferenceVia, "IPFS")
@@ -525,19 +542,20 @@ let aliceSignedDocument2 = try aliceUnsignedDocument
 XCTAssertNotEqual(aliceSignedDocument, aliceSignedDocument2)
 ```
 
-```swift
-// ➡️ ☁️ ➡️
+➡️ ☁️ ➡️
 
-// A registrar checks the signature on Alice's submitted identifier document,
-// performs any other necessary validity checks, and then extracts her CID from
-// it.
+A registrar checks the signature on Alice's submitted identifier document, performs any other necessary validity checks, and then extracts her CID from it.
+
+```swift
 let aliceCID = try aliceSignedDocument.verifySignature(from: alicePublicKeys)
     .unwrap()
     // other validity checks here
     .extractSubject(CID.self)
+```
 
-// The registrar creates its own registration document using Alice's CID as the
-// subject, incorporating Alice's signed document, and adding its own signature.
+The registrar creates its own registration document using Alice's CID as the subject, incorporating Alice's signed document, and adding its own signature.
+
+```swift
 let aliceURL = URL(string: "https://exampleledger.com/cid/\(aliceCID.data.hex)")!
 let aliceRegistration = try Envelope(aliceCID)
     .addAssertion(.entity, aliceSignedDocument)
@@ -570,17 +588,19 @@ let aliceRegistration = try Envelope(aliceCID)
 ]
 ```
 
+Alice receives the registration document back, verifies its signature, and extracts the URI that now points to her record.
+
 ```swift
-// Alice receives the registration document back, verifies its signature, and
-// extracts the URI that now points to her record.
 let aliceURI = try aliceRegistration
     .verifySignature(from: exampleLedgerPublicKeys)
     .unwrap()
     .extractObject(URL.self, forPredicate: .dereferenceVia)
 XCTAssertEqual(aliceURI†, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+```
 
-// Alice wants to introduce herself to Bob, so Bob needs to know she controls her
-// identifier. Bob sends a challenge:
+Alice wants to introduce herself to Bob, so Bob needs to know she controls her identifier. Bob sends a challenge:
+
+```swift
 let aliceChallenge = try Envelope(Nonce())
     .addAssertion(.note, "Challenge to Alice from Bob.")
 ```
