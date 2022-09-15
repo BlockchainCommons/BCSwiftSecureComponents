@@ -81,7 +81,7 @@ extension CBOR: EnvelopeFormat {
             case CBOR.tagged(CBOR.Tag.response, let cbor):
                 return .item(Envelope(cbor).format.flanked("response(", ")"))
             case CBOR.tagged(let tag, _):
-                let name = tag.name ?? String(tag.rawValue)
+                let name = CBOR.Tag.knownTag(for: tag.rawValue)?.name ?? tag.name ?? String(tag.rawValue)
                 return .item("CBOR(\(name))")
             default:
                 return "CBOR"
