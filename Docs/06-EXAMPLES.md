@@ -503,7 +503,7 @@ Digest(e8aa201db4044168d05b77d7b36648fb7a97db2d3e72f5babba9817911a52809) [
 ]
 ```
 
-## Example 11: Common Identifier
+## Example 11: Distributed Identifier
 
 This example offers an analogue of a DID document, which identifies an entity. The document itself can be referred to by its CID, while the signed document can be referred to by its digest.
 
@@ -613,8 +613,9 @@ Nonce [
 ]
 ```
 
+Alice responds by adding her registered URI to the nonce, and signing it.
+
 ```swift
-// Alice responds by adding her registered URI to the nonce, and signing it.
 let aliceChallengeResponse = try aliceChallenge
     .wrap()
     .addAssertion(.dereferenceVia, aliceURI)
@@ -640,31 +641,38 @@ let aliceChallengeResponse = try aliceChallenge
 ]
 ```
 
+Bob receives Alice's response, and first checks that the nonce is the once he sent.
+
 ```swift
-// Bob receives Alice's response, and first checks that the nonce is the once he sent.
 let responseNonce = try aliceChallengeResponse
     .unwrap()
     .unwrap()
 XCTAssertEqual(aliceChallenge, responseNonce)
+```
 
-// Bob then extracts Alice's registered URI
+Bob then extracts Alice's registered URI
+
+```swift
 let responseURI = try aliceChallengeResponse
     .unwrap()
     .extractObject(URL.self, forPredicate: .dereferenceVia)
 XCTAssertEqual(responseURI.absoluteString, "https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f")
+```
 
-// Bob uses the URI to ask ExampleLedger for Alice's identifier document, then
-// checks ExampleLedgers's signature. Bob trusts ExampleLedger's validation of
-// Alice's original document, so doesn't bother to check it for internal
-// consistency, and instead goes ahead and extracts Alice's public keys from it.
+Bob uses the URI to ask ExampleLedger for Alice's identifier document, then checks ExampleLedgers's signature. Bob trusts ExampleLedger's validation of Alice's original document, so doesn't bother to check it for internal consistency, and instead goes ahead and extracts Alice's public keys from it.
+
+```swift
 let aliceDocumentPublicKeys = try aliceRegistration
     .verifySignature(from: exampleLedgerPublicKeys)
     .unwrap()
     .extractObject(forPredicate: .entity)
     .unwrap()
     .extractObject(PublicKeyBase.self, forPredicate: .publicKeys)
+```
 
-// Finally, Bob uses Alice's public keys to validate the challenge he sent her.
+Finally, Bob uses Alice's public keys to validate the challenge he sent her.
+
+```swift
 try aliceChallengeResponse.verifySignature(from: aliceDocumentPublicKeys)
 ```
 
