@@ -763,19 +763,11 @@ try johnSmithResidentCard.verifySignature(from: statePublicKeys)
 ]
 ```
 
+John wishes to identify himself to a third party using his government-issued credential, but does not wish to reveal more than his name, his photo, and the fact that the state has verified his identity.
+
+Redaction is performed by building a set of digests that will be revealed. All digests not present in the reveal-set will be replaced with elision markers containing only the hash of what has been elided, thus preserving the hash tree including revealed signatures. If a higher-level object is elided, then everything it contains will also be elided, so if a deeper object is to be revealed, all of its parent objects also need to be revealed, even though not everything *about* the parent objects must be revealed.
+
 ```swift
-// John wishes to identify himself to a third party using his government-issued
-// credential, but does not wish to reveal more than his name, his photo, and the
-// fact that the state has verified his identity.
-
-// Redaction is performed by building a set of `Digest`s that will be revealed. All
-// digests not present in the reveal-set will be replaced with elision markers
-// containing only the hash of what has been elided, thus preserving the hash
-// tree including revealed signatures. If a higher-level object is elided, then
-// everything it contains will also be elided, so if a deeper object is to be
-// revealed, all of its parent objects also need to be revealed, even though not
-// everything *about* the parent objects must be revealed.
-
 // Start a target set
 var target: Set<Digest> = []
 
@@ -810,10 +802,10 @@ try target.insert(holderObject.assertion(withPredicate: "image").deepDigests)
 // Perform the elision
 let elidedCredential = try top.elideRevealing(target)
 
-// Verify that the elided credential compares equal to the original credential.
+// Check that the elided credential compares equal to the original credential.
 XCTAssertEqual(elidedCredential, johnSmithResidentCard)
 
-// Verify that the state's signature on the elided card is still valid.
+// Check that the state's signature on the elided card still verifies.
 try elidedCredential.verifySignature(from: statePublicKeys)
 ```
 
