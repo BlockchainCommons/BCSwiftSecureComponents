@@ -678,18 +678,25 @@ try aliceChallengeResponse.verifySignature(from: aliceDocumentPublicKeys)
 
 ## Example 12: Verifiable Credential
 
-Envelopes can also be built to support verifiable credentials, supporting the core functionality of CIDs.
+Envelopes can also be built to support verifiable credentials, supporting the core functionality of DIDs.
+
+John Smith's identifier:
 
 ```swift
-// John Smith's identifier
 let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
+```
 
-// A photo of John Smith
+A photo of John Smith:
+
+```swift
 let johnSmithImage = Envelope(Digest("John Smith smiling"))
     .addAssertion(.note, "This is an image of John Smith.")
     .addAssertion(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
+```
 
-// John Smith's Permanent Resident Card issued by the State of Example
+John Smith's Permanent Resident Card issued by the State of Example:
+
+```swift
 let johnSmithResidentCard = try Envelope(CID(‡"174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8")!)
     .addAssertion(.isA, "credential")
     .addAssertion("dateIssued", Date(iso8601: "2022-04-27"))

@@ -229,7 +229,7 @@ class ScenarioTests: XCTestCase {
         let johnSmithIdentifier = CID(‡"78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc")!
 
         // A photo of John Smith
-        let johnSmithImage = Envelope(Digest("John Smith smiling"))
+        let johnSmithImage = Envelope("John Smith smiling")
             .addAssertion(.note, "This is an image of John Smith.")
             .addAssertion(.dereferenceVia, "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999")
 
@@ -262,6 +262,8 @@ class ScenarioTests: XCTestCase {
         // Validate the state's signature
         try johnSmithResidentCard.verifySignature(from: statePublicKeys)
 
+        print(johnSmithResidentCard.format)
+        
         let expectedFormat =
         """
         {
@@ -274,7 +276,7 @@ class ScenarioTests: XCTestCase {
                     "birthDate": 1974-02-18
                     "familyName": "SMITH"
                     "givenName": "JOHN"
-                    "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                    "image": "John Smith smiling" [
                         dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                         note: "This is an image of John Smith."
                     ]
@@ -307,7 +309,7 @@ class ScenarioTests: XCTestCase {
         // fact that the state has verified his identity.
 
         // Redaction is performed by building a set of `Digest`s that will be revealed. All
-        // digests not present in the reveal-set will be replaced with elision markers
+        // digests not present in the target set will be replaced with elision markers
         // containing only the hash of what has been elided, thus preserving the hash
         // tree including revealed signatures. If a higher-level object is elided, then
         // everything it contains will also be elided, so if a deeper object is to be
@@ -361,7 +363,7 @@ class ScenarioTests: XCTestCase {
                 holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
                     "familyName": "SMITH"
                     "givenName": "JOHN"
-                    "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+                    "image": "John Smith smiling" [
                         dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                         note: "This is an image of John Smith."
                     ]
