@@ -78,6 +78,7 @@ Types that do not define a UR type generally would never be serialized as a top-
 |704|`signingPrivateKey`|
 |705|`signingPublicKey`|
 |707|`nonce`|
+|708|`salt`|
 
 ## Untagged Types
 
@@ -87,7 +88,6 @@ A number of types are simply serialized as untagged CBOR byte strings. They do n
 * `Auth`
 * `Ciphertext`
 * `Plaintext`
-* `Salt`
 * `Tag`
 
 For example, a field called `Auth` is currently only used in the context of the IETF-ChaCha20-Poly1305 encryption algorithm, and therefore does not need to be specifically tagged. If another algorithm also needed a field called `Auth`, it would be used in the context of *that* algorithm, and the two fields would not be considered interchangeable.

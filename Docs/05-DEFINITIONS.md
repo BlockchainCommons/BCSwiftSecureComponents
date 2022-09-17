@@ -35,6 +35,7 @@
 * [Password](#password)
 * [PrivateKeyBase](#privatekeybase)
 * [PublicKeyBase](#publickeybase)
+* [Salt](#salt)
 * [SealedMessage](#sealedmessage)
 * [Signature](#signature)
 * [SigningPrivateKey](#signingprivatekey)
@@ -377,6 +378,24 @@ A `crypto-pubkeys` is a two-element array with the first element being the `sign
 
 ```
 crypto-pubkeys = #6.206([signing-public-key, agreement-public-key])
+```
+
+---
+
+## Salt
+
+A `Salt` is random data frequently used as an additional input to one-way algorithms (e.g., password hashing) where similar inputs (the same password) should not yield the same outputs (the hashed password.) Salts are not usually secret.
+
+```swift
+struct Salt {
+    let data: Data
+}
+```
+
+## Salt: CDDL
+
+```
+salt = #6.708(bytes)
 ```
 
 ---

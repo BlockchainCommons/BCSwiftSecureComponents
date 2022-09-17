@@ -464,28 +464,24 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    /// Add the given Salt as an assertion
+    func addSalt(_ salt: Salt) -> Envelope {
+        addAssertion(.salt, salt)
+    }
+    
     /// Add a specified number of bytes of salt.
     func addSalt(_ count: Int) -> Envelope {
-        return addAssertion(.salt, SecureRandomNumberGenerator.shared.data(count: count))
+        addSalt(Salt(count: count))
     }
 
     /// Add a number of bytes of salt chosen randomly from the given range.
     func addSalt(_ range: ClosedRange<Int>) -> Envelope {
-        var s = SecureRandomNumberGenerator.shared
-        let count = range.randomElement(using: &s)!
-        return addSalt(count)
+        addSalt(Salt(range: range))
     }
 
-    /// Add a number of bytes of salt generally proportional to the size of the object being salted.
-    ///
-    /// For small objects, the number of bytes added will generally be from 8...16.
-    ///
-    /// For larger objects the number of bytes added will generally be from 5%...25% of the size of the object.
+    /// Add a number of bytes of salt generally proportionate to the size of the object being salted.
     func addSalt() -> Envelope {
-        let size = Double(self.taggedCBOR.cborEncode.count)
-        let minSize = max(8, Int((size * 0.05).rounded(.up)))
-        let maxSize = max(minSize + 8, Int((size * 0.25).rounded(.up)))
-        return addSalt(minSize...maxSize)
+        addSalt(Salt(forSize: taggedCBOR.cborEncode.count))
     }
 }
 

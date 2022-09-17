@@ -56,6 +56,8 @@ extension CBOR: EnvelopeFormat {
                 return "Signature"
             case CBOR.tagged(.nonce, _):
                 return "Nonce"
+            case CBOR.tagged(.salt, _):
+                return "Salt"
             case CBOR.tagged(.sealedMessage, _):
                 return "SealedMessage"
             case CBOR.tagged(.sskrShare, _):

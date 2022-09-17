@@ -170,14 +170,14 @@ let e1 = Envelope(Envelope("Hello").addSalt())
 ```
 {
     "Alpha" [
-        salt: CBOR
+        salt: Salt
     ]
 } [
     note [
-        salt: CBOR
+        salt: Salt
     ]
     : "MyNote." [
-        salt: CBOR
+        salt: Salt
     ]
 ]
 ```
