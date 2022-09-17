@@ -110,7 +110,7 @@ The tree itself inherits the correlatability of its elememts. So an `Envelope` j
 On the other hand, envelopes containing only elements that are noncorrelatable, or quasicorrelatable, inherit those attributes. For example, consider a message that has been signed then encrypted:
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
 ]
 ```
@@ -124,7 +124,7 @@ In the above:
 If the assertion is elided, we get:
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     ELIDED
 ]
 ```

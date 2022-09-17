@@ -159,9 +159,3 @@ extension EncryptedMessage: CBOREncodable {
         taggedCBOR
     }
 }
-
-extension EncryptedMessage {
-    var formatItem: EnvelopeFormatItem {
-        .item("EncryptedMessage")
-    }
-}

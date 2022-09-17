@@ -156,7 +156,7 @@ Although you cannot have duplicate assertions every signature is unique, hence t
 The subject is just an `EncryptedMessage`. Because this `EncryptedMessage` is the `subject` of an `Envelope`, we do know that its plaintext MUST be CBOR. This CBOR plaintext may be a leaf or another `Envelope` with more layers of assertions possibly  including signatures, but the receiver will have to decrypt it to find out.
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ---
@@ -166,7 +166,7 @@ EncryptedMessage
 The sender has first encrypted a message, then signed it. The signature can be verified before the actual message is decrypted because an encrypted `subject` carries the digest of the plaintext with it, and it is this digest that is used with the signature for verification.
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
 ]
 ```
@@ -178,7 +178,7 @@ EncryptedMessage [
 An ephemeral "content key" has been used to encrypt the message and the content key itself has been encrypted to one or more receipients' public keys. Therefore, only the intended recipients can decrypt and read the message, without the sender and receivers having to exchange a secret symmetric key first.
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
 ]
@@ -191,7 +191,7 @@ EncryptedMessage [
 As before, the signature can be outside the `subject` message, as below, or inside it, requiring decryption before verification.
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
@@ -205,15 +205,15 @@ EncryptedMessage [
 A message has been split into a three shares using SSKR and distributed to three trustees. Two of these shares must be recovered to reconstruct the original message.
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     sskrShare: SSKRShare
 ]
 
-EncryptedMessage [
+ENCRYPTED [
     sskrShare: SSKRShare
 ]
 
-EncryptedMessage [
+ENCRYPTED [
     sskrShare: SSKRShare
 ]
 ```

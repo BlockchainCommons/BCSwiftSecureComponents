@@ -195,7 +195,7 @@ try XCTAssertThrowsError(receivedEnvelope.decryptSubject(with: SymmetricKey()))
 ### Envelope Notation
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ## Example 5: Sign-Then-Encrypt
@@ -228,7 +228,7 @@ XCTAssertEqual(receivedPlaintext, plaintext)
 ### Envelope Notation
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ## Example 6: Encrypt-Then-Sign
@@ -264,7 +264,7 @@ XCTAssertEqual(receivedPlaintext, plaintextHello)
 ### Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
 ]
 ```
@@ -307,7 +307,7 @@ XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
 ### Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
 ]
@@ -354,7 +354,7 @@ XCTAssertThrowsError(try receivedEnvelope.decrypt(to: alicePrivateKeys))
 ### Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
@@ -420,7 +420,7 @@ XCTAssertThrowsError(try Envelope(shares: [bobEnvelope]))
 ### Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     sskrShare: SSKRShare
 ]
 ```

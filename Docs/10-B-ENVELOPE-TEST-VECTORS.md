@@ -1,7 +1,7 @@
 # Secure Components - Envelope Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 26, 2022</br>
+**Revised:** Sep 16, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -292,7 +292,7 @@ Alice and Bob have agreed to use a symmetric key.
 ### Payload in Envelope Notation
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ### UR
@@ -349,7 +349,7 @@ A message is first signed, then encrypted. Its signature can only be checked onc
 ### Payload in Envelope Notation
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ### UR
@@ -406,7 +406,7 @@ A message is first encrypted, then signed. Its signature may be checked before t
 ### Payload in Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     verifiedBy: Signature
 ]
 ```
@@ -498,7 +498,7 @@ Alice encrypts a message using the public keys of Bob and Carol so that it can o
 ### Payload in Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
 ]
@@ -660,7 +660,7 @@ Alice encrypts a message using the public keys of Bob and Carol so that it can o
 ### Payload in Envelope Notation
 
 ```
-EncryptedMessage [
+ENCRYPTED [
     hasRecipient: SealedMessage
     hasRecipient: SealedMessage
     verifiedBy: Signature

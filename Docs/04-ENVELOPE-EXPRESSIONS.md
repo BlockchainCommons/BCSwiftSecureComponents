@@ -67,7 +67,7 @@ Constants like numbers, strings, and even compound data types like `EncryptedMes
 ```
 
 ```
-EncryptedMessage
+ENCRYPTED
 ```
 
 ## Errors

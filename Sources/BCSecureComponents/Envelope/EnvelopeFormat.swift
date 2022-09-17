@@ -107,8 +107,8 @@ extension Envelope: EnvelopeFormat {
             return .list([.begin("{"), envelope.formatItem, .end("}")])
         case .assertion(let assertion):
             return assertion.formatItem
-        case .encrypted(let message):
-            return message.formatItem
+        case .encrypted(_):
+            return .item("ENCRYPTED")
         case .node(subject: let subject, assertions: let assertions, digest: _):
             var items: [EnvelopeFormatItem] = []
 
