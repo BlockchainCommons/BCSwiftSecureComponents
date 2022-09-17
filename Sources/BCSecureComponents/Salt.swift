@@ -5,17 +5,20 @@ import URKit
 public struct Salt: CustomStringConvertible, Equatable, Hashable, DataProvider {
     public let data: Data
     
-    public init(_ data: Data) {
+    public init?(_ data: Data) {
+        guard data.count >= 8 else {
+            return nil
+        }
         self.data = data
     }
-    
+
     /// Create a specific number of bytes of salt.
-    public init(count: Int) {
+    public init?(count: Int) {
         self.init(SecureRandomNumberGenerator.shared.data(count: count))
     }
     
     /// Create a number of bytes of salt chosen randomly from the given range.
-    public init(range: ClosedRange<Int>) {
+    public init?(range: ClosedRange<Int>) {
         var s = SecureRandomNumberGenerator.shared
         let count = range.randomElement(using: &s)!
         self.init(count: count)
@@ -30,7 +33,7 @@ public struct Salt: CustomStringConvertible, Equatable, Hashable, DataProvider {
         let count = Double(size)
         let minSize = max(8, Int((count * 0.05).rounded(.up)))
         let maxSize = max(minSize + 8, Int((count * 0.25).rounded(.up)))
-        self.init(range: minSize...maxSize)
+        self.init(range: minSize...maxSize)!
     }
 }
 
@@ -55,11 +58,12 @@ public extension Salt {
     
     init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.data(data) = untaggedCBOR
+            case let CBOR.data(data) = untaggedCBOR,
+            let result = Salt(data)
         else {
             throw CBORError.invalidFormat
         }
-        self = Salt(data)
+        self = result
     }
 
     var taggedCBOR: CBOR {
