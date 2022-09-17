@@ -229,10 +229,10 @@ Here is the Swift code to create an empty set of digests:
 var target: Set<Digest> = []
 ```
 
-If we use this empty target to elide the target using the `elideReveal` function:
+If we use this empty target to elide the target using the `elideRevealing` function:
 
 ```swift
-let e2 = credential.elideRevealing(target)
+let e2 = try credential.elideRevealing(target)
 print(e2.format)
 ```
 
@@ -493,7 +493,7 @@ Unlike the previous credential example above, note that we're *removing* the tar
 Starting at the top, we elide the entire `Envelope`:
 
 ```swift
-let e1 = envelope.elideRemoving(envelope)
+let e1 = try envelope.elideRemoving(envelope)
 ```
 
 ```
@@ -503,7 +503,7 @@ ELIDED
 ### Elide the Subject
 
 ```swift
-let e2 = envelope.elideRemoving(envelope.subject)
+let e2 = try envelope.elideRemoving(envelope.subject)
 ```
 
 ```
@@ -516,7 +516,7 @@ ELIDED [
 
 ```swift
 let assertion = envelope.assertions.first!
-let e3 = envelope.elideRemoving(assertion)
+let e3 = try envelope.elideRemoving(assertion)
 ```
 
 ```
@@ -528,7 +528,7 @@ let e3 = envelope.elideRemoving(assertion)
 ### Elide the Predicate
 
 ```swift
-let e4 = envelope.elideRemoving(assertion.predicate!)
+let e4 = try envelope.elideRemoving(assertion.predicate!)
 ```
 
 ```
@@ -540,7 +540,7 @@ let e4 = envelope.elideRemoving(assertion.predicate!)
 ### Elide the Object
 
 ```swift
-let e5 = envelope.elideRemoving(assertion.object!)
+let e5 = try envelope.elideRemoving(assertion.object!)
 ```
 
 ```
@@ -564,7 +564,7 @@ If we execute these statements:
 
 ```swift
 target.insert(Envelope(predicate: "knows"))
-let elided = envelope.elideRemoving(target)
+let elided = try envelope.elideRemoving(target)
 ```
 
 We would see that the "knows" predicate would be redacted everywhere it occurs:
@@ -580,7 +580,7 @@ In practice this is not usually a problem, because if you wish to elide one of t
 
 ```swift
 target.insert(Envelope(predicate: "knows", object: "Carol"))
-let elided = envelope.elideRemoving(target)
+let elided = try envelope.elideRemoving(target)
 ```
 
 ...would yield:

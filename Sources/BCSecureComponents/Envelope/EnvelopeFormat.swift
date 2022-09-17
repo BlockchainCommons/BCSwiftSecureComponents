@@ -114,10 +114,13 @@ extension Envelope: EnvelopeFormat {
 
             let subjectItem = subject.formatItem
             var elidedCount = 0
+            var encryptedCount = 0
             var assertionsItems: [[EnvelopeFormatItem]] = []
             assertions.forEach {
                 if $0.isElided {
                     elidedCount += 1
+                } else if $0.isEncrypted {
+                    encryptedCount += 1
                 } else {
                     assertionsItems.append([$0.formatItem])
                 }
@@ -127,6 +130,11 @@ extension Envelope: EnvelopeFormat {
                 assertionsItems.append([.item("ELIDED (\(elidedCount))")])
             } else if elidedCount > 0 {
                 assertionsItems.append([.item("ELIDED")])
+            }
+            if encryptedCount > 1 {
+                assertionsItems.append([.item("ENCRYPTED (\(encryptedCount))")])
+            } else if encryptedCount > 0 {
+                assertionsItems.append([.item("ENCRYPTED")])
             }
             let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
 

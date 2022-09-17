@@ -49,7 +49,7 @@ class ElisionExampleTests: XCTestCase {
         var target: Set<Digest> = []
         
         /// With an empty target, the entire document is elided.
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED
@@ -59,7 +59,7 @@ class ElisionExampleTests: XCTestCase {
         
         /// By adding the top-level digest of the document, its macro structure is revealed. The subject of the document is the drivers license proper. The two assertions are the `.note` and `.verifiedBy` assertions.
         target.insert(credential)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED [
@@ -73,7 +73,7 @@ class ElisionExampleTests: XCTestCase {
         for assertion in credential.assertions {
             target.insert(assertion.deepDigests)
         }
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED [
@@ -86,7 +86,7 @@ class ElisionExampleTests: XCTestCase {
         
         /// We insert the digest of the document's subject. The subject is a wrapped envelope, which is still elided.
         target.insert(credential.subject)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             {
@@ -102,7 +102,7 @@ class ElisionExampleTests: XCTestCase {
         /// We insert the digest of the wrapped envelope, revealing its macro structure. This is the actual content of the document.
         let content = try credential.subject.unwrap()
         target.insert(content)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             {
@@ -119,7 +119,7 @@ class ElisionExampleTests: XCTestCase {
         
         /// We insert the digest of the wrapped envelope's subject, revealing the employee's CID according to the certifying agency.
         target.insert(content.subject)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             {
@@ -141,7 +141,7 @@ class ElisionExampleTests: XCTestCase {
         target.insert(try content.assertion(withPredicate: .issuer).shallowDigests)
         target.insert(try content.assertion(withPredicate: "subject").shallowDigests)
         target.insert(try content.assertion(withPredicate: "expirationDate").shallowDigests)
-        let redactedCredential = credential.elideRevealing(target)
+        let redactedCredential = try credential.elideRevealing(target)
         XCTAssertEqual(redactedCredential.format,
         """
         {
@@ -242,7 +242,7 @@ class ElisionExampleTests: XCTestCase {
         var target: Set<Digest> = []
         
         /// With an empty target, the entire document is elided.
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED
@@ -252,7 +252,7 @@ class ElisionExampleTests: XCTestCase {
         
         /// By adding the top-level digest of the document, its macro structure is revealed. The subject of the document is the drivers license proper. The two assertions are the `.note` and `.verifiedBy` assertions.
         target.insert(credential)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED [
@@ -266,7 +266,7 @@ class ElisionExampleTests: XCTestCase {
         for assertion in credential.assertions {
             target.insert(assertion.deepDigests)
         }
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             ELIDED [
@@ -279,7 +279,7 @@ class ElisionExampleTests: XCTestCase {
         
         /// We insert the digest of the document's subject. The subject is a wrapped envelope, which is still elided.
         target.insert(credential.subject)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             {
@@ -295,7 +295,7 @@ class ElisionExampleTests: XCTestCase {
         /// We insert the digest of the wrapped envelope, revealing its macro structure. This is the actual content of the document.
         let content = try credential.subject.unwrap()
         target.insert(content)
-        with(credential.elideRevealing(target)) {
+        with(try credential.elideRevealing(target)) {
             XCTAssertEqual($0.format,
             """
             {
@@ -313,7 +313,7 @@ class ElisionExampleTests: XCTestCase {
         /// The only actual assertions we want to reveal are `birthDate` and `photo`, so we do this by finding those specific assertions by their predicate. The `shallowDigests` attribute returns just a necessary set of attributes to reveal the assertion, its predicate, and its object (yes, all three of them need to be revealed) but *not* any deeper assertions on them.
         target.insert(try content.assertion(withPredicate: "birthDate").shallowDigests)
         target.insert(try content.assertion(withPredicate: "photo").shallowDigests)
-        let redactedCredential = credential.elideRevealing(target)
+        let redactedCredential = try credential.elideRevealing(target)
         XCTAssertEqual(redactedCredential.format,
         """
         {
@@ -343,48 +343,102 @@ class ElisionExampleTests: XCTestCase {
         """
         )
 
-        let e1 = envelope.elideRemoving(envelope)
-        XCTAssertEqual(e1.format,
-        """
-        ELIDED
-        """
-        )
+        with(try envelope.elideRemoving(envelope).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            ELIDED
+            """
+            )
+        }
 
-        let e2 = envelope.elideRemoving(envelope.subject)
-        XCTAssertEqual(e2.format,
-        """
-        ELIDED [
-            "knows": "Bob"
-        ]
-        """
-        )
+        let key = SymmetricKey()
+        with(try envelope.elideRemoving(envelope, encryptingWith: key).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            ENCRYPTED
+            """
+            )
+        }
+        
+        with(try envelope.elideRemoving(envelope.subject).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            ELIDED [
+                "knows": "Bob"
+            ]
+            """
+            )
+        }
+        
+        with(try envelope.elideRemoving(envelope.subject, encryptingWith: key).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            ENCRYPTED [
+                "knows": "Bob"
+            ]
+            """
+            )
+        }
 
         let assertion = envelope.assertions.first!
-        let e3 = envelope.elideRemoving(assertion)
-        XCTAssertEqual(e3.format,
-        """
-        "Alice" [
-            ELIDED
-        ]
-        """
-        )
+        with(try envelope.elideRemoving(assertion).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                ELIDED
+            ]
+            """
+            )
+        }
 
-        let e4 = envelope.elideRemoving(assertion.predicate!)
-        XCTAssertEqual(e4.format,
-        """
-        "Alice" [
-            ELIDED: "Bob"
-        ]
-        """
-        )
+        with(try envelope.elideRemoving(assertion, encryptingWith: key).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                ENCRYPTED
+            ]
+            """
+            )
+        }
 
-        let e5 = envelope.elideRemoving(assertion.object!)
-        XCTAssertEqual(e5.format,
-        """
-        "Alice" [
-            "knows": ELIDED
-        ]
-        """
-        )
+        with(try envelope.elideRemoving(assertion.predicate!).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                ELIDED: "Bob"
+            ]
+            """
+            )
+        }
+
+        with(try envelope.elideRemoving(assertion.predicate!, encryptingWith: key).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                ENCRYPTED: "Bob"
+            ]
+            """
+            )
+        }
+
+        with(try envelope.elideRemoving(assertion.object!).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                "knows": ELIDED
+            ]
+            """
+            )
+        }
+
+        with(try envelope.elideRemoving(assertion.object!, encryptingWith: key).checkEncoding()) { e in
+            XCTAssertEqual(e.format,
+            """
+            "Alice" [
+                "knows": ENCRYPTED
+            ]
+            """
+            )
+        }
     }
 }

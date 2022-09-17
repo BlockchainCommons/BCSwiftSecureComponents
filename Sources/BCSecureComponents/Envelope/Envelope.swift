@@ -146,7 +146,7 @@ private extension Envelope {
     }
 
     init(subject: Envelope, assertions: [Envelope]) throws {
-        guard assertions.allSatisfy({ $0.isAssertion || $0.isElided }) else {
+        guard assertions.allSatisfy({ $0.isAssertion || $0.isElided || $0.isEncrypted }) else {
             throw EnvelopeError.invalidFormat
         }
         self.init(subject: subject, uncheckedAssertions: assertions)
@@ -808,27 +808,32 @@ public extension Envelope {
 //     true            true         false
 
 public extension Envelope {
-    func elide(_ target: Set<Digest>, isRevealing: Bool) -> Envelope {
+    func elide(_ target: Set<Digest>, isRevealing: Bool, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
         let result: Envelope
         if target.contains(digest) != isRevealing {
-            result = elide()
+            if let key {
+                let message = key.encrypt(plaintext: self.taggedCBOR, digest: self.digest)
+                result = try Envelope(encryptedMessage: message)
+            } else {
+                result = elide()
+            }
         } else if case .assertion(let assertion) = self {
-            let predicate = assertion.predicate.elide(target, isRevealing: isRevealing)
-            let object = assertion.object.elide(target, isRevealing: isRevealing)
+            let predicate = try assertion.predicate.elide(target, isRevealing: isRevealing, encryptingWith: key)
+            let object = try assertion.object.elide(target, isRevealing: isRevealing, encryptingWith: key)
             let elidedAssertion = Assertion(predicate: predicate, object: object)
             assert(elidedAssertion == assertion)
             result = Envelope(assertion: elidedAssertion)
         } else if case .node(let subject, let assertions, _) = self {
-            let elidedSubject = subject.elide(target, isRevealing: isRevealing)
+            let elidedSubject = try subject.elide(target, isRevealing: isRevealing, encryptingWith: key)
             assert(elidedSubject == subject)
-            let elidedAssertions = assertions.map { assertion in
-                let elidedAssertion = assertion.elide(target, isRevealing: isRevealing)
+            let elidedAssertions = try assertions.map { assertion in
+                let elidedAssertion = try assertion.elide(target, isRevealing: isRevealing, encryptingWith: key)
                 assert(elidedAssertion == assertion)
                 return elidedAssertion
             }
             result = Envelope(subject: elidedSubject, uncheckedAssertions: elidedAssertions)
         } else if case .wrapped(let envelope, _) = self {
-            let elidedEnvelope = envelope.elide(target, isRevealing: isRevealing)
+            let elidedEnvelope = try envelope.elide(target, isRevealing: isRevealing, encryptingWith: key)
             assert(elidedEnvelope == envelope)
             result = Envelope(wrapped: elidedEnvelope)
         } else {
@@ -838,39 +843,40 @@ public extension Envelope {
         return result
     }
 
-    func elideRemoving(_ target: Set<Digest>) -> Envelope {
-        elide(target, isRevealing: false)
+    func elideRemoving(_ target: Set<Digest>, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: false, encryptingWith: key)
     }
 
-    func elideRevealing(_ target: Set<Digest>) -> Envelope {
-        elide(target, isRevealing: true)
+    func elideRevealing(_ target: Set<Digest>, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: true, encryptingWith: key)
     }
 }
 
 public extension Envelope {
-    func elide(_ target: [DigestProvider], isRevealing: Bool) -> Envelope {
-        elide(Set(target.map { $0.digest }), isRevealing: isRevealing)
+    func elide(_ target: [DigestProvider], isRevealing: Bool, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(Set(target.map { $0.digest }), isRevealing: isRevealing, encryptingWith: key)
     }
-    func elideRemoving(_ target: [DigestProvider]) -> Envelope {
-        elide(target, isRevealing: false)
+    
+    func elideRemoving(_ target: [DigestProvider], encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: false, encryptingWith: key)
     }
 
-    func elideRevealing(_ target: [DigestProvider]) -> Envelope {
-        elide(target, isRevealing: true)
+    func elideRevealing(_ target: [DigestProvider], encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: true, encryptingWith: key)
     }
 }
 
 public extension Envelope {
-    func elide(_ target: DigestProvider, isRevealing: Bool) -> Envelope {
-        elide([target], isRevealing: isRevealing)
+    func elide(_ target: DigestProvider, isRevealing: Bool, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide([target], isRevealing: isRevealing, encryptingWith: key)
     }
 
-    func elideRemoving(_ target: DigestProvider) -> Envelope {
-        elide(target, isRevealing: false)
+    func elideRemoving(_ target: DigestProvider, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: false, encryptingWith: key)
     }
 
-    func elideRevealing(_ target: DigestProvider) -> Envelope {
-        elide(target, isRevealing: true)
+    func elideRevealing(_ target: DigestProvider, encryptingWith key: SymmetricKey? = nil) throws -> Envelope {
+        try elide(target, isRevealing: true, encryptingWith: key)
     }
 }
 

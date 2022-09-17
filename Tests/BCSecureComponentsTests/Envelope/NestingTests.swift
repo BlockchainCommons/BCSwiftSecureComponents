@@ -234,7 +234,7 @@ class NestingTests: XCTestCase {
         let target = try envelope
             .unwrap()
             .unwrap()
-        let elidedEnvelope = envelope.elideRemoving(target)
+        let elidedEnvelope = try envelope.elideRemoving(target)
 
         let expectedElidedFormat =
         """
