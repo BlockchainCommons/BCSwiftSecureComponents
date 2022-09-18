@@ -219,7 +219,7 @@ If we print the credential in Envelope Notation, we get:
 
 ## The Target Set
 
-Every part of an `Envelope` generates a `Digest`, and these together form a Merkle tree. So when eliding a document, we can decide what to remove or reveal by identifying a subset of all the digests that make up the tree. This set is known as the *target*. Normally we would create the target and then perform the elision in a single operation, but in this example we are going to build up the target in increments, showing the result of each step.
+Every part of an envelope generates a digest, and these together form a Merkle tree. So when eliding a document, we can decide what to remove or reveal by identifying a subset of all the digests that make up the tree. This set is known as the *target*. Normally we would create the target and then perform the elision in a single operation, but in this example we are going to build up the target in increments, showing the result of each step.
 
 ## Creating the Empty Target
 
@@ -246,7 +246,7 @@ We've essentially said, "Elide everything." Obviously this isn't very useful, so
 
 ## Revealing the Top-Level Structure
 
-The first digest we need is the top-level digest of the `Envelope`. This reveals the "macro structure" of the envelope.
+The first digest we need is the top-level digest of the envelope. This reveals the "macro structure" of the envelope.
 
 (From here on we'll just show the code that adds digests to the target, and the result of performing the elision on the original credential using that target.)
 
@@ -260,7 +260,7 @@ ELIDED [
 ]
 ```
 
-This shows us that the `Envelope` has a subject, which is still elided, and two assertions, both of which are still elided. The subject is the actual credential, and the assertions are the signature and the note.
+This shows us that the envelope has a subject, which is still elided, and two assertions, both of which are still elided. The subject is the actual credential, and the assertions are the signature and the note.
 
 ## Revealing the Signature
 
@@ -298,7 +298,7 @@ target.insert(credential.subject)
 ]
 ```
 
-Comparing to the results of the previous step, we see a new pair of braces has appeared. This is because the subject of the document is *another* `Envelope` that has been wrapped in its entirety to be signed. Notice the call to the `.wrap()` function at the start of this example above.
+Comparing to the results of the previous step, we see a new pair of braces has appeared. This is because the subject of the document is *another* envelope that has been wrapped in its entirety to be signed. Notice the call to the `.wrap()` function at the start of this example above.
 
 ## Revealing the Content
 
