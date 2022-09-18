@@ -29,7 +29,7 @@ This section includes a set of high-level examples of API usage in Swift involvi
 
 ## Status
 
-These examples are actual, running unit tests in the [BCSwiftFoundation package](https://github.com/blockchaincommons/BCSwiftFoundation). The document and implementation as a whole are considered a draft.
+These examples are actual, running unit tests in the [BCSwiftSecureComponents package](https://github.com/blockchaincommons/BCSwiftSecureComponents). The document and implementation as a whole are considered a draft.
 
 ## Common structures used by the examples
 
