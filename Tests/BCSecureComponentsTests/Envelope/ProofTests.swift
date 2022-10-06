@@ -50,7 +50,7 @@ class ProofTests: XCTestCase {
         /// are present, but because they have been salted, the third party cannot easily
         /// guess who else she knows.
         let knowsBobAssertion = Envelope(predicate: "knows", object: "Bob")
-        let aliceKnowsBobProof = aliceFriends.proof(contains: knowsBobAssertion)!
+        let aliceKnowsBobProof = try aliceFriends.proof(contains: knowsBobAssertion)!.checkEncoding()
         XCTAssertEqual(aliceKnowsBobProof.format,
         """
         ELIDED [
@@ -83,7 +83,7 @@ class ProofTests: XCTestCase {
         /// option is used to decide whether one or all positions will be revealed in the
         /// proof. In the case of one position being revealed, it will be the first one
         /// found in the search order.
-        let knowsProof1 = aliceFriends.proof(contains: Envelope("knows"), allPositions: false)!
+        let knowsProof1 = try aliceFriends.proof(contains: Envelope("knows"), allPositions: false)!.checkEncoding()
         XCTAssertEqual(knowsProof1.format,
         """
         ELIDED [
@@ -100,7 +100,7 @@ class ProofTests: XCTestCase {
         /// Note that revealing all positions of the "knows" predicate in this envelope also
         /// reveals the digest of the salt for each assertion, which might make Alice's other
         /// associates easier to guess.
-        let knowsProof = aliceFriends.proof(contains: Envelope("knows"), allPositions: true)!
+        let knowsProof = try aliceFriends.proof(contains: Envelope("knows"), allPositions: true)!.checkEncoding()
         XCTAssertEqual(knowsProof.format,
         """
         ELIDED [
@@ -145,7 +145,7 @@ class ProofTests: XCTestCase {
 
         /// In this case the holder of a credential wants to prove a single assertion from it, the address.
         let addressAssertion = Envelope(predicate: "address", object: "123 Main St.")
-        let addressProof = credential.proof(contains: addressAssertion)!
+        let addressProof = try credential.proof(contains: addressAssertion)!.checkEncoding()
         /// The proof includes digests from all the elided assertions.
         XCTAssertEqual(addressProof.format,
         """

@@ -111,12 +111,40 @@ public extension Envelope {
         }
         return true
     }
+    
+    var isSubjectEncrypted: Bool {
+        switch self {
+        case .encrypted:
+            return true
+        case .node(subject: let subject, assertions: _, digest: _):
+            if case .encrypted = subject {
+                return true
+            }
+            return false
+        default:
+            return false
+        }
+    }
 
     var isElided: Bool {
         guard case .elided = self else {
             return false
         }
         return true
+    }
+    
+    var isSubjectElided: Bool {
+        switch self {
+        case .elided:
+            return true
+        case .node(subject: let subject, assertions: _, digest: _):
+            if case .elided = subject {
+                return true
+            }
+            return false
+        default:
+            return false
+        }
     }
 
     var isWrapped: Bool {
@@ -146,7 +174,7 @@ private extension Envelope {
     }
 
     init(subject: Envelope, assertions: [Envelope]) throws {
-        guard assertions.allSatisfy({ $0.isAssertion || $0.isElided || $0.isEncrypted }) else {
+        guard assertions.allSatisfy({ $0.isAssertion || $0.isSubjectElided || $0.isSubjectEncrypted }) else {
             throw EnvelopeError.invalidFormat
         }
         self.init(subject: subject, uncheckedAssertions: assertions)
