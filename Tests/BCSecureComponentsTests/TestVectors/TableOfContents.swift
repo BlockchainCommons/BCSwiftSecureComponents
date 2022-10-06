@@ -19,6 +19,7 @@ let tocItems: [(title: String, filename: String)] = [
     ("Examples", "EXAMPLES.md"),
     ("Noncorrelation", "NONCORRELATION.md"),
     ("Elision and Redaction", "ELISION-REDACTION.md"),
+    ("Existence Proofs", "EXISTENCE-PROOFS.md"),
     ("Appendix A: MVA Algorithm Suite", "A-ALGORITHMS.md"),
     ("Appendix B: Envelope Test Vectors", "B-ENVELOPE-TEST-VECTORS.md"),
     ("Appendix C: Envelope SSKR Test Vectors", "C-ENVELOPE-SSKR-TEST-VECTORS.md"),

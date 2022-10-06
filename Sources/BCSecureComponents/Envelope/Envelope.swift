@@ -404,10 +404,11 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func addAssertion(_ envelope: Envelope) throws -> Envelope {
+    func addAssertion(_ envelope: Envelope, salted: Bool = false) throws -> Envelope {
         guard envelope.isAssertion else {
             throw EnvelopeError.invalidFormat
         }
+        let envelope = salted ? envelope.addSalt() : envelope
         switch self {
         case .node(subject: let subject, assertions: let assertions, digest: _):
             if !assertions.contains(envelope) {
@@ -420,46 +421,46 @@ public extension Envelope {
         }
     }
 
-    func addAssertion(_ assertion: Assertion) -> Envelope {
-        try! addAssertion(Envelope(assertion: assertion))
+    func addAssertion(_ assertion: Assertion, salted: Bool = false) -> Envelope {
+        try! addAssertion(Envelope(assertion: assertion), salted: salted)
     }
 
-    func addAssertion(_ predicate: Any, _ object: Any) -> Envelope {
-        addAssertion(Assertion(predicate: predicate, object: object))
+    func addAssertion(_ predicate: Any, _ object: Any, salted: Bool = false) -> Envelope {
+        addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
     }
 
-    func addAssertion(_ predicate: KnownPredicate, _ object: Any) -> Envelope {
-        addAssertion(Assertion(predicate: predicate, object: object))
+    func addAssertion(_ predicate: KnownPredicate, _ object: Any, salted: Bool = false) -> Envelope {
+        addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
     }
 }
 
 public extension Envelope {
-    func addAssertion(if condition: Bool, _ envelope: @autoclosure () -> Envelope) throws -> Envelope {
+    func addAssertion(if condition: Bool, _ envelope: @autoclosure () -> Envelope, salted: Bool = false) throws -> Envelope {
         guard condition else {
             return self
         }
-        return try addAssertion(envelope())
+        return try addAssertion(envelope(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ assertion: @autoclosure () -> Assertion) -> Envelope {
+    func addAssertion(if condition: Bool, _ assertion: @autoclosure () -> Assertion, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
-        return addAssertion(assertion())
+        return addAssertion(assertion(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> Any, _ object: @autoclosure () -> Any) -> Envelope {
+    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> Any, _ object: @autoclosure () -> Any, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
-        return addAssertion(predicate(), object())
+        return addAssertion(predicate(), object(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any) -> Envelope {
+    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
-        return addAssertion(predicate(), object())
+        return addAssertion(predicate(), object(), salted: salted)
     }
 }
 
@@ -799,6 +800,82 @@ public extension Envelope {
             throw EnvelopeError.invalidDigest
         }
         return envelope
+    }
+}
+
+extension Envelope {
+    public func proof(contains target: DigestProvider, allPositions: Bool = false) -> Envelope? {
+        let targetSet = targetSet(of: target, allPositions: allPositions)
+        guard !targetSet.isEmpty else { return nil }
+        return try! elideRevealing(targetSet).elideRemoving(target)
+    }
+    
+    public func targetSet(of target: DigestProvider, allPositions: Bool = false) -> Set<Digest> {
+        var result: [Set<Digest>] = []
+        targetSets(of: target.digest, current: [], result: &result)
+        if allPositions {
+            return result.reduce(into: []) {
+                $0.formUnion($1)
+            }
+        } else {
+            return result.first!
+        }
+    }
+    
+    func targetSets(of target: Digest, current: Set<Digest>, result: inout [Set<Digest>]) {
+        var current = current
+        current.insert(digest)
+
+        if digest == target {
+            result.append(current)
+            return
+        }
+
+        switch self {
+        case .node(let subject, let assertions, _):
+            subject.targetSets(of: target, current: current, result: &result)
+            for assertion in assertions {
+                assertion.targetSets(of: target, current: current, result: &result)
+            }
+        case .wrapped(let envelope, _):
+            envelope.targetSets(of: target, current: current, result: &result)
+        case .assertion(let assertion):
+            assertion.predicate.targetSets(of: target, current: current, result: &result)
+            assertion.object.targetSets(of: target, current: current, result: &result)
+        default:
+            break
+        }
+    }
+    
+    public func contains(_ target: DigestProvider) -> Bool {
+        _contains(target.digest)
+    }
+    
+    func _contains(_ target: Digest) -> Bool {
+        if digest == target {
+            return true
+        }
+
+        switch self {
+        case .node(let subject, let assertions, _):
+            if subject.contains(target) { return true }
+            for assertion in assertions {
+                if assertion.contains(target) { return true }
+            }
+        case .wrapped(let envelope, _):
+            if envelope.contains(target) { return true }
+        case .assertion(let assertion):
+            if assertion.predicate.contains(target) { return true }
+            if assertion.object.contains(target) { return true }
+        default:
+            break
+        }
+        
+        return false
+    }
+    
+    public func confirm(contains innerEnvelope: Envelope, proof: Envelope) -> Bool {
+        return self.digest == proof.digest && proof.contains(innerEnvelope)
     }
 }
 
