@@ -874,8 +874,8 @@ extension Envelope {
         return false
     }
     
-    public func confirm(contains innerEnvelope: Envelope, proof: Envelope) -> Bool {
-        return self.digest == proof.digest && proof.contains(innerEnvelope)
+    public func confirm(contains digest: DigestProvider, proof: Envelope) -> Bool {
+        return self.digest == proof.digest && proof.contains(digest)
     }
 }
 
