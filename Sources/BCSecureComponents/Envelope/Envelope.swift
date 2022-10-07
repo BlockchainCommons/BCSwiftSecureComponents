@@ -833,7 +833,7 @@ public extension Envelope {
 
 extension Envelope {
     public func proof(contains target: DigestProvider) -> Envelope? {
-        proof(contains: Set([target.digest]))
+        proof(contains: [target.digest])
     }
     
     public func proof(contains target: Set<Digest>) -> Envelope? {
@@ -843,7 +843,7 @@ extension Envelope {
     }
     
     public func revealSet(of target: DigestProvider) -> Set<Digest> {
-        revealSet(of: Set([target.digest]))
+        revealSet(of: [target.digest])
     }
     
     public func revealSet(of target: Set<Digest>) -> Set<Digest> {
@@ -877,34 +877,43 @@ extension Envelope {
     }
     
     public func contains(_ target: DigestProvider) -> Bool {
-        _contains(target.digest)
+        containsAll(in: [target.digest])
     }
     
-    func _contains(_ target: Digest) -> Bool {
-        if digest == target {
-            return true
+    public func containsAll(in target: Set<Digest>) -> Bool {
+        var target = target
+        removeAllFound(in: &target)
+        return target.isEmpty
+    }
+    
+    func removeAllFound(in target: inout Set<Digest>) {
+        if target.contains(digest) {
+            target.remove(digest)
         }
+        guard !target.isEmpty else { return }
 
         switch self {
         case .node(let subject, let assertions, _):
-            if subject.contains(target) { return true }
+            subject.removeAllFound(in: &target)
             for assertion in assertions {
-                if assertion.contains(target) { return true }
+                assertion.removeAllFound(in: &target)
             }
         case .wrapped(let envelope, _):
-            if envelope.contains(target) { return true }
+            envelope.removeAllFound(in: &target)
         case .assertion(let assertion):
-            if assertion.predicate.contains(target) { return true }
-            if assertion.object.contains(target) { return true }
+            assertion.predicate.removeAllFound(in: &target)
+            assertion.object.removeAllFound(in: &target)
         default:
             break
         }
-        
-        return false
     }
     
-    public func confirm(contains digest: DigestProvider, proof: Envelope) -> Bool {
-        return self.digest == proof.digest && proof.contains(digest)
+    public func confirm(contains target: DigestProvider, using proof: Envelope) -> Bool {
+        confirm(contains: [target.digest], using: proof)
+    }
+    
+    public func confirm(contains target: Set<Digest>, using proof: Envelope) -> Bool {
+        self.digest == proof.digest && proof.containsAll(in: target)
     }
 }
 

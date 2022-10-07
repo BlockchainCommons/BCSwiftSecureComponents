@@ -64,7 +64,7 @@ class ProofTests: XCTestCase {
         
         /// The third party then uses the previously known and trusted root to confirm that
         /// the envelope does indeed contain a "knows bob" assertion.
-        XCTAssertTrue(aliceFriendsRoot.confirm(contains: knowsBobAssertion, proof: aliceKnowsBobProof))
+        XCTAssertTrue(aliceFriendsRoot.confirm(contains: knowsBobAssertion, using: aliceKnowsBobProof))
     }
     
     func testMultiPosition() throws {
@@ -145,14 +145,14 @@ class ProofTests: XCTestCase {
         )
 
         /// The proof confirms the address, as intended.
-        XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, proof: addressProof))
+        XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, using: addressProof))
 
         /// Assertions without salt can also be confirmed.
         let issuerAssertion = Envelope(predicate: .issuer, object: "State of Example")
-        XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, proof: addressProof))
+        XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, using: addressProof))
 
         /// The proof cannot be used to confirm salted assertions.
         let firstNameAssertion = Envelope(predicate: "firstName", object: "John")
-        XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, proof: addressProof))
+        XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, using: addressProof))
     }
 }

@@ -96,7 +96,7 @@ ELIDED [
 The third party then uses the previously known and trusted root to confirm that the envelope does indeed contain a "knows bob" assertion.
 
 ```swift
-XCTAssertTrue(aliceFriendsRoot.confirm(contains: knowsBobAssertion, proof: aliceKnowsBobProof))
+XCTAssertTrue(aliceFriendsRoot.confirm(contains: knowsBobAssertion, using: aliceKnowsBobProof))
 ```
 
 ## Example 2: Verifiable Credential
@@ -148,19 +148,19 @@ The proof includes digests from all the elided assertions.
 The proof confirms the address, as intended.
 
 ```swift
-XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, proof: addressProof))
+XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, using: addressProof))
 ```
 
 Assertions without salt can be guessed at, and confirmed if the the guess is correct.
 
 ```swift
 let issuerAssertion = Envelope(predicate: .issuer, object: "State of Example")
-XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, proof: addressProof))
+XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, using: addressProof))
 ```
 
 The proof cannot be used to confirm salted assertions.
 
 ```swift
 let firstNameAssertion = Envelope(predicate: "firstName", object: "John")
-XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, proof: addressProof))
+XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, using: addressProof))
 ```
