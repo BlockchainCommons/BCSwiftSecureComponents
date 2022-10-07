@@ -832,44 +832,45 @@ public extension Envelope {
 }
 
 extension Envelope {
-    public func proof(contains target: DigestProvider, allPositions: Bool = false) -> Envelope? {
-        let targetSet = targetSet(of: target, allPositions: allPositions)
-        guard !targetSet.isEmpty else { return nil }
-        return try! elideRevealing(targetSet).elideRemoving(target)
+    public func proof(contains target: DigestProvider) -> Envelope? {
+        proof(contains: Set([target.digest]))
     }
     
-    public func targetSet(of target: DigestProvider, allPositions: Bool = false) -> Set<Digest> {
-        var result: [Set<Digest>] = []
-        targetSets(of: target.digest, current: [], result: &result)
-        if allPositions {
-            return result.reduce(into: []) {
-                $0.formUnion($1)
-            }
-        } else {
-            return result.first!
-        }
+    public func proof(contains target: Set<Digest>) -> Envelope? {
+        let revealSet = revealSet(of: target)
+        guard target.isSubset(of: revealSet) else { return nil }
+        return try! elideRevealing(revealSet).elideRemoving(target)
     }
     
-    func targetSets(of target: Digest, current: Set<Digest>, result: inout [Set<Digest>]) {
+    public func revealSet(of target: DigestProvider) -> Set<Digest> {
+        revealSet(of: Set([target.digest]))
+    }
+    
+    public func revealSet(of target: Set<Digest>) -> Set<Digest> {
+        var result: Set<Digest> = []
+        revealSets(of: target, current: [], result: &result)
+        return result
+    }
+    
+    func revealSets(of target: Set<Digest>, current: Set<Digest>, result: inout Set<Digest>) {
         var current = current
         current.insert(digest)
 
-        if digest == target {
-            result.append(current)
-            return
+        if target.contains(digest) {
+            result.formUnion(current)
         }
 
         switch self {
         case .node(let subject, let assertions, _):
-            subject.targetSets(of: target, current: current, result: &result)
+            subject.revealSets(of: target, current: current, result: &result)
             for assertion in assertions {
-                assertion.targetSets(of: target, current: current, result: &result)
+                assertion.revealSets(of: target, current: current, result: &result)
             }
         case .wrapped(let envelope, _):
-            envelope.targetSets(of: target, current: current, result: &result)
+            envelope.revealSets(of: target, current: current, result: &result)
         case .assertion(let assertion):
-            assertion.predicate.targetSets(of: target, current: current, result: &result)
-            assertion.object.targetSets(of: target, current: current, result: &result)
+            assertion.predicate.revealSets(of: target, current: current, result: &result)
+            assertion.object.revealSets(of: target, current: current, result: &result)
         default:
             break
         }

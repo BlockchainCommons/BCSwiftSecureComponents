@@ -74,33 +74,15 @@ class ProofTests: XCTestCase {
             .addAssertion("knows", "Dan", salted: true)
 
         /// In some cases the target of a proof might exist at more than one position in an
-        /// envelope. In this case one must decide whether the proof will proove the
-        /// existence of the target in *at least* one position, or whether it needs to
-        /// proove the target in *all* of its positions. An example target from Alice's list
-        /// of friends would be any envelope containing "knows" as its subject. Since all
-        /// three "knows" assertions use this as their predicate, that identical envelope
-        /// exists in three different positions in the outer envelope. The `allPositions`
-        /// option is used to decide whether one or all positions will be revealed in the
-        /// proof. In the case of one position being revealed, it will be the first one
-        /// found in the search order.
-        let knowsProof1 = try aliceFriends.proof(contains: Envelope("knows"), allPositions: false)!.checkEncoding()
-        XCTAssertEqual(knowsProof1.format,
-        """
-        ELIDED [
-            {
-                ELIDED: ELIDED
-            } [
-                ELIDED
-            ]
-            ELIDED (2)
-        ]
-        """
-        )
-        
+        /// envelope. An example target from Alice's list of friends would be any envelope
+        /// containing "knows" as its subject. Since all three "knows" assertions use this
+        /// as their predicate, that identical envelope exists in three different positions
+        /// in the outer envelope.
+        ///
         /// Note that revealing all positions of the "knows" predicate in this envelope also
         /// reveals the digest of the salt for each assertion, which might make Alice's other
         /// associates easier to guess.
-        let knowsProof = try aliceFriends.proof(contains: Envelope("knows"), allPositions: true)!.checkEncoding()
+        let knowsProof = try aliceFriends.proof(contains: Envelope("knows"))!.checkEncoding()
         XCTAssertEqual(knowsProof.format,
         """
         ELIDED [

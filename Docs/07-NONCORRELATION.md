@@ -183,4 +183,4 @@ let e1 = Envelope(Envelope("Hello").addSalt())
 ]
 ```
 
-Any or all elements of this salted `Envelope` could be elided with a high degree of noncorrelatability..
+Any or all elements of this salted `Envelope` could be elided with a high degree of noncorrelatability.
