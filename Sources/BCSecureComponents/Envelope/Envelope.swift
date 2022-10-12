@@ -799,6 +799,19 @@ public extension Envelope {
                 .map { try $0.object!.extractSubject(SealedMessage.self) }
         }
     }
+    
+    func encryptSubject(to recipients: [PublicKeyBase]) throws -> Envelope {
+        let contentKey = SymmetricKey()
+        var e = try encryptSubject(with: contentKey)
+        for recipient in recipients {
+            e = e.addRecipient(recipient, contentKey: contentKey)
+        }
+        return e
+    }
+    
+    func encryptSubject(to recipient: PublicKeyBase) throws -> Envelope {
+        try encryptSubject(to: [recipient])
+    }
 
     func decrypt(to recipient: PrivateKeyBase) throws -> Envelope {
         guard
