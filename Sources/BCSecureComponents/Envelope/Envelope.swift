@@ -385,9 +385,28 @@ public extension Envelope {
         }
         return result
     }
+    
+    func extractObjects(forPredicate predicate: Envelope) -> [Envelope] {
+        assertions(withPredicate: predicate).map { $0.object! }
+    }
+    
+    func extractObjects(forPredicate predicate: KnownPredicate) -> [Envelope] {
+        let predicate = Envelope(predicate)
+        return extractObjects(forPredicate: predicate)
+    }
 
     func extractObject<T>(_ type: T.Type, forPredicate predicate: Envelope) throws -> T where T: CBORDecodable {
         try extractObject(forPredicate: predicate).extractSubject(type)
+    }
+    
+    func extractObjects<T>(_ type: T.Type, forPredicate predicate: CBOREncodable) throws -> [T] where T: CBORDecodable {
+        let predicate = Envelope(predicate)
+        return try extractObjects(forPredicate: predicate).map { try $0.extractSubject(type) }
+    }
+    
+    func extractObjects<T>(_ type: T.Type, forPredicate predicate: KnownPredicate) throws -> [T] where T: CBORDecodable {
+        let predicate = Envelope(predicate)
+        return try extractObjects(forPredicate: predicate).map { try $0.extractSubject(type) }
     }
 }
 
@@ -411,6 +430,10 @@ public extension Envelope {
     func extractObject<T>(_ type: T.Type, forParameter parameter: ParameterIdentifier) throws -> T where T: CBORDecodable {
         try extractObject(type, forPredicate: parameter)
     }
+    
+    func extractObjects<T>(_ type: T.Type, forParameter parameter: ParameterIdentifier) throws -> [T] where T: CBORDecodable {
+        try extractObjects(type, forPredicate: parameter)
+    }
 }
 
 public extension Envelope {
@@ -432,59 +455,71 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func addAssertion(_ envelope: Envelope, salted: Bool = false) throws -> Envelope {
+    func addAssertion(_ envelope: Envelope?, salted: Bool = false) throws -> Envelope {
+        guard let envelope else {
+            return self
+        }
         guard envelope.isAssertion else {
             throw EnvelopeError.invalidFormat
         }
-        let envelope = salted ? envelope.addSalt() : envelope
+        let envelope2 = salted ? envelope.addSalt() : envelope
         switch self {
         case .node(subject: let subject, assertions: let assertions, digest: _):
-            if !assertions.contains(envelope) {
-                return Envelope(subject: subject, uncheckedAssertions: assertions.appending(envelope))
+            if !assertions.contains(envelope2) {
+                return Envelope(subject: subject, uncheckedAssertions: assertions.appending(envelope2))
             } else {
                 return self
             }
         default:
-            return Envelope(subject: subject, uncheckedAssertions: [envelope])
+            return Envelope(subject: subject, uncheckedAssertions: [envelope2])
         }
     }
 
-    func addAssertion(_ assertion: Assertion, salted: Bool = false) -> Envelope {
-        try! addAssertion(Envelope(assertion: assertion), salted: salted)
+    func addAssertion(_ assertion: Assertion?, salted: Bool = false) -> Envelope {
+        guard let assertion else {
+            return self
+        }
+        return try! addAssertion(Envelope(assertion: assertion), salted: salted)
     }
 
-    func addAssertion(_ predicate: Any, _ object: Any, salted: Bool = false) -> Envelope {
-        addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
+    func addAssertion(_ predicate: Any, _ object: Any?, salted: Bool = false) -> Envelope {
+        guard let object else {
+            return self
+        }
+        return addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
     }
 
-    func addAssertion(_ predicate: KnownPredicate, _ object: Any, salted: Bool = false) -> Envelope {
-        addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
+    func addAssertion(_ predicate: KnownPredicate, _ object: Any?, salted: Bool = false) -> Envelope {
+        guard let object else {
+            return self
+        }
+        return addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
     }
 }
 
 public extension Envelope {
-    func addAssertion(if condition: Bool, _ envelope: @autoclosure () -> Envelope, salted: Bool = false) throws -> Envelope {
+    func addAssertion(if condition: Bool, _ envelope: @autoclosure () -> Envelope?, salted: Bool = false) throws -> Envelope {
         guard condition else {
             return self
         }
         return try addAssertion(envelope(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ assertion: @autoclosure () -> Assertion, salted: Bool = false) -> Envelope {
+    func addAssertion(if condition: Bool, _ assertion: @autoclosure () -> Assertion?, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
         return addAssertion(assertion(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> Any, _ object: @autoclosure () -> Any, salted: Bool = false) -> Envelope {
+    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> Any, _ object: @autoclosure () -> Any?, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
         return addAssertion(predicate(), object(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any, salted: Bool = false) -> Envelope {
+    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any?, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
@@ -548,20 +583,50 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    static func parameter(_ param: ParameterIdentifier, value: CBOREncodable) -> Envelope {
-        Envelope(predicate: param.cbor, object: Envelope(value))
+    static func parameter(_ param: ParameterIdentifier, value: CBOREncodable?) -> Envelope? {
+        guard let value else {
+            return nil
+        }
+        return Envelope(predicate: param.cbor, object: Envelope(value))
     }
 
-    static func parameter(_ name: String, value: CBOREncodable) -> Envelope {
-        parameter(ParameterIdentifier(name), value: value)
+    static func parameter(_ name: String, value: CBOREncodable?) -> Envelope? {
+        guard let value else {
+            return nil
+        }
+        return parameter(ParameterIdentifier(name), value: value)
     }
 
-    func addParameter(_ param: ParameterIdentifier, value: CBOREncodable) -> Envelope {
+    func addParameter(_ param: ParameterIdentifier, value: CBOREncodable?) -> Envelope {
         try! addAssertion(.parameter(param, value: value))
     }
 
-    func addParameter(_ name: String, value: CBOREncodable) -> Envelope {
+    func addParameter(_ name: String, value: CBOREncodable?) -> Envelope {
         try! addAssertion(.parameter(name, value: value))
+    }
+    
+    func result() throws -> Envelope {
+        try extractObject(forPredicate: .result)
+    }
+    
+    func results() throws -> [Envelope] {
+        extractObjects(forPredicate: .result)
+    }
+    
+    func result<T: CBORDecodable>(_ type: T.Type) throws -> T {
+        try extractObject(T.self, forPredicate: .result)
+    }
+    
+    func results<T: CBORDecodable>(_ type: T.Type) throws -> [T] {
+        try extractObjects(T.self, forPredicate: .result)
+    }
+    
+    func isResultOK() throws -> Bool {
+        try result(KnownPredicate.self) == .ok
+    }
+    
+    func error<T: CBORDecodable>(_ type: T.Type) throws -> T {
+        try extractObject(T.self, forPredicate: .error)
     }
 }
 
@@ -1128,9 +1193,27 @@ public extension Envelope {
             .addAssertion(.body, body)
     }
 
-    init(response id: CID, result: CBOREncodable) {
+    init(response id: CID, result: CBOREncodable? = KnownPredicate.ok) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .addAssertion(.result, result)
+    }
+    
+    init(response id: CID, results: [CBOREncodable]) {
+        var e = Envelope(CBOR.tagged(.response, id.taggedCBOR))
+        for result in results {
+            e = e.addAssertion(.result, result)
+        }
+        self = e
+    }
+    
+    init(response id: CID, error: CBOREncodable) {
+        self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
+            .addAssertion(.error, error)
+    }
+    
+    init(error: CBOREncodable?) {
+        self = Envelope(CBOR.tagged(.response, "unknown"))
+            .addAssertion(.error, error)
     }
 }
 

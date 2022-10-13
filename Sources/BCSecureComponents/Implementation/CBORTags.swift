@@ -104,6 +104,7 @@ public extension CBOR.Tag {
     static let signingPublicKey = CBOR.Tag(705, "signing-public-key")
     static let nonce = CBOR.Tag(707, "nonce")
     static let salt = CBOR.Tag(708, "salt")
+    static let receipt = CBOR.Tag(709, "receipt")
 }
 
 var knownTags: [CBOR.Tag] = [
@@ -154,6 +155,7 @@ var knownTags: [CBOR.Tag] = [
     .signingPublicKey,
     .nonce,
     .salt,
+    .receipt
 ]
 
 public func addKnownTags() {

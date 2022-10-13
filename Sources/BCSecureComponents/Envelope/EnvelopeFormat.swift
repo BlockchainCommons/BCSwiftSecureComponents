@@ -40,8 +40,8 @@ extension CBOR: EnvelopeFormat {
                     s = s.prefix(count: 10)
                 }
                 return .item(s)
-            case .data(_):
-                return .item("Data")
+            case .data(let data):
+                return .item("Data(\(data.count))")
             case CBOR.tagged(.envelope, _):
                 return try Envelope(taggedCBOR: cbor).formatItem
             case CBOR.tagged(.knownPredicate, let cbor):

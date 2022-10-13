@@ -48,6 +48,11 @@ public extension KnownPredicate {
     static let body = KnownPredicate(15, "body")
     static let result = KnownPredicate(16, "result")
     static let salt = KnownPredicate(17, "salt")
+    static let ok = KnownPredicate(18, "ok")
+    static let error = KnownPredicate(19, "error")
+    static let unknown = KnownPredicate(20, "unknown")
+    static let date = KnownPredicate(21, "date")
+    static let processing = KnownPredicate(22, "processing")
 }
 
 fileprivate var knownPredicates: [KnownPredicate] = [
@@ -68,6 +73,11 @@ fileprivate var knownPredicates: [KnownPredicate] = [
     .body,
     .result,
     .salt,
+    .ok,
+    .error,
+    .unknown,
+    .date,
+    .processing
 ]
 
 fileprivate var knownPredicatesByRawValue: [UInt64: KnownPredicate] = {
