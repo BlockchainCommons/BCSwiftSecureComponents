@@ -37,6 +37,33 @@
       }
     },
     {
+      "identity" : "graph",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/Graph.git",
+      "state" : {
+        "revision" : "45d3c6ba067424cb96343bf0dc2e30316b99686e",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "graphdot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/GraphDot.git",
+      "state" : {
+        "revision" : "53da6de3248c5c42daa6810f06172329311c5e28",
+        "version" : "0.1.2"
+      }
+    },
+    {
+      "identity" : "graphmermaid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/GraphMermaid.git",
+      "state" : {
+        "revision" : "78f158ccdbf742320e88dbcff477a8889d62b382",
+        "version" : "0.1.2"
+      }
+    },
+    {
       "identity" : "secp256k1-zkp.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/secp256k1-zkp.swift.git",

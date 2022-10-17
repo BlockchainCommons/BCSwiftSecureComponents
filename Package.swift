@@ -19,6 +19,9 @@ let package = Package(
         .package(url: "https://github.com/BlockchainCommons/blake3-swift.git", from: "0.1.2"),
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", from: "1.4.1"),
         .package(url: "https://github.com/BlockchainCommons/secp256k1-zkp.swift.git", from: "0.5.0"),
+        .package(url: "https://github.com/WolfMcNally/Graph.git", from: "0.1.0"),
+        .package(url: "https://github.com/WolfMcNally/GraphMermaid.git", from: "0.1.0"),
+        .package(url: "https://github.com/WolfMcNally/GraphDot.git", from: "0.1.0"),
     ],
     targets: [
         .target(
@@ -29,6 +32,9 @@ let package = Package(
                 "URKit",
                 "BCWally",
                 "SSKR",
+                "Graph",
+                "GraphMermaid",
+                "GraphDot",
                 .product(name: "BLAKE3", package: "blake3-swift"),
                 .product(name: "secp256k1", package: "secp256k1-zkp.swift"),
             ]),

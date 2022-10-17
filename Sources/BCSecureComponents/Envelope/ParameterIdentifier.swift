@@ -16,6 +16,12 @@ public extension ParameterIdentifier {
     }
 }
 
+extension ParameterIdentifier: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(value)
+    }
+}
+
 public extension ParameterIdentifier {
     static func ==(lhs: ParameterIdentifier, rhs: ParameterIdentifier) -> Bool {
         if

@@ -16,6 +16,12 @@ public extension FunctionIdentifier {
     }
 }
 
+extension FunctionIdentifier: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        self.init(value)
+    }
+}
+
 public extension FunctionIdentifier {
     static func ==(lhs: FunctionIdentifier, rhs: FunctionIdentifier) -> Bool {
         if
