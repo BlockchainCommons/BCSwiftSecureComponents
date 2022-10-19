@@ -38,7 +38,7 @@ These examples compare a series of Gordian Envelopes output first in "envelope n
 ```mermaid
 graph LR
     1["886a0c85<br/>#quot;Hello.#quot;"]
-    style 1 stroke:blue,stroke-width:3.0px
+    style 1 stroke:#55f,stroke-width:3.0px
 ```
 
 * Leaf elements (elements having no children) have blue outlines.
@@ -66,14 +66,14 @@ graph LR
     3 -->|pred| 4
     3 -->|obj| 5
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
 * Internal elements (elements with children) are represented with red outlines.
@@ -101,14 +101,14 @@ graph LR
     3 -->|pred| 4
     3 -->|obj| 5
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 2 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
 * `ENCRYPTED` and `ELIDED` elements appear with dotted outlines in the Mermaid output, to indicate that they may be replaced with their unencrypted/unelided counterparts without invalidating the digest tree.
@@ -134,14 +134,14 @@ graph LR
     3 -->|pred| 4
     3 -->|obj| 5
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
 * `ELIDED` elements are represented by dotted hexagons.
@@ -163,10 +163,10 @@ graph LR
     1 -->|pred| 2
     1 -->|obj| 3
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
-    style 3 stroke:blue,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:green,stroke-width:2.0px
-    linkStyle 1 stroke:blue,stroke-width:2.0px
+    linkStyle 1 stroke:#55f,stroke-width:2.0px
 ```
 
 * As mentioned previously, all of the element types are themselves envelopes, and can therefore stand alone. In this case, we have extracted a single assertion.
@@ -206,26 +206,26 @@ graph LR
     9 -->|pred| 10
     9 -->|obj| 11
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
     style 6 stroke:red,stroke-width:3.0px
-    style 7 stroke:blue,stroke-width:3.0px
-    style 8 stroke:blue,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
     style 9 stroke:red,stroke-width:3.0px
-    style 10 stroke:blue,stroke-width:3.0px
-    style 11 stroke:blue,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
+    style 11 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
     linkStyle 4 stroke-width:2.0px
     linkStyle 5 stroke:green,stroke-width:2.0px
-    linkStyle 6 stroke:blue,stroke-width:2.0px
+    linkStyle 6 stroke:#55f,stroke-width:2.0px
     linkStyle 7 stroke-width:2.0px
     linkStyle 8 stroke:green,stroke-width:2.0px
-    linkStyle 9 stroke:blue,stroke-width:2.0px
+    linkStyle 9 stroke:#55f,stroke-width:2.0px
 ```
 
 * A signature signs only the digest of the subject, in this case "Alice". So in this case, the "knows" assertions are not signed.
@@ -251,10 +251,10 @@ graph LR
     1 --> 4
     1 --> 5
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
-    style 3 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
-    style 4 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
-    style 5 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 4 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 5 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke-width:2.0px
@@ -306,28 +306,28 @@ graph LR
     style 1 stroke:red,stroke-width:3.0px
     style 2 stroke:red,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
     style 5 stroke:red,stroke-width:3.0px
-    style 6 stroke:blue,stroke-width:3.0px
-    style 7 stroke:blue,stroke-width:3.0px
+    style 6 stroke:#55f,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
     style 8 stroke:red,stroke-width:3.0px
-    style 9 stroke:blue,stroke-width:3.0px
-    style 10 stroke:blue,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
     style 11 stroke:red,stroke-width:3.0px
-    style 12 stroke:blue,stroke-width:3.0px
-    style 13 stroke:blue,stroke-width:3.0px
+    style 12 stroke:#55f,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke:red,stroke-width:2.0px
     linkStyle 2 stroke:red,stroke-width:2.0px
     linkStyle 3 stroke-width:2.0px
     linkStyle 4 stroke:green,stroke-width:2.0px
-    linkStyle 5 stroke:blue,stroke-width:2.0px
+    linkStyle 5 stroke:#55f,stroke-width:2.0px
     linkStyle 6 stroke-width:2.0px
     linkStyle 7 stroke:green,stroke-width:2.0px
-    linkStyle 8 stroke:blue,stroke-width:2.0px
+    linkStyle 8 stroke:#55f,stroke-width:2.0px
     linkStyle 9 stroke-width:2.0px
     linkStyle 10 stroke:green,stroke-width:2.0px
-    linkStyle 11 stroke:blue,stroke-width:2.0px
+    linkStyle 11 stroke:#55f,stroke-width:2.0px
 ```
 
 * In this case the signature still only signs the subject, but the subject is an entire envelope that's been wrapped.
@@ -360,20 +360,20 @@ graph TB
     6 -->|pred| 7
     6 -->|obj| 8
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 2 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
     style 6 stroke:red,stroke-width:3.0px
-    style 7 stroke:blue,stroke-width:3.0px
-    style 8 stroke:blue,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
     linkStyle 4 stroke-width:2.0px
     linkStyle 5 stroke:green,stroke-width:2.0px
-    linkStyle 6 stroke:blue,stroke-width:2.0px
+    linkStyle 6 stroke:#55f,stroke-width:2.0px
 ```
 
 * Top-to-bottom layout is also supported.
@@ -494,94 +494,94 @@ graph LR
     43 -->|pred| 44
     43 -->|obj| 45
     style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:blue,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
-    style 5 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
     style 6 stroke:red,stroke-width:3.0px
-    style 7 stroke:blue,stroke-width:3.0px
-    style 8 stroke:blue,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
     style 9 stroke:red,stroke-width:3.0px
-    style 10 stroke:blue,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
     style 11 stroke:red,stroke-width:3.0px
-    style 12 stroke:blue,stroke-width:3.0px
+    style 12 stroke:#55f,stroke-width:3.0px
     style 13 stroke:red,stroke-width:3.0px
-    style 14 stroke:blue,stroke-width:3.0px
-    style 15 stroke:blue,stroke-width:3.0px
+    style 14 stroke:#55f,stroke-width:3.0px
+    style 15 stroke:#55f,stroke-width:3.0px
     style 16 stroke:red,stroke-width:3.0px
-    style 17 stroke:blue,stroke-width:3.0px
+    style 17 stroke:#55f,stroke-width:3.0px
     style 18 stroke:red,stroke-width:3.0px
-    style 19 stroke:blue,stroke-width:3.0px
+    style 19 stroke:#55f,stroke-width:3.0px
     style 20 stroke:red,stroke-width:3.0px
-    style 21 stroke:blue,stroke-width:3.0px
-    style 22 stroke:blue,stroke-width:3.0px
+    style 21 stroke:#55f,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px
     style 23 stroke:red,stroke-width:3.0px
-    style 24 stroke:blue,stroke-width:3.0px
-    style 25 stroke:blue,stroke-width:3.0px
+    style 24 stroke:#55f,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
     style 26 stroke:red,stroke-width:3.0px
-    style 27 stroke:blue,stroke-width:3.0px
+    style 27 stroke:#55f,stroke-width:3.0px
     style 28 stroke:red,stroke-width:3.0px
-    style 29 stroke:blue,stroke-width:3.0px
+    style 29 stroke:#55f,stroke-width:3.0px
     style 30 stroke:red,stroke-width:3.0px
-    style 31 stroke:blue,stroke-width:3.0px
-    style 32 stroke:blue,stroke-width:3.0px
+    style 31 stroke:#55f,stroke-width:3.0px
+    style 32 stroke:#55f,stroke-width:3.0px
     style 33 stroke:red,stroke-width:3.0px
-    style 34 stroke:blue,stroke-width:3.0px
-    style 35 stroke:blue,stroke-width:3.0px
+    style 34 stroke:#55f,stroke-width:3.0px
+    style 35 stroke:#55f,stroke-width:3.0px
     style 36 stroke:red,stroke-width:3.0px
-    style 37 stroke:blue,stroke-width:3.0px
+    style 37 stroke:#55f,stroke-width:3.0px
     style 38 stroke:red,stroke-width:3.0px
-    style 39 stroke:blue,stroke-width:3.0px
+    style 39 stroke:#55f,stroke-width:3.0px
     style 40 stroke:red,stroke-width:3.0px
-    style 41 stroke:blue,stroke-width:3.0px
-    style 42 stroke:blue,stroke-width:3.0px
+    style 41 stroke:#55f,stroke-width:3.0px
+    style 42 stroke:#55f,stroke-width:3.0px
     style 43 stroke:red,stroke-width:3.0px
-    style 44 stroke:blue,stroke-width:3.0px
-    style 45 stroke:blue,stroke-width:3.0px
+    style 44 stroke:#55f,stroke-width:3.0px
+    style 45 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke-width:2.0px
     linkStyle 2 stroke:green,stroke-width:2.0px
-    linkStyle 3 stroke:blue,stroke-width:2.0px
+    linkStyle 3 stroke:#55f,stroke-width:2.0px
     linkStyle 4 stroke-width:2.0px
     linkStyle 5 stroke:green,stroke-width:2.0px
-    linkStyle 6 stroke:blue,stroke-width:2.0px
+    linkStyle 6 stroke:#55f,stroke-width:2.0px
     linkStyle 7 stroke-width:2.0px
     linkStyle 8 stroke:green,stroke-width:2.0px
-    linkStyle 9 stroke:blue,stroke-width:2.0px
+    linkStyle 9 stroke:#55f,stroke-width:2.0px
     linkStyle 10 stroke:red,stroke-width:2.0px
     linkStyle 11 stroke-width:2.0px
     linkStyle 12 stroke:green,stroke-width:2.0px
-    linkStyle 13 stroke:blue,stroke-width:2.0px
+    linkStyle 13 stroke:#55f,stroke-width:2.0px
     linkStyle 14 stroke-width:2.0px
     linkStyle 15 stroke:green,stroke-width:2.0px
-    linkStyle 16 stroke:blue,stroke-width:2.0px
+    linkStyle 16 stroke:#55f,stroke-width:2.0px
     linkStyle 17 stroke:red,stroke-width:2.0px
     linkStyle 18 stroke-width:2.0px
     linkStyle 19 stroke:green,stroke-width:2.0px
-    linkStyle 20 stroke:blue,stroke-width:2.0px
+    linkStyle 20 stroke:#55f,stroke-width:2.0px
     linkStyle 21 stroke-width:2.0px
     linkStyle 22 stroke:green,stroke-width:2.0px
-    linkStyle 23 stroke:blue,stroke-width:2.0px
+    linkStyle 23 stroke:#55f,stroke-width:2.0px
     linkStyle 24 stroke-width:2.0px
     linkStyle 25 stroke:green,stroke-width:2.0px
-    linkStyle 26 stroke:blue,stroke-width:2.0px
+    linkStyle 26 stroke:#55f,stroke-width:2.0px
     linkStyle 27 stroke:red,stroke-width:2.0px
     linkStyle 28 stroke-width:2.0px
     linkStyle 29 stroke:green,stroke-width:2.0px
-    linkStyle 30 stroke:blue,stroke-width:2.0px
+    linkStyle 30 stroke:#55f,stroke-width:2.0px
     linkStyle 31 stroke-width:2.0px
     linkStyle 32 stroke:green,stroke-width:2.0px
-    linkStyle 33 stroke:blue,stroke-width:2.0px
+    linkStyle 33 stroke:#55f,stroke-width:2.0px
     linkStyle 34 stroke-width:2.0px
     linkStyle 35 stroke:green,stroke-width:2.0px
-    linkStyle 36 stroke:blue,stroke-width:2.0px
+    linkStyle 36 stroke:#55f,stroke-width:2.0px
     linkStyle 37 stroke:red,stroke-width:2.0px
     linkStyle 38 stroke-width:2.0px
     linkStyle 39 stroke:green,stroke-width:2.0px
-    linkStyle 40 stroke:blue,stroke-width:2.0px
+    linkStyle 40 stroke:#55f,stroke-width:2.0px
     linkStyle 41 stroke-width:2.0px
     linkStyle 42 stroke:green,stroke-width:2.0px
-    linkStyle 43 stroke:blue,stroke-width:2.0px
+    linkStyle 43 stroke:#55f,stroke-width:2.0px
 ```
 
 ## Verifiable Credential
@@ -711,100 +711,100 @@ graph LR
     style 1 stroke:red,stroke-width:3.0px
     style 2 stroke:red,stroke-width:3.0px
     style 3 stroke:red,stroke-width:3.0px
-    style 4 stroke:blue,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
     style 5 stroke:red,stroke-width:3.0px
-    style 6 stroke:blue,stroke-width:3.0px
-    style 7 stroke:blue,stroke-width:3.0px
+    style 6 stroke:#55f,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
     style 8 stroke:red,stroke-width:3.0px
-    style 9 stroke:blue,stroke-width:3.0px
-    style 10 stroke:blue,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
     style 11 stroke:red,stroke-width:3.0px
-    style 12 stroke:blue,stroke-width:3.0px
-    style 13 stroke:blue,stroke-width:3.0px
+    style 12 stroke:#55f,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px
     style 14 stroke:red,stroke-width:3.0px
-    style 15 stroke:blue,stroke-width:3.0px
-    style 16 stroke:blue,stroke-width:3.0px
+    style 15 stroke:#55f,stroke-width:3.0px
+    style 16 stroke:#55f,stroke-width:3.0px
     style 17 stroke:red,stroke-width:3.0px
-    style 18 stroke:blue,stroke-width:3.0px
-    style 19 stroke:blue,stroke-width:3.0px
+    style 18 stroke:#55f,stroke-width:3.0px
+    style 19 stroke:#55f,stroke-width:3.0px
     style 20 stroke:red,stroke-width:3.0px
-    style 21 stroke:blue,stroke-width:3.0px
-    style 22 stroke:blue,stroke-width:3.0px
+    style 21 stroke:#55f,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px
     style 23 stroke:red,stroke-width:3.0px
-    style 24 stroke:blue,stroke-width:3.0px
-    style 25 stroke:blue,stroke-width:3.0px
+    style 24 stroke:#55f,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
     style 26 stroke:red,stroke-width:3.0px
-    style 27 stroke:blue,stroke-width:3.0px
-    style 28 stroke:blue,stroke-width:3.0px
+    style 27 stroke:#55f,stroke-width:3.0px
+    style 28 stroke:#55f,stroke-width:3.0px
     style 29 stroke:red,stroke-width:3.0px
-    style 30 stroke:blue,stroke-width:3.0px
-    style 31 stroke:blue,stroke-width:3.0px
+    style 30 stroke:#55f,stroke-width:3.0px
+    style 31 stroke:#55f,stroke-width:3.0px
     style 32 stroke:red,stroke-width:3.0px
-    style 33 stroke:blue,stroke-width:3.0px
-    style 34 stroke:blue,stroke-width:3.0px
+    style 33 stroke:#55f,stroke-width:3.0px
+    style 34 stroke:#55f,stroke-width:3.0px
     style 35 stroke:red,stroke-width:3.0px
-    style 36 stroke:blue,stroke-width:3.0px
-    style 37 stroke:blue,stroke-width:3.0px
+    style 36 stroke:#55f,stroke-width:3.0px
+    style 37 stroke:#55f,stroke-width:3.0px
     style 38 stroke:red,stroke-width:3.0px
-    style 39 stroke:blue,stroke-width:3.0px
-    style 40 stroke:blue,stroke-width:3.0px
+    style 39 stroke:#55f,stroke-width:3.0px
+    style 40 stroke:#55f,stroke-width:3.0px
     style 41 stroke:red,stroke-width:3.0px
-    style 42 stroke:blue,stroke-width:3.0px
-    style 43 stroke:blue,stroke-width:3.0px
+    style 42 stroke:#55f,stroke-width:3.0px
+    style 43 stroke:#55f,stroke-width:3.0px
     style 44 stroke:red,stroke-width:3.0px
-    style 45 stroke:blue,stroke-width:3.0px
-    style 46 stroke:blue,stroke-width:3.0px
+    style 45 stroke:#55f,stroke-width:3.0px
+    style 46 stroke:#55f,stroke-width:3.0px
     style 47 stroke:red,stroke-width:3.0px
-    style 48 stroke:blue,stroke-width:3.0px
-    style 49 stroke:blue,stroke-width:3.0px
+    style 48 stroke:#55f,stroke-width:3.0px
+    style 49 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke:red,stroke-width:2.0px
     linkStyle 2 stroke:red,stroke-width:2.0px
     linkStyle 3 stroke-width:2.0px
     linkStyle 4 stroke:green,stroke-width:2.0px
-    linkStyle 5 stroke:blue,stroke-width:2.0px
+    linkStyle 5 stroke:#55f,stroke-width:2.0px
     linkStyle 6 stroke-width:2.0px
     linkStyle 7 stroke:green,stroke-width:2.0px
-    linkStyle 8 stroke:blue,stroke-width:2.0px
+    linkStyle 8 stroke:#55f,stroke-width:2.0px
     linkStyle 9 stroke-width:2.0px
     linkStyle 10 stroke:green,stroke-width:2.0px
-    linkStyle 11 stroke:blue,stroke-width:2.0px
+    linkStyle 11 stroke:#55f,stroke-width:2.0px
     linkStyle 12 stroke-width:2.0px
     linkStyle 13 stroke:green,stroke-width:2.0px
-    linkStyle 14 stroke:blue,stroke-width:2.0px
+    linkStyle 14 stroke:#55f,stroke-width:2.0px
     linkStyle 15 stroke-width:2.0px
     linkStyle 16 stroke:green,stroke-width:2.0px
-    linkStyle 17 stroke:blue,stroke-width:2.0px
+    linkStyle 17 stroke:#55f,stroke-width:2.0px
     linkStyle 18 stroke-width:2.0px
     linkStyle 19 stroke:green,stroke-width:2.0px
-    linkStyle 20 stroke:blue,stroke-width:2.0px
+    linkStyle 20 stroke:#55f,stroke-width:2.0px
     linkStyle 21 stroke-width:2.0px
     linkStyle 22 stroke:green,stroke-width:2.0px
-    linkStyle 23 stroke:blue,stroke-width:2.0px
+    linkStyle 23 stroke:#55f,stroke-width:2.0px
     linkStyle 24 stroke-width:2.0px
     linkStyle 25 stroke:green,stroke-width:2.0px
-    linkStyle 26 stroke:blue,stroke-width:2.0px
+    linkStyle 26 stroke:#55f,stroke-width:2.0px
     linkStyle 27 stroke-width:2.0px
     linkStyle 28 stroke:green,stroke-width:2.0px
-    linkStyle 29 stroke:blue,stroke-width:2.0px
+    linkStyle 29 stroke:#55f,stroke-width:2.0px
     linkStyle 30 stroke-width:2.0px
     linkStyle 31 stroke:green,stroke-width:2.0px
-    linkStyle 32 stroke:blue,stroke-width:2.0px
+    linkStyle 32 stroke:#55f,stroke-width:2.0px
     linkStyle 33 stroke-width:2.0px
     linkStyle 34 stroke:green,stroke-width:2.0px
-    linkStyle 35 stroke:blue,stroke-width:2.0px
+    linkStyle 35 stroke:#55f,stroke-width:2.0px
     linkStyle 36 stroke-width:2.0px
     linkStyle 37 stroke:green,stroke-width:2.0px
-    linkStyle 38 stroke:blue,stroke-width:2.0px
+    linkStyle 38 stroke:#55f,stroke-width:2.0px
     linkStyle 39 stroke-width:2.0px
     linkStyle 40 stroke:green,stroke-width:2.0px
-    linkStyle 41 stroke:blue,stroke-width:2.0px
+    linkStyle 41 stroke:#55f,stroke-width:2.0px
     linkStyle 42 stroke-width:2.0px
     linkStyle 43 stroke:green,stroke-width:2.0px
-    linkStyle 44 stroke:blue,stroke-width:2.0px
+    linkStyle 44 stroke:#55f,stroke-width:2.0px
     linkStyle 45 stroke-width:2.0px
     linkStyle 46 stroke:green,stroke-width:2.0px
-    linkStyle 47 stroke:blue,stroke-width:2.0px
+    linkStyle 47 stroke:#55f,stroke-width:2.0px
 ```
 
 ## Warranty
@@ -948,50 +948,50 @@ graph LR
     style 5 stroke:red,stroke-width:3.0px
     style 6 stroke:red,stroke-width:3.0px
     style 7 stroke:red,stroke-width:3.0px
-    style 8 stroke:blue,stroke-width:3.0px
-    style 9 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 8 stroke:#55f,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 10 stroke:red,stroke-width:3.0px
-    style 11 stroke:blue,stroke-width:3.0px
-    style 12 stroke:blue,stroke-width:3.0px
-    style 13 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
-    style 14 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
-    style 15 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 11 stroke:#55f,stroke-width:3.0px
+    style 12 stroke:#55f,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 14 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 15 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 16 stroke:red,stroke-width:3.0px
-    style 17 stroke:blue,stroke-width:3.0px
-    style 18 stroke:blue,stroke-width:3.0px
-    style 19 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 17 stroke:#55f,stroke-width:3.0px
+    style 18 stroke:#55f,stroke-width:3.0px
+    style 19 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 20 stroke:red,stroke-width:3.0px
-    style 21 stroke:blue,stroke-width:3.0px
-    style 22 stroke:blue,stroke-width:3.0px
+    style 21 stroke:#55f,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px
     style 23 stroke:red,stroke-width:3.0px
-    style 24 stroke:blue,stroke-width:3.0px
-    style 25 stroke:blue,stroke-width:3.0px
-    style 26 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 24 stroke:#55f,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
+    style 26 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 27 stroke:red,stroke-width:3.0px
-    style 28 stroke:blue,stroke-width:3.0px
-    style 29 stroke:blue,stroke-width:3.0px
+    style 28 stroke:#55f,stroke-width:3.0px
+    style 29 stroke:#55f,stroke-width:3.0px
     style 30 stroke:red,stroke-width:3.0px
-    style 31 stroke:blue,stroke-width:3.0px
-    style 32 stroke:blue,stroke-width:3.0px
-    style 33 stroke:blue,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 31 stroke:#55f,stroke-width:3.0px
+    style 32 stroke:#55f,stroke-width:3.0px
+    style 33 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
     style 34 stroke:red,stroke-width:3.0px
-    style 35 stroke:blue,stroke-width:3.0px
-    style 36 stroke:blue,stroke-width:3.0px
+    style 35 stroke:#55f,stroke-width:3.0px
+    style 36 stroke:#55f,stroke-width:3.0px
     style 37 stroke:red,stroke-width:3.0px
-    style 38 stroke:blue,stroke-width:3.0px
-    style 39 stroke:blue,stroke-width:3.0px
+    style 38 stroke:#55f,stroke-width:3.0px
+    style 39 stroke:#55f,stroke-width:3.0px
     style 40 stroke:red,stroke-width:3.0px
-    style 41 stroke:blue,stroke-width:3.0px
-    style 42 stroke:blue,stroke-width:3.0px
+    style 41 stroke:#55f,stroke-width:3.0px
+    style 42 stroke:#55f,stroke-width:3.0px
     style 43 stroke:red,stroke-width:3.0px
-    style 44 stroke:blue,stroke-width:3.0px
-    style 45 stroke:blue,stroke-width:3.0px
+    style 44 stroke:#55f,stroke-width:3.0px
+    style 45 stroke:#55f,stroke-width:3.0px
     style 46 stroke:red,stroke-width:3.0px
-    style 47 stroke:blue,stroke-width:3.0px
-    style 48 stroke:blue,stroke-width:3.0px
+    style 47 stroke:#55f,stroke-width:3.0px
+    style 48 stroke:#55f,stroke-width:3.0px
     style 49 stroke:red,stroke-width:3.0px
-    style 50 stroke:blue,stroke-width:3.0px
-    style 51 stroke:blue,stroke-width:3.0px
+    style 50 stroke:#55f,stroke-width:3.0px
+    style 51 stroke:#55f,stroke-width:3.0px
     linkStyle 0 stroke:red,stroke-width:2.0px
     linkStyle 1 stroke:red,stroke-width:2.0px
     linkStyle 2 stroke:red,stroke-width:2.0px
@@ -1002,44 +1002,44 @@ graph LR
     linkStyle 7 stroke-width:2.0px
     linkStyle 8 stroke-width:2.0px
     linkStyle 9 stroke:green,stroke-width:2.0px
-    linkStyle 10 stroke:blue,stroke-width:2.0px
+    linkStyle 10 stroke:#55f,stroke-width:2.0px
     linkStyle 11 stroke-width:2.0px
     linkStyle 12 stroke-width:2.0px
     linkStyle 13 stroke-width:2.0px
     linkStyle 14 stroke-width:2.0px
     linkStyle 15 stroke:green,stroke-width:2.0px
-    linkStyle 16 stroke:blue,stroke-width:2.0px
+    linkStyle 16 stroke:#55f,stroke-width:2.0px
     linkStyle 17 stroke-width:2.0px
     linkStyle 18 stroke-width:2.0px
     linkStyle 19 stroke:green,stroke-width:2.0px
-    linkStyle 20 stroke:blue,stroke-width:2.0px
+    linkStyle 20 stroke:#55f,stroke-width:2.0px
     linkStyle 21 stroke-width:2.0px
     linkStyle 22 stroke:green,stroke-width:2.0px
-    linkStyle 23 stroke:blue,stroke-width:2.0px
+    linkStyle 23 stroke:#55f,stroke-width:2.0px
     linkStyle 24 stroke-width:2.0px
     linkStyle 25 stroke-width:2.0px
     linkStyle 26 stroke:green,stroke-width:2.0px
-    linkStyle 27 stroke:blue,stroke-width:2.0px
+    linkStyle 27 stroke:#55f,stroke-width:2.0px
     linkStyle 28 stroke-width:2.0px
     linkStyle 29 stroke:green,stroke-width:2.0px
-    linkStyle 30 stroke:blue,stroke-width:2.0px
+    linkStyle 30 stroke:#55f,stroke-width:2.0px
     linkStyle 31 stroke-width:2.0px
     linkStyle 32 stroke-width:2.0px
     linkStyle 33 stroke:green,stroke-width:2.0px
-    linkStyle 34 stroke:blue,stroke-width:2.0px
+    linkStyle 34 stroke:#55f,stroke-width:2.0px
     linkStyle 35 stroke-width:2.0px
     linkStyle 36 stroke:green,stroke-width:2.0px
-    linkStyle 37 stroke:blue,stroke-width:2.0px
+    linkStyle 37 stroke:#55f,stroke-width:2.0px
     linkStyle 38 stroke-width:2.0px
     linkStyle 39 stroke:green,stroke-width:2.0px
-    linkStyle 40 stroke:blue,stroke-width:2.0px
+    linkStyle 40 stroke:#55f,stroke-width:2.0px
     linkStyle 41 stroke-width:2.0px
     linkStyle 42 stroke:green,stroke-width:2.0px
-    linkStyle 43 stroke:blue,stroke-width:2.0px
+    linkStyle 43 stroke:#55f,stroke-width:2.0px
     linkStyle 44 stroke-width:2.0px
     linkStyle 45 stroke:green,stroke-width:2.0px
-    linkStyle 46 stroke:blue,stroke-width:2.0px
+    linkStyle 46 stroke:#55f,stroke-width:2.0px
     linkStyle 47 stroke-width:2.0px
     linkStyle 48 stroke:green,stroke-width:2.0px
-    linkStyle 49 stroke:blue,stroke-width:2.0px
+    linkStyle 49 stroke:#55f,stroke-width:2.0px
 ```

@@ -143,24 +143,24 @@ extension EnvelopeGraph: MermaidEncodable {
             attributes.strokeColor = "red"
         case .leaf(_, _):
             attributes.shape = .rectangle
-            attributes.strokeColor = "blue"
+            attributes.strokeColor = "#55f"
         case .wrapped(_, _):
             attributes.shape = .trapezoid
             attributes.strokeColor = "red"
         case .knownPredicate(_, _):
             attributes.shape = .parallelogram
-            attributes.strokeColor = "blue"
+            attributes.strokeColor = "#55f"
         case .assertion(_):
             attributes.shape = .stadium
             attributes.strokeColor = "red"
         case .encrypted(_):
             attributes.shape = .asymmetric
             attributes.dashArray = [5, 5]
-            attributes.strokeColor = "blue"
+            attributes.strokeColor = "#55f"
         case .elided(_):
             attributes.shape = .hexagon
             attributes.dashArray = [5, 5]
-            attributes.strokeColor = "blue"
+            attributes.strokeColor = "#55f"
         }
         return attributes
     }
@@ -182,7 +182,7 @@ extension EnvelopeGraph: MermaidEncodable {
             attributes.strokeColor = "green"
         case .object:
             attributes.label = "obj"
-            attributes.strokeColor = "blue"
+            attributes.strokeColor = "#55f"
         case .wrapped:
             attributes.label = "subj"
             attributes.strokeColor = "red"
