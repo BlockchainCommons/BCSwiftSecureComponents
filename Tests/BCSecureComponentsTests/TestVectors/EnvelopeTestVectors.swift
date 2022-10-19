@@ -2,8 +2,6 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-fileprivate let chapterNumber = 11
-
 final class EnvelopeTestVectors: XCTestCase {
     func testGenerateEnvelopeTestVectors() throws {
         let helloWorld = TestCase(
@@ -99,8 +97,8 @@ final class EnvelopeTestVectors: XCTestCase {
                 return testCase
             }
 
-        let text = formatDocument(chapterNumber: chapterNumber, testCases: testCases)
-        writeDocFile(tocFilename(at: chapterNumber), text)
+        let text = formatDocument(chapterNumber: envelopeTestVectorsChapterNumber, testCases: testCases)
+        writeDocFile(tocFilename(at: envelopeTestVectorsChapterNumber), text)
     }
 
     @StringBuilder

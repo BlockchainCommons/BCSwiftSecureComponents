@@ -88,6 +88,12 @@ public extension CID {
     }
 }
 
+public extension CID {
+    var shortDescription: String {
+        String(self.data.hex.prefix(count: 8))
+    }
+}
+
 extension CID: CBOREncodable {
     public var cbor: CBOR {
         taggedCBOR

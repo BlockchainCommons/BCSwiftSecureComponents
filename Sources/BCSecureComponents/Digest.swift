@@ -157,3 +157,9 @@ public func +(lhs: Digest, rhs: Digest) -> Data {
 public func +(lhs: Data, rhs: Digest) -> Data {
     lhs + rhs.data
 }
+
+public extension Digest {
+    var shortDescription: String {
+        String(self.data.hex.prefix(count: 8))
+    }
+}

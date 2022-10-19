@@ -1,6 +1,9 @@
 import Foundation
 import XCTest
 
+let envelopeTestVectorsChapterNumber = 12
+let sskrEnvelopeTestVectorChapterNumer = 13
+
 final class TableOfContents: XCTestCase {
     func testGenerateTableOfContents() {
         (0..<tocItems.count).forEach {
@@ -14,6 +17,7 @@ let tocItems: [(title: String, filename: String)] = [
     ("Types", "TYPES.md"),
     ("Envelope Overview", "ENVELOPE.md"),
     ("Envelope Notation", "ENVELOPE-NOTATION.md"),
+    ("Mermaid Output", "MERMAID-OUTPUT.md"),
     ("Envelope Expressions", "ENVELOPE-EXPRESSIONS.md"),
     ("Definitions", "DEFINITIONS.md"),
     ("Examples", "EXAMPLES.md"),

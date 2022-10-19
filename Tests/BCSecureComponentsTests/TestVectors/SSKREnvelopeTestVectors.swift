@@ -2,8 +2,6 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-fileprivate let chapterNumber = 12
-
 fileprivate let seedPayload: Seed = {
     var seed = Seed(data: ‡"59f2293a5bce7d4de59e71b4207ac5d2")!
     seed.name = "Dark Purple Aqua Love"
@@ -64,8 +62,8 @@ final class SSKREnvelopeTestVectors: XCTestCase {
                 return testCase
             }
 
-        let text = formatDocument(chapterNumber: chapterNumber, testCases: testCases)
-        writeDocFile(tocFilename(at: chapterNumber), text)
+        let text = formatDocument(chapterNumber: sskrEnvelopeTestVectorChapterNumer, testCases: testCases)
+        writeDocFile(tocFilename(at: sskrEnvelopeTestVectorChapterNumer), text)
     }
 
     @StringBuilder

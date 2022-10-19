@@ -25,18 +25,6 @@ extension Digest: ElementID { }
 extension CID: ElementID { }
 typealias EnvelopeGraph = Graph<Int, Int, Envelope, MermaidEnvelopeEdgeData, EnvelopeMermaidLayoutDirection>
 
-extension Digest {
-    var shortDescription: String {
-        String(self.data.hex.prefix(count: 8))
-    }
-}
-
-extension CID {
-    var shortDescription: String {
-        String(self.data.hex.prefix(count: 8))
-    }
-}
-
 extension Envelope {
     var shortID: String {
         self.digest.shortDescription

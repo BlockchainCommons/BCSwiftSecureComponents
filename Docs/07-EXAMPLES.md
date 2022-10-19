@@ -12,15 +12,16 @@
 * [Types](01-TYPES.md)
 * [Envelope Overview](02-ENVELOPE.md)
 * [Envelope Notation](03-ENVELOPE-NOTATION.md)
-* [Envelope Expressions](04-ENVELOPE-EXPRESSIONS.md)
-* [Definitions](05-DEFINITIONS.md)
+* [Mermaid Output](04-MERMAID-OUTPUT.md)
+* [Envelope Expressions](05-ENVELOPE-EXPRESSIONS.md)
+* [Definitions](06-DEFINITIONS.md)
 * Examples: This document
-* [Noncorrelation](07-NONCORRELATION.md)
-* [Elision and Redaction](08-ELISION-REDACTION.md)
-* [Existence Proofs](09-EXISTENCE-PROOFS.md)
-* [Appendix A: MVA Algorithm Suite](10-A-ALGORITHMS.md)
-* [Appendix B: Envelope Test Vectors](11-B-ENVELOPE-TEST-VECTORS.md)
-* [Appendix C: Envelope SSKR Test Vectors](12-C-ENVELOPE-SSKR-TEST-VECTORS.md)
+* [Noncorrelation](08-NONCORRELATION.md)
+* [Elision and Redaction](09-ELISION-REDACTION.md)
+* [Existence Proofs](10-EXISTENCE-PROOFS.md)
+* [Appendix A: MVA Algorithm Suite](11-A-ALGORITHMS.md)
+* [Appendix B: Envelope Test Vectors](12-B-ENVELOPE-TEST-VECTORS.md)
+* [Appendix C: Envelope SSKR Test Vectors](13-C-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 
