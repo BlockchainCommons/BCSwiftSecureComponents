@@ -4,13 +4,4 @@
    <FileRef
       location = "group:">
    </FileRef>
-   <FileRef
-      location = "group:../../WolfLibs/Graph">
-   </FileRef>
-   <FileRef
-      location = "group:../../WolfLibs/GraphDot">
-   </FileRef>
-   <FileRef
-      location = "group:../../WolfLibs/GraphMermaid">
-   </FileRef>
 </Workspace>

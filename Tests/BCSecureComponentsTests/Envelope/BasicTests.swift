@@ -384,7 +384,7 @@ class BasicTests: XCTestCase {
 
         XCTAssertEqual(e.format,
         """
-        Digest(886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5)
+        Digest(886a0c85)
         """
         )
 

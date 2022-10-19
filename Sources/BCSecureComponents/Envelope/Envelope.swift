@@ -60,11 +60,11 @@ public extension Envelope {
         return assertion
     }
 
-    var predicate: Envelope? {
+    var predicate: Envelope! {
         assertion?.predicate
     }
 
-    var object: Envelope? {
+    var object: Envelope! {
         assertion?.object
     }
 
@@ -84,6 +84,13 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    var isLeaf: Bool {
+        guard case .leaf = self else {
+            return false
+        }
+        return true
+    }
+    
     var isNode: Bool {
         guard case .node = self else {
             return false
@@ -159,6 +166,10 @@ public extension Envelope {
             return false
         }
         return true
+    }
+    
+    var isInternal: Bool {
+        return isNode || isWrapped || isAssertion
     }
 }
 

@@ -1,7 +1,7 @@
 # Secure Components - Envelope Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Oct 11, 2022</br>
+**Revised:** Oct 18, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -852,16 +852,16 @@ John Smith is issued a Permanent Resident Card signed by the State of Example
 
 ```
 {
-    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+    CID(174842ea) [
         "dateIssued": 2022-04-27
-        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+        holder: CID(78bc3000) [
             "birthCountry": "bs" [
                 note: "The Bahamas"
             ]
             "birthDate": 1974-02-18
             "familyName": "SMITH"
             "givenName": "JOHN"
-            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+            "image": Digest(36be3072) [
                 dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                 note: "This is an image of John Smith."
             ]
@@ -873,7 +873,7 @@ John Smith is issued a Permanent Resident Card signed by the State of Example
             isA: "Person"
         ]
         isA: "credential"
-        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+        issuer: CID(04363d5f) [
             dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]
@@ -1531,18 +1531,18 @@ John wishes to identify himself to a third party using his government-issued cre
 
 ```
 {
-    CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-        holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+    CID(174842ea) [
+        holder: CID(78bc3000) [
             "familyName": "SMITH"
             "givenName": "JOHN"
-            "image": Digest(36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999) [
+            "image": Digest(36be3072) [
                 dereferenceVia: "https://exampleledger.com/digest/36be30726befb65ca13b136ae29d8081f64792c2702415eb60ad1c56ed33c999"
                 note: "This is an image of John Smith."
             ]
             ELIDED (8)
         ]
         isA: "credential"
-        issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+        issuer: CID(04363d5f) [
             dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
             note: "Issued by the State of Example"
         ]

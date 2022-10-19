@@ -39,7 +39,7 @@ class TestFunction: XCTestCase {
         
         let requestEnvelope = Envelope(request: uuid, body: twoPlusThree())
         let expectedRequestFormat = """
-        request(CID(c66be27dbad7cd095ca77647406d07976dc0f35f0d4d654bb0e96dd227a1e9fc)) [
+        request(CID(c66be27d)) [
             body: «add» [
                 ❰lhs❱: 2
                 ❰rhs❱: 3
@@ -50,7 +50,7 @@ class TestFunction: XCTestCase {
 
         let responseEnvelope = Envelope(response: uuid, result: 5)
         let expectedResponseFormat = """
-        response(CID(c66be27dbad7cd095ca77647406d07976dc0f35f0d4d654bb0e96dd227a1e9fc)) [
+        response(CID(c66be27d)) [
             result: 5
         ]
         """

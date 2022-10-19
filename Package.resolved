@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "039f56c5d7960f277087a0be51f5eb04ed0ec073",
-        "version" : "1.5.1"
+        "revision" : "19b3c3ceed117c5cc883517c4e658548315ba70b",
+        "version" : "1.6.0"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/Graph.git",
       "state" : {
-        "revision" : "45d3c6ba067424cb96343bf0dc2e30316b99686e",
-        "version" : "0.1.0"
+        "revision" : "47e62c4ddcb4fc3d5a896a0466394ffdbe066877",
+        "version" : "0.2.1"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphDot.git",
       "state" : {
-        "revision" : "53da6de3248c5c42daa6810f06172329311c5e28",
-        "version" : "0.1.2"
+        "revision" : "c3009b3ccfa5c269b17655510f5b1244d4ef22be",
+        "version" : "0.2.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphMermaid.git",
       "state" : {
-        "revision" : "78f158ccdbf742320e88dbcff477a8889d62b382",
-        "version" : "0.1.2"
+        "revision" : "b5bb43f988a12b2b3861b7a97293de282cac676b",
+        "version" : "0.2.0"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/WolfBase",
       "state" : {
-        "revision" : "098eaa6bb1d28fd01c36cd6030bee4e4209c4ca3",
-        "version" : "4.5.1"
+        "revision" : "51846810911c51dfe38514a5b5454220c59b4a79",
+        "version" : "4.5.2"
       }
     }
   ],

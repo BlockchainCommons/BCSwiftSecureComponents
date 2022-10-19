@@ -25,7 +25,7 @@ class ElisionExampleTests: XCTestCase {
         XCTAssertEqual(credential.format,
         """
         {
-            CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+            CID(4676635a) [
                 "certificateNumber": "123-456-789"
                 "continuingEducationUnits": 1.5
                 "expirationDate": 2028-01-01
@@ -123,7 +123,7 @@ class ElisionExampleTests: XCTestCase {
             XCTAssertEqual($0.format,
             """
             {
-                CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+                CID(4676635a) [
                     ELIDED (13)
                 ]
             } [
@@ -145,7 +145,7 @@ class ElisionExampleTests: XCTestCase {
         XCTAssertEqual(redactedCredential.format,
         """
         {
-            CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+            CID(4676635a) [
                 "expirationDate": 2028-01-01
                 "firstName": "James"
                 "lastName": "Maxwell"
@@ -174,7 +174,7 @@ class ElisionExampleTests: XCTestCase {
         {
             {
                 {
-                    CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+                    CID(4676635a) [
                         "expirationDate": 2028-01-01
                         "firstName": "James"
                         "lastName": "Maxwell"
@@ -220,7 +220,7 @@ class ElisionExampleTests: XCTestCase {
         XCTAssertEqual(credential.format,
         """
         {
-            CID(4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d) [
+            CID(4676635a) [
                 "address": "123 Main St."
                 "birthDate": 1970-01-01
                 "dlNumber": "123-456-789"
@@ -238,6 +238,8 @@ class ElisionExampleTests: XCTestCase {
         ]
         """
         )
+        
+        print(credential.mermaidFormat)
         
         var target: Set<Digest> = []
         
@@ -308,6 +310,7 @@ class ElisionExampleTests: XCTestCase {
             ]
             """
             )
+            print($0.mermaidFormat)
         }
         
         /// The only actual assertions we want to reveal are `birthDate` and `photo`, so we do this by finding those specific assertions by their predicate. The `shallowDigests` attribute returns just a necessary set of attributes to reveal the assertion, its predicate, and its object (yes, all three of them need to be revealed) but *not* any deeper assertions on them.

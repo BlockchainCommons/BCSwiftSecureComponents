@@ -18,32 +18,32 @@ extension CID: EnvelopeFormat {
     }
 }
 
-extension CBOR: EnvelopeFormat {
-    var formatItem: EnvelopeFormatItem {
+extension CBOR {
+    var envelopeSummary: String {
         do {
             switch self {
             case .boolean(let b):
-                return .item(b.description)
+                return b.description
             case .unsignedInt(let n):
-                return .item(String(n))
+                return String(n)
             case .negativeInt(let n):
-                return .item(String(-Int(n) - 1))
+                return String(-Int(n) - 1)
             case .float(let n):
-                return .item(String(n))
+                return String(n)
             case .double(let n):
-                return .item(String(n))
+                return String(n)
             case .utf8String(let string):
-                return .item(string.flanked(.quote))
+                return string.flanked(.quote)
             case .date(let date):
                 var s = date.ISO8601Format()
                 if s.count == 20 && s.hasSuffix("T00:00:00Z") {
                     s = s.prefix(count: 10)
                 }
-                return .item(s)
+                return s
             case .data(let data):
-                return .item("Data(\(data.count))")
+                return "Data(\(data.count))"
             case CBOR.tagged(.envelope, _):
-                return try Envelope(taggedCBOR: cbor).formatItem
+                return "Envelope"
             case CBOR.tagged(.knownPredicate, let cbor):
                 guard
                     case let CBOR.unsignedInt(rawValue) = cbor,
@@ -51,7 +51,7 @@ extension CBOR: EnvelopeFormat {
                 else {
                     return "<unknown predicate>"
                 }
-                return .item(predicate†)
+                return predicate†
             case CBOR.tagged(.signature, _):
                 return "Signature"
             case CBOR.tagged(.nonce, _):
@@ -65,28 +65,43 @@ extension CBOR: EnvelopeFormat {
             case CBOR.tagged(.publicKeyBase, _):
                 return "PublicKeyBase"
             case CBOR.tagged(.cid, _):
-                return try .item(CID(taggedCBOR: self)†)
+                return try CID(taggedCBOR: self).shortDescription.flanked("CID(", ")")
             case CBOR.tagged(.uri, _):
-                return try .item(URL(taggedCBOR: self)†.flanked("URI(", ")"))
+                return try URL(taggedCBOR: self)†.flanked("URI(", ")")
             case CBOR.tagged(.uuid, _):
-                return try .item(UUID(taggedCBOR: self)†.flanked("UUID(", ")"))
+                return try UUID(taggedCBOR: self)†.flanked("UUID(", ")")
             case CBOR.tagged(.digest, _):
-                return try .item(Digest(taggedCBOR: self)†)
+                return try Digest(taggedCBOR: self).shortDescription.flanked("Digest(", ")")
             case CBOR.tagged(.cid, _):
-                return try .item(CID(taggedCBOR: self)†)
+                return try CID(taggedCBOR: self)†
             case CBOR.tagged(CBOR.Tag.function, _):
-                return try .item(FunctionIdentifier(taggedCBOR: self)†.flanked("«", "»"))
+                return try FunctionIdentifier(taggedCBOR: self)†.flanked("«", "»")
             case CBOR.tagged(CBOR.Tag.parameter, _):
-                return try .item(ParameterIdentifier(taggedCBOR: self)†.flanked("❰", "❱"))
+                return try ParameterIdentifier(taggedCBOR: self)†.flanked("❰", "❱")
             case CBOR.tagged(CBOR.Tag.request, let cbor):
-                return .item(Envelope(cbor).format.flanked("request(", ")"))
+                return Envelope(cbor).format.flanked("request(", ")")
             case CBOR.tagged(CBOR.Tag.response, let cbor):
-                return .item(Envelope(cbor).format.flanked("response(", ")"))
+                return Envelope(cbor).format.flanked("response(", ")")
             case CBOR.tagged(let tag, _):
                 let name = CBOR.Tag.knownTag(for: tag.rawValue)?.name ?? tag.name ?? String(tag.rawValue)
-                return .item("CBOR(\(name))")
+                return "CBOR(\(name))"
             default:
                 return "CBOR"
+            }
+        } catch {
+            return "<error>"
+        }
+    }
+}
+
+extension CBOR: EnvelopeFormat {
+    var formatItem: EnvelopeFormatItem {
+        do {
+            switch self {
+            case CBOR.tagged(.envelope, _):
+                return try Envelope(taggedCBOR: cbor).formatItem
+            default:
+                return .item(envelopeSummary)
             }
         } catch {
             return "<error>"

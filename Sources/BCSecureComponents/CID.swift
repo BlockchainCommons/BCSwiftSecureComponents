@@ -35,6 +35,12 @@ public extension CID {
     }
 }
 
+extension CID: Comparable {
+    public static func < (lhs: CID, rhs: CID) -> Bool {
+        lhs.data.lexicographicallyPrecedes(rhs.data)
+    }
+}
+
 public extension CID {
     var untaggedCBOR: CBOR {
         CBOR.data(data)

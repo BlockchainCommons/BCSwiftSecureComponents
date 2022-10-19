@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "039f56c5d7960f277087a0be51f5eb04ed0ec073",
-        "version" : "1.5.1"
+        "revision" : "19b3c3ceed117c5cc883517c4e658548315ba70b",
+        "version" : "1.6.0"
       }
     },
     {
@@ -34,6 +34,33 @@
       "state" : {
         "revision" : "c09b87de7948c2e95d2a9c3faba34ab2cb24ba3b",
         "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "graph",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/Graph.git",
+      "state" : {
+        "revision" : "47e62c4ddcb4fc3d5a896a0466394ffdbe066877",
+        "version" : "0.2.1"
+      }
+    },
+    {
+      "identity" : "graphdot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/GraphDot.git",
+      "state" : {
+        "revision" : "c3009b3ccfa5c269b17655510f5b1244d4ef22be",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "graphmermaid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/GraphMermaid.git",
+      "state" : {
+        "revision" : "b5bb43f988a12b2b3861b7a97293de282cac676b",
+        "version" : "0.2.0"
       }
     },
     {
@@ -68,17 +95,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/URKit.git",
       "state" : {
-        "revision" : "ddf590d5e2b2e0ff9ba5b38280eead5985fc8af1",
-        "version" : "7.4.1"
+        "revision" : "07b7459e429ed13d42dcaa800200b935ce3297b2",
+        "version" : "7.5.0"
       }
     },
     {
       "identity" : "wolfbase",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/WolfMcNally/WolfBase",
+      "location" : "https://github.com/WolfMcNally/WolfBase.git",
       "state" : {
-        "revision" : "ad3bef161fe0f1f2b41389a4ff8a831409bd2ec6",
-        "version" : "4.5.0"
+        "revision" : "51846810911c51dfe38514a5b5454220c59b4a79",
+        "version" : "4.5.2"
       }
     }
   ],

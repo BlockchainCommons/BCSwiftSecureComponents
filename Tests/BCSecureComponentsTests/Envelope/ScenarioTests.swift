@@ -40,10 +40,10 @@ class ScenarioTests: XCTestCase {
 
         let expectedFormat =
         """
-        Digest(e8aa201db4044168d05b77d7b36648fb7a97db2d3e72f5babba9817911a52809) [
+        Digest(e8aa201d) [
             "format": "EPUB"
-            "work": CID(7fb90a9d96c07f39f75ea6acf392d79f241fac4ec0be2120f7c82489711e3e80) [
-                "author": CID(9c747ace78a4c826392510dd6285551e7df4e5164729a1b36198e56e017666c8) [
+            "work": CID(7fb90a9d) [
+                "author": CID(9c747ace) [
                     dereferenceVia: "LibraryOfCongress"
                     hasName: "Ayn Rand"
                 ]
@@ -81,8 +81,8 @@ class ScenarioTests: XCTestCase {
         let expectedFormat =
         """
         {
-            CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+            CID(d44c5e0a) [
+                controller: CID(d44c5e0a)
                 publicKeys: PublicKeyBase
             ]
         } [
@@ -128,11 +128,11 @@ class ScenarioTests: XCTestCase {
         let expectedRegistrationFormat =
         """
         {
-            CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
+            CID(d44c5e0a) [
                 dereferenceVia: URI(https://exampleledger.com/cid/d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
                 entity: {
-                    CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f) [
-                        controller: CID(d44c5e0afd353f47b02f58a5a3a29d9a2efa6298692f896cd2923268599a0d0f)
+                    CID(d44c5e0a) [
+                        controller: CID(d44c5e0a)
                         publicKeys: PublicKeyBase
                     ]
                 } [
@@ -267,9 +267,9 @@ class ScenarioTests: XCTestCase {
         let expectedFormat =
         """
         {
-            CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
+            CID(174842ea) [
                 "dateIssued": 2022-04-27
-                holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+                holder: CID(78bc3000) [
                     "birthCountry": "bs" [
                         note: "The Bahamas"
                     ]
@@ -288,7 +288,7 @@ class ScenarioTests: XCTestCase {
                     isA: "Person"
                 ]
                 isA: "credential"
-                issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+                issuer: CID(04363d5f) [
                     dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
                     note: "Issued by the State of Example"
                 ]
@@ -359,8 +359,8 @@ class ScenarioTests: XCTestCase {
         let expectedElidedFormat =
         """
         {
-            CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-                holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            CID(174842ea) [
+                holder: CID(78bc3000) [
                     "familyName": "SMITH"
                     "givenName": "JOHN"
                     "image": "John Smith smiling" [
@@ -370,7 +370,7 @@ class ScenarioTests: XCTestCase {
                     ELIDED (8)
                 ]
                 isA: "credential"
-                issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+                issuer: CID(04363d5f) [
                     dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
                     note: "Issued by the State of Example"
                 ]
@@ -391,8 +391,8 @@ class ScenarioTests: XCTestCase {
         let expectedEncryptedFormat =
         """
         {
-            CID(174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622b81ed407770302c8) [
-                holder: CID(78bc30004776a3905bccb9b8a032cf722ceaf0bbfb1a49eaf3185fab5808cadc) [
+            CID(174842ea) [
+                holder: CID(78bc3000) [
                     "familyName": "SMITH"
                     "givenName": "JOHN"
                     "image": "John Smith smiling" [
@@ -402,7 +402,7 @@ class ScenarioTests: XCTestCase {
                     ENCRYPTED (8)
                 ]
                 isA: "credential"
-                issuer: CID(04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8) [
+                issuer: CID(04363d5f) [
                     dereferenceVia: URI(https://exampleledger.com/cid/04363d5ff99733bc0f1577baba440af1cf344ad9e454fad9d128c00fef6505e8)
                     note: "Issued by the State of Example"
                 ]
@@ -499,9 +499,9 @@ class ScenarioTests: XCTestCase {
 
         let line2ExpectedFormat =
         """
-        Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
+        Digest(9be5259b) [
             "priceEach": "4.99"
-            "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
+            "product": CID(ae464c5f)
             "quantity": 3
             hasName: "Cheap Widget"
             isA: "PurchaseOrderLineItem"
@@ -521,17 +521,17 @@ class ScenarioTests: XCTestCase {
 
         let purchaseOrderProjectionExpectedFormat =
         """
-        CID(1bebb5b6e447f819d5a4cb86409c5da1207d1460672dfe903f55cde833549625) [
-            "lineItem": Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
+        CID(1bebb5b6) [
+            "lineItem": Digest(9be5259b) [
                 "priceEach": "10.99"
-                "product": CID(5bcca01f5f370ceb3b7365f076e9600e294d4da6ddf7a616976c87775ea8f0f1)
+                "product": CID(5bcca01f)
                 "quantity": 4
                 hasName: "Quality Widget"
                 isA: "PurchaseOrderLineItem"
             ]
-            "lineItem": Digest(9be5259bf40c51f84449e69764cc43e96361ba1fdc87edfc86a718d2aa3787b8) [
+            "lineItem": Digest(9be5259b) [
                 "priceEach": "4.99"
-                "product": CID(ae464c5f9569ae23ff9a75e83caf485fb581d1ef9da147ca086d10e3d6f93e64)
+                "product": CID(ae464c5f)
                 "quantity": 3
                 hasName: "Cheap Widget"
                 isA: "PurchaseOrderLineItem"
