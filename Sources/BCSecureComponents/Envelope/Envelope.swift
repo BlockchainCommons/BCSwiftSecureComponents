@@ -1151,7 +1151,7 @@ public extension Envelope {
             let assertions = try elements.dropFirst().map { try Envelope(taggedCBOR: $0 ) }
             try self.init(subject: subject, assertions: assertions)
         default:
-            preconditionFailure()
+            throw EnvelopeError.invalidFormat
         }
     }
 

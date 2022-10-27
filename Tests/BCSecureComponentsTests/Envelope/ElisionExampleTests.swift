@@ -19,9 +19,10 @@ class ElisionExampleTests: XCTestCase {
             .addAssertion("professionalDevelopmentHours", 15)
             .addAssertion("topics", ["Subject 1", "Subject 2"])
             .wrap()
-            .sign(with: alicePrivateKeys)
+            .sign(with: alicePrivateKeys, randomGenerator: generateFakeRandomNumbers)
             .addAssertion(.note, "Signed by Example Electrical Engineering Board")
             .checkEncoding()
+        XCTAssertEqual(credential.ur†, "ur:envelope/lstpsptpvtmntpsptpcstpsghdcxfgkoiahtjthnissawsfhzcmyyldsutfzcttefpaxjtmobsbwimcaleykvsdtgajntpsptputlftpsptpcsihjoisjljyjltpsptpcsksckghisinjkcxinjkcxgehsjnihjkcxgthsksktihjzjzdijkcxjoisjljyjldmtpsptputlftpsptpcsisjzhsjkjyglhsjnihtpsptpcsiogthsksktihjzjztpsptputlftpsptpcsininjkjkkpihfyhsjyihtpsptpcssecyhybdvyaetpsptputlftpsptpurattpsptpcsksdkfekshsjnjojzihcxfejzihiajyjpiniahsjzcxfejtioinjtihihjpinjtiocxfwjlhsjpietpsptputlftpsptpcsiyjyjljoiniajktpsptpcslfingukpidimihiajycxehingukpidimihiajycxeytpsptputlftpsptpuraotpsptpcskscffxihjpjyiniyiniahsjyihcxjliycxfxjljnjojzihjyinjljttpsptputlftpsptpcskscsiajljtjyinjtkpinjtiofeiekpiahsjyinjljtgojtinjyjktpsptpcszofhyaaeaeaeaeaeaetpsptputlftpsptpurbttpsptpcsksdkfekshsjnjojzihcxfejzihiajyjpiniahsjzcxfejtioinjtihihjpinjtiocxfwjlhsjpietpsptputlftpsptpcsjtihksjoinjphsjyinjljtfyhsjyihtpsptpcssecyjncscxaetpsptputlftpsptpcsjsiaihjpjyiniyiniahsjyihglkpjnidihjptpsptpcsjeeheyeodpeeecendpemetestpsptputlftpsptpcsiniyinjpjkjyglhsjnihtpsptpcsihgehsjnihjktpsptputlftpsptpcsiojkkpidimihiajytpsptpcskscegmfgcxhsjtiecxgtiniajpjlkthskoihcxfejtioinjtihihjpinjtiotpsptputlftpsptpcskscejojpjliyihjkjkinjljthsjzfyihkoihjzjljojnihjtjyfdjlkpjpjktpsptpcsbstpsptputlftpsptpuraatpsptpcsksdmguiniojtihiecxidkkcxfekshsjnjojzihcxfejzihiajyjpiniahsjzcxfejtioinjtihihjpinjtiocxfwjlhsjpietpsptputlftpsptpuraxtpsptpcstpuehdfzgltlhnpmghdyrfosgsehemehimmuahtnpfhsstgmhplytluotijyehtobecxptcsesgdhykbylsgkntbkgkosngabteyhfadspqzcabamsbkzedpzcbdtprtutbgrewmiajposkb")
         XCTAssertEqual(credential.format,
         """
         {
