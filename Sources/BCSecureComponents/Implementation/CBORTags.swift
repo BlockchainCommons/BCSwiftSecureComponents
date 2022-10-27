@@ -31,9 +31,11 @@ public extension CBOR.Tag {
 }
 
 /// Tags for subtypes specific to Secure Components.
-/// These tags use two-byte encoding.
+/// Except for `.leaf`, these tags use two-byte encoding.
 public extension CBOR.Tag {
-    static let leaf = CBOR.Tag(220, "leaf")
+    /// See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
+    static let leaf = CBOR.Tag(24, "leaf")
+    
     static let assertion = CBOR.Tag(221, "assertion")
     static let signature = CBOR.Tag(222, "signature")
     static let knownPredicate = CBOR.Tag(223, "known-predicate")

@@ -24,7 +24,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
-           220(42)   ; leaf
+           24(42)   ; leaf
         )
         """)
 
@@ -45,7 +45,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
-           220(-42)   ; leaf
+           24(-42)   ; leaf
         )
         """)
 
@@ -66,7 +66,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
-           220("Hello.")   ; leaf
+           24("Hello.")   ; leaf
         )
         """)
 
@@ -114,10 +114,10 @@ class BasicTests: XCTestCase {
            221(   ; assertion
               [
                  200(   ; envelope
-                    220("knows")   ; leaf
+                    24("knows")   ; leaf
                  ),
                  200(   ; envelope
-                    220("Bob")   ; leaf
+                    24("Bob")   ; leaf
                  )
               ]
            )
@@ -144,16 +144,16 @@ class BasicTests: XCTestCase {
         200(   ; envelope
            [
               200(   ; envelope
-                 220("Alice")   ; leaf
+                 24("Alice")   ; leaf
               ),
               200(   ; envelope
                  221(   ; assertion
                     [
                        200(   ; envelope
-                          220("knows")   ; leaf
+                          24("knows")   ; leaf
                        ),
                        200(   ; envelope
-                          220("Bob")   ; leaf
+                          24("Bob")   ; leaf
                        )
                     ]
                  )
@@ -184,16 +184,16 @@ class BasicTests: XCTestCase {
         200(   ; envelope
            [
               200(   ; envelope
-                 220("Alice")   ; leaf
+                 24("Alice")   ; leaf
               ),
               200(   ; envelope
                  221(   ; assertion
                     [
                        200(   ; envelope
-                          220("knows")   ; leaf
+                          24("knows")   ; leaf
                        ),
                        200(   ; envelope
-                          220("Bob")   ; leaf
+                          24("Bob")   ; leaf
                        )
                     ]
                  )
@@ -202,10 +202,10 @@ class BasicTests: XCTestCase {
                  221(   ; assertion
                     [
                        200(   ; envelope
-                          220("knows")   ; leaf
+                          24("knows")   ; leaf
                        ),
                        200(   ; envelope
-                          220("Carol")   ; leaf
+                          24("Carol")   ; leaf
                        )
                     ]
                  )
@@ -236,7 +236,7 @@ class BasicTests: XCTestCase {
         """
         200(   ; envelope
            224(   ; wrapped-envelope
-              220("Hello.")   ; leaf
+              24("Hello.")   ; leaf
            )
         )
         """)
@@ -261,7 +261,7 @@ class BasicTests: XCTestCase {
         200(   ; envelope
            224(   ; wrapped-envelope
               224(   ; wrapped-envelope
-                 220("Hello.")   ; leaf
+                 24("Hello.")   ; leaf
               )
            )
         )
@@ -393,7 +393,7 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
-           220(   ; leaf
+           24(   ; leaf
               203(   ; crypto-digest
                  h'886a0c85832fa119d5dc3a195308bf13547f1f16aef032f6c2ef9912cd5992e5'
               )

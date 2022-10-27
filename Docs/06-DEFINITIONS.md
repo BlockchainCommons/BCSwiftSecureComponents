@@ -73,7 +73,7 @@ struct AgreementPrivateKey {
 ```
 agreement-private-key = #6.702(key)
 
-key: bytes .size 32
+key = bytes .size 32
 ```
 
 ---
@@ -99,7 +99,7 @@ struct AgreementPublicKey {
 ```
 agreement-public-key = #6.62(key)
 
-key: bytes .size 230
+key = bytes .size 230
 ```
 
 ---
@@ -139,7 +139,7 @@ A Digest is a cryptographic hash of some source data. Currently Secure Component
 ```
 digest = #6.203(blake3-digest)
 
-blake3-digest: bytes .size 32
+blake3-digest = bytes .size 32
 ```
 
 ---
@@ -209,7 +209,7 @@ envelope = #6.200(
     envelope-content
 )
 
-envelope-content(
+envelope-content = (
     node /
     leaf /
     wrapped-envelope /
@@ -219,9 +219,11 @@ envelope-content(
     elided
 )
 
-node = [envelope-content, + assertion]
+node = [envelope-content, + assertion-element]
 
-leaf = #6.220(<<any>>)
+assertion-element = ( assertion / encrypted / elided )
+
+leaf = #6.24(bytes) ; See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
 
 wrapped-envelope = #6.224(envelope-content)
 
@@ -264,10 +266,10 @@ A `crypto-msg` is an array containing either 3 or 4 elements. If additional auth
 ```
 crypto-msg = #6.201([ ciphertext, nonce, auth, ? aad ])
 
-ciphertext: bytes       ; encrypted using ChaCha20
-aad: bytes              ; Additional Authenticated Data
-nonce: bytes .size 12   ; Random, generated at encryption-time
-auth: bytes .size 16    ; Authentication tag created by Poly1305
+ciphertext = bytes       ; encrypted using ChaCha20
+aad = bytes              ; Additional Authenticated Data
+nonce = bytes .size 12   ; Random, generated at encryption-time
+auth = bytes .size 16    ; Authentication tag created by Poly1305
 ```
 
 ---
@@ -315,11 +317,11 @@ struct Password {
 ```
 password = #6.700([n, r, p, salt, hashed-password])
 
-n: uint                             ; iterations
-r: uint                             ; block size
-p: uint                             ; parallelism factor
-salt: bytes                         ; random salt (16 bytes recommended)
-hashed-password: bytes              ; 32 bytes recommended
+n = uint                             ; iterations
+r = uint                             ; block size
+p = uint                             ; parallelism factor
+salt = bytes                         ; random salt (16 bytes recommended)
+hashed-password = bytes              ; 32 bytes recommended
 ```
 
 ---
@@ -345,7 +347,7 @@ struct PrivateKeyBase {
 ```
 crypto-prvkeys = #6.205([key-material])
 
-key-material: bytes
+key-material = bytes
 ```
 
 ### Derivations
@@ -424,7 +426,7 @@ struct SealedMessage {
 ```
 crypto-sealed = #6.207([crypto-message, ephemeral-public-key])
 
-ephemeral-public-key: agreement-public-key
+ephemeral-public-key = agreement-public-key
 ```
 
 ---
@@ -461,12 +463,12 @@ If the `signature-variant-ecdsa` is selected, it will appear as a two-element ar
 signature = #6.222([ signature-variant-schnorr / signature-variant-ecdsa ])
 
 signature-variant-schnorr = signature-schnorr / signature-schnorr-tagged
-signature-schnorr: bytes .size 64
-signature-schnorr-tagged: [signature-schnorr, schnorr-tag]
-schnorr-tag: bytes .size ne 0
+signature-schnorr = bytes .size 64
+signature-schnorr-tagged = [signature-schnorr, schnorr-tag]
+schnorr-tag = bytes .size ne 0
 
 signature-variant-ecdsa = [ 1, signature-ecdsa ]
-signature-ecdsa: bytes .size 64
+signature-ecdsa = bytes .size 64
 ```
 
 ---
@@ -492,7 +494,7 @@ struct SigningPrivateKey {
 ```
 private-signing-key = #6.704(key)
 
-key: bytes .size 32
+key = bytes .size 32
 ```
 
 ---
@@ -525,10 +527,10 @@ A signing public key has two variants: Schnorr or ECDSA. The Schnorr variant is 
 signing-public-key = #6.705(key-variant-schnorr / key-variant-ecdsa)
 
 key-variant-schnorr = key-schnorr
-key-schnorr: bytes .size 32
+key-schnorr = bytes .size 32
 
-key-variant-ecdsa: [1, key-ecdsa]
-key-ecdsa: bytes .size 33
+key-variant-ecdsa = [1, key-ecdsa]
+key-ecdsa = bytes .size 33
 ```
 
 ---
@@ -553,5 +555,5 @@ public struct SymmetricKey {
 
 ```
 symmetric-key = #6.204( symmetric-key-data )
-symmetric-key-data: bytes .size 32
+symmetric-key-data = bytes .size 32
 ```

@@ -33,7 +33,7 @@ extension CBOR {
             case .double(let n):
                 return String(n)
             case .utf8String(let string):
-                return string.flanked(.quote)
+                return (string.count > 100 ? string.prefix(count: 100).trim() + "…" : string).flanked(.quote)
             case .date(let date):
                 var s = date.ISO8601Format()
                 if s.count == 20 && s.hasSuffix("T00:00:00Z") {

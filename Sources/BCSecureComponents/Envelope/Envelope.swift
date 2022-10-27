@@ -1100,15 +1100,12 @@ public extension Envelope {
     var untaggedCBOR: CBOR {
         switch self {
         case .node(let subject, let assertions, _):
-            if assertions.isEmpty {
-                return subject.taggedCBOR
-            } else {
-                var result = [subject.taggedCBOR]
-                for assertion in assertions {
-                    result.append(assertion.taggedCBOR)
-                }
-                return CBOR.array(result)
+            precondition(!assertions.isEmpty)
+            var result = [subject.taggedCBOR]
+            for assertion in assertions {
+                result.append(assertion.taggedCBOR)
             }
+            return CBOR.array(result)
         case .leaf(let cbor, _):
             return CBOR.tagged(.leaf, cbor)
         case .wrapped(let envelope, _):

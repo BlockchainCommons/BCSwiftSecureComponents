@@ -12,7 +12,7 @@ class EncodingTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
             """
             200(   ; envelope
-               220("Hello.")   ; leaf
+               24("Hello.")   ; leaf
             )
             """
         )
@@ -24,7 +24,7 @@ class EncodingTests: XCTestCase {
         XCTAssertEqual(e.diagAnnotated,
             """
             200(   ; envelope
-               220(   ; leaf
+               24(   ; leaf
                   [1, 2, 3]
                )
             )
@@ -56,10 +56,10 @@ class EncodingTests: XCTestCase {
                  221(   ; assertion
                     [
                        200(   ; envelope
-                          220("C")   ; leaf
+                          24("C")   ; leaf
                        ),
                        200(   ; envelope
-                          220("D")   ; leaf
+                          24("D")   ; leaf
                        )
                     ]
                  )
@@ -68,10 +68,10 @@ class EncodingTests: XCTestCase {
                  221(   ; assertion
                     [
                        200(   ; envelope
-                          220("E")   ; leaf
+                          24("E")   ; leaf
                        ),
                        200(   ; envelope
-                          220("F")   ; leaf
+                          24("F")   ; leaf
                        )
                     ]
                  )
@@ -104,10 +104,10 @@ class EncodingTests: XCTestCase {
                      221(   ; assertion
                         [
                            200(   ; envelope
-                              220("A")   ; leaf
+                              24("A")   ; leaf
                            ),
                            200(   ; envelope
-                              220("B")   ; leaf
+                              24("B")   ; leaf
                            )
                         ]
                      )
@@ -118,10 +118,10 @@ class EncodingTests: XCTestCase {
                            221(   ; assertion
                               [
                                  200(   ; envelope
-                                    220("C")   ; leaf
+                                    24("C")   ; leaf
                                  ),
                                  200(   ; envelope
-                                    220("D")   ; leaf
+                                    24("D")   ; leaf
                                  )
                               ]
                            )
@@ -130,10 +130,10 @@ class EncodingTests: XCTestCase {
                            221(   ; assertion
                               [
                                  200(   ; envelope
-                                    220("E")   ; leaf
+                                    24("E")   ; leaf
                                  ),
                                  200(   ; envelope
-                                    220("F")   ; leaf
+                                    24("F")   ; leaf
                                  )
                               ]
                            )

@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/Graph.git",
       "state" : {
-        "revision" : "47e62c4ddcb4fc3d5a896a0466394ffdbe066877",
-        "version" : "0.2.1"
+        "revision" : "bfa9328e60b0145a28392e4566c941806603ef72",
+        "version" : "0.3.0"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphDot.git",
       "state" : {
-        "revision" : "c3009b3ccfa5c269b17655510f5b1244d4ef22be",
-        "version" : "0.2.0"
+        "revision" : "e5d213eb21b3b1f38e839e251c2b822445349328",
+        "version" : "0.3.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphMermaid.git",
       "state" : {
-        "revision" : "b5bb43f988a12b2b3861b7a97293de282cac676b",
-        "version" : "0.2.0"
+        "revision" : "4e4592836db43116e9a86c30b2c2da5f36d96627",
+        "version" : "0.3.0"
       }
     },
     {

@@ -3,124 +3,40 @@ import Graph
 import GraphMermaid
 import WolfBase
 
-public enum EnvelopeMermaidLayoutDirection {
-    case leftToRight
-    case topToBottom
-}
+public struct MermaidOptions {
+    public let layoutDirection: LayoutDirection
+    public let theme: Theme
 
-struct MermaidEnvelopeEdgeData {
-    let type: EdgeType
-    
-    enum EdgeType {
-        case unknown
-        case subject
-        case assertion
-        case predicate
-        case object
-        case wrapped
+    public init(layoutDirection: LayoutDirection? = nil, theme: Theme? = nil) {
+        self.layoutDirection = layoutDirection ?? .leftToRight
+        self.theme = theme ?? .color
     }
-}
 
-extension Digest: ElementID { }
-extension CID: ElementID { }
-typealias EnvelopeGraph = Graph<Int, Int, Envelope, MermaidEnvelopeEdgeData, EnvelopeMermaidLayoutDirection>
-
-extension Envelope {
-    var shortID: String {
-        self.digest.shortDescription
+    public enum LayoutDirection {
+        case leftToRight
+        case topToBottom
     }
     
-    var summary: String {
-        switch self {
-        case .node(_, _, _):
-            return "NODE"
-        case .leaf(let cBOR, _):
-            return cBOR.envelopeSummary
-        case .wrapped(_, _):
-            return "WRAPPED"
-        case .knownPredicate(let knownPredicate, _):
-            return knownPredicate.name
-        case .assertion(_):
-            return "ASSERTION"
-        case .encrypted(_):
-            return "ENCRYPTED"
-        case .elided(_):
-            return "ELIDED"
-        }
+    public enum Theme {
+        case color
+        case monochrome
     }
 }
 
-struct EnvelopeGraphBuilder {
-    var graph: EnvelopeGraph
-    var _nextNodeID = 1
-    var _nextEdgeID = 1
-
-    init(layoutDirection: EnvelopeMermaidLayoutDirection) {
-        self.graph = EnvelopeGraph(data: layoutDirection)
-    }
-
-    var nextNodeID: Int {
-        mutating get {
-            defer {
-                _nextNodeID += 1
-            }
-            return _nextNodeID
-        }
+public extension Envelope {
+    func mermaidFormat(layoutDirection: MermaidOptions.LayoutDirection? = nil, theme: MermaidOptions.Theme? = nil) -> String {
+        graph(data: MermaidOptions(layoutDirection: layoutDirection, theme: theme)).mermaidFormat
     }
     
-    var nextEdgeID: Int {
-        mutating get {
-            defer {
-                _nextEdgeID += 1
-            }
-            return _nextEdgeID
-        }
-    }
-    
-    init(_ envelope: Envelope, layoutDirection: EnvelopeMermaidLayoutDirection) {
-        self.init(layoutDirection: layoutDirection)
-        addNode(envelope)
-    }
-
-    @discardableResult
-    mutating func addNode(_ envelope: Envelope, parent: Int? = nil, edgeType: MermaidEnvelopeEdgeData.EdgeType? = nil) -> Int {
-        let node = nextNodeID
-        try! graph.newNode(node, data: envelope)
-        if let parent {
-            try! graph.newEdge(nextEdgeID, tail: parent, head: node, data: .init(type: edgeType ?? .unknown))
-        }
-        switch envelope {
-        case .node(let subject, let assertions, _):
-            addNode(subject, parent: node, edgeType: .subject)
-            for assertion in assertions {
-                addNode(assertion, parent: node, edgeType: .assertion)
-            }
-        case .assertion(let assertion):
-            addNode(assertion.predicate, parent: node, edgeType: .predicate)
-            addNode(assertion.object, parent: node, edgeType: .object)
-        case .wrapped(let envelope, _):
-            addNode(envelope, parent: node, edgeType: .wrapped)
-        default:
-            break
-        }
-        return node
+    var mermaidFormat: String {
+        mermaidFormat()
     }
 }
 
-extension Envelope {
-    func graph(layoutDirection: EnvelopeMermaidLayoutDirection) -> EnvelopeGraph {
-        EnvelopeGraphBuilder(self, layoutDirection: layoutDirection).graph
-    }
-    
-    public func mermaidFormat(layoutDirection: EnvelopeMermaidLayoutDirection = .leftToRight) -> String {
-        graph(layoutDirection: layoutDirection).mermaidFormat
-    }
-}
-
-extension EnvelopeGraph: MermaidEncodable {
+extension MermaidEnvelopeGraph: MermaidEncodable {
     public var mermaidGraphAttributes: GraphAttributes {
         let layoutDirection: LayoutDirection
-        switch self.data {
+        switch self.data.layoutDirection {
         case .leftToRight:
             layoutDirection = .leftToRight
         case .topToBottom:
@@ -162,31 +78,39 @@ extension EnvelopeGraph: MermaidEncodable {
             attributes.dashArray = [5, 5]
             attributes.strokeColor = "#55f"
         }
+        
+        if data.theme == .monochrome {
+            attributes.strokeColor = nil
+            attributes.fillColor = nil
+        }
+        
         return attributes
     }
     
     public func mermaidEdgeAttributes(_ edge: Int) -> EdgeAttributes {
-        let data = try! edgeData(edge)
+        let edgeAttributes = try! edgeData(edge)
         var attributes = EdgeAttributes()
         attributes.strokeWidth = 2
-        switch data.type {
+        attributes.label = edgeAttributes.type.label
+        switch edgeAttributes.type {
         case .unknown:
             break
         case .subject:
-            attributes.label = "subj"
             attributes.strokeColor = "red"
         case .assertion:
             break
         case .predicate:
-            attributes.label = "pred"
             attributes.strokeColor = "green"
         case .object:
-            attributes.label = "obj"
             attributes.strokeColor = "#55f"
         case .wrapped:
-            attributes.label = "subj"
             attributes.strokeColor = "red"
         }
+        
+        if data.theme == .monochrome {
+            attributes.strokeColor = nil
+        }
+        
         return attributes
     }
 }
