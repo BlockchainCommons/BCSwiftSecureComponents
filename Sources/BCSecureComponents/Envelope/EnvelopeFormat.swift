@@ -49,7 +49,7 @@ extension CBOR {
                     case let CBOR.unsignedInt(rawValue) = cbor,
                     case let predicate = KnownValue(rawValue: rawValue)
                 else {
-                    return "<unknown predicate>"
+                    return "<not a known value>"
                 }
                 return predicate†
             case CBOR.tagged(.signature, _):

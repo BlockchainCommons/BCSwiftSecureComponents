@@ -213,7 +213,7 @@ envelope-content = (
     node /
     leaf /
     wrapped-envelope /
-    known-predicate /
+    known-value /
     assertion /
     encrypted /
     elided
@@ -227,7 +227,7 @@ leaf = #6.24(bytes) ; See https://www.rfc-editor.org/rfc/rfc8949.html#name-encod
 
 wrapped-envelope = #6.224(envelope-content)
 
-known-predicate = #6.223(uint)
+known-value = #6.223(uint)
 
 assertion = #6.221([envelope, envelope])
 
