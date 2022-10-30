@@ -50,9 +50,9 @@ public extension KnownValue {
 
     static let body = KnownValue(100, "body")
     static let result = KnownValue(101, "result")
-    static let processing = KnownValue(102, "processing")
+    static let error = KnownValue(102, "error")
     static let ok = KnownValue(103, "ok")
-    static let error = KnownValue(104, "error")
+    static let processing = KnownValue(104, "processing")
 }
 
 fileprivate var knownValues: [KnownValue] = [
@@ -75,9 +75,9 @@ fileprivate var knownValues: [KnownValue] = [
 
     .body,
     .result,
-    .processing,
-    .ok,
     .error,
+    .ok,
+    .processing,
 ]
 
 fileprivate var knownValuesByRawValue: [UInt64: KnownValue] = {
