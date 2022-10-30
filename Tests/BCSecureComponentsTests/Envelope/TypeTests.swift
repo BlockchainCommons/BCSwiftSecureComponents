@@ -3,8 +3,8 @@ import BCSecureComponents
 import WolfBase
 
 class TypeTests: XCTestCase {
-    func testKnownPredicate() throws {
-        let envelope = try Envelope(KnownPredicate.verifiedBy).checkEncoding()
+    func testKnownValue() throws {
+        let envelope = try Envelope(KnownValue.verifiedBy).checkEncoding()
         XCTAssertEqual(envelope.format, "verifiedBy")
     }
 

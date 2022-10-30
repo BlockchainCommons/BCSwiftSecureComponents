@@ -44,10 +44,10 @@ extension CBOR {
                 return "Data(\(data.count))"
             case CBOR.tagged(.envelope, _):
                 return "Envelope"
-            case CBOR.tagged(.knownPredicate, let cbor):
+            case CBOR.tagged(.knownValue, let cbor):
                 guard
                     case let CBOR.unsignedInt(rawValue) = cbor,
-                    case let predicate = KnownPredicate(rawValue: rawValue)
+                    case let predicate = KnownValue(rawValue: rawValue)
                 else {
                     return "<unknown predicate>"
                 }
@@ -118,7 +118,7 @@ extension Envelope: EnvelopeFormat {
         switch self {
         case .leaf(let cbor, _):
             return cbor.formatItem
-        case .knownPredicate(let predicate, _):
+        case .knownValue(let predicate, _):
             return predicate.formatItem
         case .wrapped(let envelope, _):
             return .list([.begin("{"), envelope.formatItem, .end("}")])

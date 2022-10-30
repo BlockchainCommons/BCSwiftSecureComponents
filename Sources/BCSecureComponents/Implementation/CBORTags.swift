@@ -38,7 +38,7 @@ public extension CBOR.Tag {
     
     static let assertion = CBOR.Tag(221, "assertion")
     static let signature = CBOR.Tag(222, "signature")
-    static let knownPredicate = CBOR.Tag(223, "known-predicate")
+    static let knownValue = CBOR.Tag(223, "known-value")
     static let wrappedEnvelope = CBOR.Tag(224, "wrapped-envelope")
     
     static let agreementPublicKey = CBOR.Tag(230, "agreement-public-key")
@@ -121,7 +121,7 @@ var knownTags: [CBOR.Tag] = [
     .leaf,
     .assertion,
     .signature,
-    .knownPredicate,
+    .knownValue,
     .wrappedEnvelope,
     .agreementPublicKey,
     .seed,

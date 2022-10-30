@@ -171,7 +171,7 @@ public indirect enum Envelope: DigestProvider {
     case node(subject: Envelope, assertions: [Envelope], digest: Digest)
     case leaf(CBOR, Digest)
     case wrapped(Envelope, Digest)
-    case knownPredicate(KnownPredicate, Digest)
+    case knownValue(KnownValue, Digest)
     case assertion(Assertion)
     case encrypted(EncryptedMessage)
     case elided(Digest)
@@ -189,7 +189,7 @@ The cases of `Envelope` are as follows. Except for `.node`, each case represents
 * `.node` A subject with one or more assertions.
 * `.leaf` A terminal CBOR object.
 * `.wrapped` An enclosed `Envelope`.
-* `.knownPredicate` An integer tagged as a predicate and typically used in the `predicate` position of an assertion.
+* `.knownValue` An integer tagged as a predicate and typically used in the `predicate` position of an assertion.
 * `.assertion` A (predicate, object) pair.
 * `.encrypted` A subject that has been encrypted.
 * `.elided` A subject that has been elided.
@@ -201,7 +201,7 @@ The cases of `Envelope` are as follows. Except for `.node`, each case represents
 |200|`envelope`|
 |220|`leaf`|
 |221|`assertion`|
-|223|`knownPredicate`|
+|223|`knownValue`|
 |224|`wrappedEnvelope`|
 
 ```

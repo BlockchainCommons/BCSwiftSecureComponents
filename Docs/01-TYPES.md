@@ -71,7 +71,7 @@ Types that do not define a UR type generally would never be serialized as a top-
 |220|`leaf`|
 |221|`assertion`|
 |222|`signature`|
-|223|`knownPredicate`|
+|223|`knownValue`|
 |224|`wrappedEnvelope`|
 |225|`elided`|
 |230|`agreementPublicKey`|

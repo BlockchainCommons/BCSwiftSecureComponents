@@ -1,7 +1,7 @@
 # Secure Components - Envelope Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Oct 26, 2022</br>
+**Revised:** Oct 30, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -141,7 +141,7 @@ d8c882d8c8d8186648656c6c6f2ed8c8d8dd82d8c8d8df03d8c8d818d8de584077aa2215186632fe
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -170,7 +170,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -220,7 +220,7 @@ d8c883d8c8d8186648656c6c6f2ed8c8d8dd82d8c8d8df03d8c8d818d8de584077aa2215186632fe
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -236,7 +236,7 @@ d8c883d8c8d8186648656c6c6f2ed8c8d8dd82d8c8d8df03d8c8d818d8de584077aa2215186632fe
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -265,7 +265,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -276,7 +276,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -446,7 +446,7 @@ d8c882d8c8d8c98449095cadd29c5be8c9164c4d785658f36c22fb5aed3ac05099304976559439d4
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -482,7 +482,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -539,7 +539,7 @@ d8c883d8c8d8c98449095cadd29c5be8c9164c4d785658f36c22fb5aed3ac05099304976559439d4
          221(   ; assertion
             [
                200(   ; envelope
-                  223(5)   ; known-predicate
+                  223(5)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -566,7 +566,7 @@ d8c883d8c8d8c98449095cadd29c5be8c9164c4d785658f36c22fb5aed3ac05099304976559439d4
          221(   ; assertion
             [
                200(   ; envelope
-                  223(5)   ; known-predicate
+                  223(5)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -613,7 +613,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      05                  # unsigned(5)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -634,7 +634,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      05                  # unsigned(5)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -702,7 +702,7 @@ d8c884d8c8d8c9844b098c13829f7fe1ca5475004c4d785658f36c22fb5aed3ac050ceae0883f0fd
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -718,7 +718,7 @@ d8c884d8c8d8c9844b098c13829f7fe1ca5475004c4d785658f36c22fb5aed3ac050ceae0883f0fd
          221(   ; assertion
             [
                200(   ; envelope
-                  223(5)   ; known-predicate
+                  223(5)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -745,7 +745,7 @@ d8c884d8c8d8c9844b098c13829f7fe1ca5475004c4d785658f36c22fb5aed3ac050ceae0883f0fd
          221(   ; assertion
             [
                200(   ; envelope
-                  223(5)   ; known-predicate
+                  223(5)   ; known-value
                ),
                200(   ; envelope
                   24(   ; leaf
@@ -792,7 +792,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -803,7 +803,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      05                  # unsigned(5)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -824,7 +824,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      05                  # unsigned(5)
                d8 c8                     # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
@@ -920,7 +920,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(4)   ; known-predicate
+                           223(4)   ; known-value
                         ),
                         200(   ; envelope
                            24(   ; leaf
@@ -934,7 +934,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(14)   ; known-predicate
+                           223(14)   ; known-value
                         ),
                         200(   ; envelope
                            [
@@ -960,7 +960,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                                 221(   ; assertion
                                                    [
                                                       200(   ; envelope
-                                                         223(4)   ; known-predicate
+                                                         223(4)   ; known-value
                                                       ),
                                                       200(   ; envelope
                                                          24("The Bahamas")   ; leaf
@@ -989,7 +989,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(2)   ; known-predicate
+                                          223(2)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24("Person")   ; leaf
@@ -1027,7 +1027,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(2)   ; known-predicate
+                                          223(2)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24("Permanent Resident")   ; leaf
@@ -1104,7 +1104,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                                 221(   ; assertion
                                                    [
                                                       200(   ; envelope
-                                                         223(4)   ; known-predicate
+                                                         223(4)   ; known-value
                                                       ),
                                                       200(   ; envelope
                                                          24(   ; leaf
@@ -1118,7 +1118,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                                 221(   ; assertion
                                                    [
                                                       200(   ; envelope
-                                                         223(9)   ; known-predicate
+                                                         223(9)   ; known-value
                                                       ),
                                                       200(   ; envelope
                                                          24(   ; leaf
@@ -1156,7 +1156,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(2)   ; known-predicate
+                           223(2)   ; known-value
                         ),
                         200(   ; envelope
                            24("credential")   ; leaf
@@ -1168,7 +1168,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(13)   ; known-predicate
+                           223(13)   ; known-value
                         ),
                         200(   ; envelope
                            [
@@ -1183,7 +1183,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(9)   ; known-predicate
+                                          223(9)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24(   ; leaf
@@ -1199,7 +1199,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(4)   ; known-predicate
+                                          223(4)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24(   ; leaf
@@ -1221,7 +1221,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   [
@@ -1236,7 +1236,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                         221(   ; assertion
                            [
                               200(   ; envelope
-                                 223(4)   ; known-predicate
+                                 223(4)   ; known-value
                               ),
                               200(   ; envelope
                                  24(   ; leaf
@@ -1272,7 +1272,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               04         # unsigned(4)
                         d8 c8            # tag(200)   ; envelope
                            d8 18         # tag(24)   ; leaf
@@ -1282,7 +1282,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               0e         # unsigned(14)
                         d8 c8            # tag(200)   ; envelope
                            8c            # array(12)
@@ -1308,7 +1308,7 @@ d8 c8                                    # tag(200)   ; envelope
                                                 d8 dd # tag(221)   ; assertion
                                                    82 # array(2)
                                                       d8 c8 # tag(200)   ; envelope
-                                                         d8 df # tag(223)   ; known-predicate
+                                                         d8 df # tag(223)   ; known-value
                                                             04 # unsigned(4)
                                                       d8 c8 # tag(200)   ; envelope
                                                          d8 18 # tag(24)   ; leaf
@@ -1329,7 +1329,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              02 # unsigned(2)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -1360,7 +1360,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              02 # unsigned(2)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -1427,7 +1427,7 @@ d8 c8                                    # tag(200)   ; envelope
                                                 d8 dd # tag(221)   ; assertion
                                                    82 # array(2)
                                                       d8 c8 # tag(200)   ; envelope
-                                                         d8 df # tag(223)   ; known-predicate
+                                                         d8 df # tag(223)   ; known-value
                                                             04 # unsigned(4)
                                                       d8 c8 # tag(200)   ; envelope
                                                          d8 18 # tag(24)   ; leaf
@@ -1437,7 +1437,7 @@ d8 c8                                    # tag(200)   ; envelope
                                                 d8 dd # tag(221)   ; assertion
                                                    82 # array(2)
                                                       d8 c8 # tag(200)   ; envelope
-                                                         d8 df # tag(223)   ; known-predicate
+                                                         d8 df # tag(223)   ; known-value
                                                             09 # unsigned(9)
                                                       d8 c8 # tag(200)   ; envelope
                                                          d8 18 # tag(24)   ; leaf
@@ -1457,7 +1457,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               02         # unsigned(2)
                         d8 c8            # tag(200)   ; envelope
                            d8 18         # tag(24)   ; leaf
@@ -1467,7 +1467,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               0d         # unsigned(13)
                         d8 c8            # tag(200)   ; envelope
                            83            # array(3)
@@ -1480,7 +1480,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              09 # unsigned(9)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -1491,7 +1491,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              04 # unsigned(4)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -1501,7 +1501,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   82                     # array(2)
@@ -1514,7 +1514,7 @@ d8 c8                                    # tag(200)   ; envelope
                         d8 dd            # tag(221)   ; assertion
                            82            # array(2)
                               d8 c8      # tag(200)   ; envelope
-                                 d8 df   # tag(223)   ; known-predicate
+                                 d8 df   # tag(223)   ; known-value
                                     04   # unsigned(4)
                               d8 c8      # tag(200)   ; envelope
                                  d8 18   # tag(24)   ; leaf
@@ -1594,7 +1594,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(14)   ; known-predicate
+                           223(14)   ; known-value
                         ),
                         200(   ; envelope
                            [
@@ -1688,7 +1688,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                                 221(   ; assertion
                                                    [
                                                       200(   ; envelope
-                                                         223(4)   ; known-predicate
+                                                         223(4)   ; known-value
                                                       ),
                                                       200(   ; envelope
                                                          24(   ; leaf
@@ -1702,7 +1702,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                                 221(   ; assertion
                                                    [
                                                       200(   ; envelope
-                                                         223(9)   ; known-predicate
+                                                         223(9)   ; known-value
                                                       ),
                                                       200(   ; envelope
                                                          24(   ; leaf
@@ -1731,7 +1731,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(2)   ; known-predicate
+                           223(2)   ; known-value
                         ),
                         200(   ; envelope
                            24("credential")   ; leaf
@@ -1743,7 +1743,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                   221(   ; assertion
                      [
                         200(   ; envelope
-                           223(13)   ; known-predicate
+                           223(13)   ; known-value
                         ),
                         200(   ; envelope
                            [
@@ -1758,7 +1758,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(9)   ; known-predicate
+                                          223(9)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24(   ; leaf
@@ -1774,7 +1774,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                                  221(   ; assertion
                                     [
                                        200(   ; envelope
-                                          223(4)   ; known-predicate
+                                          223(4)   ; known-value
                                        ),
                                        200(   ; envelope
                                           24(   ; leaf
@@ -1796,7 +1796,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
          221(   ; assertion
             [
                200(   ; envelope
-                  223(3)   ; known-predicate
+                  223(3)   ; known-value
                ),
                200(   ; envelope
                   [
@@ -1811,7 +1811,7 @@ d8c882d8c8d8e086d8c8d818d8ca5820174842eac3fb44d7f626e4d79b7e107fd293c55629f6d622
                         221(   ; assertion
                            [
                               200(   ; envelope
-                                 223(4)   ; known-predicate
+                                 223(4)   ; known-value
                               ),
                               200(   ; envelope
                                  24(   ; leaf
@@ -1851,7 +1851,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               0e         # unsigned(14)
                         d8 c8            # tag(200)   ; envelope
                            8c            # array(12)
@@ -1932,7 +1932,7 @@ d8 c8                                    # tag(200)   ; envelope
                                                 d8 dd # tag(221)   ; assertion
                                                    82 # array(2)
                                                       d8 c8 # tag(200)   ; envelope
-                                                         d8 df # tag(223)   ; known-predicate
+                                                         d8 df # tag(223)   ; known-value
                                                             04 # unsigned(4)
                                                       d8 c8 # tag(200)   ; envelope
                                                          d8 18 # tag(24)   ; leaf
@@ -1942,7 +1942,7 @@ d8 c8                                    # tag(200)   ; envelope
                                                 d8 dd # tag(221)   ; assertion
                                                    82 # array(2)
                                                       d8 c8 # tag(200)   ; envelope
-                                                         d8 df # tag(223)   ; known-predicate
+                                                         d8 df # tag(223)   ; known-value
                                                             09 # unsigned(9)
                                                       d8 c8 # tag(200)   ; envelope
                                                          d8 18 # tag(24)   ; leaf
@@ -1956,7 +1956,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               02         # unsigned(2)
                         d8 c8            # tag(200)   ; envelope
                            d8 18         # tag(24)   ; leaf
@@ -1966,7 +1966,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 dd                  # tag(221)   ; assertion
                      82                  # array(2)
                         d8 c8            # tag(200)   ; envelope
-                           d8 df         # tag(223)   ; known-predicate
+                           d8 df         # tag(223)   ; known-value
                               0d         # unsigned(13)
                         d8 c8            # tag(200)   ; envelope
                            83            # array(3)
@@ -1979,7 +1979,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              09 # unsigned(9)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -1990,7 +1990,7 @@ d8 c8                                    # tag(200)   ; envelope
                                  d8 dd   # tag(221)   ; assertion
                                     82   # array(2)
                                        d8 c8 # tag(200)   ; envelope
-                                          d8 df # tag(223)   ; known-predicate
+                                          d8 df # tag(223)   ; known-value
                                              04 # unsigned(4)
                                        d8 c8 # tag(200)   ; envelope
                                           d8 18 # tag(24)   ; leaf
@@ -2000,7 +2000,7 @@ d8 c8                                    # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
                d8 c8                     # tag(200)   ; envelope
-                  d8 df                  # tag(223)   ; known-predicate
+                  d8 df                  # tag(223)   ; known-value
                      03                  # unsigned(3)
                d8 c8                     # tag(200)   ; envelope
                   82                     # array(2)
@@ -2013,7 +2013,7 @@ d8 c8                                    # tag(200)   ; envelope
                         d8 dd            # tag(221)   ; assertion
                            82            # array(2)
                               d8 c8      # tag(200)   ; envelope
-                                 d8 df   # tag(223)   ; known-predicate
+                                 d8 df   # tag(223)   ; known-value
                                     04   # unsigned(4)
                               d8 c8      # tag(200)   ; envelope
                                  d8 18   # tag(24)   ; leaf

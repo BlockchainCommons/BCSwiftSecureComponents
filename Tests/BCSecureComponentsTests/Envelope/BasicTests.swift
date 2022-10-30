@@ -4,7 +4,7 @@ import WolfBase
 
 class BasicTests: XCTestCase {
     static let basicEnvelope = Envelope("Hello.")
-    static let knownPredicateEnvelope = Envelope(KnownPredicate.note)
+    static let knownValueEnvelope = Envelope(KnownValue.note)
     static let wrappedEnvelope = Envelope(basicEnvelope)
     static let doubleWrappedEnvelope = Envelope(wrappedEnvelope)
     static let assertionEnvelope = Envelope(predicate: "knows", object: "Bob")
@@ -83,13 +83,13 @@ class BasicTests: XCTestCase {
         XCTAssertEqual(try e.extractSubject(String.self), "Hello.")
     }
 
-    func testKnownPredicateSubject() throws {
-        let e = try Self.knownPredicateEnvelope.checkEncoding()
+    func testKnownValueSubject() throws {
+        let e = try Self.knownValueEnvelope.checkEncoding()
 
         XCTAssertEqual(e.diagAnnotated,
         """
         200(   ; envelope
-           223(4)   ; known-predicate
+           223(4)   ; known-value
         )
         """)
 
@@ -102,7 +102,7 @@ class BasicTests: XCTestCase {
         note
         """)
 
-        XCTAssertEqual(try e.extractSubject(KnownPredicate.self), .note)
+        XCTAssertEqual(try e.extractSubject(KnownValue.self), .note)
     }
 
     func testAssertionSubject() throws {
@@ -302,7 +302,7 @@ class BasicTests: XCTestCase {
         try encryptedTest(Self.basicEnvelope)
         try encryptedTest(Self.wrappedEnvelope)
         try encryptedTest(Self.doubleWrappedEnvelope)
-        try encryptedTest(Self.knownPredicateEnvelope)
+        try encryptedTest(Self.knownValueEnvelope)
         try encryptedTest(Self.assertionEnvelope)
         try encryptedTest(Self.singleAssertionEnvelope)
         try encryptedTest(Self.doubleAssertionEnvelope)

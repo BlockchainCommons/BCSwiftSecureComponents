@@ -79,7 +79,7 @@ graph LR
 * Internal elements (elements with children) are represented with red outlines.
 * A `NODE` element appears when one or more assertions are present on a subject. They are represented by circles. They have one arm for the `subject` and an additional arm for each assertion.
 * An `ASSERTION` element is represented by the Mermaid `stadium`  shape, and has exactly two arms: `predicate` and `object`.
-* Well-known predicates like `verifiedBy` are represented by trapezoids, and are encoded as short integers.
+* Well-known values like the `verifiedBy` are represented by trapezoids, and are encoded as short integers.
 
 ## Encrypted Subject
 

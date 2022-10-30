@@ -9,7 +9,7 @@ public indirect enum Envelope: DigestProvider {
     case node(subject: Envelope, assertions: [Envelope], digest: Digest)
     case leaf(CBOR, Digest)
     case wrapped(Envelope, Digest)
-    case knownPredicate(KnownPredicate, Digest)
+    case knownValue(KnownValue, Digest)
     case assertion(Assertion)
     case encrypted(EncryptedMessage)
     case elided(Digest)
@@ -24,7 +24,7 @@ public extension Envelope {
             return digest
         case .wrapped(_, let digest):
             return digest
-        case .knownPredicate(_, let digest):
+        case .knownValue(_, let digest):
             return digest
         case .assertion(let assertion):
             return assertion.digest
@@ -75,11 +75,11 @@ public extension Envelope {
         return cbor
     }
 
-    var knownPredicate: KnownPredicate? {
-        guard case .knownPredicate(let knownPredicate, _) = self else {
+    var knownValue: KnownValue? {
+        guard case .knownValue(let knownValue, _) = self else {
             return nil
         }
-        return knownPredicate
+        return knownValue
     }
 }
 
@@ -161,8 +161,8 @@ public extension Envelope {
         return true
     }
 
-    var isKnownPredicate: Bool {
-        guard case .knownPredicate = self else {
+    var isKnownValue: Bool {
+        guard case .knownValue = self else {
             return false
         }
         return true
@@ -191,8 +191,8 @@ private extension Envelope {
         self.init(subject: subject, uncheckedAssertions: assertions)
     }
 
-    init(knownPredicate: KnownPredicate) {
-        self = .knownPredicate(knownPredicate, knownPredicate.digest)
+    init(knownValue: KnownValue) {
+        self = .knownValue(knownValue, knownValue.digest)
     }
 
     init(assertion: Assertion) {
@@ -229,8 +229,8 @@ public extension Envelope {
     init(_ item: Any) {
         if let envelope = item as? Envelope {
             self.init(wrapped: envelope)
-        } else if let knownPredicate = item as? KnownPredicate {
-            self.init(knownPredicate: knownPredicate)
+        } else if let knownValue = item as? KnownValue {
+            self.init(knownValue: knownValue)
         } else if let assertion = item as? Assertion {
             self.init(assertion: assertion)
         } else if
@@ -249,7 +249,7 @@ public extension Envelope {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 
-    init(predicate: KnownPredicate, object: Any) {
+    init(predicate: KnownValue, object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 }
@@ -316,8 +316,8 @@ public extension Envelope {
         case .leaf(let cbor, _):
             let t = (type.self as! CBORDecodable.Type)
             return try t.cborDecode(cbor) as! T
-        case .knownPredicate(let knownPredicate, _):
-            guard let result = knownPredicate as? T else {
+        case .knownValue(let knownValue, _):
+            guard let result = knownValue as? T else {
                 throw EnvelopeError.invalidFormat
             }
             return result
@@ -401,7 +401,7 @@ public extension Envelope {
         assertions(withPredicate: predicate).map { $0.object! }
     }
     
-    func extractObjects(forPredicate predicate: KnownPredicate) -> [Envelope] {
+    func extractObjects(forPredicate predicate: KnownValue) -> [Envelope] {
         let predicate = Envelope(predicate)
         return extractObjects(forPredicate: predicate)
     }
@@ -415,7 +415,7 @@ public extension Envelope {
         return try extractObjects(forPredicate: predicate).map { try $0.extractSubject(type) }
     }
     
-    func extractObjects<T>(_ type: T.Type, forPredicate predicate: KnownPredicate) throws -> [T] where T: CBORDecodable {
+    func extractObjects<T>(_ type: T.Type, forPredicate predicate: KnownValue) throws -> [T] where T: CBORDecodable {
         let predicate = Envelope(predicate)
         return try extractObjects(forPredicate: predicate).map { try $0.extractSubject(type) }
     }
@@ -448,20 +448,20 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func assertions(withPredicate predicate: KnownPredicate) -> [Envelope] {
-        assertions(withPredicate: Envelope(knownPredicate: predicate))
+    func assertions(withPredicate predicate: KnownValue) -> [Envelope] {
+        assertions(withPredicate: Envelope(knownValue: predicate))
     }
 
-    func assertion(withPredicate predicate: KnownPredicate) throws -> Envelope {
-        try assertion(withPredicate: Envelope(knownPredicate: predicate))
+    func assertion(withPredicate predicate: KnownValue) throws -> Envelope {
+        try assertion(withPredicate: Envelope(knownValue: predicate))
     }
 
-    func extractObject(forPredicate predicate: KnownPredicate) throws -> Envelope {
-        try extractObject(forPredicate: Envelope(knownPredicate: predicate))
+    func extractObject(forPredicate predicate: KnownValue) throws -> Envelope {
+        try extractObject(forPredicate: Envelope(knownValue: predicate))
     }
 
-    func extractObject<T>(_ type: T.Type, forPredicate predicate: KnownPredicate) throws -> T where T: CBORDecodable {
-        try extractObject(type, forPredicate: Envelope(knownPredicate: predicate))
+    func extractObject<T>(_ type: T.Type, forPredicate predicate: KnownValue) throws -> T where T: CBORDecodable {
+        try extractObject(type, forPredicate: Envelope(knownValue: predicate))
     }
 }
 
@@ -500,7 +500,7 @@ public extension Envelope {
         return addAssertion(Assertion(predicate: predicate, object: object), salted: salted)
     }
 
-    func addAssertion(_ predicate: KnownPredicate, _ object: Any?, salted: Bool = false) -> Envelope {
+    func addAssertion(_ predicate: KnownValue, _ object: Any?, salted: Bool = false) -> Envelope {
         guard let object else {
             return self
         }
@@ -530,7 +530,7 @@ public extension Envelope {
         return addAssertion(predicate(), object(), salted: salted)
     }
 
-    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownPredicate, _ object: @autoclosure () -> Any?, salted: Bool = false) -> Envelope {
+    func addAssertion(if condition: Bool, _ predicate: @autoclosure () -> KnownValue, _ object: @autoclosure () -> Any?, salted: Bool = false) -> Envelope {
         guard condition else {
             return self
         }
@@ -633,7 +633,7 @@ public extension Envelope {
     }
     
     func isResultOK() throws -> Bool {
-        try result(KnownPredicate.self) == .ok
+        try result(KnownValue.self) == .ok
     }
     
     func error<T: CBORDecodable>(_ type: T.Type) throws -> T {
@@ -812,8 +812,8 @@ public extension Envelope {
             let encryptedMessage = key.encrypt(plaintext: encodedCBOR, digest: wrappedDigest, nonce: testNonce)
             result = try Envelope(encryptedMessage: encryptedMessage)
             originalDigest = wrappedDigest
-        case .knownPredicate(let knownPredicate, let envelopeDigest):
-            let encodedCBOR = knownPredicate.taggedCBOR.cborEncode
+        case .knownValue(let knownValue, let envelopeDigest):
+            let encodedCBOR = knownValue.taggedCBOR.cborEncode
             let encryptedMessage = key.encrypt(plaintext: encodedCBOR, digest: envelopeDigest, nonce: testNonce)
             result = try Envelope(encryptedMessage: encryptedMessage)
             originalDigest = envelopeDigest
@@ -1110,8 +1110,8 @@ public extension Envelope {
             return CBOR.tagged(.leaf, cbor)
         case .wrapped(let envelope, _):
             return CBOR.tagged(.wrappedEnvelope, envelope.untaggedCBOR)
-        case .knownPredicate(let knownPredicate, _):
-            return knownPredicate.taggedCBOR
+        case .knownValue(let knownValue, _):
+            return knownValue.taggedCBOR
         case .assertion(let assertion):
             return assertion.taggedCBOR
         case .encrypted(let encryptedMessage):
@@ -1129,8 +1129,8 @@ public extension Envelope {
         switch cbor {
         case CBOR.tagged(.leaf, let item):
             self.init(cbor: item)
-        case CBOR.tagged(.knownPredicate, let item):
-            self.init(knownPredicate: try KnownPredicate(untaggedCBOR: item))
+        case CBOR.tagged(.knownValue, let item):
+            self.init(knownValue: try KnownValue(untaggedCBOR: item))
         case CBOR.tagged(.wrappedEnvelope, let item):
             self.init(wrapped: try Envelope(untaggedCBOR: item))
         case CBOR.tagged(.assertion, let item):
@@ -1201,7 +1201,7 @@ public extension Envelope {
             .addAssertion(.body, body)
     }
 
-    init(response id: CID, result: CBOREncodable? = KnownPredicate.ok) {
+    init(response id: CID, result: CBOREncodable? = KnownValue.ok) {
         self = Envelope(CBOR.tagged(.response, id.taggedCBOR))
             .addAssertion(.result, result)
     }
@@ -1274,8 +1274,8 @@ extension Envelope: CustomStringConvertible {
             return ".cbor(\(cbor.formatItem.description))"
         case .wrapped(let envelope, _):
             return ".wrapped(\(envelope))"
-        case .knownPredicate(let knownPredicate, _):
-            return ".knownPredicate(\(knownPredicate))"
+        case .knownValue(let knownValue, _):
+            return ".knownValue(\(knownValue))"
         case .assertion(let assertion):
             return ".assertion(\(assertion.predicate), \(assertion.object))"
         case .encrypted(_):

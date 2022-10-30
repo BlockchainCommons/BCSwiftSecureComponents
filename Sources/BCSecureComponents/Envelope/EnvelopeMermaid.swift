@@ -63,7 +63,7 @@ extension MermaidEnvelopeGraph: MermaidEncodable {
         case .wrapped(_, _):
             attributes.shape = .trapezoid
             attributes.strokeColor = "red"
-        case .knownPredicate(_, _):
+        case .knownValue(_, _):
             attributes.shape = .parallelogram
             attributes.strokeColor = "#55f"
         case .assertion(_):

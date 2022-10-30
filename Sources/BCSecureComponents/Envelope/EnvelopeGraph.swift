@@ -46,8 +46,8 @@ extension Envelope {
             return cbor.envelopeSummary
         case .wrapped(_, _):
             return "WRAPPED"
-        case .knownPredicate(let knownPredicate, _):
-            return knownPredicate.name
+        case .knownValue(let knownValue, _):
+            return knownValue.name
         case .assertion(_):
             return "ASSERTION"
         case .encrypted(_):
