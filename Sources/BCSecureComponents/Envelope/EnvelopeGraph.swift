@@ -3,7 +3,7 @@ import Graph
 import WolfBase
 
 enum EdgeType {
-    case unknown
+    case none
     case subject
     case assertion
     case predicate
@@ -30,8 +30,6 @@ struct EnvelopeEdgeData {
 
 extension Digest: ElementID { }
 extension CID: ElementID { }
-typealias MermaidEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, MermaidOptions>
-typealias TreeEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, Void>
 
 extension Envelope {
     var shortID: String {
@@ -88,27 +86,27 @@ struct EnvelopeGraphBuilder<GraphData> {
     
     init(_ envelope: Envelope, data: GraphData) {
         self.init(data: data)
-        addNode(envelope)
+        addNode(envelope, incomingEdge: .none)
     }
 
     @discardableResult
-    mutating func addNode(_ envelope: Envelope, parent: Int? = nil, edgeType: EdgeType? = nil) -> Int {
+    mutating func addNode(_ envelope: Envelope, parent: Int? = nil, incomingEdge: EdgeType) -> Int {
         let node = nextNodeID
         try! graph.newNode(node, data: envelope)
         if let parent {
-            try! graph.newEdge(nextEdgeID, tail: parent, head: node, data: .init(type: edgeType ?? .unknown))
+            try! graph.newEdge(nextEdgeID, tail: parent, head: node, data: .init(type: incomingEdge))
         }
         switch envelope {
         case .node(let subject, let assertions, _):
-            addNode(subject, parent: node, edgeType: .subject)
+            addNode(subject, parent: node, incomingEdge: .subject)
             for assertion in assertions {
-                addNode(assertion, parent: node, edgeType: .assertion)
+                addNode(assertion, parent: node, incomingEdge: .assertion)
             }
         case .assertion(let assertion):
-            addNode(assertion.predicate, parent: node, edgeType: .predicate)
-            addNode(assertion.object, parent: node, edgeType: .object)
+            addNode(assertion.predicate, parent: node, incomingEdge: .predicate)
+            addNode(assertion.object, parent: node, incomingEdge: .object)
         case .wrapped(let envelope, _):
-            addNode(envelope, parent: node, edgeType: .wrapped)
+            addNode(envelope, parent: node, incomingEdge: .wrapped)
         default:
             break
         }

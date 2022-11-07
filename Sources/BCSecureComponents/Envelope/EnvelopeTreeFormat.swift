@@ -1,20 +1,29 @@
 import Foundation
+import Graph
 
-struct TreeElement {
+extension Envelope {
+    public var treeFormat: String {
+        graph(data: ()).treeFormat
+    }
+}
+
+typealias TreeEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, Void>
+
+fileprivate struct TreeElement {
     let level: Int
     let envelope: Envelope
-    let edgeType: EdgeType?
+    let incomingEdge: EdgeType
 
-    init(level: Int, envelope: Envelope, edgeType: EdgeType? = nil) {
+    init(level: Int, envelope: Envelope, incomingEdge: EdgeType) {
         self.level = level
         self.envelope = envelope
-        self.edgeType = edgeType
+        self.incomingEdge = incomingEdge
     }
     
     var string: String {
         let line = [
             envelope.shortID,
-            edgeType?.label,
+            incomingEdge.label,
             envelope.summary
         ]
             .compactMap { $0 }
@@ -24,36 +33,30 @@ struct TreeElement {
     }
 }
 
-extension TreeEnvelopeGraph {
+fileprivate extension TreeEnvelopeGraph {
     var treeFormat: String {
         let envelope = try! nodeData(nodes.first!)
         var elements: [TreeElement] = []
-        addEnvelope(envelope, level: 0, edgeType: nil, result: &elements)
+        addEnvelope(envelope, level: 0, incomingEdge: .none, result: &elements)
         return elements.map { $0.string }.joined(separator: "\n")
     }
     
-    func addEnvelope(_ envelope: Envelope, level: Int, edgeType: EdgeType?, result: inout [TreeElement]) {
-        result.append(TreeElement(level: level, envelope: envelope, edgeType: edgeType))
+    func addEnvelope(_ envelope: Envelope, level: Int, incomingEdge: EdgeType, result: inout [TreeElement]) {
+        result.append(TreeElement(level: level, envelope: envelope, incomingEdge: incomingEdge))
         let level = level + 1
         switch envelope {
         case .node(let subject, let assertions, _):
-            addEnvelope(subject, level: level, edgeType: .subject, result: &result)
+            addEnvelope(subject, level: level, incomingEdge: .subject, result: &result)
             for assertion in assertions {
-                addEnvelope(assertion, level: level, edgeType: .assertion, result: &result)
+                addEnvelope(assertion, level: level, incomingEdge: .assertion, result: &result)
             }
         case .assertion(let assertion):
-            addEnvelope(assertion.predicate, level: level, edgeType: .predicate, result: &result)
-            addEnvelope(assertion.object, level: level, edgeType: .object, result: &result)
+            addEnvelope(assertion.predicate, level: level, incomingEdge: .predicate, result: &result)
+            addEnvelope(assertion.object, level: level, incomingEdge: .object, result: &result)
         case .wrapped(let envelope, _):
-            addEnvelope(envelope, level: level, edgeType: .wrapped, result: &result)
+            addEnvelope(envelope, level: level, incomingEdge: .wrapped, result: &result)
         default:
             break
         }
-    }
-}
-
-extension Envelope {
-    public var treeFormat: String {
-        graph(data: ()).treeFormat
     }
 }

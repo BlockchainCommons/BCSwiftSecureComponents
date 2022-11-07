@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Oct 30, 2022</br>
+**Revised:** Nov 7, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -10,7 +10,7 @@
 * [Types](01-TYPES.md)
 * [Envelope Overview](02-ENVELOPE.md)
 * [Envelope Notation](03-ENVELOPE-NOTATION.md)
-* [Mermaid Output](04-MERMAID-OUTPUT.md)
+* [Output Formats](04-OUTPUT-FORMATS.md)
 * [Envelope Expressions](05-ENVELOPE-EXPRESSIONS.md)
 * [Definitions](06-DEFINITIONS.md)
 * [Examples](07-EXAMPLES.md)

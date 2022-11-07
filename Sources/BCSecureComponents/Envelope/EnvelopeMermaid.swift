@@ -3,6 +3,18 @@ import Graph
 import GraphMermaid
 import WolfBase
 
+public extension Envelope {
+    func mermaidFormat(layoutDirection: MermaidOptions.LayoutDirection? = nil, theme: MermaidOptions.Theme? = nil) -> String {
+        graph(data: MermaidOptions(layoutDirection: layoutDirection, theme: theme)).mermaidFormat
+    }
+    
+    var mermaidFormat: String {
+        mermaidFormat()
+    }
+}
+
+typealias MermaidEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, MermaidOptions>
+
 public struct MermaidOptions {
     public let layoutDirection: LayoutDirection
     public let theme: Theme
@@ -20,16 +32,6 @@ public struct MermaidOptions {
     public enum Theme {
         case color
         case monochrome
-    }
-}
-
-public extension Envelope {
-    func mermaidFormat(layoutDirection: MermaidOptions.LayoutDirection? = nil, theme: MermaidOptions.Theme? = nil) -> String {
-        graph(data: MermaidOptions(layoutDirection: layoutDirection, theme: theme)).mermaidFormat
-    }
-    
-    var mermaidFormat: String {
-        mermaidFormat()
     }
 }
 
@@ -93,18 +95,16 @@ extension MermaidEnvelopeGraph: MermaidEncodable {
         attributes.strokeWidth = 2
         attributes.label = edgeAttributes.type.label
         switch edgeAttributes.type {
-        case .unknown:
-            break
         case .subject:
             attributes.strokeColor = "red"
-        case .assertion:
-            break
         case .predicate:
             attributes.strokeColor = "green"
         case .object:
             attributes.strokeColor = "#55f"
         case .wrapped:
             attributes.strokeColor = "red"
+        default:
+            break
         }
         
         if data.theme == .monochrome {

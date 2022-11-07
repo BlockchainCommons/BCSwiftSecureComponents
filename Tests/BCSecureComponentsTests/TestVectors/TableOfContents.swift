@@ -17,7 +17,7 @@ let tocItems: [(title: String, filename: String)] = [
     ("Types", "TYPES.md"),
     ("Envelope Overview", "ENVELOPE.md"),
     ("Envelope Notation", "ENVELOPE-NOTATION.md"),
-    ("Mermaid Output", "MERMAID-OUTPUT.md"),
+    ("Output Formats", "OUTPUT-FORMATS.md"),
     ("Envelope Expressions", "ENVELOPE-EXPRESSIONS.md"),
     ("Definitions", "DEFINITIONS.md"),
     ("Examples", "EXAMPLES.md"),
@@ -42,7 +42,7 @@ func formatTableOfContents(itemIndex: Int) -> String {
             item(itemIndex: itemIndex, index: $0)
         }
     )
-    
+
     divider()
 }
 
@@ -70,7 +70,7 @@ fileprivate extension String.StringInterpolation {
     mutating func appendInterpolation(_ value: Date) {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        
+
         let dateString = formatter.string(from: value)
         appendLiteral(dateString)
     }

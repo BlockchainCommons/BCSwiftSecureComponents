@@ -1,4 +1,4 @@
-# Secure Components - Mermaid Output
+# Secure Components - Output Formats
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
 **Revised:** Oct 18, 2022</br>
@@ -12,7 +12,7 @@
 * [Types](01-TYPES.md)
 * [Envelope Overview](02-ENVELOPE.md)
 * [Envelope Notation](03-ENVELOPE-NOTATION.md)
-* Mermaid Output: This document
+* Output Formats: This document
 * [Envelope Expressions](05-ENVELOPE-EXPRESSIONS.md)
 * [Definitions](06-DEFINITIONS.md)
 * [Examples](07-EXAMPLES.md)
@@ -27,12 +27,16 @@
 
 ## Introduction
 
-These examples compare a series of Gordian Envelopes output first in "envelope notation" and then in [Mermaid](https://mermaid-js.github.io/mermaid/#/) format.
+These examples compare a series of Gordian Envelopes output first in "envelope notation", then "envelope tree format", and finally in [Mermaid](https://mermaid-js.github.io/mermaid/#/) format.
 
 ## Plaintext
 
 ```
 "Hello."
+```
+
+```
+886a0c85 "Hello."
 ```
 
 ```mermaid
@@ -52,6 +56,14 @@ graph LR
 "Hello." [
     verifiedBy: Signature
 ]
+```
+
+```
+542a4152 NODE
+    886a0c85 subj "Hello."
+    97a092fc ASSERTION
+        d59f8c0f pred verifiedBy
+        4edea99f obj Signature
 ```
 
 ```mermaid
@@ -89,6 +101,14 @@ ENCRYPTED [
 ]
 ```
 
+```
+e54d6fd3 NODE
+    27840350 subj ENCRYPTED
+    55560bdf ASSERTION
+        7092d620 pred "knows"
+        9a771715 obj "Bob"
+```
+
 ```mermaid
 graph LR
     1(("e54d6fd3<br/>NODE"))
@@ -111,8 +131,36 @@ graph LR
     linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
-* `ENCRYPTED` and `ELIDED` elements appear with dotted outlines in the Mermaid output, to indicate that they may be replaced with their unencrypted/unelided counterparts without invalidating the digest tree.
+* `ENCRYPTED` and `ELIDED` elements appear with dotted outlines in the Output Formats, to indicate that they may be replaced with their unencrypted/unelided counterparts without invalidating the digest tree.
 * `ENCRYPTED` elements are represented by the Mermaid `asymmetric` shape.
+
+## Top-Level Assertion
+
+```
+"knows": "Bob"
+```
+
+```
+55560bdf ASSERTION
+    7092d620 pred "knows"
+    9a771715 obj "Bob"
+```
+
+```mermaid
+graph LR
+    1(["55560bdf<br/>ASSERTION"])
+    2["7092d620<br/>#quot;knows#quot;"]
+    3["9a771715<br/>#quot;Bob#quot;"]
+    1 -->|pred| 2
+    1 -->|obj| 3
+    style 1 stroke:red,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke:green,stroke-width:2.0px
+    linkStyle 1 stroke:#55f,stroke-width:2.0px
+```
+
+* As mentioned previously, all of the element types are themselves envelopes, and can therefore stand alone. In this case, we have extracted a single assertion.
 
 ## Elided Object
 
@@ -120,6 +168,14 @@ graph LR
 "Alice" [
     "knows": ELIDED
 ]
+```
+
+```
+e54d6fd3 NODE
+    27840350 subj "Alice"
+    55560bdf ASSERTION
+        7092d620 pred "knows"
+        9a771715 obj ELIDED
 ```
 
 ```mermaid
@@ -149,29 +205,6 @@ graph LR
 * Likewise, note that the digest of the subject "Alice" matches the encrypted version in the previous example.
 * In fact, *all* the digests in this envelope match those in the previous example, indicating that the unencrypted/unelided form of this envelope has the exact same content.
 
-## Top-Level Assertion
-
-```
-"knows": "Bob"
-```
-
-```mermaid
-graph LR
-    1(["55560bdf<br/>ASSERTION"])
-    2["7092d620<br/>#quot;knows#quot;"]
-    3["9a771715<br/>#quot;Bob#quot;"]
-    1 -->|pred| 2
-    1 -->|obj| 3
-    style 1 stroke:red,stroke-width:3.0px
-    style 2 stroke:#55f,stroke-width:3.0px
-    style 3 stroke:#55f,stroke-width:3.0px
-    linkStyle 0 stroke:green,stroke-width:2.0px
-    linkStyle 1 stroke:#55f,stroke-width:2.0px
-```
-
-* As mentioned previously, all of the element types are themselves envelopes, and can therefore stand alone. In this case, we have extracted a single assertion.
-
-
 ## Signed Subject
 
 ```
@@ -180,6 +213,20 @@ graph LR
     "knows": "Carol"
     verifiedBy: Signature
 ]
+```
+
+```
+686d2c59 NODE
+    27840350 subj "Alice"
+    55560bdf ASSERTION
+        7092d620 pred "knows"
+        9a771715 obj "Bob"
+    71a30690 ASSERTION
+        7092d620 pred "knows"
+        ad2c454b obj "Carol"
+    d575c6a9 ASSERTION
+        d59f8c0f pred verifiedBy
+        85fa379f obj Signature
 ```
 
 ```mermaid
@@ -239,6 +286,14 @@ graph LR
 ]
 ```
 
+```
+686d2c59 NODE
+    27840350 subj "Alice"
+    55560bdf ELIDED
+    71a30690 ELIDED
+    d575c6a9 ELIDED
+```
+
 ```mermaid
 graph LR
     1(("efed9563<br/>NODE"))
@@ -274,6 +329,22 @@ graph LR
 } [
     verifiedBy: Signature
 ]
+```
+
+```
+df50a73a NODE
+    3cc750a3 subj WRAPPED
+        c733401e subj NODE
+            27840350 subj "Alice"
+            55560bdf ASSERTION
+                7092d620 pred "knows"
+                9a771715 obj "Bob"
+            71a30690 ASSERTION
+                7092d620 pred "knows"
+                ad2c454b obj "Carol"
+    2a079b36 ASSERTION
+        d59f8c0f pred verifiedBy
+        c690bdf9 obj Signature
 ```
 
 ```mermaid
@@ -342,6 +413,17 @@ ENCRYPTED [
 ]
 ```
 
+```
+003c3d15 NODE
+    886a0c85 subj ENCRYPTED
+    9de6ec19 ASSERTION
+        f4af70d6 pred hasRecipient
+        0eef002e obj SealedMessage
+    b05bfebd ASSERTION
+        f4af70d6 pred hasRecipient
+        b65acdd8 obj SealedMessage
+```
+
 ```mermaid
 graph TB
     1(("fd42b5f0<br/>NODE"))
@@ -400,6 +482,54 @@ Digest(e8aa201d) [
     ]
     dereferenceVia: "IPFS"
 ]
+```
+
+```
+72fdea85 NODE
+    ec067552 subj Digest(e8aa201d)
+    71573ec4 ASSERTION
+        f191c6ea pred dereferenceVia
+        920da73e obj "IPFS"
+    c2856abd ASSERTION
+        48bb1df6 pred "format"
+        9afbbb54 obj "EPUB"
+    eaa72721 ASSERTION
+        8ea19b98 pred "work"
+        f70de543 obj NODE
+            734250ee subj CID(7fb90a9d)
+            049bbd66 ASSERTION
+                f191c6ea pred dereferenceVia
+                b4580455 obj "LibraryOfCongress"
+            1f908002 ASSERTION
+                d8c1566f pred "author"
+                b51b535c obj NODE
+                    306a5d76 subj CID(9c747ace)
+                    049bbd66 ASSERTION
+                        f191c6ea pred dereferenceVia
+                        b4580455 obj "LibraryOfCongress"
+                    e7441f7c ASSERTION
+                        bf166e5d pred hasName
+                        5bb41313 obj "Ayn Rand"
+            91ec8590 ASSERTION
+                bf166e5d pred hasName
+                59cd2799 obj NODE
+                    9d76964a subj "Atlas Shrugged"
+                    02d3e92e ASSERTION
+                        556c14a4 pred language
+                        409b5893 obj "en"
+            c1029b07 ASSERTION
+                8982354d pred isA
+                9066de8c obj "novel"
+            c1785e1a ASSERTION
+                bf166e5d pred hasName
+                0412cf19 obj NODE
+                    5a42d004 subj "La rebelión de Atlas"
+                    a5243b41 ASSERTION
+                        556c14a4 pred language
+                        dd2f866d obj "es"
+            efb00f5e ASSERTION
+                b95d2849 pred "isbn"
+                2e8d4edd obj "9780451191144"
 ```
 
 ```mermaid
@@ -607,6 +737,58 @@ graph LR
     note: "Signed by Example Electrical Engineering Board"
     verifiedBy: Signature
 ]
+```
+
+```
+e9bce5a5 NODE
+    dbd70e79 subj WRAPPED
+        b750a45f subj NODE
+            bdd347d4 subj CID(4676635a)
+            0536afd8 ASSERTION
+                a791d0c7 pred "photo"
+                9e77bb70 obj "This is James Maxwell's photo."
+            1d598c65 ASSERTION
+                eb62836d pred "lastName"
+                997a0e2d obj "Maxwell"
+            34f8f7d3 ASSERTION
+                b1e12d58 pred "issueDate"
+                2511c0df obj 2020-01-01
+            3d00d64f ASSERTION
+                2f9bee2f pred controller
+                4035b4bd obj "Example Electrical Engineering Board"
+            44736993 ASSERTION
+                05651934 pred "topics"
+                264aec65 obj CBOR
+            46d6cfea ASSERTION
+                8982354d pred isA
+                112e2cdb obj "Certificate of Completion"
+            4a69fca3 ASSERTION
+                b6d5ea01 pred "continuingEducationUnits"
+                02a61366 obj 1.5
+            5545f6e2 ASSERTION
+                954c8356 pred issuer
+                4035b4bd obj "Example Electrical Engineering Board"
+            61689bb7 ASSERTION
+                e6c2932d pred "expirationDate"
+                b91eea18 obj 2028-01-01
+            a0274d1c ASSERTION
+                62c0a26e pred "certificateNumber"
+                ac0b465a obj "123-456-789"
+            d4f678a9 ASSERTION
+                c4d5323d pred "firstName"
+                bfe9d39b obj "James"
+            e0070876 ASSERTION
+                0eb38394 pred "subject"
+                b059b0f2 obj "RF and Microwave Engineering"
+            e96b24d9 ASSERTION
+                c8c1a6dd pred "professionalDevelopmentHours"
+                0bf6b955 obj 15
+    afe231cc ASSERTION
+        61fb6a6b pred note
+        f4bf011f obj "Signed by Example Electrical Engineering Board"
+    e0b4f467 ASSERTION
+        d59f8c0f pred verifiedBy
+        7f1fd17b obj Signature
 ```
 
 ```mermaid
@@ -836,6 +1018,60 @@ This is the same credential above that has been elided, had additional assertion
     note: "Signed by Employer Corp."
     verifiedBy: Signature
 ]
+```
+
+```
+d72fefb6 NODE
+    75f35220 subj WRAPPED
+        9a57fbda subj NODE
+            bd7d68b8 subj WRAPPED
+                e9bce5a5 subj NODE
+                    dbd70e79 subj WRAPPED
+                        b750a45f subj NODE
+                            bdd347d4 subj CID(4676635a)
+                            0536afd8 ELIDED
+                            1d598c65 ASSERTION
+                                eb62836d pred "lastName"
+                                997a0e2d obj "Maxwell"
+                            34f8f7d3 ELIDED
+                            3d00d64f ELIDED
+                            44736993 ELIDED
+                            46d6cfea ASSERTION
+                                8982354d pred isA
+                                112e2cdb obj "Certificate of Completion"
+                            4a69fca3 ELIDED
+                            5545f6e2 ASSERTION
+                                954c8356 pred issuer
+                                4035b4bd obj "Example Electrical Engineering Board"
+                            61689bb7 ASSERTION
+                                e6c2932d pred "expirationDate"
+                                b91eea18 obj 2028-01-01
+                            a0274d1c ELIDED
+                            d4f678a9 ASSERTION
+                                c4d5323d pred "firstName"
+                                bfe9d39b obj "James"
+                            e0070876 ASSERTION
+                                0eb38394 pred "subject"
+                                b059b0f2 obj "RF and Microwave Engineering"
+                            e96b24d9 ELIDED
+                    afe231cc ASSERTION
+                        61fb6a6b pred note
+                        f4bf011f obj "Signed by Example Electrical Engineering Board"
+                    e0b4f467 ASSERTION
+                        d59f8c0f pred verifiedBy
+                        7f1fd17b obj Signature
+            310b027f ASSERTION
+                f942ee55 pred "employeeStatus"
+                919eb85d obj "active"
+            5901b070 ASSERTION
+                134a1704 pred "employeeHiredDate"
+                24c173c5 obj 2022-01-01
+    648b2cc3 ASSERTION
+        61fb6a6b pred note
+        46f4bfd7 obj "Signed by Employer Corp."
+    f23b1fe1 ASSERTION
+        d59f8c0f pred verifiedBy
+        af01dd65 obj Signature
 ```
 
 ```mermaid
