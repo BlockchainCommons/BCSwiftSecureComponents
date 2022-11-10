@@ -13,6 +13,7 @@ class FormatTests: XCTestCase {
         """
         886a0c85 "Hello."
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -38,6 +39,7 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 4edea99f obj Signature
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -80,6 +82,7 @@ class FormatTests: XCTestCase {
                 7092d620 pred "knows"
                 9a771715 obj "Bob"
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -105,7 +108,7 @@ class FormatTests: XCTestCase {
     }
     
     func testTopLevelAssertion() throws {
-        let envelope = Envelope(predicate: "knows", object: "Bob")
+        let envelope = Envelope("knows", "Bob")
         XCTAssertEqual(envelope.format,
         """
         "knows": "Bob"
@@ -116,6 +119,7 @@ class FormatTests: XCTestCase {
             7092d620 pred "knows"
             9a771715 obj "Bob"
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -150,6 +154,7 @@ class FormatTests: XCTestCase {
                 7092d620 pred "knows"
                 9a771715 obj ELIDED
         """)
+        XCTAssertEqual(elided.elementsCount, elided.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(elided.mermaidFormat,
         """
         graph LR
@@ -201,6 +206,7 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 85fa379f obj Signature
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -267,6 +273,7 @@ class FormatTests: XCTestCase {
             71a30690 ELIDED
             d575c6a9 ELIDED
         """)
+        XCTAssertEqual(elided.elementsCount, elided.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(elided.mermaidFormat,
         """
         graph LR
@@ -324,6 +331,7 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 c690bdf9 obj Signature
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         #"""
         graph LR
@@ -404,6 +412,7 @@ class FormatTests: XCTestCase {
                 f4af70d6 pred hasRecipient
                 b65acdd8 obj SealedMessage
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -475,6 +484,7 @@ class FormatTests: XCTestCase {
                         f24609db pred "object-predicate"
                         5c7b47fb obj "object-object"
         """)
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat,
         """
         graph LR
@@ -636,6 +646,7 @@ class FormatTests: XCTestCase {
                         b95d2849 pred "isbn"
                         2e8d4edd obj "9780451191144"
         """)
+        XCTAssertEqual(bookMetadata.elementsCount, bookMetadata.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(bookMetadata.mermaidFormat,
         """
         graph LR
@@ -915,6 +926,7 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 7f1fd17b obj Signature
         """)
+        XCTAssertEqual(Self.credential.elementsCount, Self.credential.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(Self.credential.mermaidFormat,
         #"""
         graph LR
@@ -1222,6 +1234,7 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 af01dd65 obj Signature
         """)
+        XCTAssertEqual(warranty.elementsCount, warranty.treeFormat.split(separator: "\n").count)
         XCTAssertEqual(warranty.mermaidFormat,
         #"""
         graph LR

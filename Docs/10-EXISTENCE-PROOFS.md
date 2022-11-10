@@ -81,7 +81,7 @@ Now Alice wants to prove to the third party that her document contains a "knows 
 Note that in the proof the digests of the two other elided "knows" assertions are present, but because they have been salted, the third party cannot easily guess who else she knows.
 
 ```swift
-let knowsBobAssertion = Envelope(predicate: "knows", object: "Bob")
+let knowsBobAssertion = Envelope("knows", "Bob")
 let aliceKnowsBobProof = aliceFriends.proof(contains: knowsBobAssertion)!
 ```
 
@@ -127,7 +127,7 @@ let credentialRoot = try credential.elideRevealing([])
 In this case the holder of a credential wants to prove a single assertion from it: the address.
 
 ```swift
-let addressAssertion = Envelope(predicate: "address", object: "123 Main St.")
+let addressAssertion = Envelope("address", "123 Main St.")
 let addressProof = credential.proof(contains: addressAssertion)!
 ```
 
@@ -155,13 +155,13 @@ XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, using: addressP
 Assertions without salt can be guessed at, and confirmed if the the guess is correct.
 
 ```swift
-let issuerAssertion = Envelope(predicate: .issuer, object: "State of Example")
+let issuerAssertion = Envelope(.issuer, "State of Example")
 XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, using: addressProof))
 ```
 
 The proof cannot be used to confirm salted assertions.
 
 ```swift
-let firstNameAssertion = Envelope(predicate: "firstName", object: "John")
+let firstNameAssertion = Envelope("firstName", "John")
 XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, using: addressProof))
 ```

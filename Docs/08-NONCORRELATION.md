@@ -166,7 +166,7 @@ The same content, but with every element salted.
 
 ```swift
 let e1 = Envelope(Envelope("Hello").addSalt())
-    .add(Envelope(predicate: .note).addSalt(), Envelope("Beta").addSalt())
+    .addAssertion(Envelope(KnownValue.note).addSalt(), Envelope("Beta").addSalt())
 ```
 
 ```

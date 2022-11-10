@@ -49,7 +49,7 @@ class ProofTests: XCTestCase {
         /// Note that in the proof the digests of the two other elided "knows" assertions
         /// are present, but because they have been salted, the third party cannot easily
         /// guess who else she knows.
-        let knowsBobAssertion = Envelope(predicate: "knows", object: "Bob")
+        let knowsBobAssertion = Envelope("knows", "Bob")
         let aliceKnowsBobProof = try aliceFriends.proof(contains: knowsBobAssertion)!.checkEncoding()
         XCTAssertEqual(aliceKnowsBobProof.format,
         """
@@ -126,7 +126,7 @@ class ProofTests: XCTestCase {
         let credentialRoot = try credential.elideRevealing([])
 
         /// In this case the holder of a credential wants to prove a single assertion from it, the address.
-        let addressAssertion = Envelope(predicate: "address", object: "123 Main St.")
+        let addressAssertion = Envelope("address", "123 Main St.")
         let addressProof = try credential.proof(contains: addressAssertion)!.checkEncoding()
         /// The proof includes digests from all the elided assertions.
         XCTAssertEqual(addressProof.format,
@@ -148,11 +148,11 @@ class ProofTests: XCTestCase {
         XCTAssertTrue(credentialRoot.confirm(contains: addressAssertion, using: addressProof))
 
         /// Assertions without salt can also be confirmed.
-        let issuerAssertion = Envelope(predicate: .issuer, object: "State of Example")
+        let issuerAssertion = Envelope(.issuer, "State of Example")
         XCTAssertTrue(credentialRoot.confirm(contains: issuerAssertion, using: addressProof))
 
         /// The proof cannot be used to confirm salted assertions.
-        let firstNameAssertion = Envelope(predicate: "firstName", object: "John")
+        let firstNameAssertion = Envelope("firstName", "John")
         XCTAssertFalse(credentialRoot.confirm(contains: firstNameAssertion, using: addressProof))
     }
 }

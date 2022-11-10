@@ -7,7 +7,7 @@ class BasicTests: XCTestCase {
     static let knownValueEnvelope = Envelope(KnownValue.note)
     static let wrappedEnvelope = Envelope(basicEnvelope)
     static let doubleWrappedEnvelope = Envelope(wrappedEnvelope)
-    static let assertionEnvelope = Envelope(predicate: "knows", object: "Bob")
+    static let assertionEnvelope = Envelope("knows", "Bob")
 
     static let singleAssertionEnvelope = Envelope("Alice")
         .addAssertion("knows", "Bob")

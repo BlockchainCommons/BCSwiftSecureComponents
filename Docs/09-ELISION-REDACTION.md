@@ -565,7 +565,7 @@ If a digest in a target occurs more than once in an `Envelope`'s tree, then doin
 If we execute these statements:
 
 ```swift
-target.insert(Envelope(predicate: "knows"))
+target.insert(Envelope("knows"))
 let elided = try envelope.elideRemoving(target)
 ```
 
@@ -581,7 +581,7 @@ We would see that the "knows" predicate would be redacted everywhere it occurs:
 In practice this is not usually a problem, because if you wish to elide one of the assertions above, you would hide the *whole* assertion and not just the predicate. Since duplicate assertions are not allowed, each assertion in its `Envelope` has its own unique digest. So executing:
 
 ```swift
-target.insert(Envelope(predicate: "knows", object: "Carol"))
+target.insert(Envelope("knows", "Carol"))
 let elided = try envelope.elideRemoving(target)
 ```
 

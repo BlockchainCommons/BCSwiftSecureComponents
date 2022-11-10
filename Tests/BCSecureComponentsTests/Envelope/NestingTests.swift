@@ -11,21 +11,21 @@ class NestingTests: XCTestCase {
         let a = Envelope("A")
         let b = Envelope("B")
 
-        let knowsBob = Envelope(predicate: knows, object: bob)
+        let knowsBob = Envelope(knows, bob)
         XCTAssertEqual(knowsBob.format,
             """
             "knows": "Bob"
             """
         )
 
-        let ab = Envelope(predicate: a, object: b)
+        let ab = Envelope(a, b)
         XCTAssertEqual(ab.format,
             """
             "A": "B"
             """
         )
 
-        let knowsABBob = try Envelope(predicate: knows.addAssertion(ab), object: bob).checkEncoding()
+        let knowsABBob = try Envelope(knows.addAssertion(ab), bob).checkEncoding()
         XCTAssertEqual(knowsABBob.format,
             """
             "knows" [
@@ -35,7 +35,7 @@ class NestingTests: XCTestCase {
             """
         )
 
-        let knowsBobAB = try Envelope(predicate: knows, object: bob.addAssertion(ab)).checkEncoding()
+        let knowsBobAB = try Envelope(knows, bob.addAssertion(ab)).checkEncoding()
         XCTAssertEqual(knowsBobAB.format,
             """
             "knows": "Bob" [
@@ -81,7 +81,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsABBob = try alice
-            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob))
+            .addAssertion(Envelope(knows.addAssertion(ab), bob))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsABBob.format,
             """
@@ -95,7 +95,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsBobAB = try alice
-            .addAssertion(Envelope(predicate: knows, object: bob.addAssertion(ab)))
+            .addAssertion(Envelope(knows, bob.addAssertion(ab)))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsBobAB.format,
             """
@@ -108,7 +108,7 @@ class NestingTests: XCTestCase {
         )
 
         let aliceKnowsABBobAB = try alice
-            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab)))
+            .addAssertion(Envelope(knows.addAssertion(ab), bob.addAssertion(ab)))
             .checkEncoding()
         XCTAssertEqual(aliceKnowsABBobAB.format,
             """
@@ -125,7 +125,7 @@ class NestingTests: XCTestCase {
 
         let aliceABKnowsABBobAB = try alice
             .addAssertion(ab)
-            .addAssertion(Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab)))
+            .addAssertion(Envelope(knows.addAssertion(ab), bob.addAssertion(ab)))
             .checkEncoding()
         XCTAssertEqual(aliceABKnowsABBobAB.format,
             """
@@ -144,7 +144,7 @@ class NestingTests: XCTestCase {
         let aliceABKnowsABBobABEncloseAB = try alice
             .addAssertion(ab)
             .addAssertion(
-                Envelope(predicate: knows.addAssertion(ab), object: bob.addAssertion(ab))
+                Envelope(knows.addAssertion(ab), bob.addAssertion(ab))
                     .addAssertion(ab)
             )
             .checkEncoding()

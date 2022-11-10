@@ -245,11 +245,11 @@ public extension Envelope {
         }
     }
 
-    init(predicate: Any, object: Any) {
+    init(_ predicate: Any, _ object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 
-    init(predicate: KnownValue, object: Any) {
+    init(_ predicate: KnownValue, _ object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 }
@@ -353,9 +353,13 @@ public extension Envelope {
     }
 }
 
-extension Envelope: Equatable {
+extension Envelope: Hashable {
     public static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
         lhs.digest == rhs.digest
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(digest)
     }
 }
 
@@ -386,6 +390,14 @@ public extension Envelope {
             let result = a.first
         else {
             throw EnvelopeError.ambiguousPredicate
+        }
+        return result
+    }
+    
+    func assertion(withDigest digest: DigestProvider) throws -> Envelope {
+        let digest = digest.digest
+        guard let result = assertions.first(where: { $0.digest == digest }) else {
+            throw EnvelopeError.nonexistentAssertion
         }
         return result
     }
@@ -485,6 +497,12 @@ public extension Envelope {
             return Envelope(subject: subject, uncheckedAssertions: [envelope2])
         }
     }
+    
+    func addAssertions(_ envelopes: [Envelope], salted: Bool = false) throws -> Envelope {
+        try envelopes.reduce(into: self) {
+            $0 = try $0.addAssertion($1, salted: salted)
+        }
+    }
 
     func addAssertion(_ assertion: Assertion?, salted: Bool = false) -> Envelope {
         guard let assertion else {
@@ -569,27 +587,27 @@ public extension Envelope {
 public extension Envelope {
     static func verifiedBy(signature: Signature, note: String? = nil) -> Envelope {
         Envelope(
-            predicate: .verifiedBy,
-            object: Envelope(signature)
+            .verifiedBy,
+            Envelope(signature)
                 .addAssertion(if: note != nil, .note, note!)
         )
     }
 
     static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
         let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient, testKeyMaterial: testKeyMaterial, testNonce: testNonce)
-        return Envelope(predicate: .hasRecipient, object: sealedMessage)
+        return Envelope(.hasRecipient, sealedMessage)
     }
 
     static func sskrShare(_ share: SSKRShare) -> Envelope {
-        Envelope(predicate: .sskrShare, object: share)
+        Envelope(.sskrShare, share)
     }
 
     static func isA(_ object: Envelope) -> Envelope {
-        Envelope(predicate: .isA, object: object)
+        Envelope(.isA, object)
     }
 
     static func id(_ id: CID) -> Envelope {
-        Envelope(predicate: .id, object: id)
+        Envelope(.id, id)
     }
 }
 
@@ -598,7 +616,7 @@ public extension Envelope {
         guard let value else {
             return nil
         }
-        return Envelope(predicate: param.cbor, object: Envelope(value))
+        return Envelope(param.cbor, Envelope(value))
     }
 
     static func parameter(_ name: String, value: CBOREncodable?) -> Envelope? {
@@ -642,17 +660,34 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    func sign(with privateKeys: PrivateKeyBase, uncoveredAssertions: [Envelope], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) throws -> Envelope {
+        let signature = try Envelope(privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator))
+            .addAssertions(uncoveredAssertions)
+        return try addAssertion(Envelope(.verifiedBy, signature))
+    }
+    
     func sign(with privateKeys: PrivateKeyBase, note: String? = nil, tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
-        let signature = privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator)
-        return try! addAssertion(.verifiedBy(signature: signature, note: note))
+        var assertions: [Envelope] = []
+        if let note {
+            assertions.append(Envelope(.note, note))
+        }
+        return try! sign(with: privateKeys, uncoveredAssertions: assertions, tag: tag, randomGenerator: randomGenerator)
     }
 
     func sign(with privateKeys: [PrivateKeyBase], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Envelope {
-        var result = self
-        for keys in privateKeys {
-            result = result.sign(with: keys, randomGenerator: randomGenerator)
+        privateKeys.reduce(into: self) {
+            $0 = $0.sign(with: $1, tag: tag, randomGenerator: randomGenerator)
         }
-        return result
+    }
+    
+    func sign(with privateKeys: PrivateKeyBase, coveredAssertions: [Envelope], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) throws -> Envelope {
+        guard !coveredAssertions.isEmpty else {
+            return sign(with: privateKeys, tag: tag, randomGenerator: randomGenerator)
+        }
+        return try self.elide()
+            .addAssertions(coveredAssertions)
+            .wrap()
+            .sign(with: privateKeys, tag: tag, randomGenerator: randomGenerator)
     }
 
     func addRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
@@ -1087,12 +1122,17 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func revoke(_ digest: Digest) -> Envelope {
+    func removeAssertion(_ target: DigestProvider) -> Envelope {
         var assertions = self.assertions
-        if let index = assertions.firstIndex(where: { $0.digest == digest }) {
+        let target = target.digest
+        if let index = assertions.firstIndex(where: { $0.digest == target }) {
             assertions.remove(at: index)
         }
-        return Envelope(subject: subject, uncheckedAssertions: assertions)
+        if assertions.isEmpty {
+            return subject
+        } else {
+            return Envelope(subject: subject, uncheckedAssertions: assertions)
+        }
     }
 }
 
@@ -1283,5 +1323,47 @@ extension Envelope: CustomStringConvertible {
         case .elided(_):
             return ".elided"
         }
+    }
+}
+
+public extension Envelope {
+    var elementsCount: Int {
+        var result = 0
+        
+        func _count(_ envelope: Envelope) {
+            result += 1
+            switch envelope {
+            case .node(let subject, let assertions, _):
+                result += subject.elementsCount
+                for assertion in assertions {
+                    result += assertion.elementsCount
+                }
+            case .assertion(let assertion):
+                result += assertion.predicate.elementsCount
+                result += assertion.object.elementsCount
+            case .wrapped(let envelope, _):
+                result += envelope.elementsCount
+            default:
+                break
+            }
+        }
+        
+        _count(self)
+        
+        return result
+    }
+}
+
+public extension Envelope {
+    func replacingSubject(with subject: Envelope) -> Envelope {
+        assertions.reduce(into: subject) {
+            try! $0 = $0.addAssertion($1)
+        }
+    }
+}
+
+extension Envelope: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        self = Envelope(value)
     }
 }
