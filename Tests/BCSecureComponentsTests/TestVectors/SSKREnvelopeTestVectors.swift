@@ -33,7 +33,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             groupThreshold: 1,
             groups: [(2, 3)],
             recoveredShareIndexes: [0, 2],
-            expectedFirstShare: "ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduoaeadaefltivlttcloxssbnadahlsbdghcmcwuyatwnjliomwtkvaflztlnghfhfeplnthkparphles"
+            expectedFirstShare: "ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbaeadaeseambbvacfisghnygsuetdadsbkgihldesjymkpksbatzstefslnhnskzeswkbzorodsgtle"
         )
         
         let testCase2 = try TestCase(
@@ -43,7 +43,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             groups: [(3, 5)],
             recoveredShareIndexes: [0, 2, 4],
             vendorNote: "This could be vendor-specific data attached to the envelope.",
-            expectedFirstShare: "ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoaetkvsvakiaxzsqzchjpkktlgamnknuopdtkvsvakiaxzsqzchjpkktlgamnknuopdtpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmvldlrett"
+            expectedFirstShare: "ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoaehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlwegylntpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmfrqzhswm"
         )
         
         let testCase3 = try TestCase(
@@ -52,7 +52,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
             groupThreshold: 2,
             groups: [(2, 3), (2, 3), (2, 3)],
             recoveredShareIndexes: [0, 1, 6, 7],
-            expectedFirstShare: "ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgadaehsjklgrevenybbimhfnyrtfrgakoueindpdpweetoyfhadfshliyjlihtoptasjeptmobswf"
+            expectedFirstShare: "ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgadaebzykrnmemtcnknnddlbbiylehnihonvsnybdsrsefmrhbyaxwtiycxdmesceiddmssolvtmw"
         )
         
         let testCases: [AnyTestCase] = [testCase1 as AnyTestCase, testCase2, testCase3]
@@ -86,7 +86,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
         list([
             "Symmetric key used for encryption: `\(fakeContentKey.data.hex)`",
             "Nonce for encryption: `\(fakeNonce.data.hex)`",
-            "Random generator for SSKR returns repeating sequence: `\(fakeRandomGeneratorSeed.hex)`"
+            "Random generator for SSKR returns repeating sequence: `\(generateFakeRandomNumbers(100).hex)`"
         ])
 
         formatIndex(testCases)
@@ -150,7 +150,7 @@ final class SSKREnvelopeTestVectors: XCTestCase {
         }
 
         func generateShares() throws -> [[Envelope]] {
-            let fakeRandomGenerator = makeFakeRandomGenerator()
+            var fakeRandomGenerator = makeFakeRandomGenerator()
             
             // Encrypt the envelope with the content key. This is the key that will be split below using SSKR.
             let encryptedEnvelope = try envelopeWithPayload.encryptSubject(with: fakeContentKey, testNonce: fakeNonce)

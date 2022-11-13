@@ -128,7 +128,7 @@ final class EnvelopeTestVectors: XCTestCase {
         list([
             "Symmetric key used for encryption: `\(fakeContentKey.data.hex)`",
             "Nonce for encryption: `\(fakeNonce.data.hex)`",
-            "Random generator for signing returns repeating sequence: `\(fakeRandomGeneratorSeed.hex)`"
+            "Random generator for signing returns pseudorandom sequence beginning: `\(generateFakeRandomNumbers(100).hex)`"
         ])
 
         formatIndex(testCases)

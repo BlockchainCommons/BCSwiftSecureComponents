@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Nov 7, 2022</br>
+**Revised:** Nov 12, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -37,7 +37,7 @@ These objects are normally random, but they are fixed for these test vectors:
 
 * Symmetric key used for encryption: `526afd95b2229c5381baec4a1788507a3c4a566ca5cce64543b46ad12aff0035`
 * Nonce for encryption: `4d785658f36c22fb5aed3ac0`
-* Random generator for SSKR returns repeating sequence: `dca8cfe8e67d03fab4177279d5498e7a`
+* Random generator for SSKR returns repeating sequence: `7eb559bbbf6cce2632cf9f194aeb50943de7e1cbad54dcfab27a42759f5e2fed518684c556472008a67932f7c682125b50cb72e8216f6906358fdaf28d3545532daee0c5bb5023f50cd8e71ec14901ac746c576c481b893be6656b80622b3a564e59b4e2`
 
 ## INDEX
 
@@ -79,13 +79,13 @@ CBOR(crypto-seed)
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduoaeadaefltivlttcloxssbnadahlsbdghcmcwuyatwnjliomwtkvaflztlnghfhfeplnthkparphles
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbaeadaeseambbvacfisghnygsuetdadsbkgihldesjymkpksbatzstefslnhnskzeswkbzorodsgtle
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e000100c10614e61968549a4cded201cb7b6589397498aacb07fad33d8660c5fec67efb
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -112,7 +112,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59'
+                        h'b57e000100c10614e61968549a4cded201cb7b6589397498aacb07fad33d8660c5fec67efb'
                      )
                   )
                )
@@ -149,7 +149,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc00010047d0e3d121a4c40c0105830b54161bdb07f16f6794cfe647fc86543f45ae9d59
+                           b57e000100c10614e61968549a4cded201cb7b6589397498aacb07fad33d8660c5fec67efb
 ```
 
 ---
@@ -161,13 +161,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduoaeadadwtztmhvthhjtrncplsfeuyhfehvdnnvsresevwotzewmvalbrfspleytcadefddaaxbwlrmw
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbaeadadrfknlnykwzwnktonaxfwbnlrfxwdlbcsgopkwfclmyaepasaoesprojtmtgsvymhiytebass
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e000101bc7a86f5f2f177a503420c8443ea7f1855aaf3218f00b1c2a2c8b86e964ce190
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -194,7 +194,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825'
+                        h'b57e000101bc7a86f5f2f177a503420c8443ea7f1855aaf3218f00b1c2a2c8b86e964ce190'
                      )
                   )
                )
@@ -231,7 +231,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc000101f0fc90e05c6ebe228345db5631e79ee8b5c1e5a3feebe67fbcc88af91d284825
+                           b57e000101bc7a86f5f2f177a503420c8443ea7f1855aaf3218f00b1c2a2c8b86e964ce190
 ```
 
 ---
@@ -243,13 +243,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduoaeadaoeyloahqduydndygdcklpeopannwsbkryksmehnwkfzltvaemkecywfpdykrhdwoyltpsmywp
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbaeadaofrzednrttyfpbgvetdzckpbertfwgypfvyteglosfxasjzwncscysblodmsohpdpnnttecie
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e0001023bfe2bc0d44112e4d2fd7510c04251b0e1d34ea743096cf1181acb882ec95b2d
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -276,7 +276,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1'
+                        h'b57e0001023bfe2bc0d44112e4d2fd7510c04251b0e1d34ea743096cf1181acb882ec95b2d'
                      )
                   )
                )
@@ -313,7 +313,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc000102328805b3db2b30501e8533b19eef0abd789160f44087e6377c1af3a8f5b92ca1
+                           b57e0001023bfe2bc0d44112e4d2fd7510c04251b0e1d34ea743096cf1181acb882ec95b2d
 ```
 
 ---
@@ -341,13 +341,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoaetkvsvakiaxzsqzchjpkktlgamnknuopdtkvsvakiaxzsqzchjpkktlgamnknuopdtpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmvldlrett
+ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoaehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlwegylntpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmfrqzhswm
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e00020059bbbf6cce2632cf9f194aeb50943de7e1cbad54dcfab27a42759f5e2fed5186d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -374,7 +374,7 @@ d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8'
+                        h'b57e00020059bbbf6cce2632cf9f194aeb50943de7e1cbad54dcfab27a42759f5e2fed5186'
                      )
                   )
                )
@@ -425,7 +425,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc000200cfe8e67d03fab4177279d5498e7adca8cfe8e67d03fab4177279d5498e7adca8
+                           b57e00020059bbbf6cce2632cf9f194aeb50943de7e1cbad54dcfab27a42759f5e2fed5186
       d8 c8                              # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
@@ -447,13 +447,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoadksssmdgskbdytoeswteslgbbwmluhkndkitpjzrhinueqzdleyembdmytbztastytpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmmdnsdmfr
+ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoadjkgtrockyaseyauyfmpyaetpkpwmpycttktnpywfbduekpgdisstrtaeurvtuolntpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmwnnnammw
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e000201734db81ef8c1f8db3eab00d875ebab1fcfdaabf30bde755068c7c000dfe0dc86d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -480,7 +480,7 @@ d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4'
+                        h'b57e000201734db81ef8c1f8db3eab00d875ebab1fcfdaabf30bde755068c7c000dfe0dc86'
                      )
                   )
                )
@@ -531,7 +531,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc00020178c4954c7e30ce39f0398d14eb8b599b7dd86cb969deb42f32370b8fd6fc09d4
+                           b57e000201734db81ef8c1f8db3eab00d875ebab1fcfdaabf30bde755068c7c000dfe0dc86
       d8 c8                              # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
@@ -553,13 +553,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoaownhdpssppmhslucpsarhlsmumhfnrohsdrgdktgmlkaadngajsksckutrtlsinyltpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmwnvlchzs
+ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoaocslkdllpqzlnpkkgcxtdotlgdlcalojsrebddsptrfaahthdfzfrtnbnnlvoisfptpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmckvoztdt
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e000202188c2f85b486aa7b20d2a38d2f1d8871b50b26a9bc045a58403bda0c99e26841d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -586,7 +586,7 @@ d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7'
+                        h'b57e000202188c2f85b486aa7b20d2a38d2f1d8871b50b26a9bc045a58403bda0c99e26841'
                      )
                   )
                )
@@ -637,7 +637,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc000202f158acc8ad618b22c2b98393903cb8612a5077528c042b4971781eddc08369f7
+                           b57e000202188c2f85b486aa7b20d2a38d2f1d8871b50b26a9bc045a58403bda0c99e26841
       d8 c8                              # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
@@ -659,13 +659,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoaxfgjyuryttipywnbnfzytuytoyksnfsgmmkhnzcmtvacxdnjsehenrtcwmkahrflutpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmltgdlkbe
+ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoaxeykndeyllfhshnjllyhnwlrnbkidckldndcycxbajecxntjpimldlpgminwsvwfptpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmtyspndhf
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8bd8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e000203327a28f78261606f8160e9be0a621e899b1a200e6b209d726a89855269efe541d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -692,7 +692,7 @@ d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b'
+                        h'b57e000203327a28f78261606f8160e9be0a621e899b1a200e6b209d726a89855269efe541'
                      )
                   )
                )
@@ -743,7 +743,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc0002034674dff9d0abf10c40f9dbcef5cd3d529860fd96e6202b713136c01b9805bc8b
+                           b57e000203327a28f78261606f8160e9be0a621e899b1a200e6b209d726a89855269efe541
       d8 c8                              # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
@@ -765,13 +765,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddapduoaeaoaalrckwkkibsltsbsalsytsfkitkfnuypyfztomevwjswfuybwgleswfkostamryrftpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmhhgtylkb
+ur:envelope/lstpsptpsolrhdheaslkbwlflyjtsntdcsjkhluemsktwdntythtatamjlmeswmybatlbdjywylszojtutwnswgekiludpnyaxjploskpmzsvaatwkatlroseoasgrdkgystrlpymnhdcxfdsguyiocfbajtdlmnatfmlnpepkjsaaktcabslfnepmvdenrffgvsguaslktpaogsgtkshfhdwfjzcpzohtweftrtgdoxectecaoxpdynrfmytyrtpksarfeshdhddktpsbhdcxpdnecmfmzchgaedppackpandielkfpzospynvtckjlhdatonweswceuyaxvehffrtpsptputlftpsptpuramtpsptpcstaadechddarekbaeaoaamyyasgmeidprfezsgwjpjzdiknhtjpfhinyklecnihwfmtzcahdptyjlktossrcptpsptputlftpsptpuraatpsptpcsksfnghisinjkcxiajlkpjziecxidihcxkoihjtiejljpdpjkjoihiainiyiniacxiehsjyhscxhsjyjyhsiaisihiecxjyjlcxjyisihcxihjtkoihjzjljoihdmueesgreo
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbcd8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
+d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83fb6eddf1c64a7d8b2d9a037288c5adfae607f40784a733094b2451c7b7ab8e582048cadb67190e6e2f8e073e86afaa7104771d0f829fade736bc46e853098cd8024c4d785658f36c22fb5aed3ac050a435d31da4a8f6bc8fd4c0aac2bc39585824d8cb5820a89f163efd57002db11eb19b648c41fbc8f6e01e6f5807a5edc61cdb03e4563bd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e0002048ff8ca9162b245fa4f726c277a5a723f69f58a2365f396fd052dd46f77a7c322d8c8d8dd82d8c8d8df04d8c8d818783c5468697320636f756c642062652076656e646f722d7370656369666963206461746120617474616368656420746f2074686520656e76656c6f70652e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -798,7 +798,7 @@ d8c883d8c8d8c984585f098c1382816ecdd218735dde9777ea9df95a07066f91c68f0ed50b74ee83
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc'
+                        h'b57e0002048ff8ca9162b245fa4f726c277a5a723f69f58a2365f396fd052dd46f77a7c322'
                      )
                   )
                )
@@ -849,7 +849,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc000204841ef47d0f87cbc283f9cc7dcf3cdbab40ce91e571f3db134e39f376c706bdbc
+                           b57e0002048ff8ca9162b245fa4f726c277a5a723f69f58a2365f396fd052dd46f77a7c322
       d8 c8                              # tag(200)   ; envelope
          d8 dd                           # tag(221)   ; assertion
             82                           # array(2)
@@ -896,13 +896,13 @@ CBOR(crypto-seed)
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgadaehsjklgrevenybbimhfnyrtfrgakoueindpdpweetoyfhadfshliyjlihtoptasjeptmobswf
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgadaebzykrnmemtcnknnddlbbiylehnihonvsnybdsrsefmrhbyaxwtiycxdmesceiddmssolvtmw
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e12010015f5be9196237a9b2f14668a6065a5e89a0bc3c13eb91103f066202e391c622e
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -929,7 +929,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b'
+                        h'b57e12010015f5be9196237a9b2f14668a6065a5e89a0bc3c13eb91103f066202e391c622e'
                      )
                   )
                )
@@ -966,7 +966,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc12010061738db5e49a146a569ac03b4976de692d2ded38a13f013d5d666f65cea9096b
+                           b57e12010015f5be9196237a9b2f14668a6065a5e89a0bc3c13eb91103f066202e391c622e
 ```
 
 ---
@@ -978,13 +978,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgadadlrkssodtgrfybntomkktongtcknyjsonhdonhgcmrklefrtdjtayutdilozccxdafmlrnnmd
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgadadkiiegawznbollbltvdbsvosflucmiycsmelontwlvdvwrkcwrsayhslrpluodthtfrfdgolu
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e1201017d6449f2a0a67f87e70fe2cc8b16661891889de9e7e5bb1bbf086184aedc295a
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1011,7 +1011,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025'
+                        h'b57e1201017d6449f2a0a67f87e70fe2cc8b16661891889de9e7e5bb1bbf086184aedc295a'
                      )
                   )
                )
@@ -1048,7 +1048,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc1201018478c9294b440cce9877a54d1e9a71a558a55716bb8a3bd26e08dd2788fd2025
+                           b57e1201017d6449f2a0a67f87e70fe2cc8b16661891889de9e7e5bb1bbf086184aedc295a
 ```
 
 ---
@@ -1060,13 +1060,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgadaopfihahmtoyfsdkestthpbktsvdrendwdstdslfiemdglkpyafrrdbevyfwadhpylrfmnoxfl
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgadaosksfgrhgzseyjootoxcpkpampmlsetbwlkcmlbmemsadhyeojtrdoehsbnltwkswdiztnlrf
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e120102c5cc4b57fa3270a3a4227506ad8338138c167f9197015e336ebaa2610c87f4c6
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1093,7 +1093,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7'
+                        h'b57e120102c5cc4b57fa3270a3a4227506ad8338138c167f9197015e336ebaa2610c87f4c6'
                      )
                   )
                )
@@ -1130,7 +1130,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc120102b0650596a13d2439d15b0ad7e7b59beac7268264954e75f83bba10e142015bf7
+                           b57e120102c5cc4b57fa3270a3a4227506ad8338138c167f9197015e336ebaa2610c87f4c6
 ```
 
 ---
@@ -1142,13 +1142,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgbyaegspldepsaxsfjowpbblkberdutmdcnsghetasfpswfaoflwtvowfistigrwzjpgepfgygyvs
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgbyaefnguoxpdnlwmgeptlotyclbkwygejyckihbavtamhpvereaabsjybkluqdnnbehfmkguoyfs
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e1211003c53a4a899eb4aa988d4210aee4a741e650ee0065be4b5040f740a8bb39e1056
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1175,7 +1175,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a'
+                        h'b57e1211003c53a4a899eb4aa988d4210aee4a741e650ee0065be4b5040f740a8bb39e1056'
                      )
                   )
                )
@@ -1212,7 +1212,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc1211004cae28ac03cc70ec148c10badd9523ca5fd9ccacf30247f0e2f368d04bf2724a
+                           b57e1211003c53a4a899eb4aa988d4210aee4a741e650ee0065be4b5040f740a8bb39e1056
 ```
 
 ---
@@ -1224,13 +1224,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgbyaddebnfnkidpuycwltcfqdchfycnnyhphewlvontcslbmhjyswtifpfmlynleyuobgkkcsvepa
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgbyadrnaoehrnpavspfestoskaecxgtihpfhfbwgyctzmeozsskmypsbeswldjprnrhutuoktgdfh
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e121101be0231beb1e8b039cec500204d65b05613511fff33fac58fac10c68972beb9dd
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1257,7 +1257,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12'
+                        h'b57e121101be0231beb1e8b039cec500204d65b05613511fff33fac58fac10c68972beb9dd'
                      )
                   )
                )
@@ -1294,7 +1294,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc121101280c3c7d2ddb1b8719b31744239a5b5fe9e29d187f9074c6d0413e819932dc12
+                           b57e121101be0231beb1e8b039cec500204d65b05613511fff33fac58fac10c68972beb9dd
 ```
 
 ---
@@ -1306,13 +1306,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgbyaolrwnaebzhevoolftbawzckhlftlutezodepejturwtfsclnslnlkssjpwkineczshfvozehd
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgbyaocnwnmdlrsoweonmoaayniahyqdbbvdmnldpfahwslutpgoasgmrfldmydruehkhpnbkpfseo
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e12110223f19584c9eda59204f6635eb314e78e89b005ef8bd8550952bc898f2ade595b
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1339,7 +1339,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa'
+                        h'b57e12110223f19584c9eda59204f6635eb314e78e89b005ef8bd8550952bc898f2ade595b'
                      )
                   )
                )
@@ -1376,7 +1376,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc12110284f100155fe2a63a0ef21e5d3a8bd3fb28af6edff03d219c868cc472f46935fa
+                           b57e12110223f19584c9eda59204f6635eb314e78e89b005ef8bd8550952bc898f2ade595b
 ```
 
 ---
@@ -1388,13 +1388,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgclaedydmwljnttiolrdkcwlkbsinylsnlgzsjnteehtsvwbbtlvwwnjnbzhegmkkgtvdynaxmywl
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgclaediprlbdnmdcfoekbgejttsayzczsgezecfmslopffgaemyaspkweiatyayckdpihmoleiaeo
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e12210027b27f2b9519a27e4a6ed708fdfa4afe199788b046008f09aaed63d4081e2d65
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1421,7 +1421,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7'
+                        h'b57e12210027b27f2b9519a27e4a6ed708fdfa4afe199788b046008f09aaed63d4081e2d65'
                      )
                   )
                )
@@ -1458,7 +1458,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc122100302ee96dd16784241b8c0f69f7cd8dfa6dd331d7e514d5e5f16d155f52794de7
+                           b57e12210027b27f2b9519a27e4a6ed708fdfa4afe199788b046008f09aaed63d4081e2d65
 ```
 
 ---
@@ -1470,13 +1470,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgcladaygachutasrpaeiaktjowlmevdhdhpwstnpkrlhyolinltskzmbaeorndtrdrywylnonltfz
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgcladjziamdlyspiahfzmwfbwrteoatwygochgsolaxfhdrztskhhiybnpsuewegmgmsskojlclge
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e1221016c639581c86356fff313c03307ee55174ca6033f2afcc55c660cacdeed5252c4
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1503,7 +1503,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee'
+                        h'b57e1221016c639581c86356fff313c03307ee55174ca6033f2afcc55c660cacdeed5252c4'
                      )
                   )
                )
@@ -1540,7 +1540,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc122101084917dd09b600637770e991e7585befdaaab75ea66987c5ff0e33be29babdee
+                           b57e1221016c639581c86356fff313c03307ee55174ca6033f2afcc55c660cacdeed5252c4
 ```
 
 ---
@@ -1552,13 +1552,13 @@ d8 c8                                    # tag(200)   ; envelope
 👉 _The CBOR in a UR is never tagged, because the UR `type` field serves this purpose._
 
 ```
-ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddapduobgclaofzvtbacmknuemspksrjltplftsztftticscldsueiawyjsonwepyhklnoxverpykbdgwtols
+ur:envelope/lftpsptpsolrhdqzashhbgndtlmulpynhsvsatssrottwzwtinpkahsacxlaiyeodwjsihkeprktuyaotomdswghknlubemncmjeltsowptlvegmvyfdvsoldrcsjldmgwzcryroltbzjygaurlohsbygtksdamtcwidlnwnwydahnktamaxmomutowmdtoegdzmhfbblkrtbwcmylprdruyhhmyvwnyyawntecefpjomogoglfdbkrthstdbtlejeahylmwykglihvalrmufeuevsftsfytbnnlpaiemurhemsbesldltemtsuebeaewpkisfdetibetobzcngorepfjslycmsgldtdfzdyzchsztctbkwdeottgsgtkshfhdwfjzcpzohtweftrtgdtkgltsaarerkgepahgoxfljllfdwgyuthddktpsbhdcxaygrjzeeguftwpianbtlfmpkeyjepylnhdosktgelpleielnrnpllafmrdmdflsbtpsptputlftpsptpuramtpsptpcstaadechddarekbbgclaopabdpfiedlwegyiocnmwytkbbgtdjyemqdyklprennvlcwotdteevarttalntefnykrsamto
 ```
 
 #### Tagged CBOR Binary
 
 ```
-d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
+d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277db02ce95c6547a8b108e166b87c9ecd5e452e148e8a62a186f2e4ffdbdb887157449df8861114d7825961b6286f1ee25607706039293ceeb29a250ff56148cc01316f7b22adb5c8fe59af8f1d31c417092554e480ac061d20d8a6b05f794f54e65e6849345dee83accf90c99b16493b937cb39898737d7de1000ec7dcc28d010ce152355b5b0718116ca89d24030fd61fc1f0aea33d14c4d785658f36c22fb5aed3ac050cf4ed704b5bb4ab157a4476f822c51dd5824d8cb5820084b6c34533aec63a0d53eaa326bab8658a7774a858a6486beae803eba9547cbd8c8d8dd82d8c8d8df06d8c8d818d901355825b57e122102b10bb0642fed51672394f97e12d27437b3f585b59ee31ba32934e6c0d986d33c
 ```
 
 #### Tagged CBOR Diagnostic Notation
@@ -1585,7 +1585,7 @@ d8c882d8c8d8c98458b4095c129bd59385f661e807c4b8d1f2f069aa05c2208066332c71657cb277
                200(   ; envelope
                   24(   ; leaf
                      309(   ; crypto-sskr
-                        h'a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5'
+                        h'b57e122102b10bb0642fed51672394f97e12d27437b3f585b59ee31ba32934e6c0d986d33c'
                      )
                   )
                )
@@ -1622,7 +1622,7 @@ d8 c8                                    # tag(200)   ; envelope
                   d8 18                  # tag(24)   ; leaf
                      d9 0135             # tag(309)   ; crypto-sskr
                         5825             # bytes(37)
-                           a8dc12210240e00e167ade97aac36fd882d7fc3ad0182126de63ee71a5edab5986a4e4b6f5
+                           b57e122102b10bb0642fed51672394f97e12d27437b3f585b59ee31ba32934e6c0d986d33c
 ```
 
 ---
