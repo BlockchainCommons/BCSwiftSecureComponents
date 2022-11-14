@@ -104,8 +104,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/WolfBase",
       "state" : {
-        "revision" : "51846810911c51dfe38514a5b5454220c59b4a79",
-        "version" : "4.5.2"
+        "revision" : "f3b313c4f48b77ba9ea206291dbe3d688bd89bed",
+        "version" : "4.6.1"
+      }
+    },
+    {
+      "identity" : "wolflorem",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/WolfLorem.git",
+      "state" : {
+        "revision" : "328003261454a67ce8c7213bffc4706aff5ce1c2",
+        "version" : "2.2.1"
       }
     }
   ],

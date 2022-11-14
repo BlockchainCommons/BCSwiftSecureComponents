@@ -22,6 +22,7 @@ let package = Package(
         .package(url: "https://github.com/WolfMcNally/Graph.git", from: "0.1.0"),
         .package(url: "https://github.com/WolfMcNally/GraphMermaid.git", from: "0.1.0"),
         .package(url: "https://github.com/WolfMcNally/GraphDot.git", from: "0.1.0"),
+        .package(url: "https://github.com/WolfMcNally/WolfLorem.git", from: "2.0.0"),
     ],
     targets: [
         .target(
@@ -50,7 +51,8 @@ let package = Package(
             name: "BCSecureComponentsTests",
             dependencies: [
                 "BCSecureComponents",
-                "WolfBase"
+                "WolfBase",
+                "WolfLorem"
             ]),
     ]
 )

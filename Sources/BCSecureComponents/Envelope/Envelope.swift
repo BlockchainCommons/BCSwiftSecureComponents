@@ -580,7 +580,12 @@ public extension Envelope {
 
     /// Add a number of bytes of salt generally proportionate to the size of the object being salted.
     func addSalt() -> Envelope {
-        addSalt(Salt(forSize: taggedCBOR.cborEncode.count))
+        var rng = SecureRandomNumberGenerator.shared
+        return addSalt(using: &rng)
+    }
+    
+    func addSalt<R: RandomNumberGenerator>(using rng: inout R) -> Envelope {
+        addSalt(Salt(forSize: taggedCBOR.cborEncode.count, using: &rng))
     }
 }
 
