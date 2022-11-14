@@ -2,30 +2,8 @@ import Foundation
 import Graph
 import WolfBase
 
-enum EdgeType {
-    case none
-    case subject
-    case assertion
-    case predicate
-    case object
-    case wrapped
-    
-    var label: String? {
-        switch self {
-        case .subject, .wrapped:
-            return "subj"
-        case .predicate:
-            return "pred"
-        case .object:
-            return "obj"
-        default:
-            return nil
-        }
-    }
-}
-
 struct EnvelopeEdgeData {
-    let type: EdgeType
+    let type: EnvelopeEdgeType
 }
 
 extension Digest: ElementID { }
@@ -86,31 +64,14 @@ struct EnvelopeGraphBuilder<GraphData> {
     
     init(_ envelope: Envelope, data: GraphData) {
         self.init(data: data)
-        addNode(envelope, incomingEdge: .none)
-    }
-
-    @discardableResult
-    mutating func addNode(_ envelope: Envelope, parent: Int? = nil, incomingEdge: EdgeType) -> Int {
-        let node = nextNodeID
-        try! graph.newNode(node, data: envelope)
-        if let parent {
-            try! graph.newEdge(nextEdgeID, tail: parent, head: node, data: .init(type: incomingEdge))
-        }
-        switch envelope {
-        case .node(let subject, let assertions, _):
-            addNode(subject, parent: node, incomingEdge: .subject)
-            for assertion in assertions {
-                addNode(assertion, parent: node, incomingEdge: .assertion)
+        envelope.walk { level, incomingEdge, parent, envelope in
+            let node = nextNodeID
+            try! graph.newNode(node, data: envelope)
+            if let parent {
+                try! graph.newEdge(nextEdgeID, tail: parent, head: node, data: .init(type: incomingEdge))
             }
-        case .assertion(let assertion):
-            addNode(assertion.predicate, parent: node, incomingEdge: .predicate)
-            addNode(assertion.object, parent: node, incomingEdge: .object)
-        case .wrapped(let envelope, _):
-            addNode(envelope, parent: node, incomingEdge: .wrapped)
-        default:
-            break
+            return node
         }
-        return node
     }
 }
 

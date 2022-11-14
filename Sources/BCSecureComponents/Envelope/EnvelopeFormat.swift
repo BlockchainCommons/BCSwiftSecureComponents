@@ -155,7 +155,7 @@ extension Envelope: EnvelopeFormat {
             }
             let joinedAssertionsItems = Array(assertionsItems.joined(separator: [.separator]))
 
-            let needsBraces: Bool = subject.isAssertion
+            let needsBraces: Bool = subject.isSubjectAssertion
             
             if needsBraces {
                 items.append(.begin("{"))

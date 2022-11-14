@@ -115,7 +115,7 @@ extension Envelope {
     public static func applyDiff(source: Envelope, diff: Envelope) throws -> Envelope {
         var result = source
         if diff.subject != "noChange" {
-            result = result.replacingSubject(with: diff.subject)
+            result = result.replaceSubject(with: diff.subject)
         }
         for assertion in diff.assertions {
             guard let assertionPredicate = assertion.subject.predicate else {

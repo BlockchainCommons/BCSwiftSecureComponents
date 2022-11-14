@@ -3,44 +3,35 @@ import Graph
 
 extension Envelope {
     public var treeFormat: String {
-        var elements: [TreeElement] = []
-        addEnvelope(self, level: 0, incomingEdge: .none, result: &elements)
-        return elements.map { $0.string }.joined(separator: "\n")
+        treeFormat()
     }
-
-    fileprivate func addEnvelope(_ envelope: Envelope, level: Int, incomingEdge: EdgeType, result: inout [TreeElement]) {
-        result.append(TreeElement(level: level, envelope: envelope, incomingEdge: incomingEdge))
-        let level = level + 1
-        switch envelope {
-        case .node(let subject, let assertions, _):
-            addEnvelope(subject, level: level, incomingEdge: .subject, result: &result)
-            for assertion in assertions {
-                addEnvelope(assertion, level: level, incomingEdge: .assertion, result: &result)
-            }
-        case .assertion(let assertion):
-            addEnvelope(assertion.predicate, level: level, incomingEdge: .predicate, result: &result)
-            addEnvelope(assertion.object, level: level, incomingEdge: .object, result: &result)
-        case .wrapped(let envelope, _):
-            addEnvelope(envelope, level: level, incomingEdge: .wrapped, result: &result)
-        default:
-            break
+    
+    public func treeFormat(highlighting target: Set<Digest> = []) -> String {
+        var elements: [TreeElement] = []
+        walk { level, incomingEdge, parent, envelope in
+            elements.append(TreeElement(level: level, envelope: envelope, incomingEdge: incomingEdge, isHighlighted: target.contains(envelope.digest)))
+            return nil
         }
+        return elements.map { $0.string }.joined(separator: "\n")
     }
 }
 
 fileprivate struct TreeElement {
     let level: Int
     let envelope: Envelope
-    let incomingEdge: EdgeType
+    let incomingEdge: EnvelopeEdgeType
+    let isHighlighted: Bool
 
-    init(level: Int, envelope: Envelope, incomingEdge: EdgeType) {
+    init(level: Int, envelope: Envelope, incomingEdge: EnvelopeEdgeType, isHighlighted: Bool) {
         self.level = level
         self.envelope = envelope
         self.incomingEdge = incomingEdge
+        self.isHighlighted = isHighlighted
     }
     
     var string: String {
         let line = [
+            isHighlighted ? "*" : nil,
             envelope.shortID,
             incomingEdge.label,
             envelope.summary

@@ -71,7 +71,6 @@ public class EnvelopeGenerator {
         var result: [Operation: Int] = [:]
         result[.addAssertion] = Int(400.0 / pow(2, Double(level)))
         result[.removeAssertion] = 10
-//        print(level, result[.addAssertion]!)
         result[.encryptSubject] = 10
         result[.elideSubject] = 10
         result[.encryptAssertion] = 10
@@ -109,19 +108,19 @@ public class EnvelopeGenerator {
             }
             envelope = envelope.removeAssertion(assertion)
         case .encryptSubject:
-            guard !envelope.subject.isEncrypted && !envelope.subject.isElided else {
+            guard !envelope.subject.isObscured else {
                 return
             }
             envelope = try! envelope.encryptSubject(with: fakeContentKey, testNonce: fakeNonce)
         case .elideSubject:
-            guard !envelope.subject.isEncrypted && !envelope.subject.isElided else {
+            guard !envelope.subject.isObscured else {
                 return
             }
             envelope = envelope.elide()
         case .encryptAssertion:
             guard
                 let assertion = envelope.assertions.randomElement(using: &rng),
-                !assertion.subject.isEncrypted && !assertion.subject.isElided
+                !assertion.subject.isObscured
             else {
                 return
             }
@@ -129,7 +128,7 @@ public class EnvelopeGenerator {
         case .elideAssertion:
             guard
                 let assertion = envelope.assertions.randomElement(using: &rng),
-                !assertion.subject.isEncrypted && !assertion.subject.isElided
+                !assertion.subject.isObscured
             else {
                 return
             }

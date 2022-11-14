@@ -714,23 +714,23 @@ class BasicTests: XCTestCase {
         """
         )
 
-        let e2 = try e1.elideRevealing(e1.digests(levels: 0)).checkEncoding()
+        let e2 = try e1.elideRevealing(e1.digests(levelLimit: 0)).checkEncoding()
         XCTAssertEqual(e2.format,
         """
         ELIDED
         """
         )
 
-        let e3 = try e1.elideRevealing(e1.digests(levels: 1)).checkEncoding()
+        let e3 = try e1.elideRevealing(e1.digests(levelLimit: 1)).checkEncoding()
         XCTAssertEqual(e3.format,
         """
-        ELIDED [
+        "Alice" [
             ELIDED (2)
         ]
         """
         )
 
-        let e4 = try e1.elideRevealing(e1.digests(levels: 2)).checkEncoding()
+        let e4 = try e1.elideRevealing(e1.digests(levelLimit: 2)).checkEncoding()
         XCTAssertEqual(e4.format,
         """
         "Alice" [
@@ -740,7 +740,7 @@ class BasicTests: XCTestCase {
         """
         )
 
-        let e5 = try e1.elideRevealing(e1.digests(levels: 3)).checkEncoding()
+        let e5 = try e1.elideRevealing(e1.digests(levelLimit: 3)).checkEncoding()
         XCTAssertEqual(e5.format,
         """
         "Alice" [
@@ -766,7 +766,7 @@ class BasicTests: XCTestCase {
 
         var target: Set<Digest> = []
         // Reveal the Envelope structure
-        target.formUnion(e1.digests(levels: 1))
+        target.formUnion(e1.digests(levelLimit: 1))
         // Reveal everything about the subject
         target.formUnion(e1.subject.deepDigests)
         // Reveal everything about one of the assertions
@@ -800,7 +800,7 @@ class BasicTests: XCTestCase {
 
         var target2: Set<Digest> = []
         // Hide one of the assertions
-        target2.formUnion(Self.assertionEnvelope.digests(levels: 1))
+        target2.formUnion(Self.assertionEnvelope.digests(levelLimit: 1))
         let e2 = try e1.elideRemoving(target2).checkEncoding()
         XCTAssertEqual(e2.format,
         """

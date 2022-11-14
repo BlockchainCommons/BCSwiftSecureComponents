@@ -16,6 +16,7 @@ public indirect enum Envelope: DigestProvider {
 }
 
 public extension Envelope {
+    /// The envelope's digest.
     var digest: Digest {
         switch self {
         case .node(subject: _, assertions: _, digest: let digest):
@@ -35,6 +36,7 @@ public extension Envelope {
         }
     }
 
+    /// The envelope's subject.
     var subject: Envelope {
         if case .node(let subject, _, _) = self {
             return subject
@@ -42,6 +44,7 @@ public extension Envelope {
         return self
     }
 
+    /// The envelope's assertions.
     var assertions: [Envelope] {
         guard case .node(_, let assertions, _) = self else {
             return []
@@ -49,10 +52,12 @@ public extension Envelope {
         return assertions
     }
 
+    /// `true` if the envelope has at least one assertion, `false` otherwise.
     var hasAssertions: Bool {
         !assertions.isEmpty
     }
 
+    /// The envelope's `Assertion`, or `nil` if the envelope is not an assertion.
     var assertion: Assertion? {
         guard case .assertion(let assertion) = self else {
             return nil
@@ -60,14 +65,17 @@ public extension Envelope {
         return assertion
     }
 
+    /// The envelope's predicate, or `nil` if the envelope is not an assertion.
     var predicate: Envelope! {
         assertion?.predicate
     }
 
+    /// The envelope's object, or `nil` if the envelope is not an assertion.
     var object: Envelope! {
         assertion?.object
     }
 
+    /// The envelope's leaf CBOR object, or `nil` if the envelope is not a leaf.
     var leaf: CBOR? {
         guard case .leaf(let cbor, _) = subject else {
             return nil
@@ -75,6 +83,7 @@ public extension Envelope {
         return cbor
     }
 
+    /// The envelope's `KnownValue`, or `nil` if the envelope is not case `.knownValue`.
     var knownValue: KnownValue? {
         guard case .knownValue(let knownValue, _) = self else {
             return nil
@@ -84,6 +93,7 @@ public extension Envelope {
 }
 
 public extension Envelope {
+    /// `true` if the envelope is case `.leaf`, `false` otherwise.
     var isLeaf: Bool {
         guard case .leaf = self else {
             return false
@@ -91,14 +101,50 @@ public extension Envelope {
         return true
     }
     
+    /// `true` if the envelope is case `.node`, `false` otherwise.
     var isNode: Bool {
         guard case .node = self else {
             return false
         }
         return true
     }
+    
+    /// `true` if the envelope is case `.encrypted`, `false` otherwise.
+    var isEncrypted: Bool {
+        guard case .encrypted = self else {
+            return false
+        }
+        return true
+    }
+    
+    /// `true` if the envelope is case `.elided`, `false` otherwise.
+    var isElided: Bool {
+        guard case .elided = self else {
+            return false
+        }
+        return true
+    }
+    
+    /// `true` if the envelope is case `.wrapped`, `false` otherwise.
+    var isWrapped: Bool {
+        guard case .wrapped = self else {
+            return false
+        }
+        return true
+    }
+    
+    /// `true` if the envelope is case `.knownValue`, `false` otherwise.
+    var isKnownValue: Bool {
+        guard case .knownValue = self else {
+            return false
+        }
+        return true
+    }
+}
 
-    var isAssertion: Bool {
+public extension Envelope {
+    /// `true` if the subject of the envelope is an assertion, `false` otherwise.
+    var isSubjectAssertion: Bool {
         switch self {
         case .assertion:
             return true
@@ -111,14 +157,8 @@ public extension Envelope {
             return false
         }
     }
-
-    var isEncrypted: Bool {
-        guard case .encrypted = self else {
-            return false
-        }
-        return true
-    }
     
+    /// `true` if the subject of the envelope has been encrypted, `false` otherwise.
     var isSubjectEncrypted: Bool {
         switch self {
         case .encrypted:
@@ -132,14 +172,8 @@ public extension Envelope {
             return false
         }
     }
-
-    var isElided: Bool {
-        guard case .elided = self else {
-            return false
-        }
-        return true
-    }
     
+    /// `true` if the subject of the envelope has been elided, `false` otherwise.
     var isSubjectElided: Bool {
         switch self {
         case .elided:
@@ -153,23 +187,19 @@ public extension Envelope {
             return false
         }
     }
+}
 
-    var isWrapped: Bool {
-        guard case .wrapped = self else {
-            return false
-        }
-        return true
-    }
-
-    var isKnownValue: Bool {
-        guard case .knownValue = self else {
-            return false
-        }
-        return true
+public extension Envelope {
+    /// `true` if the envelope is *internal*, that is, it has child elements, or `false` if it is a leaf node.
+    ///
+    /// Internal elements include `.node`, `.wrapped`, and `.assertion`.
+    var isInternal: Bool {
+        isNode || isWrapped || isSubjectAssertion
     }
     
-    var isInternal: Bool {
-        return isNode || isWrapped || isAssertion
+    /// `true` if the envelope is either encrypted or elided, `false` otherwise.
+    var isObscured: Bool {
+        isEncrypted || isElided
     }
 }
 
@@ -185,7 +215,7 @@ private extension Envelope {
     }
 
     init(subject: Envelope, assertions: [Envelope]) throws {
-        guard assertions.allSatisfy({ $0.isAssertion || $0.isSubjectElided || $0.isSubjectEncrypted }) else {
+        guard assertions.allSatisfy({ $0.isSubjectAssertion || $0.isSubjectElided || $0.isSubjectEncrypted }) else {
             throw EnvelopeError.invalidFormat
         }
         self.init(subject: subject, uncheckedAssertions: assertions)
@@ -226,6 +256,7 @@ private extension Envelope {
 }
 
 public extension Envelope {
+    /// Create an envelope with the given subject.
     init(_ item: Any) {
         if let envelope = item as? Envelope {
             self.init(wrapped: envelope)
@@ -245,51 +276,51 @@ public extension Envelope {
         }
     }
 
+    /// Create an assertion envelope with the given predicate and object.
     init(_ predicate: Any, _ object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 
+    /// Create an assertion envelope with the given `KnownValue` predicate and object.
     init(_ predicate: KnownValue, _ object: Any) {
         self.init(assertion: Assertion(predicate: predicate, object: object))
     }
 }
 
 public extension Envelope {
-    func digests(levels level: Int) -> Set<Digest> {
-        guard level > 0 else {
-            return []
-        }
-
-        var result: Set<Digest> = [digest]
-
-        let nextLevel = level - 1
-
-        switch self {
-        case .node(let subject, let assertions, _):
-            result.insert(subject.digests(levels: nextLevel))
-            for assertion in assertions {
-                result.insert(assertion.digests(levels: nextLevel))
+    /// Returns the set of digests contained in the envelope's elements, down to the
+    /// specified level.
+    ///
+    /// - Parameter levelLimit: Return digests at levels below this value.
+    /// - Returns: The set of digests down to `level`.
+    ///
+    /// The digest of the envelope is included as well as the digest of the envelope's
+    /// subject (if it is different).
+    ///
+    /// If no `levelLimit` is provided, all digests in the envelope will be returned.
+    ///
+    /// A `levelLimit` of zero will return no digests.
+    func digests(levelLimit: Int = .max) -> Set<Digest> {
+        var result: Set<Digest> = []
+        walk { level, incomingEdge, _, envelope in
+            guard level < levelLimit else {
+                return nil
             }
-        case .assertion(let assertion):
-            result.insert(assertion.predicate.digests(levels: nextLevel))
-            result.insert(assertion.predicate.subject.digests(levels: nextLevel))
-            result.insert(assertion.object.digests(levels: nextLevel))
-            result.insert(assertion.object.subject.digests(levels: nextLevel))
-        case .wrapped(let envelope, _):
-            result.insert(envelope.digests(levels: nextLevel))
-        default:
-            break
+            result.insert(envelope)
+            result.insert(envelope.subject)
+            return nil
         }
-
         return result
     }
-
+    
+    /// The set of all digests in the envelope.
     var deepDigests: Set<Digest> {
-        digests(levels: .max)
+        digests()
     }
 
+    /// The set of all digests in the envelope, down to its second level.
     var shallowDigests: Set<Digest> {
-        digests(levels: 2)
+        digests(levelLimit: 2)
     }
 }
 
@@ -482,7 +513,7 @@ public extension Envelope {
         guard let envelope else {
             return self
         }
-        guard envelope.isAssertion else {
+        guard envelope.isSubjectAssertion else {
             throw EnvelopeError.invalidFormat
         }
         let envelope2 = salted ? envelope.addSalt() : envelope
@@ -1046,6 +1077,60 @@ extension Envelope {
     }
 }
 
+public extension Envelope {
+    /// Perform a depth-first walk of the element tree, replacing each of the visited
+    /// elements with the resulting one.
+    ///
+    /// Replaced elements are not themselves walked.
+    func walk(visit: (Envelope) -> Envelope) throws -> Envelope {
+        var result = self
+        let newSelf = visit(self)
+        if newSelf != self || newSelf.isObscured != self.isObscured {
+            result = newSelf
+        } else {
+            switch self {
+            case .node(let subject, _, _):
+                result = try replaceSubject(with: subject.walk(visit: visit))
+                for assertion in result.assertions {
+                    result = try replaceAssertion(assertion, with: assertion.walk(visit: visit))
+                }
+            case .wrapped(let envelope, _):
+                result = try envelope.walk(visit: visit).wrap()
+            case .assertion(let assertion):
+                let predicate = try assertion.predicate.walk(visit: visit)
+                let object = try assertion.object.walk(visit: visit)
+                result = Envelope(predicate, object)
+            default:
+                break
+            }
+        }
+        return result
+    }
+    
+    /// Perform a depth-first walk of the envelope's element tree.
+    func walk(visit: (Int, EnvelopeEdgeType, Int?, Envelope) -> Int?) {
+        walk(level: 0, incomingEdge: .none, parent: nil, visit: visit)
+    }
+    
+    private func walk(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Int, EnvelopeEdgeType, Int?, Envelope) -> Int?) {
+        let parent = visit(level, incomingEdge, parent, self)
+        switch self {
+        case .node(let subject, let assertions, _):
+            subject.walk(level: level + 1, incomingEdge: .subject, parent: parent, visit: visit)
+            for assertion in assertions {
+                assertion.walk(level: level + 1, incomingEdge: .assertion, parent: parent, visit: visit)
+            }
+        case .wrapped(let envelope, _):
+            envelope.walk(level: level + 1, incomingEdge: .wrapped, parent: parent, visit: visit)
+        case .assertion(let assertion):
+            assertion.predicate.walk(level: level + 1, incomingEdge: .predicate, parent: parent, visit: visit)
+            assertion.object.walk(level: level + 1, incomingEdge: .object, parent: parent, visit: visit)
+        default:
+            break
+        }
+    }
+}
+
 // Target Matches   isRevealing     elide
 // ----------------------------------------
 //     false           false        false
@@ -1360,10 +1445,17 @@ public extension Envelope {
 }
 
 public extension Envelope {
-    func replacingSubject(with subject: Envelope) -> Envelope {
+    func replaceSubject(with subject: Envelope) -> Envelope {
         assertions.reduce(into: subject) {
             try! $0 = $0.addAssertion($1)
         }
+    }
+    
+    func replaceAssertion(_ assertion: DigestProvider, with newAssertion: Envelope) throws -> Envelope {
+        var e = self
+        e = e.removeAssertion(assertion)
+        e = try e.addAssertion(newAssertion)
+        return e
     }
 }
 
