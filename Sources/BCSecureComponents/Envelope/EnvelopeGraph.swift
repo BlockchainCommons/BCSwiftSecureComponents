@@ -64,7 +64,7 @@ struct EnvelopeGraphBuilder<GraphData> {
     
     init(_ envelope: Envelope, data: GraphData) {
         self.init(data: data)
-        envelope.walk { level, incomingEdge, parent, envelope in
+        envelope.walk { envelope, level, incomingEdge, parent in
             let node = nextNodeID
             try! graph.newNode(node, data: envelope)
             if let parent {

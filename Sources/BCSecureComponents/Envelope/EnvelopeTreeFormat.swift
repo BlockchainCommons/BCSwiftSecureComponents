@@ -8,7 +8,7 @@ extension Envelope {
     
     public func treeFormat(highlighting target: Set<Digest> = []) -> String {
         var elements: [TreeElement] = []
-        walk { level, incomingEdge, parent, envelope in
+        walk { envelope, level, incomingEdge, parent in
             elements.append(TreeElement(level: level, envelope: envelope, incomingEdge: incomingEdge, isHighlighted: target.contains(envelope.digest)))
             return nil
         }

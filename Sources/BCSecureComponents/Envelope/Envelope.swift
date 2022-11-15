@@ -292,7 +292,7 @@ public extension Envelope {
     /// specified level.
     ///
     /// - Parameter levelLimit: Return digests at levels below this value.
-    /// - Returns: The set of digests down to `level`.
+    /// - Returns: The set of digests down to `levelLimit`.
     ///
     /// The digest of the envelope is included as well as the digest of the envelope's
     /// subject (if it is different).
@@ -302,7 +302,7 @@ public extension Envelope {
     /// A `levelLimit` of zero will return no digests.
     func digests(levelLimit: Int = .max) -> Set<Digest> {
         var result: Set<Digest> = []
-        walk { level, incomingEdge, _, envelope in
+        walk { envelope, level, incomingEdge, _ in
             guard level < levelLimit else {
                 return nil
             }
@@ -1108,12 +1108,12 @@ public extension Envelope {
     }
     
     /// Perform a depth-first walk of the envelope's element tree.
-    func walk(visit: (Int, EnvelopeEdgeType, Int?, Envelope) -> Int?) {
+    func walk(visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
         walk(level: 0, incomingEdge: .none, parent: nil, visit: visit)
     }
     
-    private func walk(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Int, EnvelopeEdgeType, Int?, Envelope) -> Int?) {
-        let parent = visit(level, incomingEdge, parent, self)
+    private func walk(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+        let parent = visit(self, level, incomingEdge, parent)
         switch self {
         case .node(let subject, let assertions, _):
             subject.walk(level: level + 1, incomingEdge: .subject, parent: parent, visit: visit)
