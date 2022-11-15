@@ -23,6 +23,18 @@ public class EnvelopeGenerator {
         return envelope(level: 0, count: &count)
     }
     
+//    func mutate(_ envelope: Envelope) -> Envelope {
+//        try! envelope.mutatingWalk { envelope, level in
+//            guard Double.random(in: 0..<1, using: &rng) < 0.1 else {
+//                return envelope
+//            }
+//            var count = 5
+//            var result = envelope
+//            permute(level: level, count: &count, envelope: &result)
+//            return result
+//        }
+//    }
+    
     private enum LeafType: CaseIterable {
         case string
         case knownValue

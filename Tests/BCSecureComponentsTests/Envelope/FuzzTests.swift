@@ -23,7 +23,7 @@ class FuzzTests: XCTestCase {
 //            let state: Xoroshiro256StarStar.State = (16613201003084073342, 15821912718973707888, 15152885056770712099, 16670797755942650989)
             
             let count = 100
-            let state = EnvelopeGenerator().state
+            let state = Xoroshiro256StarStar().state
             let generator1 = EnvelopeGenerator(state: state)
             let e1 = generator1.envelope(count: count)
             let generator2 = EnvelopeGenerator(state: state)
@@ -38,4 +38,56 @@ class FuzzTests: XCTestCase {
             XCTAssertEqual(e1, e2)
         }
     }
+    
+//    func testDiff() throws {
+//        for offset in 0..<100 {
+//            print("offset: \(offset)")
+//            let state: Xoroshiro256StarStar.State = (16613201003084073342 + UInt64(offset), 15821912718973707888, 15152885056770712099, 16670797755942650989)
+//            let count = 10
+//            let generator = EnvelopeGenerator(state: state)
+//            let e1 = generator.envelope(count: count)
+//            let e2 = generator.envelope(count: count)
+//            let diff = e1.diff(target: e2)
+//            guard let e3 = try? e1.applyDiff(diff) else {
+//                print(e1.format)
+//                print(e2.format)
+//                print(diff.format)
+//                break
+//            }
+//            if e3 != e2 {
+//                print(e1.format)
+//                print(e2.format)
+//                print(diff.format)
+//                print(e3.format)
+//                break
+//            }
+////            XCTAssertEqual(e3, e2)
+//        }
+//    }
+    
+//    func testMutatingWalk() throws {
+//        let e1 = Envelope("Alice").addAssertion("knows", Envelope("Bob").wrap())
+//        print(e1.treeFormat)
+//        e1.mutatingWalk { envelope, path, _ in
+//            var comps: [String] = path.reduce(into: []) {
+//                $0.append($1.digest.shortDescription)
+//            }
+//            comps.append(envelope.digest.shortDescription)
+//            print(comps.joined(separator: " "))
+//            //return envelope.addAssertion(1, 2)
+//        }
+//    }
+    
+//    func testDiff() {
+//        let generator = EnvelopeGenerator()
+////        let state = generator.state
+//        let e1 = generator.envelope(count: 100)
+//        print("===")
+//        print(e1.format)
+//        let e2 = generator.mutate(e1)
+//        print("===")
+//        print(e2.format)
+//        print("===")
+//        print(e1.diff(target: e2).format)
+//    }
 }

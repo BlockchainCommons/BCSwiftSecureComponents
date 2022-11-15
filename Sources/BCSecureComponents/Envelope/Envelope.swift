@@ -187,6 +187,11 @@ public extension Envelope {
             return false
         }
     }
+    
+    /// `true` if the subject of the envelope has been encrypted or elided, `false` otherwise
+    var isSubjectObscured: Bool {
+        isSubjectEncrypted || isSubjectElided
+    }
 }
 
 public extension Envelope {
@@ -513,7 +518,7 @@ public extension Envelope {
         guard let envelope else {
             return self
         }
-        guard envelope.isSubjectAssertion else {
+        guard envelope.isSubjectAssertion || envelope.isSubjectObscured else {
             throw EnvelopeError.invalidFormat
         }
         let envelope2 = salted ? envelope.addSalt() : envelope
@@ -1082,31 +1087,58 @@ public extension Envelope {
     /// elements with the resulting one.
     ///
     /// Replaced elements are not themselves walked.
-    func walk(visit: (Envelope) -> Envelope) throws -> Envelope {
-        var result = self
-        let newSelf = visit(self)
-        if newSelf != self || newSelf.isObscured != self.isObscured {
-            result = newSelf
-        } else {
-            switch self {
-            case .node(let subject, _, _):
-                result = try replaceSubject(with: subject.walk(visit: visit))
-                for assertion in result.assertions {
-                    result = try replaceAssertion(assertion, with: assertion.walk(visit: visit))
-                }
-            case .wrapped(let envelope, _):
-                result = try envelope.walk(visit: visit).wrap()
-            case .assertion(let assertion):
-                let predicate = try assertion.predicate.walk(visit: visit)
-                let object = try assertion.object.walk(visit: visit)
-                result = Envelope(predicate, object)
-            default:
-                break
-            }
-        }
-        return result
+//    func mutatingWalk(visit: (Envelope, Int) -> Void) throws {
+//        try mutatingWalk(level: 0, visit: visit)
+//    }
+//
+//    private func mutatingWalk(level: Int, visit: (Envelope, Int) -> Void) throws {
+//        print(self.format)
+//        var result = self
+//        let nextLevel = level + 1
+//        switch self {
+//        case .node(let subject, let assertions, _):
+//            result = try result.replaceSubject(with: subject.mutatingWalk(level: nextLevel, visit: visit))
+//            for assertion in assertions {
+//                result = try result.replaceAssertion(assertion, with: assertion.mutatingWalk(level: nextLevel, visit: visit))
+//            }
+//        case .wrapped(let envelope, _):
+//            result = try envelope.mutatingWalk(level: nextLevel, visit: visit).wrap()
+//        case .assertion(let assertion):
+//            let predicate = try assertion.predicate.mutatingWalk(level: nextLevel, visit: visit)
+//            let object = try assertion.object.mutatingWalk(level: nextLevel, visit: visit)
+//            result = try result.replaceAssertion(self, with: Envelope(predicate, object))
+//        default:
+//            break
+//        }
+//        result = visit(self, level)
+//        return result
+//    }
+//
+
+    /// Perform a depth-first walk of the envelope's element tree.
+    func mutatingWalk(visit: (Envelope, [Envelope], EnvelopeEdgeType) -> Void) {
+        mutatingWalk(path: [], incomingEdge: .none, visit: visit)
     }
     
+    private func mutatingWalk(path: [Envelope], incomingEdge: EnvelopeEdgeType, visit: (Envelope, [Envelope], EnvelopeEdgeType) -> Void) {
+        let nextPath = path.appending(self)
+        switch self {
+        case .node(let subject, let assertions, _):
+            for assertion in assertions {
+                assertion.mutatingWalk(path: nextPath, incomingEdge: .assertion, visit: visit)
+            }
+            subject.mutatingWalk(path: nextPath, incomingEdge: .subject, visit: visit)
+        case .wrapped(let envelope, _):
+            envelope.mutatingWalk(path: nextPath, incomingEdge: .wrapped, visit: visit)
+        case .assertion(let assertion):
+            assertion.object.mutatingWalk(path: nextPath, incomingEdge: .object, visit: visit)
+            assertion.predicate.mutatingWalk(path: nextPath, incomingEdge: .predicate, visit: visit)
+        default:
+            break
+        }
+        visit(self, path, incomingEdge)
+    }
+
     /// Perform a depth-first walk of the envelope's element tree.
     func walk(visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
         walk(level: 0, incomingEdge: .none, parent: nil, visit: visit)
@@ -1114,17 +1146,18 @@ public extension Envelope {
     
     private func walk(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
         let parent = visit(self, level, incomingEdge, parent)
+        let nextLevel = level + 1
         switch self {
         case .node(let subject, let assertions, _):
-            subject.walk(level: level + 1, incomingEdge: .subject, parent: parent, visit: visit)
+            subject.walk(level: nextLevel, incomingEdge: .subject, parent: parent, visit: visit)
             for assertion in assertions {
-                assertion.walk(level: level + 1, incomingEdge: .assertion, parent: parent, visit: visit)
+                assertion.walk(level: nextLevel, incomingEdge: .assertion, parent: parent, visit: visit)
             }
         case .wrapped(let envelope, _):
-            envelope.walk(level: level + 1, incomingEdge: .wrapped, parent: parent, visit: visit)
+            envelope.walk(level: nextLevel, incomingEdge: .wrapped, parent: parent, visit: visit)
         case .assertion(let assertion):
-            assertion.predicate.walk(level: level + 1, incomingEdge: .predicate, parent: parent, visit: visit)
-            assertion.object.walk(level: level + 1, incomingEdge: .object, parent: parent, visit: visit)
+            assertion.predicate.walk(level: nextLevel, incomingEdge: .predicate, parent: parent, visit: visit)
+            assertion.object.walk(level: nextLevel, incomingEdge: .object, parent: parent, visit: visit)
         default:
             break
         }
