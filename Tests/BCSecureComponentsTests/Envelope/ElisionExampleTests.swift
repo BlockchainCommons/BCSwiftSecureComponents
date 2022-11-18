@@ -240,7 +240,7 @@ class ElisionExampleTests: XCTestCase {
         """
         )
         
-        print(credential.mermaidFormat)
+        print(credential.mermaidFormat())
         
         var target: Set<Digest> = []
         
@@ -311,7 +311,7 @@ class ElisionExampleTests: XCTestCase {
             ]
             """
             )
-            print($0.mermaidFormat)
+            print($0.mermaidFormat())
         }
         
         /// The only actual assertions we want to reveal are `birthDate` and `photo`, so we do this by finding those specific assertions by their predicate. The `shallowDigests` attribute returns just a necessary set of attributes to reveal the assertion, its predicate, and its object (yes, all three of them need to be revealed) but *not* any deeper assertions on them.

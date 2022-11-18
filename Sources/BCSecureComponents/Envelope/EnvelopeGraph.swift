@@ -6,9 +6,6 @@ struct EnvelopeEdgeData {
     let type: EnvelopeEdgeType
 }
 
-extension Digest: ElementID { }
-extension CID: ElementID { }
-
 extension Envelope {
     var shortID: String {
         self.digest.shortDescription
@@ -62,9 +59,9 @@ struct EnvelopeGraphBuilder<GraphData> {
         }
     }
     
-    init(_ envelope: Envelope, data: GraphData) {
+    init(_ envelope: Envelope, hideNodes: Bool, data: GraphData) {
         self.init(data: data)
-        envelope.walk { envelope, level, incomingEdge, parent in
+        envelope.walk(hideNodes: hideNodes) { envelope, level, incomingEdge, parent in
             let node = nextNodeID
             try! graph.newNode(node, data: envelope)
             if let parent {
@@ -76,7 +73,7 @@ struct EnvelopeGraphBuilder<GraphData> {
 }
 
 extension Envelope {
-    func graph<GraphData>(data: GraphData) -> Graph<Int, Int, Envelope, EnvelopeEdgeData, GraphData> {
-        EnvelopeGraphBuilder(self, data: data).graph
+    func graph<GraphData>(hideNodes: Bool, data: GraphData) -> Graph<Int, Int, Envelope, EnvelopeEdgeData, GraphData> {
+        EnvelopeGraphBuilder(self, hideNodes: hideNodes, data: data).graph
     }
 }

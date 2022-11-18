@@ -10,7 +10,7 @@ import WolfBase
 //        let diff = a.diff(target: b)
 //        XCTAssertEqual(diff.format,
 //        """
-//        "noChange"
+//        noChange
 //        """)
 //        let c = try a.applyDiff(diff)
 //        XCTAssertEqual(b, c)
@@ -54,13 +54,13 @@ import WolfBase
 //        let diff = a.diff(target: b)
 //        XCTAssertEqual(diff.format,
 //        """
-//        "noChange" [
+//        noChange [
 //            {
-//                "edit": Digest(1e0b049b)
+//                edit: Digest(1e0b049b)
 //            } [
-//                "object": "Dan"
+//                object: "Dan"
 //            ]
-//            "delete": Digest(71a30690)
+//            delete: Digest(71a30690)
 //        ]
 //        """)
 //        let c = try a.applyDiff(diff)
@@ -79,13 +79,13 @@ import WolfBase
 //        let diff = a.diff(target: b)
 //        XCTAssertEqual(diff.format,
 //        """
-//        "noChange" [
+//        noChange [
 //            {
-//                "edit": Digest(71a30690)
+//                edit: Digest(71a30690)
 //            } [
-//                "object": "Edward"
+//                object: "Edward"
 //            ]
-//            "add": "knows": "Dan"
+//            add: "knows": "Dan"
 //        ]
 //        """)
 //        let c = try a.applyDiff(diff)
@@ -101,9 +101,9 @@ import WolfBase
 //        let diff = a.diff(target: b)
 //        XCTAssertEqual(diff.format,
 //        """
-//        "noChange" [
-//            "delete": Digest(55560bdf)
-//            "delete": Digest(71a30690)
+//        noChange [
+//            delete: Digest(55560bdf)
+//            delete: Digest(71a30690)
 //        ]
 //        """)
 //        let c = try a.applyDiff(diff)
@@ -120,8 +120,8 @@ import WolfBase
 //        XCTAssertEqual(diff.format,
 //        """
 //        "Edward" [
-//            "delete": Digest(55560bdf)
-//            "delete": Digest(71a30690)
+//            delete: Digest(55560bdf)
+//            delete: Digest(71a30690)
 //        ]
 //        """)
 //        let c = try a.applyDiff(diff)

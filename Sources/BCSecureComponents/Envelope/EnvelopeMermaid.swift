@@ -4,12 +4,8 @@ import GraphMermaid
 import WolfBase
 
 public extension Envelope {
-    func mermaidFormat(layoutDirection: MermaidOptions.LayoutDirection? = nil, theme: MermaidOptions.Theme? = nil) -> String {
-        graph(data: MermaidOptions(layoutDirection: layoutDirection, theme: theme)).mermaidFormat
-    }
-    
-    var mermaidFormat: String {
-        mermaidFormat()
+    func mermaidFormat(hideNodes: Bool = false, layoutDirection: MermaidOptions.LayoutDirection? = nil, theme: MermaidOptions.Theme? = nil) -> String {
+        graph(hideNodes: hideNodes, data: MermaidOptions(layoutDirection: layoutDirection, theme: theme, includeDigests: !hideNodes)).mermaidFormat
     }
 }
 
@@ -18,10 +14,12 @@ typealias MermaidEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, Mer
 public struct MermaidOptions {
     public let layoutDirection: LayoutDirection
     public let theme: Theme
+    public let includeDigests: Bool
 
-    public init(layoutDirection: LayoutDirection? = nil, theme: Theme? = nil) {
+    public init(layoutDirection: LayoutDirection? = nil, theme: Theme? = nil, includeDigests: Bool = true) {
         self.layoutDirection = layoutDirection ?? .leftToRight
         self.theme = theme ?? .color
+        self.includeDigests = includeDigests
     }
 
     public enum LayoutDirection {
@@ -49,9 +47,12 @@ extension MermaidEnvelopeGraph: MermaidEncodable {
     
     public func mermaidNodeAttributes(_ node: Int) -> NodeAttributes {
         let envelope = try! nodeData(node)
-        let label = (envelope.shortID + "<br/>" +
-                     envelope.summary.replacingOccurrences(of: "\"", with: "#quot;"))
-            .flanked("\"")
+        var labelComponents: [String] = []
+        if data.includeDigests {
+            labelComponents.append(envelope.shortID)
+        }
+        labelComponents.append(envelope.summary.replacingOccurrences(of: "\"", with: "#quot;"))
+        let label = labelComponents.joined(separator: "<br/>").flanked("\"")
 
         var attributes = NodeAttributes(label: label)
         attributes.strokeWidth = 3

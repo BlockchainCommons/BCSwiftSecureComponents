@@ -8,7 +8,7 @@ extension Envelope {
 
     public static func diff(source: Envelope, target: Envelope) -> Envelope {
         guard source != target else {
-            return "noChange"
+            return .noChange
         }
 
         func diffAssertions(sourceAssertions: [Envelope], targetAssertions: [Envelope]) -> Envelope {
@@ -36,8 +36,8 @@ extension Envelope {
                 var selectedTargetAssertion: Envelope!
                 for targetAssertion in remainingTargetAssertions.sorted() {
                     var diff = diff(source: sourceAssertion, target: targetAssertion)
-                    if diff.subject != "edit" {
-                        diff = Envelope("edit", sourceAssertion.digest)
+                    if diff.subject != .edit {
+                        diff = Envelope(.edit, sourceAssertion.digest)
                             .addAssertion("assertion", diff)
                     }
                     let count = diff.elementsCount
@@ -55,11 +55,11 @@ extension Envelope {
             // diffAssertions transform existing assertions in the source
             // remainingSourceAssertions are to be deleted in the source
             for assertionToBeDeleted in remainingSourceAssertions {
-                assertionEdits.insert(Envelope("delete", Envelope(assertionToBeDeleted.digest)))
+                assertionEdits.insert(Envelope(.delete, Envelope(assertionToBeDeleted.digest)))
             }
             // remainingTargetAssertions are to be added to the source
             for assertionToBeAdded in remainingTargetAssertions {
-                assertionEdits.insert(Envelope("add", assertionToBeAdded))
+                assertionEdits.insert(Envelope(.add, assertionToBeAdded))
             }
             
             let diffSubject = diff(source: source.subject, target: target.subject)
@@ -69,7 +69,7 @@ extension Envelope {
         }
         
 //        func diffAssertion(source: Envelope, target: Envelope) -> Envelope {
-//            var result = Envelope("edit", source.digest)
+//            var result = Envelope(.edit, source.digest)
 //            switch source {
 //            case .node(subject: <#T##Envelope#>, assertions: <#T##[Envelope]#>, digest: <#T##Digest#>)
 //            }
@@ -85,18 +85,18 @@ extension Envelope {
                 return diffAssertions(sourceAssertions: sourceAssertions, targetAssertions: [])
             }
         case .assertion(let sourceAssertion):
-            var result = Envelope("edit", sourceAssertion.digest)
+            var result = Envelope(.edit, sourceAssertion.digest)
             switch target {
             case .assertion(let targetAssertion):
                 let predicateEdit = diff(source: sourceAssertion.predicate, target: targetAssertion.predicate)
                 let objectEdit = diff(source: sourceAssertion.object, target: targetAssertion.object)
                 
-                if predicateEdit != "noChange" {
-                    result = result.addAssertion("predicate", predicateEdit)
+                if predicateEdit != .noChange {
+                    result = result.addAssertion(.predicate, predicateEdit)
                 }
                 
-                if objectEdit != "noChange" {
-                    result = result.addAssertion("object", objectEdit)
+                if objectEdit != .noChange {
+                    result = result.addAssertion(.object, objectEdit)
                 }
             case .encrypted, .elided:
                 result = result.addAssertion("assertion", target)
@@ -124,7 +124,7 @@ extension Envelope {
     
     public static func applyDiff(source: Envelope, diff: Envelope) throws -> Envelope {
         var result = source
-        if diff.subject != "noChange" {
+        if diff.subject != .noChange {
             result = result.replaceSubject(with: diff.subject)
         }
         for assertion in diff.assertions {
@@ -132,12 +132,12 @@ extension Envelope {
                 throw EnvelopeError.invalidDiff
             }
             switch assertionPredicate {
-            case "add":
+            case .add:
                 result = try result.addAssertion(assertion.object)
-            case "delete":
+            case .delete:
                 let target = try assertion.object!.extractSubject(Digest.self)
                 result = result.removeAssertion(target)
-            case "edit":
+            case .edit:
                 let target = try assertion.subject.object.extractSubject(Digest.self)
                 let sourceAssertion = try source.assertion(withDigest: target)
                 if let assertionEdit = try? assertion.assertion(withPredicate: "assertion").object {
@@ -146,10 +146,10 @@ extension Envelope {
                 } else {
                     var predicate = sourceAssertion.predicate!
                     var object = sourceAssertion.object!
-                    if let predicateEdit = try? assertion.assertion(withPredicate: "predicate").object {
+                    if let predicateEdit = try? assertion.assertion(withPredicate: KnownValue.predicate).object {
                         predicate = try applyDiff(source: predicate, diff: predicateEdit)
                     }
-                    if let objectEdit = try? assertion.assertion(withPredicate: "object").object {
+                    if let objectEdit = try? assertion.assertion(withPredicate: KnownValue.object).object {
                         object = try applyDiff(source: object, diff: objectEdit)
                     }
                     result = try result.replaceAssertion(sourceAssertion, with: Envelope(predicate, object))

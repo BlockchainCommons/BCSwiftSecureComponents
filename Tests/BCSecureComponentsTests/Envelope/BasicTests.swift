@@ -280,6 +280,25 @@ class BasicTests: XCTestCase {
         }
         """)
     }
+    
+    func testAssertionWithAssertions() throws {
+        let a = try Envelope(1, 2)
+            .addAssertion(Envelope(3, 4))
+            .addAssertion(Envelope(5, 6))
+        let e = try Envelope(7)
+            .addAssertion(a)
+        XCTAssertEqual(e.format,
+        """
+        7 [
+            {
+                1: 2
+            } [
+                3: 4
+                5: 6
+            ]
+        ]
+        """)
+    }
 
     func encryptedTest(_ e1: Envelope) throws {
         let e2 = try e1
@@ -408,6 +427,9 @@ class BasicTests: XCTestCase {
 
         let e2 = e1.elide()
         XCTAssertEqual(e1, e2)
+        XCTAssertNotEqual(e1.structuralDigest, e2.structuralDigest)
+        XCTAssertFalse(e1 === e2)
+        XCTAssertTrue(e1 !== e2)
 
         XCTAssertEqual(e2.format,
         """
@@ -825,5 +847,11 @@ class BasicTests: XCTestCase {
         ]
         """
         )
+        
+        // Semantically equivalent
+        XCTAssertTrue(e1 == e3)
+        
+        // Structurally different
+        XCTAssertTrue(e1 !== e3)
     }
 }

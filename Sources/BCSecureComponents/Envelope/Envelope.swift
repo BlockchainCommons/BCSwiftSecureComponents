@@ -307,7 +307,7 @@ public extension Envelope {
     /// A `levelLimit` of zero will return no digests.
     func digests(levelLimit: Int = .max) -> Set<Digest> {
         var result: Set<Digest> = []
-        walk { envelope, level, incomingEdge, _ in
+        walkStructure { envelope, level, incomingEdge, _ in
             guard level < levelLimit else {
                 return nil
             }
@@ -396,6 +396,68 @@ extension Envelope: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(digest)
+    }
+}
+
+public extension Envelope {
+    /// Produce a value that will necessarily be different if two envelopes differ
+    /// structurally, even if they are semantically equivalent.
+    ///
+    /// The == operator tests whether two envelopes are *semantically equivalent*. This
+    /// is accomplished by simply comparing the top level digests of the envelopes for
+    /// equality, and has a complexity of `O(1)`.
+    ///
+    /// This means that two envelopes will compare equal if they contain identical
+    /// information in their completely unencrypted and unelided form.
+    ///
+    /// However, semantically equivalent envelopes will still compare equal if they
+    /// differ in structure due to encryption or elision.
+    ///
+    /// Some applications need to determine whether two envelopes are not only
+    /// semantically equivalent, but also structurally identical. Two envelopes that are
+    /// not semantically equivalent cannot be structurally identical, but two envelopes
+    /// that *are* semantically equivalent *may or may not* be structurally identical.
+    ///
+    /// The `structuralDigest` attribute is used to produce a value that will
+    /// necessarily be different if two envelopes differ structurally, even if they are
+    /// semantically equivalent.
+    ///
+    /// The `===` and `!==` operators compare two envelopes for structural equality and
+    /// have a complexity of `O(1)` if the envelopes are not semantically equivalent
+    /// (that is, their top-level digests are different) and a complexity of `O(m + n)`
+    /// where `m` and `n` are the number of elements in each of the two envelopes when
+    /// they *are* semantically equivalent.
+    ///
+    /// This choice to assign the meaning of semantic equivalence to the `==` operator
+    /// is an architectural design choice of the reference implementation, and is not a
+    /// normative aspect of the envelope specification.
+    var structuralDigest: Digest {
+        var image = Data()
+        walkStructure { envelope, _, _, _ in
+            // Add a discriminator to the image for the encrypted and elided cases.
+            switch envelope {
+            case .encrypted:
+                image.append(contentsOf: [0])
+            case .elided:
+                image.append(contentsOf: [1])
+            default:
+                break
+            }
+            image.append(envelope.digest.data)
+            return nil
+        }
+        return Digest(image)
+    }
+    
+    static func === (lhs: Envelope, rhs: Envelope) -> Bool {
+        guard lhs == rhs else {
+            return false
+        }
+        return lhs.structuralDigest == rhs.structuralDigest
+    }
+    
+    static func !== (lhs: Envelope, rhs: Envelope) -> Bool {
+        return !(lhs === rhs)
     }
 }
 
@@ -1138,29 +1200,70 @@ public extension Envelope {
         }
         visit(self, path, incomingEdge)
     }
+    
+    /// Perform a depth-first walk of the envelope's structure.
+    func walk(hideNodes: Bool, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+        if hideNodes {
+            walkTree { envelope, level, parent in
+                visit(envelope, level, .none, parent)
+            }
+        } else {
+            walkStructure(visit: visit)
+        }
+    }
 
-    /// Perform a depth-first walk of the envelope's element tree.
-    func walk(visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
-        walk(level: 0, incomingEdge: .none, parent: nil, visit: visit)
+    private func walkStructure(visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+        walkStructure(level: 0, incomingEdge: .none, parent: nil, visit: visit)
     }
     
-    private func walk(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+    private func walkStructure(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
         let parent = visit(self, level, incomingEdge, parent)
         let nextLevel = level + 1
         switch self {
         case .node(let subject, let assertions, _):
-            subject.walk(level: nextLevel, incomingEdge: .subject, parent: parent, visit: visit)
+            subject.walkStructure(level: nextLevel, incomingEdge: .subject, parent: parent, visit: visit)
             for assertion in assertions {
-                assertion.walk(level: nextLevel, incomingEdge: .assertion, parent: parent, visit: visit)
+                assertion.walkStructure(level: nextLevel, incomingEdge: .assertion, parent: parent, visit: visit)
             }
         case .wrapped(let envelope, _):
-            envelope.walk(level: nextLevel, incomingEdge: .wrapped, parent: parent, visit: visit)
+            envelope.walkStructure(level: nextLevel, incomingEdge: .wrapped, parent: parent, visit: visit)
         case .assertion(let assertion):
-            assertion.predicate.walk(level: nextLevel, incomingEdge: .predicate, parent: parent, visit: visit)
-            assertion.object.walk(level: nextLevel, incomingEdge: .object, parent: parent, visit: visit)
+            assertion.predicate.walkStructure(level: nextLevel, incomingEdge: .predicate, parent: parent, visit: visit)
+            assertion.object.walkStructure(level: nextLevel, incomingEdge: .object, parent: parent, visit: visit)
         default:
             break
         }
+    }
+
+    /// Perform a depth-first walk of the envelope's tree.
+    private func walkTree(visit: (Envelope, Int, Int?) -> Int?) {
+        walkTree(level: 0, parent: nil, visit: visit)
+    }
+    
+    @discardableResult
+    private func walkTree(level: Int, parent: Int?, visit: (Envelope, Int, Int?) -> Int?) -> Int? {
+        var parent = parent
+        var subjectLevel = level
+        if !isNode {
+            parent = visit(self, level, parent)
+            subjectLevel = level + 1
+        }
+        switch self {
+        case .node(let subject, let assertions, _):
+            let assertionParent = subject.walkTree(level: subjectLevel, parent: parent, visit: visit)
+            let assertionLevel = subjectLevel + 1
+            for assertion in assertions {
+                assertion.walkTree(level: assertionLevel, parent: assertionParent, visit: visit)
+            }
+        case .wrapped(let envelope, _):
+            envelope.walkTree(level: subjectLevel, parent: parent, visit: visit)
+        case .assertion(let assertion):
+            assertion.predicate.walkTree(level: subjectLevel, parent: parent, visit: visit)
+            assertion.object.walkTree(level: subjectLevel, parent: parent, visit: visit)
+        default:
+            break
+        }
+        return parent
     }
 }
 

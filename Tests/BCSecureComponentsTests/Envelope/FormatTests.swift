@@ -9,12 +9,16 @@ class FormatTests: XCTestCase {
         """
         "Hello."
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Hello."
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         886a0c85 "Hello."
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1["886a0c85<br/>#quot;Hello.#quot;"]
@@ -31,7 +35,14 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Hello."
+            ASSERTION
+                verifiedBy
+                Signature
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         7b935d2f NODE
             886a0c85 subj "Hello."
@@ -39,8 +50,8 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 62cbbb8f obj Signature
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(("7b935d2f<br/>NODE"))
@@ -62,6 +73,24 @@ class FormatTests: XCTestCase {
             linkStyle 2 stroke:green,stroke-width:2.0px
             linkStyle 3 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;Hello.#quot;"]
+            2(["ASSERTION"])
+            3[/"verifiedBy"/]
+            4["Signature"]
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+        """)
     }
     
     func testEncryptSubject() throws {
@@ -74,7 +103,14 @@ class FormatTests: XCTestCase {
             "knows": "Bob"
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ENCRYPTED
+            ASSERTION
+                "knows"
+                "Bob"
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         e54d6fd3 NODE
             27840350 subj ENCRYPTED
@@ -82,8 +118,8 @@ class FormatTests: XCTestCase {
                 7092d620 pred "knows"
                 9a771715 obj "Bob"
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(("e54d6fd3<br/>NODE"))
@@ -105,6 +141,24 @@ class FormatTests: XCTestCase {
             linkStyle 2 stroke:green,stroke-width:2.0px
             linkStyle 3 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1>"ENCRYPTED"]
+            2(["ASSERTION"])
+            3["#quot;knows#quot;"]
+            4["#quot;Bob#quot;"]
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            style 1 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+        """)
     }
     
     func testTopLevelAssertion() throws {
@@ -113,14 +167,20 @@ class FormatTests: XCTestCase {
         """
         "knows": "Bob"
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ASSERTION
+            "knows"
+            "Bob"
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         55560bdf ASSERTION
             7092d620 pred "knows"
             9a771715 obj "Bob"
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(["55560bdf<br/>ASSERTION"])
@@ -134,6 +194,20 @@ class FormatTests: XCTestCase {
             linkStyle 0 stroke:green,stroke-width:2.0px
             linkStyle 1 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1(["ASSERTION"])
+            2["#quot;knows#quot;"]
+            3["#quot;Bob#quot;"]
+            1 --> 2
+            1 --> 3
+            style 1 stroke:red,stroke-width:3.0px
+            style 2 stroke:#55f,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+        """)
     }
 
     func testElidedObject() throws {
@@ -146,7 +220,14 @@ class FormatTests: XCTestCase {
             "knows": ELIDED
         ]
         """)
-        XCTAssertEqual(elided.treeFormat,
+        XCTAssertEqual(elided.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ASSERTION
+                "knows"
+                ELIDED
+        """)
+        XCTAssertEqual(elided.treeFormat(),
         """
         e54d6fd3 NODE
             27840350 subj "Alice"
@@ -154,8 +235,8 @@ class FormatTests: XCTestCase {
                 7092d620 pred "knows"
                 9a771715 obj ELIDED
         """)
-        XCTAssertEqual(elided.elementsCount, elided.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(elided.mermaidFormat,
+        XCTAssertEqual(elided.elementsCount, elided.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(elided.mermaidFormat(),
         """
         graph LR
             1(("e54d6fd3<br/>NODE"))
@@ -177,6 +258,24 @@ class FormatTests: XCTestCase {
             linkStyle 2 stroke:green,stroke-width:2.0px
             linkStyle 3 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(elided.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;Alice#quot;"]
+            2(["ASSERTION"])
+            3["#quot;knows#quot;"]
+            4{{"ELIDED"}}
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+        """)
     }
 
     func testSignedSubject() throws {
@@ -192,7 +291,20 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ASSERTION
+                "knows"
+                "Bob"
+            ASSERTION
+                verifiedBy
+                Signature
+            ASSERTION
+                "knows"
+                "Carol"
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         9a51755e NODE
             27840350 subj "Alice"
@@ -206,8 +318,8 @@ class FormatTests: XCTestCase {
                 7092d620 pred "knows"
                 ad2c454b obj "Carol"
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(("9a51755e<br/>NODE"))
@@ -253,6 +365,48 @@ class FormatTests: XCTestCase {
             linkStyle 8 stroke:green,stroke-width:2.0px
             linkStyle 9 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;Alice#quot;"]
+            2(["ASSERTION"])
+            3["#quot;knows#quot;"]
+            4["#quot;Bob#quot;"]
+            5(["ASSERTION"])
+            6[/"verifiedBy"/]
+            7["Signature"]
+            8(["ASSERTION"])
+            9["#quot;knows#quot;"]
+            10["#quot;Carol#quot;"]
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            1 --> 5
+            5 --> 6
+            5 --> 7
+            1 --> 8
+            8 --> 9
+            8 --> 10
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:red,stroke-width:3.0px
+            style 6 stroke:#55f,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:red,stroke-width:3.0px
+            style 9 stroke:#55f,stroke-width:3.0px
+            style 10 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
+        """)
 
         // Elided Assertions
         var target = Set<Digest>()
@@ -265,7 +419,14 @@ class FormatTests: XCTestCase {
             ELIDED (3)
         ]
         """)
-        XCTAssertEqual(elided.treeFormat,
+        XCTAssertEqual(elided.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ELIDED
+            ELIDED
+            ELIDED
+        """)
+        XCTAssertEqual(elided.treeFormat(),
         """
         9a51755e NODE
             27840350 subj "Alice"
@@ -273,8 +434,8 @@ class FormatTests: XCTestCase {
             645921c0 ELIDED
             71a30690 ELIDED
         """)
-        XCTAssertEqual(elided.elementsCount, elided.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(elided.mermaidFormat,
+        XCTAssertEqual(elided.elementsCount, elided.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(elided.mermaidFormat(),
         """
         graph LR
             1(("9a51755e<br/>NODE"))
@@ -296,6 +457,24 @@ class FormatTests: XCTestCase {
             linkStyle 2 stroke-width:2.0px
             linkStyle 3 stroke-width:2.0px
         """)
+        XCTAssertEqual(elided.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;Alice#quot;"]
+            2{{"ELIDED"}}
+            3{{"ELIDED"}}
+            4{{"ELIDED"}}
+            1 --> 2
+            1 --> 3
+            1 --> 4
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 3 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 4 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+        """)
     }
 
     func testWrapThenSign() throws {
@@ -315,7 +494,21 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            "Alice"
+                ASSERTION
+                    "knows"
+                    "Bob"
+                ASSERTION
+                    "knows"
+                    "Carol"
+            ASSERTION
+                verifiedBy
+                Signature
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         e18b6e85 NODE
             3cc750a3 subj WRAPPED
@@ -331,8 +524,8 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 c176abe0 obj Signature
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         #"""
         graph LR
             1(("e18b6e85<br/>NODE"))
@@ -386,6 +579,52 @@ class FormatTests: XCTestCase {
             linkStyle 10 stroke:green,stroke-width:2.0px
             linkStyle 11 stroke:#55f,stroke-width:2.0px
         """#)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        #"""
+        graph LR
+            1[/"WRAPPED"\]
+            2["#quot;Alice#quot;"]
+            3(["ASSERTION"])
+            4["#quot;knows#quot;"]
+            5["#quot;Bob#quot;"]
+            6(["ASSERTION"])
+            7["#quot;knows#quot;"]
+            8["#quot;Carol#quot;"]
+            9(["ASSERTION"])
+            10[/"verifiedBy"/]
+            11["Signature"]
+            1 --> 2
+            2 --> 3
+            3 --> 4
+            3 --> 5
+            2 --> 6
+            6 --> 7
+            6 --> 8
+            1 --> 9
+            9 --> 10
+            9 --> 11
+            style 1 stroke:red,stroke-width:3.0px
+            style 2 stroke:#55f,stroke-width:3.0px
+            style 3 stroke:red,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:#55f,stroke-width:3.0px
+            style 6 stroke:red,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:#55f,stroke-width:3.0px
+            style 9 stroke:red,stroke-width:3.0px
+            style 10 stroke:#55f,stroke-width:3.0px
+            style 11 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
+            linkStyle 9 stroke-width:2.0px
+        """#)
     }
     
     func testEncryptToRecipients() throws {
@@ -401,7 +640,17 @@ class FormatTests: XCTestCase {
             hasRecipient: SealedMessage
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ENCRYPTED
+            ASSERTION
+                hasRecipient
+                SealedMessage
+            ASSERTION
+                hasRecipient
+                SealedMessage
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         003c3d15 NODE
             886a0c85 subj ENCRYPTED
@@ -412,8 +661,8 @@ class FormatTests: XCTestCase {
                 f4af70d6 pred hasRecipient
                 b65acdd8 obj SealedMessage
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(("003c3d15<br/>NODE"))
@@ -447,6 +696,36 @@ class FormatTests: XCTestCase {
             linkStyle 5 stroke:green,stroke-width:2.0px
             linkStyle 6 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1>"ENCRYPTED"]
+            2(["ASSERTION"])
+            3[/"hasRecipient"/]
+            4["SealedMessage"]
+            5(["ASSERTION"])
+            6[/"hasRecipient"/]
+            7["SealedMessage"]
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            1 --> 5
+            5 --> 6
+            5 --> 7
+            style 1 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:red,stroke-width:3.0px
+            style 6 stroke:#55f,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+        """)
     }
 
     func testAssertionPositions() throws {
@@ -468,7 +747,20 @@ class FormatTests: XCTestCase {
             ]
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat,
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "subject"
+            ASSERTION
+                "predicate"
+                    ASSERTION
+                        "predicate-predicate"
+                        "predicate-object"
+                "object"
+                    ASSERTION
+                        "object-predicate"
+                        "object-object"
+        """)
+        XCTAssertEqual(envelope.treeFormat(),
         """
         6e23f835 NODE
             0eb38394 subj "subject"
@@ -484,8 +776,8 @@ class FormatTests: XCTestCase {
                         f24609db pred "object-predicate"
                         5c7b47fb obj "object-object"
         """)
-        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(envelope.mermaidFormat,
+        XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1(("6e23f835<br/>NODE"))
@@ -538,6 +830,48 @@ class FormatTests: XCTestCase {
             linkStyle 9 stroke-width:2.0px
             linkStyle 10 stroke:green,stroke-width:2.0px
             linkStyle 11 stroke:#55f,stroke-width:2.0px
+        """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;subject#quot;"]
+            2(["ASSERTION"])
+            3["#quot;predicate#quot;"]
+            4(["ASSERTION"])
+            5["#quot;predicate-predicate#quot;"]
+            6["#quot;predicate-object#quot;"]
+            7["#quot;object#quot;"]
+            8(["ASSERTION"])
+            9["#quot;object-predicate#quot;"]
+            10["#quot;object-object#quot;"]
+            1 --> 2
+            2 --> 3
+            3 --> 4
+            4 --> 5
+            4 --> 6
+            2 --> 7
+            7 --> 8
+            8 --> 9
+            8 --> 10
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:red,stroke-width:3.0px
+            style 5 stroke:#55f,stroke-width:3.0px
+            style 6 stroke:#55f,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:red,stroke-width:3.0px
+            style 9 stroke:#55f,stroke-width:3.0px
+            style 10 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
         """)
     }
 
@@ -598,7 +932,50 @@ class FormatTests: XCTestCase {
             dereferenceVia: "IPFS"
         ]
         """)
-        XCTAssertEqual(bookMetadata.treeFormat,
+        XCTAssertEqual(bookMetadata.treeFormat(hideNodes: true),
+        """
+        Digest(e8aa201d)
+            ASSERTION
+                dereferenceVia
+                "IPFS"
+            ASSERTION
+                "format"
+                "EPUB"
+            ASSERTION
+                "work"
+                CID(7fb90a9d)
+                    ASSERTION
+                        dereferenceVia
+                        "LibraryOfCongress"
+                    ASSERTION
+                        "author"
+                        CID(9c747ace)
+                            ASSERTION
+                                dereferenceVia
+                                "LibraryOfCongress"
+                            ASSERTION
+                                hasName
+                                "Ayn Rand"
+                    ASSERTION
+                        hasName
+                        "Atlas Shrugged"
+                            ASSERTION
+                                language
+                                "en"
+                    ASSERTION
+                        isA
+                        "novel"
+                    ASSERTION
+                        hasName
+                        "La rebelión de Atlas"
+                            ASSERTION
+                                language
+                                "es"
+                    ASSERTION
+                        "isbn"
+                        "9780451191144"
+        """)
+        XCTAssertEqual(bookMetadata.treeFormat(),
         """
         72fdea85 NODE
             ec067552 subj Digest(e8aa201d)
@@ -646,8 +1023,8 @@ class FormatTests: XCTestCase {
                         b95d2849 pred "isbn"
                         2e8d4edd obj "9780451191144"
         """)
-        XCTAssertEqual(bookMetadata.elementsCount, bookMetadata.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(bookMetadata.mermaidFormat,
+        XCTAssertEqual(bookMetadata.elementsCount, bookMetadata.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(bookMetadata.mermaidFormat(),
         """
         graph LR
             1(("72fdea85<br/>NODE"))
@@ -829,6 +1206,168 @@ class FormatTests: XCTestCase {
             linkStyle 42 stroke:green,stroke-width:2.0px
             linkStyle 43 stroke:#55f,stroke-width:2.0px
         """)
+        XCTAssertEqual(bookMetadata.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["Digest(e8aa201d)"]
+            2(["ASSERTION"])
+            3[/"dereferenceVia"/]
+            4["#quot;IPFS#quot;"]
+            5(["ASSERTION"])
+            6["#quot;format#quot;"]
+            7["#quot;EPUB#quot;"]
+            8(["ASSERTION"])
+            9["#quot;work#quot;"]
+            10["CID(7fb90a9d)"]
+            11(["ASSERTION"])
+            12[/"dereferenceVia"/]
+            13["#quot;LibraryOfCongress#quot;"]
+            14(["ASSERTION"])
+            15["#quot;author#quot;"]
+            16["CID(9c747ace)"]
+            17(["ASSERTION"])
+            18[/"dereferenceVia"/]
+            19["#quot;LibraryOfCongress#quot;"]
+            20(["ASSERTION"])
+            21[/"hasName"/]
+            22["#quot;Ayn Rand#quot;"]
+            23(["ASSERTION"])
+            24[/"hasName"/]
+            25["#quot;Atlas Shrugged#quot;"]
+            26(["ASSERTION"])
+            27[/"language"/]
+            28["#quot;en#quot;"]
+            29(["ASSERTION"])
+            30[/"isA"/]
+            31["#quot;novel#quot;"]
+            32(["ASSERTION"])
+            33[/"hasName"/]
+            34["#quot;La rebelión de Atlas#quot;"]
+            35(["ASSERTION"])
+            36[/"language"/]
+            37["#quot;es#quot;"]
+            38(["ASSERTION"])
+            39["#quot;isbn#quot;"]
+            40["#quot;9780451191144#quot;"]
+            1 --> 2
+            2 --> 3
+            2 --> 4
+            1 --> 5
+            5 --> 6
+            5 --> 7
+            1 --> 8
+            8 --> 9
+            8 --> 10
+            10 --> 11
+            11 --> 12
+            11 --> 13
+            10 --> 14
+            14 --> 15
+            14 --> 16
+            16 --> 17
+            17 --> 18
+            17 --> 19
+            16 --> 20
+            20 --> 21
+            20 --> 22
+            10 --> 23
+            23 --> 24
+            23 --> 25
+            25 --> 26
+            26 --> 27
+            26 --> 28
+            10 --> 29
+            29 --> 30
+            29 --> 31
+            10 --> 32
+            32 --> 33
+            32 --> 34
+            34 --> 35
+            35 --> 36
+            35 --> 37
+            10 --> 38
+            38 --> 39
+            38 --> 40
+            style 1 stroke:#55f,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:#55f,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:red,stroke-width:3.0px
+            style 6 stroke:#55f,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:red,stroke-width:3.0px
+            style 9 stroke:#55f,stroke-width:3.0px
+            style 10 stroke:#55f,stroke-width:3.0px
+            style 11 stroke:red,stroke-width:3.0px
+            style 12 stroke:#55f,stroke-width:3.0px
+            style 13 stroke:#55f,stroke-width:3.0px
+            style 14 stroke:red,stroke-width:3.0px
+            style 15 stroke:#55f,stroke-width:3.0px
+            style 16 stroke:#55f,stroke-width:3.0px
+            style 17 stroke:red,stroke-width:3.0px
+            style 18 stroke:#55f,stroke-width:3.0px
+            style 19 stroke:#55f,stroke-width:3.0px
+            style 20 stroke:red,stroke-width:3.0px
+            style 21 stroke:#55f,stroke-width:3.0px
+            style 22 stroke:#55f,stroke-width:3.0px
+            style 23 stroke:red,stroke-width:3.0px
+            style 24 stroke:#55f,stroke-width:3.0px
+            style 25 stroke:#55f,stroke-width:3.0px
+            style 26 stroke:red,stroke-width:3.0px
+            style 27 stroke:#55f,stroke-width:3.0px
+            style 28 stroke:#55f,stroke-width:3.0px
+            style 29 stroke:red,stroke-width:3.0px
+            style 30 stroke:#55f,stroke-width:3.0px
+            style 31 stroke:#55f,stroke-width:3.0px
+            style 32 stroke:red,stroke-width:3.0px
+            style 33 stroke:#55f,stroke-width:3.0px
+            style 34 stroke:#55f,stroke-width:3.0px
+            style 35 stroke:red,stroke-width:3.0px
+            style 36 stroke:#55f,stroke-width:3.0px
+            style 37 stroke:#55f,stroke-width:3.0px
+            style 38 stroke:red,stroke-width:3.0px
+            style 39 stroke:#55f,stroke-width:3.0px
+            style 40 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
+            linkStyle 9 stroke-width:2.0px
+            linkStyle 10 stroke-width:2.0px
+            linkStyle 11 stroke-width:2.0px
+            linkStyle 12 stroke-width:2.0px
+            linkStyle 13 stroke-width:2.0px
+            linkStyle 14 stroke-width:2.0px
+            linkStyle 15 stroke-width:2.0px
+            linkStyle 16 stroke-width:2.0px
+            linkStyle 17 stroke-width:2.0px
+            linkStyle 18 stroke-width:2.0px
+            linkStyle 19 stroke-width:2.0px
+            linkStyle 20 stroke-width:2.0px
+            linkStyle 21 stroke-width:2.0px
+            linkStyle 22 stroke-width:2.0px
+            linkStyle 23 stroke-width:2.0px
+            linkStyle 24 stroke-width:2.0px
+            linkStyle 25 stroke-width:2.0px
+            linkStyle 26 stroke-width:2.0px
+            linkStyle 27 stroke-width:2.0px
+            linkStyle 28 stroke-width:2.0px
+            linkStyle 29 stroke-width:2.0px
+            linkStyle 30 stroke-width:2.0px
+            linkStyle 31 stroke-width:2.0px
+            linkStyle 32 stroke-width:2.0px
+            linkStyle 33 stroke-width:2.0px
+            linkStyle 34 stroke-width:2.0px
+            linkStyle 35 stroke-width:2.0px
+            linkStyle 36 stroke-width:2.0px
+            linkStyle 37 stroke-width:2.0px
+            linkStyle 38 stroke-width:2.0px
+        """)
     }
 
     static let credential = try! Envelope(CID(‡"4676635a6e6068c2ef3ffd8ff726dd401fd341036e920f136a1d8af5e829496d")!)
@@ -874,7 +1413,57 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(Self.credential.treeFormat,
+        XCTAssertEqual(Self.credential.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            CID(4676635a)
+                ASSERTION
+                    "photo"
+                    "This is James Maxwell's photo."
+                ASSERTION
+                    "lastName"
+                    "Maxwell"
+                ASSERTION
+                    "issueDate"
+                    2020-01-01
+                ASSERTION
+                    controller
+                    "Example Electrical Engineering Board"
+                ASSERTION
+                    "topics"
+                    CBOR
+                ASSERTION
+                    isA
+                    "Certificate of Completion"
+                ASSERTION
+                    "continuingEducationUnits"
+                    1.5
+                ASSERTION
+                    issuer
+                    "Example Electrical Engineering Board"
+                ASSERTION
+                    "expirationDate"
+                    2028-01-01
+                ASSERTION
+                    "certificateNumber"
+                    "123-456-789"
+                ASSERTION
+                    "firstName"
+                    "James"
+                ASSERTION
+                    "subject"
+                    "RF and Microwave Engineering"
+                ASSERTION
+                    "professionalDevelopmentHours"
+                    15
+            ASSERTION
+                verifiedBy
+                Signature
+            ASSERTION
+                note
+                "Signed by Example Electrical Engineering Board"
+        """)
+        XCTAssertEqual(Self.credential.treeFormat(),
         """
         6142d9bc NODE
             dbd70e79 subj WRAPPED
@@ -926,8 +1515,8 @@ class FormatTests: XCTestCase {
                 61fb6a6b pred note
                 f4bf011f obj "Signed by Example Electrical Engineering Board"
         """)
-        XCTAssertEqual(Self.credential.elementsCount, Self.credential.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(Self.credential.mermaidFormat,
+        XCTAssertEqual(Self.credential.elementsCount, Self.credential.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(Self.credential.mermaidFormat(),
         #"""
         graph LR
             1(("6142d9bc<br/>NODE"))
@@ -1125,6 +1714,196 @@ class FormatTests: XCTestCase {
             linkStyle 46 stroke:green,stroke-width:2.0px
             linkStyle 47 stroke:#55f,stroke-width:2.0px
         """#)
+        XCTAssertEqual(Self.credential.mermaidFormat(hideNodes: true),
+        #"""
+        graph LR
+            1[/"WRAPPED"\]
+            2["CID(4676635a)"]
+            3(["ASSERTION"])
+            4["#quot;photo#quot;"]
+            5["#quot;This is James Maxwell's photo.#quot;"]
+            6(["ASSERTION"])
+            7["#quot;lastName#quot;"]
+            8["#quot;Maxwell#quot;"]
+            9(["ASSERTION"])
+            10["#quot;issueDate#quot;"]
+            11["2020-01-01"]
+            12(["ASSERTION"])
+            13[/"controller"/]
+            14["#quot;Example Electrical Engineering Board#quot;"]
+            15(["ASSERTION"])
+            16["#quot;topics#quot;"]
+            17["CBOR"]
+            18(["ASSERTION"])
+            19[/"isA"/]
+            20["#quot;Certificate of Completion#quot;"]
+            21(["ASSERTION"])
+            22["#quot;continuingEducationUnits#quot;"]
+            23["1.5"]
+            24(["ASSERTION"])
+            25[/"issuer"/]
+            26["#quot;Example Electrical Engineering Board#quot;"]
+            27(["ASSERTION"])
+            28["#quot;expirationDate#quot;"]
+            29["2028-01-01"]
+            30(["ASSERTION"])
+            31["#quot;certificateNumber#quot;"]
+            32["#quot;123-456-789#quot;"]
+            33(["ASSERTION"])
+            34["#quot;firstName#quot;"]
+            35["#quot;James#quot;"]
+            36(["ASSERTION"])
+            37["#quot;subject#quot;"]
+            38["#quot;RF and Microwave Engineering#quot;"]
+            39(["ASSERTION"])
+            40["#quot;professionalDevelopmentHours#quot;"]
+            41["15"]
+            42(["ASSERTION"])
+            43[/"verifiedBy"/]
+            44["Signature"]
+            45(["ASSERTION"])
+            46[/"note"/]
+            47["#quot;Signed by Example Electrical Engineering Board#quot;"]
+            1 --> 2
+            2 --> 3
+            3 --> 4
+            3 --> 5
+            2 --> 6
+            6 --> 7
+            6 --> 8
+            2 --> 9
+            9 --> 10
+            9 --> 11
+            2 --> 12
+            12 --> 13
+            12 --> 14
+            2 --> 15
+            15 --> 16
+            15 --> 17
+            2 --> 18
+            18 --> 19
+            18 --> 20
+            2 --> 21
+            21 --> 22
+            21 --> 23
+            2 --> 24
+            24 --> 25
+            24 --> 26
+            2 --> 27
+            27 --> 28
+            27 --> 29
+            2 --> 30
+            30 --> 31
+            30 --> 32
+            2 --> 33
+            33 --> 34
+            33 --> 35
+            2 --> 36
+            36 --> 37
+            36 --> 38
+            2 --> 39
+            39 --> 40
+            39 --> 41
+            1 --> 42
+            42 --> 43
+            42 --> 44
+            1 --> 45
+            45 --> 46
+            45 --> 47
+            style 1 stroke:red,stroke-width:3.0px
+            style 2 stroke:#55f,stroke-width:3.0px
+            style 3 stroke:red,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:#55f,stroke-width:3.0px
+            style 6 stroke:red,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:#55f,stroke-width:3.0px
+            style 9 stroke:red,stroke-width:3.0px
+            style 10 stroke:#55f,stroke-width:3.0px
+            style 11 stroke:#55f,stroke-width:3.0px
+            style 12 stroke:red,stroke-width:3.0px
+            style 13 stroke:#55f,stroke-width:3.0px
+            style 14 stroke:#55f,stroke-width:3.0px
+            style 15 stroke:red,stroke-width:3.0px
+            style 16 stroke:#55f,stroke-width:3.0px
+            style 17 stroke:#55f,stroke-width:3.0px
+            style 18 stroke:red,stroke-width:3.0px
+            style 19 stroke:#55f,stroke-width:3.0px
+            style 20 stroke:#55f,stroke-width:3.0px
+            style 21 stroke:red,stroke-width:3.0px
+            style 22 stroke:#55f,stroke-width:3.0px
+            style 23 stroke:#55f,stroke-width:3.0px
+            style 24 stroke:red,stroke-width:3.0px
+            style 25 stroke:#55f,stroke-width:3.0px
+            style 26 stroke:#55f,stroke-width:3.0px
+            style 27 stroke:red,stroke-width:3.0px
+            style 28 stroke:#55f,stroke-width:3.0px
+            style 29 stroke:#55f,stroke-width:3.0px
+            style 30 stroke:red,stroke-width:3.0px
+            style 31 stroke:#55f,stroke-width:3.0px
+            style 32 stroke:#55f,stroke-width:3.0px
+            style 33 stroke:red,stroke-width:3.0px
+            style 34 stroke:#55f,stroke-width:3.0px
+            style 35 stroke:#55f,stroke-width:3.0px
+            style 36 stroke:red,stroke-width:3.0px
+            style 37 stroke:#55f,stroke-width:3.0px
+            style 38 stroke:#55f,stroke-width:3.0px
+            style 39 stroke:red,stroke-width:3.0px
+            style 40 stroke:#55f,stroke-width:3.0px
+            style 41 stroke:#55f,stroke-width:3.0px
+            style 42 stroke:red,stroke-width:3.0px
+            style 43 stroke:#55f,stroke-width:3.0px
+            style 44 stroke:#55f,stroke-width:3.0px
+            style 45 stroke:red,stroke-width:3.0px
+            style 46 stroke:#55f,stroke-width:3.0px
+            style 47 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
+            linkStyle 9 stroke-width:2.0px
+            linkStyle 10 stroke-width:2.0px
+            linkStyle 11 stroke-width:2.0px
+            linkStyle 12 stroke-width:2.0px
+            linkStyle 13 stroke-width:2.0px
+            linkStyle 14 stroke-width:2.0px
+            linkStyle 15 stroke-width:2.0px
+            linkStyle 16 stroke-width:2.0px
+            linkStyle 17 stroke-width:2.0px
+            linkStyle 18 stroke-width:2.0px
+            linkStyle 19 stroke-width:2.0px
+            linkStyle 20 stroke-width:2.0px
+            linkStyle 21 stroke-width:2.0px
+            linkStyle 22 stroke-width:2.0px
+            linkStyle 23 stroke-width:2.0px
+            linkStyle 24 stroke-width:2.0px
+            linkStyle 25 stroke-width:2.0px
+            linkStyle 26 stroke-width:2.0px
+            linkStyle 27 stroke-width:2.0px
+            linkStyle 28 stroke-width:2.0px
+            linkStyle 29 stroke-width:2.0px
+            linkStyle 30 stroke-width:2.0px
+            linkStyle 31 stroke-width:2.0px
+            linkStyle 32 stroke-width:2.0px
+            linkStyle 33 stroke-width:2.0px
+            linkStyle 34 stroke-width:2.0px
+            linkStyle 35 stroke-width:2.0px
+            linkStyle 36 stroke-width:2.0px
+            linkStyle 37 stroke-width:2.0px
+            linkStyle 38 stroke-width:2.0px
+            linkStyle 39 stroke-width:2.0px
+            linkStyle 40 stroke-width:2.0px
+            linkStyle 41 stroke-width:2.0px
+            linkStyle 42 stroke-width:2.0px
+            linkStyle 43 stroke-width:2.0px
+            linkStyle 44 stroke-width:2.0px
+            linkStyle 45 stroke-width:2.0px
+        """#)
     }
     
     func testRedactedCredential() throws {
@@ -1180,7 +1959,57 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(warranty.treeFormat,
+        XCTAssertEqual(warranty.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            WRAPPED
+                WRAPPED
+                    CID(4676635a)
+                        ELIDED
+                        ASSERTION
+                            "lastName"
+                            "Maxwell"
+                        ELIDED
+                        ELIDED
+                        ELIDED
+                        ASSERTION
+                            isA
+                            "Certificate of Completion"
+                        ELIDED
+                        ASSERTION
+                            issuer
+                            "Example Electrical Engineering Board"
+                        ASSERTION
+                            "expirationDate"
+                            2028-01-01
+                        ELIDED
+                        ASSERTION
+                            "firstName"
+                            "James"
+                        ASSERTION
+                            "subject"
+                            "RF and Microwave Engineering"
+                        ELIDED
+                    ASSERTION
+                        verifiedBy
+                        Signature
+                    ASSERTION
+                        note
+                        "Signed by Example Electrical Engineering Board"
+                ASSERTION
+                    "employeeStatus"
+                    "active"
+                ASSERTION
+                    "employeeHiredDate"
+                    2022-01-01
+            ASSERTION
+                note
+                "Signed by Employer Corp."
+            ASSERTION
+                verifiedBy
+                Signature
+        """)
+        XCTAssertEqual(warranty.treeFormat(),
         """
         697b9b63 NODE
             0cbbb246 subj WRAPPED
@@ -1234,8 +2063,8 @@ class FormatTests: XCTestCase {
                 d59f8c0f pred verifiedBy
                 efe20914 obj Signature
         """)
-        XCTAssertEqual(warranty.elementsCount, warranty.treeFormat.split(separator: "\n").count)
-        XCTAssertEqual(warranty.mermaidFormat,
+        XCTAssertEqual(warranty.elementsCount, warranty.treeFormat().split(separator: "\n").count)
+        XCTAssertEqual(warranty.mermaidFormat(),
         #"""
         graph LR
             1(("697b9b63<br/>NODE"))
@@ -1440,6 +2269,196 @@ class FormatTests: XCTestCase {
             linkStyle 47 stroke-width:2.0px
             linkStyle 48 stroke:green,stroke-width:2.0px
             linkStyle 49 stroke:#55f,stroke-width:2.0px
+        """#)
+        XCTAssertEqual(warranty.mermaidFormat(hideNodes: true),
+        #"""
+        graph LR
+            1[/"WRAPPED"\]
+            2[/"WRAPPED"\]
+            3[/"WRAPPED"\]
+            4["CID(4676635a)"]
+            5{{"ELIDED"}}
+            6(["ASSERTION"])
+            7["#quot;lastName#quot;"]
+            8["#quot;Maxwell#quot;"]
+            9{{"ELIDED"}}
+            10{{"ELIDED"}}
+            11{{"ELIDED"}}
+            12(["ASSERTION"])
+            13[/"isA"/]
+            14["#quot;Certificate of Completion#quot;"]
+            15{{"ELIDED"}}
+            16(["ASSERTION"])
+            17[/"issuer"/]
+            18["#quot;Example Electrical Engineering Board#quot;"]
+            19(["ASSERTION"])
+            20["#quot;expirationDate#quot;"]
+            21["2028-01-01"]
+            22{{"ELIDED"}}
+            23(["ASSERTION"])
+            24["#quot;firstName#quot;"]
+            25["#quot;James#quot;"]
+            26(["ASSERTION"])
+            27["#quot;subject#quot;"]
+            28["#quot;RF and Microwave Engineering#quot;"]
+            29{{"ELIDED"}}
+            30(["ASSERTION"])
+            31[/"verifiedBy"/]
+            32["Signature"]
+            33(["ASSERTION"])
+            34[/"note"/]
+            35["#quot;Signed by Example Electrical Engineering Board#quot;"]
+            36(["ASSERTION"])
+            37["#quot;employeeStatus#quot;"]
+            38["#quot;active#quot;"]
+            39(["ASSERTION"])
+            40["#quot;employeeHiredDate#quot;"]
+            41["2022-01-01"]
+            42(["ASSERTION"])
+            43[/"note"/]
+            44["#quot;Signed by Employer Corp.#quot;"]
+            45(["ASSERTION"])
+            46[/"verifiedBy"/]
+            47["Signature"]
+            1 --> 2
+            2 --> 3
+            3 --> 4
+            4 --> 5
+            4 --> 6
+            6 --> 7
+            6 --> 8
+            4 --> 9
+            4 --> 10
+            4 --> 11
+            4 --> 12
+            12 --> 13
+            12 --> 14
+            4 --> 15
+            4 --> 16
+            16 --> 17
+            16 --> 18
+            4 --> 19
+            19 --> 20
+            19 --> 21
+            4 --> 22
+            4 --> 23
+            23 --> 24
+            23 --> 25
+            4 --> 26
+            26 --> 27
+            26 --> 28
+            4 --> 29
+            3 --> 30
+            30 --> 31
+            30 --> 32
+            3 --> 33
+            33 --> 34
+            33 --> 35
+            2 --> 36
+            36 --> 37
+            36 --> 38
+            2 --> 39
+            39 --> 40
+            39 --> 41
+            1 --> 42
+            42 --> 43
+            42 --> 44
+            1 --> 45
+            45 --> 46
+            45 --> 47
+            style 1 stroke:red,stroke-width:3.0px
+            style 2 stroke:red,stroke-width:3.0px
+            style 3 stroke:red,stroke-width:3.0px
+            style 4 stroke:#55f,stroke-width:3.0px
+            style 5 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 6 stroke:red,stroke-width:3.0px
+            style 7 stroke:#55f,stroke-width:3.0px
+            style 8 stroke:#55f,stroke-width:3.0px
+            style 9 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 10 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 11 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 12 stroke:red,stroke-width:3.0px
+            style 13 stroke:#55f,stroke-width:3.0px
+            style 14 stroke:#55f,stroke-width:3.0px
+            style 15 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 16 stroke:red,stroke-width:3.0px
+            style 17 stroke:#55f,stroke-width:3.0px
+            style 18 stroke:#55f,stroke-width:3.0px
+            style 19 stroke:red,stroke-width:3.0px
+            style 20 stroke:#55f,stroke-width:3.0px
+            style 21 stroke:#55f,stroke-width:3.0px
+            style 22 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 23 stroke:red,stroke-width:3.0px
+            style 24 stroke:#55f,stroke-width:3.0px
+            style 25 stroke:#55f,stroke-width:3.0px
+            style 26 stroke:red,stroke-width:3.0px
+            style 27 stroke:#55f,stroke-width:3.0px
+            style 28 stroke:#55f,stroke-width:3.0px
+            style 29 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+            style 30 stroke:red,stroke-width:3.0px
+            style 31 stroke:#55f,stroke-width:3.0px
+            style 32 stroke:#55f,stroke-width:3.0px
+            style 33 stroke:red,stroke-width:3.0px
+            style 34 stroke:#55f,stroke-width:3.0px
+            style 35 stroke:#55f,stroke-width:3.0px
+            style 36 stroke:red,stroke-width:3.0px
+            style 37 stroke:#55f,stroke-width:3.0px
+            style 38 stroke:#55f,stroke-width:3.0px
+            style 39 stroke:red,stroke-width:3.0px
+            style 40 stroke:#55f,stroke-width:3.0px
+            style 41 stroke:#55f,stroke-width:3.0px
+            style 42 stroke:red,stroke-width:3.0px
+            style 43 stroke:#55f,stroke-width:3.0px
+            style 44 stroke:#55f,stroke-width:3.0px
+            style 45 stroke:red,stroke-width:3.0px
+            style 46 stroke:#55f,stroke-width:3.0px
+            style 47 stroke:#55f,stroke-width:3.0px
+            linkStyle 0 stroke-width:2.0px
+            linkStyle 1 stroke-width:2.0px
+            linkStyle 2 stroke-width:2.0px
+            linkStyle 3 stroke-width:2.0px
+            linkStyle 4 stroke-width:2.0px
+            linkStyle 5 stroke-width:2.0px
+            linkStyle 6 stroke-width:2.0px
+            linkStyle 7 stroke-width:2.0px
+            linkStyle 8 stroke-width:2.0px
+            linkStyle 9 stroke-width:2.0px
+            linkStyle 10 stroke-width:2.0px
+            linkStyle 11 stroke-width:2.0px
+            linkStyle 12 stroke-width:2.0px
+            linkStyle 13 stroke-width:2.0px
+            linkStyle 14 stroke-width:2.0px
+            linkStyle 15 stroke-width:2.0px
+            linkStyle 16 stroke-width:2.0px
+            linkStyle 17 stroke-width:2.0px
+            linkStyle 18 stroke-width:2.0px
+            linkStyle 19 stroke-width:2.0px
+            linkStyle 20 stroke-width:2.0px
+            linkStyle 21 stroke-width:2.0px
+            linkStyle 22 stroke-width:2.0px
+            linkStyle 23 stroke-width:2.0px
+            linkStyle 24 stroke-width:2.0px
+            linkStyle 25 stroke-width:2.0px
+            linkStyle 26 stroke-width:2.0px
+            linkStyle 27 stroke-width:2.0px
+            linkStyle 28 stroke-width:2.0px
+            linkStyle 29 stroke-width:2.0px
+            linkStyle 30 stroke-width:2.0px
+            linkStyle 31 stroke-width:2.0px
+            linkStyle 32 stroke-width:2.0px
+            linkStyle 33 stroke-width:2.0px
+            linkStyle 34 stroke-width:2.0px
+            linkStyle 35 stroke-width:2.0px
+            linkStyle 36 stroke-width:2.0px
+            linkStyle 37 stroke-width:2.0px
+            linkStyle 38 stroke-width:2.0px
+            linkStyle 39 stroke-width:2.0px
+            linkStyle 40 stroke-width:2.0px
+            linkStyle 41 stroke-width:2.0px
+            linkStyle 42 stroke-width:2.0px
+            linkStyle 43 stroke-width:2.0px
+            linkStyle 44 stroke-width:2.0px
+            linkStyle 45 stroke-width:2.0px
         """#)
     }
 }

@@ -47,6 +47,13 @@ public extension KnownValue {
     static let holder = KnownValue(14, "holder")
     static let salt = KnownValue(15, "salt")
     static let date = KnownValue(16, "date")
+    
+    static let noChange = KnownValue(50, "noChange")
+    static let add = KnownValue(51, "add")
+    static let delete = KnownValue(52, "delete")
+    static let edit = KnownValue(53, "edit")
+    static let predicate = KnownValue(54, "predicate")
+    static let object = KnownValue(55, "object")
 
     static let body = KnownValue(100, "body")
     static let result = KnownValue(101, "result")
@@ -73,12 +80,28 @@ fileprivate var knownValues: [KnownValue] = [
     .salt,
     .date,
 
+    .noChange,
+    .add,
+    .delete,
+    .edit,
+    .predicate,
+    .object,
+
     .body,
     .result,
     .error,
     .ok,
     .processing,
 ]
+
+public extension Envelope {
+    static let noChange = Envelope(KnownValue.noChange)
+    static let add = Envelope(KnownValue.noChange)
+    static let delete = Envelope(KnownValue.noChange)
+    static let edit = Envelope(KnownValue.noChange)
+    static let predicate = Envelope(KnownValue.noChange)
+    static let object = Envelope(KnownValue.noChange)
+}
 
 fileprivate var knownValuesByRawValue: [UInt64: KnownValue] = {
     var result: [UInt64: KnownValue] = [:]

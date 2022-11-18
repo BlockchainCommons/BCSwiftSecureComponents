@@ -13,8 +13,9 @@ class FuzzTests: XCTestCase {
         let generator = EnvelopeGenerator(state: state)
         
         let e = generator.envelope(count: 400)
+        print(e.mermaidFormat())
         XCTAssertEqual(e.digest.hex, "15fdc13a905bcb6c4095d068b62ad3991b8cefedbf57c83fa0d979ccba07f61c")
-//        print(e.treeFormat)
+//        print(e.structureFormat)
 //        print(e.mermaidFormat)
     }
     
@@ -32,7 +33,7 @@ class FuzzTests: XCTestCase {
                 print(state)
                 print(e1.diff(target: e2).format)
 //                print(e1.format)
-//                print(e.treeFormat)
+//                print(e.structureFormat)
 //                print(e.mermaidFormat)
             }
             XCTAssertEqual(e1, e2)
@@ -67,7 +68,7 @@ class FuzzTests: XCTestCase {
     
 //    func testMutatingWalk() throws {
 //        let e1 = Envelope("Alice").addAssertion("knows", Envelope("Bob").wrap())
-//        print(e1.treeFormat)
+//        print(e1.structureFormat)
 //        e1.mutatingWalk { envelope, path, _ in
 //            var comps: [String] = path.reduce(into: []) {
 //                $0.append($1.digest.shortDescription)

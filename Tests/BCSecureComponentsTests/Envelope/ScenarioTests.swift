@@ -543,4 +543,38 @@ class ScenarioTests: XCTestCase {
         """
         XCTAssertEqual(purchaseOrderProjection.format, purchaseOrderProjectionExpectedFormat)
     }
+    
+    func testExampleCredential() {
+        let omarCID = CID()
+        let omarPrivateKey = PrivateKeyBase()
+        let omar = Envelope(omarCID)
+            .addAssertion(.hasName, "Omar Chaim")
+            .addAssertion("githubID", "omarc-bc-guy")
+            .addAssertion("pubkeyURL", "https://github.com/omarc-bc-guy.keys")
+            .wrap()
+            .sign(with: omarPrivateKey, note: "Self-signed by Omar.")
+        
+        let jonathanCID = CID()
+        let jonathanPrivateKey = PrivateKeyBase()
+        let jonathanPublicKey = jonathanPrivateKey.publicKeys
+        let ur = jonathanPublicKey.ur
+        let jonathan = Envelope(jonathanCID)
+            .addAssertion(.hasName, "Jonathan Jakes")
+            .addAssertion("githubID", "jojokes")
+            .addAssertion("pubkey", ur.string)
+            .wrap()
+            .sign(with: jonathanPrivateKey, note: "Self-signed by Jonathan")
+
+        let certCID = CID()
+        let cert = Envelope(certCID)
+            .addAssertion(.issuer, Envelope(omarCID).addAssertion(.note, "Omar's CID"))
+            .addAssertion("subject", Envelope(jonathanCID).addAssertion(.note, "Jonathan's CID"))
+            .addAssertion(.isA, "Assessment of Blockchain Tech Writing Expertise")
+            .wrap()
+            .sign(with: omarPrivateKey, note: "Signed by Omar")
+        
+        print(omar.format)
+        print(jonathan.format)
+        print(cert.format)
+    }
 }
