@@ -27,17 +27,37 @@
 
 ## Introduction
 
-These examples compare a series of Gordian Envelopes output first in "envelope notation", then "envelope tree format", and finally in [Mermaid](https://mermaid-js.github.io/mermaid/#/) format.
+These examples compare a series of Gordian Envelopes:
+
+* envelope notation
+* tree format
+* tree format (`hideNodes`)
+* [Mermaid](https://mermaid-js.github.io/mermaid/#/) format
+* Mermaid format (`hideNodes`)
+
+The `hideNodes` versions are better for understanding an envelope's semantic content. While the regular versions are better for understanding the specific structure of an envelope, including locating all of its digests.
 
 ## Plaintext
+
+### Envelope Notation
 
 ```
 "Hello."
 ```
 
+### Tree Format
+
 ```
 886a0c85 "Hello."
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+"Hello."
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
@@ -45,12 +65,23 @@ graph LR
     style 1 stroke:#55f,stroke-width:3.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["#quot;Hello.#quot;"]
+    style 1 stroke:#55f,stroke-width:3.0px
+```
+
 * Leaf elements (elements having no children) have blue outlines.
 * CBOR leaf elements (like strings, but they can be of any complexity) are represented by rectangles.
 * The digests shown in each element are the first four bytes of the 32-byte digest associated with each element.
 * Every element you see is *itself* an envelope that can be extracted and manipulated. If two digests match, the contents of the envelopes they represent also necessarily match.
+* Since they omit the NODE digest points, the `hideNodes` don't show any digests for both simplicity and not to mislead.
 
 ## Signed Plaintext
+
+### Envelope Notation
 
 ```
 "Hello." [
@@ -58,21 +89,34 @@ graph LR
 ]
 ```
 
+### Tree Format
+
 ```
-542a4152 NODE
+7b935d2f NODE
     886a0c85 subj "Hello."
-    97a092fc ASSERTION
+    6b05e4c4 ASSERTION
         d59f8c0f pred verifiedBy
-        4edea99f obj Signature
+        62cbbb8f obj Signature
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+"Hello."
+    ASSERTION
+        verifiedBy
+        Signature
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("c3915ed3<br/>NODE"))
+    1(("7b935d2f<br/>NODE"))
     2["886a0c85<br/>#quot;Hello.#quot;"]
-    3(["5f656bf5<br/>ASSERTION"])
+    3(["6b05e4c4<br/>ASSERTION"])
     4[/"d59f8c0f<br/>verifiedBy"/]
-    5["9f388294<br/>Signature"]
+    5["62cbbb8f<br/>Signature"]
     1 -->|subj| 2
     1 --> 3
     3 -->|pred| 4
@@ -88,18 +132,43 @@ graph LR
     linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["#quot;Hello.#quot;"]
+    2(["ASSERTION"])
+    3[/"verifiedBy"/]
+    4["Signature"]
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    style 1 stroke:#55f,stroke-width:3.0px
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+```
+
 * Internal elements (elements with children) are represented with red outlines.
 * A `NODE` element appears when one or more assertions are present on a subject. They are represented by circles. They have one arm for the `subject` and an additional arm for each assertion.
 * An `ASSERTION` element is represented by the Mermaid `stadium`  shape, and has exactly two arms: `predicate` and `object`.
 * Well-known values like the `verifiedBy` are represented by trapezoids, and are encoded as short integers.
+* In the `hideNodes` variants, assertions appear to stem from the subject of the envelope.
 
 ## Encrypted Subject
+
+### Envelope Notation
 
 ```
 ENCRYPTED [
     "knows": "Bob"
 ]
 ```
+
+### Tree Format
 
 ```
 e54d6fd3 NODE
@@ -108,6 +177,17 @@ e54d6fd3 NODE
         7092d620 pred "knows"
         9a771715 obj "Bob"
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+ENCRYPTED
+    ASSERTION
+        "knows"
+        "Bob"
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
@@ -131,20 +211,54 @@ graph LR
     linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1>"ENCRYPTED"]
+    2(["ASSERTION"])
+    3["#quot;knows#quot;"]
+    4["#quot;Bob#quot;"]
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    style 1 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+```
+
 * `ENCRYPTED` and `ELIDED` elements appear with dotted outlines in the Output Formats, to indicate that they may be replaced with their unencrypted/unelided counterparts without invalidating the digest tree.
 * `ENCRYPTED` elements are represented by the Mermaid `asymmetric` shape.
 
 ## Top-Level Assertion
 
+### Envelope Notation
+
 ```
 "knows": "Bob"
 ```
+
+### Tree Format
 
 ```
 55560bdf ASSERTION
     7092d620 pred "knows"
     9a771715 obj "Bob"
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+ASSERTION
+    "knows"
+    "Bob"
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
@@ -160,15 +274,35 @@ graph LR
     linkStyle 1 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1(["ASSERTION"])
+    2["#quot;knows#quot;"]
+    3["#quot;Bob#quot;"]
+    1 --> 2
+    1 --> 3
+    style 1 stroke:red,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+```
+
 * As mentioned previously, all of the element types are themselves envelopes, and can therefore stand alone. In this case, we have extracted a single assertion.
 
 ## Elided Object
+
+### Envelope Notation
 
 ```
 "Alice" [
     "knows": ELIDED
 ]
 ```
+
+### Tree Format
 
 ```
 e54d6fd3 NODE
@@ -177,6 +311,17 @@ e54d6fd3 NODE
         7092d620 pred "knows"
         9a771715 obj ELIDED
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+"Alice"
+    ASSERTION
+        "knows"
+        ELIDED
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
@@ -200,12 +345,34 @@ graph LR
     linkStyle 3 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["#quot;Alice#quot;"]
+    2(["ASSERTION"])
+    3["#quot;knows#quot;"]
+    4{{"ELIDED"}}
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    style 1 stroke:#55f,stroke-width:3.0px
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+```
+
 * `ELIDED` elements are represented by dotted hexagons.
 * Note that the digest of the element "Bob" in the previous example matches the digest of the elided element above.
 * Likewise, note that the digest of the subject "Alice" matches the encrypted version in the previous example.
 * In fact, *all* the digests in this envelope match those in the previous example, indicating that the unencrypted/unelided form of this envelope has the exact same content.
 
 ## Signed Subject
+
+### Envelope Notation
 
 ```
 "Alice" [
@@ -215,33 +382,52 @@ graph LR
 ]
 ```
 
+### Tree Format
+
 ```
-686d2c59 NODE
+9a51755e NODE
     27840350 subj "Alice"
     55560bdf ASSERTION
         7092d620 pred "knows"
         9a771715 obj "Bob"
+    645921c0 ASSERTION
+        d59f8c0f pred verifiedBy
+        affdea11 obj Signature
     71a30690 ASSERTION
         7092d620 pred "knows"
         ad2c454b obj "Carol"
-    d575c6a9 ASSERTION
-        d59f8c0f pred verifiedBy
-        85fa379f obj Signature
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+"Alice"
+    ASSERTION
+        "knows"
+        "Bob"
+    ASSERTION
+        verifiedBy
+        Signature
+    ASSERTION
+        "knows"
+        "Carol"
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("efed9563<br/>NODE"))
+    1(("9a51755e<br/>NODE"))
     2["27840350<br/>#quot;Alice#quot;"]
     3(["55560bdf<br/>ASSERTION"])
     4["7092d620<br/>#quot;knows#quot;"]
     5["9a771715<br/>#quot;Bob#quot;"]
-    6(["71a30690<br/>ASSERTION"])
-    7["7092d620<br/>#quot;knows#quot;"]
-    8["ad2c454b<br/>#quot;Carol#quot;"]
-    9(["dbb0ad16<br/>ASSERTION"])
-    10[/"d59f8c0f<br/>verifiedBy"/]
-    11["858d19e2<br/>Signature"]
+    6(["645921c0<br/>ASSERTION"])
+    7[/"d59f8c0f<br/>verifiedBy"/]
+    8["affdea11<br/>Signature"]
+    9(["71a30690<br/>ASSERTION"])
+    10["7092d620<br/>#quot;knows#quot;"]
+    11["ad2c454b<br/>#quot;Carol#quot;"]
     1 -->|subj| 2
     1 --> 3
     3 -->|pred| 4
@@ -275,10 +461,56 @@ graph LR
     linkStyle 9 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["#quot;Alice#quot;"]
+    2(["ASSERTION"])
+    3["#quot;knows#quot;"]
+    4["#quot;Bob#quot;"]
+    5(["ASSERTION"])
+    6[/"verifiedBy"/]
+    7["Signature"]
+    8(["ASSERTION"])
+    9["#quot;knows#quot;"]
+    10["#quot;Carol#quot;"]
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    1 --> 5
+    5 --> 6
+    5 --> 7
+    1 --> 8
+    8 --> 9
+    8 --> 10
+    style 1 stroke:#55f,stroke-width:3.0px
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:red,stroke-width:3.0px
+    style 6 stroke:#55f,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:red,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+    linkStyle 6 stroke-width:2.0px
+    linkStyle 7 stroke-width:2.0px
+    linkStyle 8 stroke-width:2.0px
+```
+
 * A signature signs only the digest of the subject, in this case "Alice". So in this case, the "knows" assertions are not signed.
 * Note that for every internal element, the children are displayed in the order that their digests are combined to form the parent's digest. In particular a `NODE`'s, `ASSERTION` elements are ordered by ascending digest value, so the order of the three assertion digests here: `3ed95464`, `55560bdf`, `71a30690` reflects that ascending order.
 
 ## Elided Assertions
+
+### Envelope Notation
 
 ```
 "Alice" [
@@ -286,21 +518,34 @@ graph LR
 ]
 ```
 
+### Tree Format
+
 ```
-686d2c59 NODE
+9a51755e NODE
     27840350 subj "Alice"
     55560bdf ELIDED
+    645921c0 ELIDED
     71a30690 ELIDED
-    d575c6a9 ELIDED
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+"Alice"
+    ELIDED
+    ELIDED
+    ELIDED
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("efed9563<br/>NODE"))
+    1(("9a51755e<br/>NODE"))
     2["27840350<br/>#quot;Alice#quot;"]
     3{{"55560bdf<br/>ELIDED"}}
-    4{{"71a30690<br/>ELIDED"}}
-    5{{"dbb0ad16<br/>ELIDED"}}
+    4{{"645921c0<br/>ELIDED"}}
+    5{{"71a30690<br/>ELIDED"}}
     1 -->|subj| 2
     1 --> 3
     1 --> 4
@@ -316,9 +561,31 @@ graph LR
     linkStyle 3 stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["#quot;Alice#quot;"]
+    2{{"ELIDED"}}
+    3{{"ELIDED"}}
+    4{{"ELIDED"}}
+    1 --> 2
+    1 --> 3
+    1 --> 4
+    style 1 stroke:#55f,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 3 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 4 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+```
+
 * This is the same envelope from the previous example with its assertions elided. Note that the digests at every level still present are all the same.
 
 ## Wrapped Then Signed
+
+### Envelope Notation
 
 ```
 {
@@ -331,8 +598,10 @@ graph LR
 ]
 ```
 
+### Tree Format
+
 ```
-df50a73a NODE
+e18b6e85 NODE
     3cc750a3 subj WRAPPED
         c733401e subj NODE
             27840350 subj "Alice"
@@ -342,14 +611,32 @@ df50a73a NODE
             71a30690 ASSERTION
                 7092d620 pred "knows"
                 ad2c454b obj "Carol"
-    2a079b36 ASSERTION
+    a18db4cc ASSERTION
         d59f8c0f pred verifiedBy
-        c690bdf9 obj Signature
+        c176abe0 obj Signature
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+WRAPPED
+    "Alice"
+        ASSERTION
+            "knows"
+            "Bob"
+        ASSERTION
+            "knows"
+            "Carol"
+    ASSERTION
+        verifiedBy
+        Signature
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("fde86f77<br/>NODE"))
+    1(("e18b6e85<br/>NODE"))
     2[/"3cc750a3<br/>WRAPPED"\]
     3(("c733401e<br/>NODE"))
     4["27840350<br/>#quot;Alice#quot;"]
@@ -359,9 +646,9 @@ graph LR
     8(["71a30690<br/>ASSERTION"])
     9["7092d620<br/>#quot;knows#quot;"]
     10["ad2c454b<br/>#quot;Carol#quot;"]
-    11(["ab430e79<br/>ASSERTION"])
+    11(["a18db4cc<br/>ASSERTION"])
     12[/"d59f8c0f<br/>verifiedBy"/]
-    13["2a13e7f6<br/>Signature"]
+    13["c176abe0<br/>Signature"]
     1 -->|subj| 2
     2 -->|subj| 3
     3 -->|subj| 4
@@ -401,10 +688,60 @@ graph LR
     linkStyle 11 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1[/"WRAPPED"\]
+    2["#quot;Alice#quot;"]
+    3(["ASSERTION"])
+    4["#quot;knows#quot;"]
+    5["#quot;Bob#quot;"]
+    6(["ASSERTION"])
+    7["#quot;knows#quot;"]
+    8["#quot;Carol#quot;"]
+    9(["ASSERTION"])
+    10[/"verifiedBy"/]
+    11["Signature"]
+    1 --> 2
+    2 --> 3
+    3 --> 4
+    3 --> 5
+    2 --> 6
+    6 --> 7
+    6 --> 8
+    1 --> 9
+    9 --> 10
+    9 --> 11
+    style 1 stroke:red,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:red,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
+    style 6 stroke:red,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
+    style 9 stroke:red,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
+    style 11 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+    linkStyle 6 stroke-width:2.0px
+    linkStyle 7 stroke-width:2.0px
+    linkStyle 8 stroke-width:2.0px
+    linkStyle 9 stroke-width:2.0px
+```
+
 * In this case the signature still only signs the subject, but the subject is an entire envelope that's been wrapped.
 * `WRAPPED` elements are represented by trapezoids. They have exactly one arm, which is the root of the wrapped envelope.
 
 ## Encrypt to Recipients
+
+### Envelope Notation
 
 ```
 ENCRYPTED [
@@ -412,6 +749,8 @@ ENCRYPTED [
     hasRecipient: SealedMessage
 ]
 ```
+
+### Tree Format
 
 ```
 003c3d15 NODE
@@ -423,6 +762,20 @@ ENCRYPTED [
         f4af70d6 pred hasRecipient
         b65acdd8 obj SealedMessage
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+ENCRYPTED
+    ASSERTION
+        hasRecipient
+        SealedMessage
+    ASSERTION
+        hasRecipient
+        SealedMessage
+```
+
+### Mermaid
 
 ```mermaid
 graph TB
@@ -458,9 +811,43 @@ graph TB
     linkStyle 6 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph TB
+    1>"ENCRYPTED"]
+    2(["ASSERTION"])
+    3[/"hasRecipient"/]
+    4["SealedMessage"]
+    5(["ASSERTION"])
+    6[/"hasRecipient"/]
+    7["SealedMessage"]
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    1 --> 5
+    5 --> 6
+    5 --> 7
+    style 1 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:red,stroke-width:3.0px
+    style 6 stroke:#55f,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+```
+
 * Top-to-bottom layout is also supported.
 
 ## Complex Metadata
+
+### Envelope Notation
 
 ```
 Digest(e8aa201d) [
@@ -483,6 +870,8 @@ Digest(e8aa201d) [
     dereferenceVia: "IPFS"
 ]
 ```
+
+### Tree Format
 
 ```
 72fdea85 NODE
@@ -531,6 +920,53 @@ Digest(e8aa201d) [
                 b95d2849 pred "isbn"
                 2e8d4edd obj "9780451191144"
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+Digest(e8aa201d)
+    ASSERTION
+        dereferenceVia
+        "IPFS"
+    ASSERTION
+        "format"
+        "EPUB"
+    ASSERTION
+        "work"
+        CID(7fb90a9d)
+            ASSERTION
+                dereferenceVia
+                "LibraryOfCongress"
+            ASSERTION
+                "author"
+                CID(9c747ace)
+                    ASSERTION
+                        dereferenceVia
+                        "LibraryOfCongress"
+                    ASSERTION
+                        hasName
+                        "Ayn Rand"
+            ASSERTION
+                hasName
+                "Atlas Shrugged"
+                    ASSERTION
+                        language
+                        "en"
+            ASSERTION
+                isA
+                "novel"
+            ASSERTION
+                hasName
+                "La rebelión de Atlas"
+                    ASSERTION
+                        language
+                        "es"
+            ASSERTION
+                "isbn"
+                "9780451191144"
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
@@ -714,7 +1150,173 @@ graph LR
     linkStyle 43 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1["Digest(e8aa201d)"]
+    2(["ASSERTION"])
+    3[/"dereferenceVia"/]
+    4["#quot;IPFS#quot;"]
+    5(["ASSERTION"])
+    6["#quot;format#quot;"]
+    7["#quot;EPUB#quot;"]
+    8(["ASSERTION"])
+    9["#quot;work#quot;"]
+    10["CID(7fb90a9d)"]
+    11(["ASSERTION"])
+    12[/"dereferenceVia"/]
+    13["#quot;LibraryOfCongress#quot;"]
+    14(["ASSERTION"])
+    15["#quot;author#quot;"]
+    16["CID(9c747ace)"]
+    17(["ASSERTION"])
+    18[/"dereferenceVia"/]
+    19["#quot;LibraryOfCongress#quot;"]
+    20(["ASSERTION"])
+    21[/"hasName"/]
+    22["#quot;Ayn Rand#quot;"]
+    23(["ASSERTION"])
+    24[/"hasName"/]
+    25["#quot;Atlas Shrugged#quot;"]
+    26(["ASSERTION"])
+    27[/"language"/]
+    28["#quot;en#quot;"]
+    29(["ASSERTION"])
+    30[/"isA"/]
+    31["#quot;novel#quot;"]
+    32(["ASSERTION"])
+    33[/"hasName"/]
+    34["#quot;La rebelión de Atlas#quot;"]
+    35(["ASSERTION"])
+    36[/"language"/]
+    37["#quot;es#quot;"]
+    38(["ASSERTION"])
+    39["#quot;isbn#quot;"]
+    40["#quot;9780451191144#quot;"]
+    1 --> 2
+    2 --> 3
+    2 --> 4
+    1 --> 5
+    5 --> 6
+    5 --> 7
+    1 --> 8
+    8 --> 9
+    8 --> 10
+    10 --> 11
+    11 --> 12
+    11 --> 13
+    10 --> 14
+    14 --> 15
+    14 --> 16
+    16 --> 17
+    17 --> 18
+    17 --> 19
+    16 --> 20
+    20 --> 21
+    20 --> 22
+    10 --> 23
+    23 --> 24
+    23 --> 25
+    25 --> 26
+    26 --> 27
+    26 --> 28
+    10 --> 29
+    29 --> 30
+    29 --> 31
+    10 --> 32
+    32 --> 33
+    32 --> 34
+    34 --> 35
+    35 --> 36
+    35 --> 37
+    10 --> 38
+    38 --> 39
+    38 --> 40
+    style 1 stroke:#55f,stroke-width:3.0px
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:#55f,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:red,stroke-width:3.0px
+    style 6 stroke:#55f,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:red,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
+    style 11 stroke:red,stroke-width:3.0px
+    style 12 stroke:#55f,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px
+    style 14 stroke:red,stroke-width:3.0px
+    style 15 stroke:#55f,stroke-width:3.0px
+    style 16 stroke:#55f,stroke-width:3.0px
+    style 17 stroke:red,stroke-width:3.0px
+    style 18 stroke:#55f,stroke-width:3.0px
+    style 19 stroke:#55f,stroke-width:3.0px
+    style 20 stroke:red,stroke-width:3.0px
+    style 21 stroke:#55f,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px
+    style 23 stroke:red,stroke-width:3.0px
+    style 24 stroke:#55f,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
+    style 26 stroke:red,stroke-width:3.0px
+    style 27 stroke:#55f,stroke-width:3.0px
+    style 28 stroke:#55f,stroke-width:3.0px
+    style 29 stroke:red,stroke-width:3.0px
+    style 30 stroke:#55f,stroke-width:3.0px
+    style 31 stroke:#55f,stroke-width:3.0px
+    style 32 stroke:red,stroke-width:3.0px
+    style 33 stroke:#55f,stroke-width:3.0px
+    style 34 stroke:#55f,stroke-width:3.0px
+    style 35 stroke:red,stroke-width:3.0px
+    style 36 stroke:#55f,stroke-width:3.0px
+    style 37 stroke:#55f,stroke-width:3.0px
+    style 38 stroke:red,stroke-width:3.0px
+    style 39 stroke:#55f,stroke-width:3.0px
+    style 40 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+    linkStyle 6 stroke-width:2.0px
+    linkStyle 7 stroke-width:2.0px
+    linkStyle 8 stroke-width:2.0px
+    linkStyle 9 stroke-width:2.0px
+    linkStyle 10 stroke-width:2.0px
+    linkStyle 11 stroke-width:2.0px
+    linkStyle 12 stroke-width:2.0px
+    linkStyle 13 stroke-width:2.0px
+    linkStyle 14 stroke-width:2.0px
+    linkStyle 15 stroke-width:2.0px
+    linkStyle 16 stroke-width:2.0px
+    linkStyle 17 stroke-width:2.0px
+    linkStyle 18 stroke-width:2.0px
+    linkStyle 19 stroke-width:2.0px
+    linkStyle 20 stroke-width:2.0px
+    linkStyle 21 stroke-width:2.0px
+    linkStyle 22 stroke-width:2.0px
+    linkStyle 23 stroke-width:2.0px
+    linkStyle 24 stroke-width:2.0px
+    linkStyle 25 stroke-width:2.0px
+    linkStyle 26 stroke-width:2.0px
+    linkStyle 27 stroke-width:2.0px
+    linkStyle 28 stroke-width:2.0px
+    linkStyle 29 stroke-width:2.0px
+    linkStyle 30 stroke-width:2.0px
+    linkStyle 31 stroke-width:2.0px
+    linkStyle 32 stroke-width:2.0px
+    linkStyle 33 stroke-width:2.0px
+    linkStyle 34 stroke-width:2.0px
+    linkStyle 35 stroke-width:2.0px
+    linkStyle 36 stroke-width:2.0px
+    linkStyle 37 stroke-width:2.0px
+    linkStyle 38 stroke-width:2.0px
+```
+
 ## Verifiable Credential
+
+### Envelope Notation
 
 ```
 {
@@ -739,8 +1341,10 @@ graph LR
 ]
 ```
 
+### Tree Format
+
 ```
-e9bce5a5 NODE
+6142d9bc NODE
     dbd70e79 subj WRAPPED
         b750a45f subj NODE
             bdd347d4 subj CID(4676635a)
@@ -783,17 +1387,71 @@ e9bce5a5 NODE
             e96b24d9 ASSERTION
                 c8c1a6dd pred "professionalDevelopmentHours"
                 0bf6b955 obj 15
+    8c02e1c6 ASSERTION
+        d59f8c0f pred verifiedBy
+        2deb70b6 obj Signature
     afe231cc ASSERTION
         61fb6a6b pred note
         f4bf011f obj "Signed by Example Electrical Engineering Board"
-    e0b4f467 ASSERTION
-        d59f8c0f pred verifiedBy
-        7f1fd17b obj Signature
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+WRAPPED
+    CID(4676635a)
+        ASSERTION
+            "photo"
+            "This is James Maxwell's photo."
+        ASSERTION
+            "lastName"
+            "Maxwell"
+        ASSERTION
+            "issueDate"
+            2020-01-01
+        ASSERTION
+            controller
+            "Example Electrical Engineering Board"
+        ASSERTION
+            "topics"
+            CBOR
+        ASSERTION
+            isA
+            "Certificate of Completion"
+        ASSERTION
+            "continuingEducationUnits"
+            1.5
+        ASSERTION
+            issuer
+            "Example Electrical Engineering Board"
+        ASSERTION
+            "expirationDate"
+            2028-01-01
+        ASSERTION
+            "certificateNumber"
+            "123-456-789"
+        ASSERTION
+            "firstName"
+            "James"
+        ASSERTION
+            "subject"
+            "RF and Microwave Engineering"
+        ASSERTION
+            "professionalDevelopmentHours"
+            15
+    ASSERTION
+        verifiedBy
+        Signature
+    ASSERTION
+        note
+        "Signed by Example Electrical Engineering Board"
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("6b879639<br/>NODE"))
+    1(("6142d9bc<br/>NODE"))
     2[/"dbd70e79<br/>WRAPPED"\]
     3(("b750a45f<br/>NODE"))
     4["bdd347d4<br/>CID(4676635a)"]
@@ -836,9 +1494,9 @@ graph LR
     41(["e96b24d9<br/>ASSERTION"])
     42["c8c1a6dd<br/>#quot;professionalDevelopmentHours#quot;"]
     43["0bf6b955<br/>15"]
-    44(["42fd806a<br/>ASSERTION"])
+    44(["8c02e1c6<br/>ASSERTION"])
     45[/"d59f8c0f<br/>verifiedBy"/]
-    46["dcfa430e<br/>Signature"]
+    46["2deb70b6<br/>Signature"]
     47(["afe231cc<br/>ASSERTION"])
     48[/"61fb6a6b<br/>note"/]
     49["f4bf011f<br/>#quot;Signed by Example Electrical Engineering Board#quot;"]
@@ -989,9 +1647,203 @@ graph LR
     linkStyle 47 stroke:#55f,stroke-width:2.0px
 ```
 
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1[/"WRAPPED"\]
+    2["CID(4676635a)"]
+    3(["ASSERTION"])
+    4["#quot;photo#quot;"]
+    5["#quot;This is James Maxwell's photo.#quot;"]
+    6(["ASSERTION"])
+    7["#quot;lastName#quot;"]
+    8["#quot;Maxwell#quot;"]
+    9(["ASSERTION"])
+    10["#quot;issueDate#quot;"]
+    11["2020-01-01"]
+    12(["ASSERTION"])
+    13[/"controller"/]
+    14["#quot;Example Electrical Engineering Board#quot;"]
+    15(["ASSERTION"])
+    16["#quot;topics#quot;"]
+    17["CBOR"]
+    18(["ASSERTION"])
+    19[/"isA"/]
+    20["#quot;Certificate of Completion#quot;"]
+    21(["ASSERTION"])
+    22["#quot;continuingEducationUnits#quot;"]
+    23["1.5"]
+    24(["ASSERTION"])
+    25[/"issuer"/]
+    26["#quot;Example Electrical Engineering Board#quot;"]
+    27(["ASSERTION"])
+    28["#quot;expirationDate#quot;"]
+    29["2028-01-01"]
+    30(["ASSERTION"])
+    31["#quot;certificateNumber#quot;"]
+    32["#quot;123-456-789#quot;"]
+    33(["ASSERTION"])
+    34["#quot;firstName#quot;"]
+    35["#quot;James#quot;"]
+    36(["ASSERTION"])
+    37["#quot;subject#quot;"]
+    38["#quot;RF and Microwave Engineering#quot;"]
+    39(["ASSERTION"])
+    40["#quot;professionalDevelopmentHours#quot;"]
+    41["15"]
+    42(["ASSERTION"])
+    43[/"verifiedBy"/]
+    44["Signature"]
+    45(["ASSERTION"])
+    46[/"note"/]
+    47["#quot;Signed by Example Electrical Engineering Board#quot;"]
+    1 --> 2
+    2 --> 3
+    3 --> 4
+    3 --> 5
+    2 --> 6
+    6 --> 7
+    6 --> 8
+    2 --> 9
+    9 --> 10
+    9 --> 11
+    2 --> 12
+    12 --> 13
+    12 --> 14
+    2 --> 15
+    15 --> 16
+    15 --> 17
+    2 --> 18
+    18 --> 19
+    18 --> 20
+    2 --> 21
+    21 --> 22
+    21 --> 23
+    2 --> 24
+    24 --> 25
+    24 --> 26
+    2 --> 27
+    27 --> 28
+    27 --> 29
+    2 --> 30
+    30 --> 31
+    30 --> 32
+    2 --> 33
+    33 --> 34
+    33 --> 35
+    2 --> 36
+    36 --> 37
+    36 --> 38
+    2 --> 39
+    39 --> 40
+    39 --> 41
+    1 --> 42
+    42 --> 43
+    42 --> 44
+    1 --> 45
+    45 --> 46
+    45 --> 47
+    style 1 stroke:red,stroke-width:3.0px
+    style 2 stroke:#55f,stroke-width:3.0px
+    style 3 stroke:red,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px
+    style 6 stroke:red,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
+    style 9 stroke:red,stroke-width:3.0px
+    style 10 stroke:#55f,stroke-width:3.0px
+    style 11 stroke:#55f,stroke-width:3.0px
+    style 12 stroke:red,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px
+    style 14 stroke:#55f,stroke-width:3.0px
+    style 15 stroke:red,stroke-width:3.0px
+    style 16 stroke:#55f,stroke-width:3.0px
+    style 17 stroke:#55f,stroke-width:3.0px
+    style 18 stroke:red,stroke-width:3.0px
+    style 19 stroke:#55f,stroke-width:3.0px
+    style 20 stroke:#55f,stroke-width:3.0px
+    style 21 stroke:red,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px
+    style 23 stroke:#55f,stroke-width:3.0px
+    style 24 stroke:red,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
+    style 26 stroke:#55f,stroke-width:3.0px
+    style 27 stroke:red,stroke-width:3.0px
+    style 28 stroke:#55f,stroke-width:3.0px
+    style 29 stroke:#55f,stroke-width:3.0px
+    style 30 stroke:red,stroke-width:3.0px
+    style 31 stroke:#55f,stroke-width:3.0px
+    style 32 stroke:#55f,stroke-width:3.0px
+    style 33 stroke:red,stroke-width:3.0px
+    style 34 stroke:#55f,stroke-width:3.0px
+    style 35 stroke:#55f,stroke-width:3.0px
+    style 36 stroke:red,stroke-width:3.0px
+    style 37 stroke:#55f,stroke-width:3.0px
+    style 38 stroke:#55f,stroke-width:3.0px
+    style 39 stroke:red,stroke-width:3.0px
+    style 40 stroke:#55f,stroke-width:3.0px
+    style 41 stroke:#55f,stroke-width:3.0px
+    style 42 stroke:red,stroke-width:3.0px
+    style 43 stroke:#55f,stroke-width:3.0px
+    style 44 stroke:#55f,stroke-width:3.0px
+    style 45 stroke:red,stroke-width:3.0px
+    style 46 stroke:#55f,stroke-width:3.0px
+    style 47 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+    linkStyle 6 stroke-width:2.0px
+    linkStyle 7 stroke-width:2.0px
+    linkStyle 8 stroke-width:2.0px
+    linkStyle 9 stroke-width:2.0px
+    linkStyle 10 stroke-width:2.0px
+    linkStyle 11 stroke-width:2.0px
+    linkStyle 12 stroke-width:2.0px
+    linkStyle 13 stroke-width:2.0px
+    linkStyle 14 stroke-width:2.0px
+    linkStyle 15 stroke-width:2.0px
+    linkStyle 16 stroke-width:2.0px
+    linkStyle 17 stroke-width:2.0px
+    linkStyle 18 stroke-width:2.0px
+    linkStyle 19 stroke-width:2.0px
+    linkStyle 20 stroke-width:2.0px
+    linkStyle 21 stroke-width:2.0px
+    linkStyle 22 stroke-width:2.0px
+    linkStyle 23 stroke-width:2.0px
+    linkStyle 24 stroke-width:2.0px
+    linkStyle 25 stroke-width:2.0px
+    linkStyle 26 stroke-width:2.0px
+    linkStyle 27 stroke-width:2.0px
+    linkStyle 28 stroke-width:2.0px
+    linkStyle 29 stroke-width:2.0px
+    linkStyle 30 stroke-width:2.0px
+    linkStyle 31 stroke-width:2.0px
+    linkStyle 32 stroke-width:2.0px
+    linkStyle 33 stroke-width:2.0px
+    linkStyle 34 stroke-width:2.0px
+    linkStyle 35 stroke-width:2.0px
+    linkStyle 36 stroke-width:2.0px
+    linkStyle 37 stroke-width:2.0px
+    linkStyle 38 stroke-width:2.0px
+    linkStyle 39 stroke-width:2.0px
+    linkStyle 40 stroke-width:2.0px
+    linkStyle 41 stroke-width:2.0px
+    linkStyle 42 stroke-width:2.0px
+    linkStyle 43 stroke-width:2.0px
+    linkStyle 44 stroke-width:2.0px
+    linkStyle 45 stroke-width:2.0px
+```
+
 ## Warranty
 
 This is the same credential above that has been elided, had additional assertions added, and then been signed by the employer.
+
+### Envelope Notation
 
 ```
 {
@@ -1020,12 +1872,14 @@ This is the same credential above that has been elided, had additional assertion
 ]
 ```
 
+### Tree Format
+
 ```
-d72fefb6 NODE
-    75f35220 subj WRAPPED
-        9a57fbda subj NODE
-            bd7d68b8 subj WRAPPED
-                e9bce5a5 subj NODE
+697b9b63 NODE
+    0cbbb246 subj WRAPPED
+        ceecf43c subj NODE
+            6e5c92a5 subj WRAPPED
+                6142d9bc subj NODE
                     dbd70e79 subj WRAPPED
                         b750a45f subj NODE
                             bdd347d4 subj CID(4676635a)
@@ -1054,12 +1908,12 @@ d72fefb6 NODE
                                 0eb38394 pred "subject"
                                 b059b0f2 obj "RF and Microwave Engineering"
                             e96b24d9 ELIDED
+                    8c02e1c6 ASSERTION
+                        d59f8c0f pred verifiedBy
+                        2deb70b6 obj Signature
                     afe231cc ASSERTION
                         61fb6a6b pred note
                         f4bf011f obj "Signed by Example Electrical Engineering Board"
-                    e0b4f467 ASSERTION
-                        d59f8c0f pred verifiedBy
-                        7f1fd17b obj Signature
             310b027f ASSERTION
                 f942ee55 pred "employeeStatus"
                 919eb85d obj "active"
@@ -1069,18 +1923,72 @@ d72fefb6 NODE
     648b2cc3 ASSERTION
         61fb6a6b pred note
         46f4bfd7 obj "Signed by Employer Corp."
-    f23b1fe1 ASSERTION
+    b370f85a ASSERTION
         d59f8c0f pred verifiedBy
-        af01dd65 obj Signature
+        efe20914 obj Signature
 ```
+
+### Tree Format (`hideNodes`)
+
+```
+WRAPPED
+    WRAPPED
+        WRAPPED
+            CID(4676635a)
+                ELIDED
+                ASSERTION
+                    "lastName"
+                    "Maxwell"
+                ELIDED
+                ELIDED
+                ELIDED
+                ASSERTION
+                    isA
+                    "Certificate of Completion"
+                ELIDED
+                ASSERTION
+                    issuer
+                    "Example Electrical Engineering Board"
+                ASSERTION
+                    "expirationDate"
+                    2028-01-01
+                ELIDED
+                ASSERTION
+                    "firstName"
+                    "James"
+                ASSERTION
+                    "subject"
+                    "RF and Microwave Engineering"
+                ELIDED
+            ASSERTION
+                verifiedBy
+                Signature
+            ASSERTION
+                note
+                "Signed by Example Electrical Engineering Board"
+        ASSERTION
+            "employeeStatus"
+            "active"
+        ASSERTION
+            "employeeHiredDate"
+            2022-01-01
+    ASSERTION
+        note
+        "Signed by Employer Corp."
+    ASSERTION
+        verifiedBy
+        Signature
+```
+
+### Mermaid
 
 ```mermaid
 graph LR
-    1(("ec038a13<br/>NODE"))
-    2[/"a182e8b4<br/>WRAPPED"\]
-    3(("1de7ddc0<br/>NODE"))
-    4[/"03e5d69f<br/>WRAPPED"\]
-    5(("7d1be7c0<br/>NODE"))
+    1(("697b9b63<br/>NODE"))
+    2[/"0cbbb246<br/>WRAPPED"\]
+    3(("ceecf43c<br/>NODE"))
+    4[/"6e5c92a5<br/>WRAPPED"\]
+    5(("6142d9bc<br/>NODE"))
     6[/"dbd70e79<br/>WRAPPED"\]
     7(("b750a45f<br/>NODE"))
     8["bdd347d4<br/>CID(4676635a)"]
@@ -1109,9 +2017,9 @@ graph LR
     31["0eb38394<br/>#quot;subject#quot;"]
     32["b059b0f2<br/>#quot;RF and Microwave Engineering#quot;"]
     33{{"e96b24d9<br/>ELIDED"}}
-    34(["7cfa7977<br/>ASSERTION"])
+    34(["8c02e1c6<br/>ASSERTION"])
     35[/"d59f8c0f<br/>verifiedBy"/]
-    36["4529a775<br/>Signature"]
+    36["2deb70b6<br/>Signature"]
     37(["afe231cc<br/>ASSERTION"])
     38[/"61fb6a6b<br/>note"/]
     39["f4bf011f<br/>#quot;Signed by Example Electrical Engineering Board#quot;"]
@@ -1121,12 +2029,12 @@ graph LR
     43(["5901b070<br/>ASSERTION"])
     44["134a1704<br/>#quot;employeeHiredDate#quot;"]
     45["24c173c5<br/>2022-01-01"]
-    46(["3160f0dc<br/>ASSERTION"])
-    47[/"d59f8c0f<br/>verifiedBy"/]
-    48["2b42cab7<br/>Signature"]
-    49(["648b2cc3<br/>ASSERTION"])
-    50[/"61fb6a6b<br/>note"/]
-    51["46f4bfd7<br/>#quot;Signed by Employer Corp.#quot;"]
+    46(["648b2cc3<br/>ASSERTION"])
+    47[/"61fb6a6b<br/>note"/]
+    48["46f4bfd7<br/>#quot;Signed by Employer Corp.#quot;"]
+    49(["b370f85a<br/>ASSERTION"])
+    50[/"d59f8c0f<br/>verifiedBy"/]
+    51["efe20914<br/>Signature"]
     1 -->|subj| 2
     2 -->|subj| 3
     3 -->|subj| 4
@@ -1278,4 +2186,196 @@ graph LR
     linkStyle 47 stroke-width:2.0px
     linkStyle 48 stroke:green,stroke-width:2.0px
     linkStyle 49 stroke:#55f,stroke-width:2.0px
+```
+
+### Mermaid (`hideNodes`)
+
+```mermaid
+graph LR
+    1[/"WRAPPED"\]
+    2[/"WRAPPED"\]
+    3[/"WRAPPED"\]
+    4["CID(4676635a)"]
+    5{{"ELIDED"}}
+    6(["ASSERTION"])
+    7["#quot;lastName#quot;"]
+    8["#quot;Maxwell#quot;"]
+    9{{"ELIDED"}}
+    10{{"ELIDED"}}
+    11{{"ELIDED"}}
+    12(["ASSERTION"])
+    13[/"isA"/]
+    14["#quot;Certificate of Completion#quot;"]
+    15{{"ELIDED"}}
+    16(["ASSERTION"])
+    17[/"issuer"/]
+    18["#quot;Example Electrical Engineering Board#quot;"]
+    19(["ASSERTION"])
+    20["#quot;expirationDate#quot;"]
+    21["2028-01-01"]
+    22{{"ELIDED"}}
+    23(["ASSERTION"])
+    24["#quot;firstName#quot;"]
+    25["#quot;James#quot;"]
+    26(["ASSERTION"])
+    27["#quot;subject#quot;"]
+    28["#quot;RF and Microwave Engineering#quot;"]
+    29{{"ELIDED"}}
+    30(["ASSERTION"])
+    31[/"verifiedBy"/]
+    32["Signature"]
+    33(["ASSERTION"])
+    34[/"note"/]
+    35["#quot;Signed by Example Electrical Engineering Board#quot;"]
+    36(["ASSERTION"])
+    37["#quot;employeeStatus#quot;"]
+    38["#quot;active#quot;"]
+    39(["ASSERTION"])
+    40["#quot;employeeHiredDate#quot;"]
+    41["2022-01-01"]
+    42(["ASSERTION"])
+    43[/"note"/]
+    44["#quot;Signed by Employer Corp.#quot;"]
+    45(["ASSERTION"])
+    46[/"verifiedBy"/]
+    47["Signature"]
+    1 --> 2
+    2 --> 3
+    3 --> 4
+    4 --> 5
+    4 --> 6
+    6 --> 7
+    6 --> 8
+    4 --> 9
+    4 --> 10
+    4 --> 11
+    4 --> 12
+    12 --> 13
+    12 --> 14
+    4 --> 15
+    4 --> 16
+    16 --> 17
+    16 --> 18
+    4 --> 19
+    19 --> 20
+    19 --> 21
+    4 --> 22
+    4 --> 23
+    23 --> 24
+    23 --> 25
+    4 --> 26
+    26 --> 27
+    26 --> 28
+    4 --> 29
+    3 --> 30
+    30 --> 31
+    30 --> 32
+    3 --> 33
+    33 --> 34
+    33 --> 35
+    2 --> 36
+    36 --> 37
+    36 --> 38
+    2 --> 39
+    39 --> 40
+    39 --> 41
+    1 --> 42
+    42 --> 43
+    42 --> 44
+    1 --> 45
+    45 --> 46
+    45 --> 47
+    style 1 stroke:red,stroke-width:3.0px
+    style 2 stroke:red,stroke-width:3.0px
+    style 3 stroke:red,stroke-width:3.0px
+    style 4 stroke:#55f,stroke-width:3.0px
+    style 5 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 6 stroke:red,stroke-width:3.0px
+    style 7 stroke:#55f,stroke-width:3.0px
+    style 8 stroke:#55f,stroke-width:3.0px
+    style 9 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 10 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 11 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 12 stroke:red,stroke-width:3.0px
+    style 13 stroke:#55f,stroke-width:3.0px
+    style 14 stroke:#55f,stroke-width:3.0px
+    style 15 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 16 stroke:red,stroke-width:3.0px
+    style 17 stroke:#55f,stroke-width:3.0px
+    style 18 stroke:#55f,stroke-width:3.0px
+    style 19 stroke:red,stroke-width:3.0px
+    style 20 stroke:#55f,stroke-width:3.0px
+    style 21 stroke:#55f,stroke-width:3.0px
+    style 22 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 23 stroke:red,stroke-width:3.0px
+    style 24 stroke:#55f,stroke-width:3.0px
+    style 25 stroke:#55f,stroke-width:3.0px
+    style 26 stroke:red,stroke-width:3.0px
+    style 27 stroke:#55f,stroke-width:3.0px
+    style 28 stroke:#55f,stroke-width:3.0px
+    style 29 stroke:#55f,stroke-width:3.0px,stroke-dasharray:5.0 5.0
+    style 30 stroke:red,stroke-width:3.0px
+    style 31 stroke:#55f,stroke-width:3.0px
+    style 32 stroke:#55f,stroke-width:3.0px
+    style 33 stroke:red,stroke-width:3.0px
+    style 34 stroke:#55f,stroke-width:3.0px
+    style 35 stroke:#55f,stroke-width:3.0px
+    style 36 stroke:red,stroke-width:3.0px
+    style 37 stroke:#55f,stroke-width:3.0px
+    style 38 stroke:#55f,stroke-width:3.0px
+    style 39 stroke:red,stroke-width:3.0px
+    style 40 stroke:#55f,stroke-width:3.0px
+    style 41 stroke:#55f,stroke-width:3.0px
+    style 42 stroke:red,stroke-width:3.0px
+    style 43 stroke:#55f,stroke-width:3.0px
+    style 44 stroke:#55f,stroke-width:3.0px
+    style 45 stroke:red,stroke-width:3.0px
+    style 46 stroke:#55f,stroke-width:3.0px
+    style 47 stroke:#55f,stroke-width:3.0px
+    linkStyle 0 stroke-width:2.0px
+    linkStyle 1 stroke-width:2.0px
+    linkStyle 2 stroke-width:2.0px
+    linkStyle 3 stroke-width:2.0px
+    linkStyle 4 stroke-width:2.0px
+    linkStyle 5 stroke-width:2.0px
+    linkStyle 6 stroke-width:2.0px
+    linkStyle 7 stroke-width:2.0px
+    linkStyle 8 stroke-width:2.0px
+    linkStyle 9 stroke-width:2.0px
+    linkStyle 10 stroke-width:2.0px
+    linkStyle 11 stroke-width:2.0px
+    linkStyle 12 stroke-width:2.0px
+    linkStyle 13 stroke-width:2.0px
+    linkStyle 14 stroke-width:2.0px
+    linkStyle 15 stroke-width:2.0px
+    linkStyle 16 stroke-width:2.0px
+    linkStyle 17 stroke-width:2.0px
+    linkStyle 18 stroke-width:2.0px
+    linkStyle 19 stroke-width:2.0px
+    linkStyle 20 stroke-width:2.0px
+    linkStyle 21 stroke-width:2.0px
+    linkStyle 22 stroke-width:2.0px
+    linkStyle 23 stroke-width:2.0px
+    linkStyle 24 stroke-width:2.0px
+    linkStyle 25 stroke-width:2.0px
+    linkStyle 26 stroke-width:2.0px
+    linkStyle 27 stroke-width:2.0px
+    linkStyle 28 stroke-width:2.0px
+    linkStyle 29 stroke-width:2.0px
+    linkStyle 30 stroke-width:2.0px
+    linkStyle 31 stroke-width:2.0px
+    linkStyle 32 stroke-width:2.0px
+    linkStyle 33 stroke-width:2.0px
+    linkStyle 34 stroke-width:2.0px
+    linkStyle 35 stroke-width:2.0px
+    linkStyle 36 stroke-width:2.0px
+    linkStyle 37 stroke-width:2.0px
+    linkStyle 38 stroke-width:2.0px
+    linkStyle 39 stroke-width:2.0px
+    linkStyle 40 stroke-width:2.0px
+    linkStyle 41 stroke-width:2.0px
+    linkStyle 42 stroke-width:2.0px
+    linkStyle 43 stroke-width:2.0px
+    linkStyle 44 stroke-width:2.0px
+    linkStyle 45 stroke-width:2.0px
 ```

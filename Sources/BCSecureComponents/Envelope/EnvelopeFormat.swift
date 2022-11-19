@@ -19,7 +19,7 @@ extension CID: EnvelopeFormat {
 }
 
 extension CBOR {
-    var envelopeSummary: String {
+    func envelopeSummary(maxLength: Int = .max) -> String {
         do {
             switch self {
             case .boolean(let b):
@@ -33,7 +33,7 @@ extension CBOR {
             case .double(let n):
                 return String(n)
             case .utf8String(let string):
-                return (string.count > 100 ? string.prefix(count: 100).trim() + "…" : string).flanked(.quote)
+                return (string.count > maxLength ? string.prefix(count: maxLength).trim() + "…" : string).flanked(.quote)
             case .date(let date):
                 var s = date.ISO8601Format()
                 if s.count == 20 && s.hasSuffix("T00:00:00Z") {
@@ -101,7 +101,7 @@ extension CBOR: EnvelopeFormat {
             case CBOR.tagged(.envelope, _):
                 return try Envelope(taggedCBOR: cbor).formatItem
             default:
-                return .item(envelopeSummary)
+                return .item(envelopeSummary())
             }
         } catch {
             return "<error>"

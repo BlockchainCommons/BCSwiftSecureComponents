@@ -51,7 +51,7 @@ extension MermaidEnvelopeGraph: MermaidEncodable {
         if data.includeDigests {
             labelComponents.append(envelope.shortID)
         }
-        labelComponents.append(envelope.summary.replacingOccurrences(of: "\"", with: "#quot;"))
+        labelComponents.append(envelope.summary(maxLength: 40).replacingOccurrences(of: "\"", with: "#quot;"))
         let label = labelComponents.joined(separator: "<br/>").flanked("\"")
 
         var attributes = NodeAttributes(label: label)

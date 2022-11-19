@@ -32,7 +32,7 @@ fileprivate struct TreeElement {
             isHighlighted ? "*" : nil,
             showID ? envelope.shortID : nil,
             incomingEdge.label,
-            envelope.summary
+            envelope.summary(maxLength: 40)
         ]
             .compactMap { $0 }
             .joined(separator: " ")

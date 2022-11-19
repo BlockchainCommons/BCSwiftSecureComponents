@@ -11,12 +11,12 @@ extension Envelope {
         self.digest.shortDescription
     }
     
-    var summary: String {
+    func summary(maxLength: Int = .max) -> String {
         switch self {
         case .node(_, _, _):
             return "NODE"
         case .leaf(let cbor, _):
-            return cbor.envelopeSummary
+            return cbor.envelopeSummary(maxLength: maxLength)
         case .wrapped(_, _):
             return "WRAPPED"
         case .knownValue(let knownValue, _):

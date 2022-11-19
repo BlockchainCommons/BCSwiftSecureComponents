@@ -9,19 +9,25 @@ class FormatTests: XCTestCase {
         """
         "Hello."
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        "Hello."
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         886a0c85 "Hello."
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Hello."
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
         """
         graph LR
             1["886a0c85<br/>#quot;Hello.#quot;"]
+            style 1 stroke:#55f,stroke-width:3.0px
+        """)
+        XCTAssertEqual(envelope.mermaidFormat(hideNodes: true),
+        """
+        graph LR
+            1["#quot;Hello.#quot;"]
             style 1 stroke:#55f,stroke-width:3.0px
         """)
     }
@@ -35,13 +41,6 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        "Hello."
-            ASSERTION
-                verifiedBy
-                Signature
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         7b935d2f NODE
@@ -49,6 +48,13 @@ class FormatTests: XCTestCase {
             6b05e4c4 ASSERTION
                 d59f8c0f pred verifiedBy
                 62cbbb8f obj Signature
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Hello."
+            ASSERTION
+                verifiedBy
+                Signature
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -103,13 +109,6 @@ class FormatTests: XCTestCase {
             "knows": "Bob"
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        ENCRYPTED
-            ASSERTION
-                "knows"
-                "Bob"
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         e54d6fd3 NODE
@@ -117,6 +116,13 @@ class FormatTests: XCTestCase {
             55560bdf ASSERTION
                 7092d620 pred "knows"
                 9a771715 obj "Bob"
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ENCRYPTED
+            ASSERTION
+                "knows"
+                "Bob"
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -167,17 +173,17 @@ class FormatTests: XCTestCase {
         """
         "knows": "Bob"
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        ASSERTION
-            "knows"
-            "Bob"
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         55560bdf ASSERTION
             7092d620 pred "knows"
             9a771715 obj "Bob"
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ASSERTION
+            "knows"
+            "Bob"
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -220,13 +226,6 @@ class FormatTests: XCTestCase {
             "knows": ELIDED
         ]
         """)
-        XCTAssertEqual(elided.treeFormat(hideNodes: true),
-        """
-        "Alice"
-            ASSERTION
-                "knows"
-                ELIDED
-        """)
         XCTAssertEqual(elided.treeFormat(),
         """
         e54d6fd3 NODE
@@ -234,6 +233,13 @@ class FormatTests: XCTestCase {
             55560bdf ASSERTION
                 7092d620 pred "knows"
                 9a771715 obj ELIDED
+        """)
+        XCTAssertEqual(elided.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ASSERTION
+                "knows"
+                ELIDED
         """)
         XCTAssertEqual(elided.elementsCount, elided.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(elided.mermaidFormat(),
@@ -291,19 +297,6 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        "Alice"
-            ASSERTION
-                "knows"
-                "Bob"
-            ASSERTION
-                verifiedBy
-                Signature
-            ASSERTION
-                "knows"
-                "Carol"
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         9a51755e NODE
@@ -317,6 +310,19 @@ class FormatTests: XCTestCase {
             71a30690 ASSERTION
                 7092d620 pred "knows"
                 ad2c454b obj "Carol"
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ASSERTION
+                "knows"
+                "Bob"
+            ASSERTION
+                verifiedBy
+                Signature
+            ASSERTION
+                "knows"
+                "Carol"
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -419,13 +425,6 @@ class FormatTests: XCTestCase {
             ELIDED (3)
         ]
         """)
-        XCTAssertEqual(elided.treeFormat(hideNodes: true),
-        """
-        "Alice"
-            ELIDED
-            ELIDED
-            ELIDED
-        """)
         XCTAssertEqual(elided.treeFormat(),
         """
         9a51755e NODE
@@ -433,6 +432,13 @@ class FormatTests: XCTestCase {
             55560bdf ELIDED
             645921c0 ELIDED
             71a30690 ELIDED
+        """)
+        XCTAssertEqual(elided.treeFormat(hideNodes: true),
+        """
+        "Alice"
+            ELIDED
+            ELIDED
+            ELIDED
         """)
         XCTAssertEqual(elided.elementsCount, elided.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(elided.mermaidFormat(),
@@ -494,20 +500,6 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        WRAPPED
-            "Alice"
-                ASSERTION
-                    "knows"
-                    "Bob"
-                ASSERTION
-                    "knows"
-                    "Carol"
-            ASSERTION
-                verifiedBy
-                Signature
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         e18b6e85 NODE
@@ -523,6 +515,20 @@ class FormatTests: XCTestCase {
             a18db4cc ASSERTION
                 d59f8c0f pred verifiedBy
                 c176abe0 obj Signature
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            "Alice"
+                ASSERTION
+                    "knows"
+                    "Bob"
+                ASSERTION
+                    "knows"
+                    "Carol"
+            ASSERTION
+                verifiedBy
+                Signature
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -640,16 +646,6 @@ class FormatTests: XCTestCase {
             hasRecipient: SealedMessage
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        ENCRYPTED
-            ASSERTION
-                hasRecipient
-                SealedMessage
-            ASSERTION
-                hasRecipient
-                SealedMessage
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         003c3d15 NODE
@@ -660,6 +656,16 @@ class FormatTests: XCTestCase {
             b05bfebd ASSERTION
                 f4af70d6 pred hasRecipient
                 b65acdd8 obj SealedMessage
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        ENCRYPTED
+            ASSERTION
+                hasRecipient
+                SealedMessage
+            ASSERTION
+                hasRecipient
+                SealedMessage
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -747,19 +753,6 @@ class FormatTests: XCTestCase {
             ]
         ]
         """)
-        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
-        """
-        "subject"
-            ASSERTION
-                "predicate"
-                    ASSERTION
-                        "predicate-predicate"
-                        "predicate-object"
-                "object"
-                    ASSERTION
-                        "object-predicate"
-                        "object-object"
-        """)
         XCTAssertEqual(envelope.treeFormat(),
         """
         6e23f835 NODE
@@ -775,6 +768,19 @@ class FormatTests: XCTestCase {
                     d1d716fd ASSERTION
                         f24609db pred "object-predicate"
                         5c7b47fb obj "object-object"
+        """)
+        XCTAssertEqual(envelope.treeFormat(hideNodes: true),
+        """
+        "subject"
+            ASSERTION
+                "predicate"
+                    ASSERTION
+                        "predicate-predicate"
+                        "predicate-object"
+                "object"
+                    ASSERTION
+                        "object-predicate"
+                        "object-object"
         """)
         XCTAssertEqual(envelope.elementsCount, envelope.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(envelope.mermaidFormat(),
@@ -932,49 +938,6 @@ class FormatTests: XCTestCase {
             dereferenceVia: "IPFS"
         ]
         """)
-        XCTAssertEqual(bookMetadata.treeFormat(hideNodes: true),
-        """
-        Digest(e8aa201d)
-            ASSERTION
-                dereferenceVia
-                "IPFS"
-            ASSERTION
-                "format"
-                "EPUB"
-            ASSERTION
-                "work"
-                CID(7fb90a9d)
-                    ASSERTION
-                        dereferenceVia
-                        "LibraryOfCongress"
-                    ASSERTION
-                        "author"
-                        CID(9c747ace)
-                            ASSERTION
-                                dereferenceVia
-                                "LibraryOfCongress"
-                            ASSERTION
-                                hasName
-                                "Ayn Rand"
-                    ASSERTION
-                        hasName
-                        "Atlas Shrugged"
-                            ASSERTION
-                                language
-                                "en"
-                    ASSERTION
-                        isA
-                        "novel"
-                    ASSERTION
-                        hasName
-                        "La rebelión de Atlas"
-                            ASSERTION
-                                language
-                                "es"
-                    ASSERTION
-                        "isbn"
-                        "9780451191144"
-        """)
         XCTAssertEqual(bookMetadata.treeFormat(),
         """
         72fdea85 NODE
@@ -1022,6 +985,49 @@ class FormatTests: XCTestCase {
                     efb00f5e ASSERTION
                         b95d2849 pred "isbn"
                         2e8d4edd obj "9780451191144"
+        """)
+        XCTAssertEqual(bookMetadata.treeFormat(hideNodes: true),
+        """
+        Digest(e8aa201d)
+            ASSERTION
+                dereferenceVia
+                "IPFS"
+            ASSERTION
+                "format"
+                "EPUB"
+            ASSERTION
+                "work"
+                CID(7fb90a9d)
+                    ASSERTION
+                        dereferenceVia
+                        "LibraryOfCongress"
+                    ASSERTION
+                        "author"
+                        CID(9c747ace)
+                            ASSERTION
+                                dereferenceVia
+                                "LibraryOfCongress"
+                            ASSERTION
+                                hasName
+                                "Ayn Rand"
+                    ASSERTION
+                        hasName
+                        "Atlas Shrugged"
+                            ASSERTION
+                                language
+                                "en"
+                    ASSERTION
+                        isA
+                        "novel"
+                    ASSERTION
+                        hasName
+                        "La rebelión de Atlas"
+                            ASSERTION
+                                language
+                                "es"
+                    ASSERTION
+                        "isbn"
+                        "9780451191144"
         """)
         XCTAssertEqual(bookMetadata.elementsCount, bookMetadata.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(bookMetadata.mermaidFormat(),
@@ -1413,56 +1419,6 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(Self.credential.treeFormat(hideNodes: true),
-        """
-        WRAPPED
-            CID(4676635a)
-                ASSERTION
-                    "photo"
-                    "This is James Maxwell's photo."
-                ASSERTION
-                    "lastName"
-                    "Maxwell"
-                ASSERTION
-                    "issueDate"
-                    2020-01-01
-                ASSERTION
-                    controller
-                    "Example Electrical Engineering Board"
-                ASSERTION
-                    "topics"
-                    CBOR
-                ASSERTION
-                    isA
-                    "Certificate of Completion"
-                ASSERTION
-                    "continuingEducationUnits"
-                    1.5
-                ASSERTION
-                    issuer
-                    "Example Electrical Engineering Board"
-                ASSERTION
-                    "expirationDate"
-                    2028-01-01
-                ASSERTION
-                    "certificateNumber"
-                    "123-456-789"
-                ASSERTION
-                    "firstName"
-                    "James"
-                ASSERTION
-                    "subject"
-                    "RF and Microwave Engineering"
-                ASSERTION
-                    "professionalDevelopmentHours"
-                    15
-            ASSERTION
-                verifiedBy
-                Signature
-            ASSERTION
-                note
-                "Signed by Example Electrical Engineering Board"
-        """)
         XCTAssertEqual(Self.credential.treeFormat(),
         """
         6142d9bc NODE
@@ -1513,7 +1469,57 @@ class FormatTests: XCTestCase {
                 2deb70b6 obj Signature
             afe231cc ASSERTION
                 61fb6a6b pred note
-                f4bf011f obj "Signed by Example Electrical Engineering Board"
+                f4bf011f obj "Signed by Example Electrical Engineering…"
+        """)
+        XCTAssertEqual(Self.credential.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            CID(4676635a)
+                ASSERTION
+                    "photo"
+                    "This is James Maxwell's photo."
+                ASSERTION
+                    "lastName"
+                    "Maxwell"
+                ASSERTION
+                    "issueDate"
+                    2020-01-01
+                ASSERTION
+                    controller
+                    "Example Electrical Engineering Board"
+                ASSERTION
+                    "topics"
+                    CBOR
+                ASSERTION
+                    isA
+                    "Certificate of Completion"
+                ASSERTION
+                    "continuingEducationUnits"
+                    1.5
+                ASSERTION
+                    issuer
+                    "Example Electrical Engineering Board"
+                ASSERTION
+                    "expirationDate"
+                    2028-01-01
+                ASSERTION
+                    "certificateNumber"
+                    "123-456-789"
+                ASSERTION
+                    "firstName"
+                    "James"
+                ASSERTION
+                    "subject"
+                    "RF and Microwave Engineering"
+                ASSERTION
+                    "professionalDevelopmentHours"
+                    15
+            ASSERTION
+                verifiedBy
+                Signature
+            ASSERTION
+                note
+                "Signed by Example Electrical Engineering…"
         """)
         XCTAssertEqual(Self.credential.elementsCount, Self.credential.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(Self.credential.mermaidFormat(),
@@ -1567,7 +1573,7 @@ class FormatTests: XCTestCase {
             46["2deb70b6<br/>Signature"]
             47(["afe231cc<br/>ASSERTION"])
             48[/"61fb6a6b<br/>note"/]
-            49["f4bf011f<br/>#quot;Signed by Example Electrical Engineering Board#quot;"]
+            49["f4bf011f<br/>#quot;Signed by Example Electrical Engineering…#quot;"]
             1 -->|subj| 2
             2 -->|subj| 3
             3 -->|subj| 4
@@ -1763,7 +1769,7 @@ class FormatTests: XCTestCase {
             44["Signature"]
             45(["ASSERTION"])
             46[/"note"/]
-            47["#quot;Signed by Example Electrical Engineering Board#quot;"]
+            47["#quot;Signed by Example Electrical Engineering…#quot;"]
             1 --> 2
             2 --> 3
             3 --> 4
@@ -1959,56 +1965,6 @@ class FormatTests: XCTestCase {
             verifiedBy: Signature
         ]
         """)
-        XCTAssertEqual(warranty.treeFormat(hideNodes: true),
-        """
-        WRAPPED
-            WRAPPED
-                WRAPPED
-                    CID(4676635a)
-                        ELIDED
-                        ASSERTION
-                            "lastName"
-                            "Maxwell"
-                        ELIDED
-                        ELIDED
-                        ELIDED
-                        ASSERTION
-                            isA
-                            "Certificate of Completion"
-                        ELIDED
-                        ASSERTION
-                            issuer
-                            "Example Electrical Engineering Board"
-                        ASSERTION
-                            "expirationDate"
-                            2028-01-01
-                        ELIDED
-                        ASSERTION
-                            "firstName"
-                            "James"
-                        ASSERTION
-                            "subject"
-                            "RF and Microwave Engineering"
-                        ELIDED
-                    ASSERTION
-                        verifiedBy
-                        Signature
-                    ASSERTION
-                        note
-                        "Signed by Example Electrical Engineering Board"
-                ASSERTION
-                    "employeeStatus"
-                    "active"
-                ASSERTION
-                    "employeeHiredDate"
-                    2022-01-01
-            ASSERTION
-                note
-                "Signed by Employer Corp."
-            ASSERTION
-                verifiedBy
-                Signature
-        """)
         XCTAssertEqual(warranty.treeFormat(),
         """
         697b9b63 NODE
@@ -2049,7 +2005,7 @@ class FormatTests: XCTestCase {
                                 2deb70b6 obj Signature
                             afe231cc ASSERTION
                                 61fb6a6b pred note
-                                f4bf011f obj "Signed by Example Electrical Engineering Board"
+                                f4bf011f obj "Signed by Example Electrical Engineering…"
                     310b027f ASSERTION
                         f942ee55 pred "employeeStatus"
                         919eb85d obj "active"
@@ -2062,6 +2018,56 @@ class FormatTests: XCTestCase {
             b370f85a ASSERTION
                 d59f8c0f pred verifiedBy
                 efe20914 obj Signature
+        """)
+        XCTAssertEqual(warranty.treeFormat(hideNodes: true),
+        """
+        WRAPPED
+            WRAPPED
+                WRAPPED
+                    CID(4676635a)
+                        ELIDED
+                        ASSERTION
+                            "lastName"
+                            "Maxwell"
+                        ELIDED
+                        ELIDED
+                        ELIDED
+                        ASSERTION
+                            isA
+                            "Certificate of Completion"
+                        ELIDED
+                        ASSERTION
+                            issuer
+                            "Example Electrical Engineering Board"
+                        ASSERTION
+                            "expirationDate"
+                            2028-01-01
+                        ELIDED
+                        ASSERTION
+                            "firstName"
+                            "James"
+                        ASSERTION
+                            "subject"
+                            "RF and Microwave Engineering"
+                        ELIDED
+                    ASSERTION
+                        verifiedBy
+                        Signature
+                    ASSERTION
+                        note
+                        "Signed by Example Electrical Engineering…"
+                ASSERTION
+                    "employeeStatus"
+                    "active"
+                ASSERTION
+                    "employeeHiredDate"
+                    2022-01-01
+            ASSERTION
+                note
+                "Signed by Employer Corp."
+            ASSERTION
+                verifiedBy
+                Signature
         """)
         XCTAssertEqual(warranty.elementsCount, warranty.treeFormat().split(separator: "\n").count)
         XCTAssertEqual(warranty.mermaidFormat(),
@@ -2105,7 +2111,7 @@ class FormatTests: XCTestCase {
             36["2deb70b6<br/>Signature"]
             37(["afe231cc<br/>ASSERTION"])
             38[/"61fb6a6b<br/>note"/]
-            39["f4bf011f<br/>#quot;Signed by Example Electrical Engineering Board#quot;"]
+            39["f4bf011f<br/>#quot;Signed by Example Electrical Engineering…#quot;"]
             40(["310b027f<br/>ASSERTION"])
             41["f942ee55<br/>#quot;employeeStatus#quot;"]
             42["919eb85d<br/>#quot;active#quot;"]
@@ -2307,7 +2313,7 @@ class FormatTests: XCTestCase {
             32["Signature"]
             33(["ASSERTION"])
             34[/"note"/]
-            35["#quot;Signed by Example Electrical Engineering Board#quot;"]
+            35["#quot;Signed by Example Electrical Engineering…#quot;"]
             36(["ASSERTION"])
             37["#quot;employeeStatus#quot;"]
             38["#quot;active#quot;"]
