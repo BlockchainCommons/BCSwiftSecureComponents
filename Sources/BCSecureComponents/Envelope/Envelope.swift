@@ -211,7 +211,7 @@ public extension Envelope {
 private extension Envelope {
     init(subject: Envelope, uncheckedAssertions: [Envelope]) {
         assert(!uncheckedAssertions.isEmpty)
-        let sortedAssertions = uncheckedAssertions.sorted()
+        let sortedAssertions = uncheckedAssertions.sorted() { $0.digest < $1.digest }
         var digests = [subject.digest]
         digests.append(contentsOf: sortedAssertions.map { $0.digest })
         let digest = Digest(Data(digests.map { $0.data }.joined()))
@@ -389,15 +389,21 @@ public extension Envelope {
     }
 }
 
-extension Envelope: Hashable {
-    public static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
-        lhs.digest == rhs.digest
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(digest)
-    }
-}
+//extension Envelope: Comparable {
+//    public static func <(lhs: Envelope, rhs: Envelope) -> Bool {
+//        lhs.digest < rhs.digest
+//    }
+//}
+//
+//extension Envelope: Hashable {
+//    public static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
+//        lhs.digest == rhs.digest
+//    }
+//
+//    public func hash(into hasher: inout Hasher) {
+//        hasher.combine(digest)
+//    }
+//}
 
 public extension Envelope {
     /// Produce a value that will necessarily be different if two envelopes differ
@@ -449,22 +455,16 @@ public extension Envelope {
         return Digest(image)
     }
     
-    static func === (lhs: Envelope, rhs: Envelope) -> Bool {
-        guard lhs == rhs else {
-            return false
-        }
-        return lhs.structuralDigest == rhs.structuralDigest
-    }
-    
-    static func !== (lhs: Envelope, rhs: Envelope) -> Bool {
-        return !(lhs === rhs)
-    }
-}
-
-extension Envelope: Comparable {
-    public static func <(lhs: Envelope, rhs: Envelope) -> Bool {
-        lhs.digest < rhs.digest
-    }
+//    static func === (lhs: Envelope, rhs: Envelope) -> Bool {
+//        guard lhs == rhs else {
+//            return false
+//        }
+//        return lhs.structuralDigest == rhs.structuralDigest
+//    }
+//
+//    static func !== (lhs: Envelope, rhs: Envelope) -> Bool {
+//        return !(lhs === rhs)
+//    }
 }
 
 extension Envelope: ExpressibleByIntegerLiteral {
@@ -475,7 +475,7 @@ extension Envelope: ExpressibleByIntegerLiteral {
 
 public extension Envelope {
     func assertions(withPredicate predicate: Envelope) -> [Envelope] {
-        return assertions.filter { $0.predicate == predicate }
+        return assertions.filter { $0.predicate.digest == predicate.digest }
     }
 
     func assertion(withPredicate predicate: Envelope) throws -> Envelope {
@@ -586,7 +586,7 @@ public extension Envelope {
         let envelope2 = salted ? envelope.addSalt() : envelope
         switch self {
         case .node(subject: let subject, assertions: let assertions, digest: _):
-            if !assertions.contains(envelope2) {
+            if !assertions.contains(where: { $0.digest == envelope2.digest}) {
                 return Envelope(subject: subject, uncheckedAssertions: assertions.appending(envelope2))
             } else {
                 return self
@@ -1292,16 +1292,16 @@ public extension Envelope {
             result = Envelope(assertion: elidedAssertion)
         } else if case .node(let subject, let assertions, _) = self {
             let elidedSubject = try subject.elide(target, isRevealing: isRevealing, encryptingWith: key)
-            assert(elidedSubject == subject)
+            assert(elidedSubject.digest == subject.digest)
             let elidedAssertions = try assertions.map { assertion in
                 let elidedAssertion = try assertion.elide(target, isRevealing: isRevealing, encryptingWith: key)
-                assert(elidedAssertion == assertion)
+                assert(elidedAssertion.digest == assertion.digest)
                 return elidedAssertion
             }
             result = Envelope(subject: elidedSubject, uncheckedAssertions: elidedAssertions)
         } else if case .wrapped(let envelope, _) = self {
             let elidedEnvelope = try envelope.elide(target, isRevealing: isRevealing, encryptingWith: key)
-            assert(elidedEnvelope == envelope)
+            assert(elidedEnvelope.digest == envelope.digest)
             result = Envelope(wrapped: elidedEnvelope)
         } else {
             result = self
@@ -1497,7 +1497,7 @@ public extension Envelope {
         do {
             let cbor = taggedCBOR
             let restored = try Envelope(taggedCBOR: cbor)
-            guard self == restored else {
+            guard self.digest == restored.digest else {
                 print("=== EXPECTED")
                 print(self.format)
                 print("=== GOT")

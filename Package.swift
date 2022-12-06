@@ -23,6 +23,7 @@ let package = Package(
         .package(url: "https://github.com/WolfMcNally/GraphMermaid.git", branch: "master"),
         .package(url: "https://github.com/WolfMcNally/GraphDot.git", branch: "master"),
         .package(url: "https://github.com/WolfMcNally/WolfLorem.git", from: "2.0.0"),
+        .package(url: "https://github.com/WolfMcNally/TreeDistance.git", branch: "master"),
     ],
     targets: [
         .target(
@@ -36,6 +37,7 @@ let package = Package(
                 "Graph",
                 "GraphMermaid",
                 "GraphDot",
+                "TreeDistance",
                 .product(name: "BLAKE3", package: "blake3-swift"),
                 .product(name: "secp256k1", package: "secp256k1-zkp.swift"),
             ]),

@@ -305,7 +305,7 @@ class BasicTests: XCTestCase {
             .encryptSubject(with: symmetricKey, testNonce: fakeNonce)
             .checkEncoding()
 
-        XCTAssertEqual(e1, e2)
+        XCTAssertEqual(e1.digest, e2.digest)
         XCTAssertEqual(e1.subject.digest, e2.subject.digest)
 
         let encryptedMessage = try e2.extractSubject(EncryptedMessage.self)
@@ -314,7 +314,7 @@ class BasicTests: XCTestCase {
         let e3 = try e2
             .decryptSubject(with: symmetricKey)
 
-        XCTAssertEqual(e1, e3)
+        XCTAssertEqual(e1.digest, e3.digest)
     }
 
     func testEncrypted() throws {
@@ -346,18 +346,18 @@ class BasicTests: XCTestCase {
         let d3 = try e4
             .decryptSubject(with: symmetricKey)
         //print(d3.format)
-        XCTAssertEqual(d3, e3)
+        XCTAssertEqual(d3.digest, e3.digest)
 
         let d2 = try d3
             .unwrap()
         //print(d2.format)
-        XCTAssertEqual(d2, e2)
+        XCTAssertEqual(d2.digest, e2.digest)
 
         try d2.verifySignature(from: alicePublicKeys)
 
         let d1 = d2.subject
         //print(d1.format)
-        XCTAssertEqual(d1, e1)
+        XCTAssertEqual(d1.digest, e1.digest)
     }
 
     func testSignWrapEncryptToRecipient() throws {
@@ -376,7 +376,7 @@ class BasicTests: XCTestCase {
 
         let d1 = try e3.decrypt(to: bobPrivateKeys)
         //print(d1.format)
-        XCTAssertEqual(d1, e1)
+        XCTAssertEqual(d1.digest, e1.digest)
     }
 
     func testEncryptDecryptWithOrderedMapKeys() throws {
@@ -394,7 +394,7 @@ class BasicTests: XCTestCase {
 
         let decryptedSeedEnvelope = try encryptedSeedEnvelope
             .decryptSubject(with: symmetricKey)
-        XCTAssertEqual(seedEnvelope, decryptedSeedEnvelope)
+        XCTAssertEqual(seedEnvelope.digest, decryptedSeedEnvelope.digest)
     }
 
     func testDigestLeaf() throws {
@@ -426,10 +426,8 @@ class BasicTests: XCTestCase {
         let e1 = Self.basicEnvelope
 
         let e2 = e1.elide()
-        XCTAssertEqual(e1, e2)
+        XCTAssertEqual(e1.digest, e2.digest)
         XCTAssertNotEqual(e1.structuralDigest, e2.structuralDigest)
-        XCTAssertFalse(e1 === e2)
-        XCTAssertTrue(e1 !== e2)
 
         XCTAssertEqual(e2.format,
         """
@@ -448,7 +446,7 @@ class BasicTests: XCTestCase {
         )
 
         let e3 = try e2.unelide(e1)
-        XCTAssertEqual(e3, e1)
+        XCTAssertEqual(e3.digest, e1.digest)
         XCTAssertEqual(e3.format,
         """
         "Hello."
@@ -849,9 +847,9 @@ class BasicTests: XCTestCase {
         )
         
         // Semantically equivalent
-        XCTAssertTrue(e1 == e3)
+        XCTAssertTrue(e1.digest == e3.digest)
         
         // Structurally different
-        XCTAssertTrue(e1 !== e3)
+        XCTAssertTrue(e1.structuralDigest != e3.structuralDigest)
     }
 }

@@ -42,7 +42,7 @@
       "location" : "https://github.com/WolfMcNally/Graph.git",
       "state" : {
         "branch" : "master",
-        "revision" : "5327fd74673160771e8f5afdbff743108f11c55d"
+        "revision" : "243181ba08bc8d1044a93c5372bf0cee7643543d"
       }
     },
     {
@@ -86,6 +86,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
+        "branch" : "main",
         "revision" : "ceab2a560af75361d0f6ca01a15ad58174daf77e"
       }
     },
@@ -96,6 +97,15 @@
       "state" : {
         "revision" : "0a5bc04095a675662cf24757cc0640aa2204253b",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "treedistance",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/WolfMcNally/TreeDistance.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "742b3fe8214819f17a6b482228a2ab0dcb252402"
       }
     },
     {
@@ -110,10 +120,10 @@
     {
       "identity" : "wolfbase",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/WolfMcNally/WolfBase",
+      "location" : "https://github.com/wolfmcnally/WolfBase.git",
       "state" : {
-        "revision" : "f3b313c4f48b77ba9ea206291dbe3d688bd89bed",
-        "version" : "4.6.1"
+        "revision" : "883d3e868ab61b2001f2cbf4566bb5e72ab10603",
+        "version" : "4.7.0"
       }
     },
     {

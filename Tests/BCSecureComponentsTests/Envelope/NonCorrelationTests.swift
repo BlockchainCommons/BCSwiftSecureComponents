@@ -7,7 +7,7 @@ class NonCorrelationTests: XCTestCase {
         let e1 = Envelope("Hello.")
         
         // e1 correlates with its elision
-        XCTAssertEqual(e1, e1.elide())
+        XCTAssertEqual(e1.digest, e1.elide().digest)
 
         // e2 is the same message, but with random salt
         let e2 = try e1.addSalt().checkEncoding()
@@ -20,10 +20,10 @@ class NonCorrelationTests: XCTestCase {
         XCTAssertEqual(e2.format, e2ExpectedFormat)
 
         // So even though its content is the same, it doesn't correlate.
-        XCTAssertNotEqual(e1, e2)
+        XCTAssertNotEqual(e1.digest, e2.digest)
 
         // And of course, neither does its elision.
-        XCTAssertNotEqual(e1, e2.elide())
+        XCTAssertNotEqual(e1.digest, e2.elide().digest)
     }
     
     func testPredicateCorrelation() throws {
@@ -40,7 +40,7 @@ class NonCorrelationTests: XCTestCase {
         XCTAssertEqual(e1.format, e1ExpectedFormat)
 
         // e1 and e2 have the same predicate
-        XCTAssertEqual(e1.assertions.first!.predicate!, e2.assertions.first!.predicate!)
+        XCTAssertEqual(e1.assertions.first!.predicate!.digest, e2.assertions.first!.predicate!.digest)
         
         // Redact the entire contents of e1 without
         // redacting the envelope itself.
