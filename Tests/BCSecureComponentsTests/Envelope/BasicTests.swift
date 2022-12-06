@@ -305,8 +305,8 @@ class BasicTests: XCTestCase {
             .encryptSubject(with: symmetricKey, testNonce: fakeNonce)
             .checkEncoding()
 
-        XCTAssertEqual(e1.digest, e2.digest)
-        XCTAssertEqual(e1.subject.digest, e2.subject.digest)
+        XCTAssert(e1.isEquivalent(to: e2))
+        XCTAssert(e1.subject.isEquivalent(to: e2.subject))
 
         let encryptedMessage = try e2.extractSubject(EncryptedMessage.self)
         XCTAssertEqual(encryptedMessage.digest, e1.subject.digest)
@@ -314,7 +314,7 @@ class BasicTests: XCTestCase {
         let e3 = try e2
             .decryptSubject(with: symmetricKey)
 
-        XCTAssertEqual(e1.digest, e3.digest)
+        XCTAssert(e1.isEquivalent(to: e3))
     }
 
     func testEncrypted() throws {
@@ -346,18 +346,18 @@ class BasicTests: XCTestCase {
         let d3 = try e4
             .decryptSubject(with: symmetricKey)
         //print(d3.format)
-        XCTAssertEqual(d3.digest, e3.digest)
+        XCTAssert(d3.isEquivalent(to: e3))
 
         let d2 = try d3
             .unwrap()
         //print(d2.format)
-        XCTAssertEqual(d2.digest, e2.digest)
+        XCTAssert(d2.isEquivalent(to: e2))
 
         try d2.verifySignature(from: alicePublicKeys)
 
         let d1 = d2.subject
         //print(d1.format)
-        XCTAssertEqual(d1.digest, e1.digest)
+        XCTAssert(d1.isEquivalent(to: e1))
     }
 
     func testSignWrapEncryptToRecipient() throws {
@@ -376,7 +376,7 @@ class BasicTests: XCTestCase {
 
         let d1 = try e3.decrypt(to: bobPrivateKeys)
         //print(d1.format)
-        XCTAssertEqual(d1.digest, e1.digest)
+        XCTAssert(d1.isEquivalent(to: e1))
     }
 
     func testEncryptDecryptWithOrderedMapKeys() throws {
@@ -389,12 +389,12 @@ class BasicTests: XCTestCase {
         let encryptedSeedEnvelope = try seedEnvelope
             .encryptSubject(with: symmetricKey)
             .checkEncoding()
-        XCTAssertEqual(seedEnvelope.subject.digest, encryptedSeedEnvelope.subject.digest)
-        XCTAssertEqual(seedEnvelope.digest, encryptedSeedEnvelope.digest)
+        XCTAssert(seedEnvelope.subject.isEquivalent(to: encryptedSeedEnvelope.subject))
+        XCTAssert(seedEnvelope.isEquivalent(to: encryptedSeedEnvelope))
 
         let decryptedSeedEnvelope = try encryptedSeedEnvelope
             .decryptSubject(with: symmetricKey)
-        XCTAssertEqual(seedEnvelope.digest, decryptedSeedEnvelope.digest)
+        XCTAssert(seedEnvelope.isEquivalent(to: decryptedSeedEnvelope))
     }
 
     func testDigestLeaf() throws {
@@ -426,8 +426,8 @@ class BasicTests: XCTestCase {
         let e1 = Self.basicEnvelope
 
         let e2 = e1.elide()
-        XCTAssertEqual(e1.digest, e2.digest)
-        XCTAssertNotEqual(e1.structuralDigest, e2.structuralDigest)
+        XCTAssert(e1.isEquivalent(to: e2))
+        XCTAssertFalse(e1.isIdentical(to: e2))
 
         XCTAssertEqual(e2.format,
         """
@@ -446,7 +446,7 @@ class BasicTests: XCTestCase {
         )
 
         let e3 = try e2.unelide(e1)
-        XCTAssertEqual(e3.digest, e1.digest)
+        XCTAssert(e3.isEquivalent(to: e1))
         XCTAssertEqual(e3.format,
         """
         "Hello."
@@ -847,9 +847,9 @@ class BasicTests: XCTestCase {
         )
         
         // Semantically equivalent
-        XCTAssertTrue(e1.digest == e3.digest)
+        XCTAssert(e1.isEquivalent(to: e3))
         
         // Structurally different
-        XCTAssertTrue(e1.structuralDigest != e3.structuralDigest)
+        XCTAssertFalse(e1.isIdentical(to: e3))
     }
 }

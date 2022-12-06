@@ -258,7 +258,7 @@ final class EnvelopeTestVectors: XCTestCase {
         let elidedCredential = try top.elideRevealing(target).checkEncoding()
 
         // Verify that the elided credential compares equal to the original credential.
-        XCTAssertEqual(elidedCredential.digest, johnSmithResidentCard.digest)
+        XCTAssert(elidedCredential.isEquivalent(to: johnSmithResidentCard))
 
         // Verify that the state's signature on the elided card is still valid.
         return try! elidedCredential.verifySignature(from: statePublicKeys)

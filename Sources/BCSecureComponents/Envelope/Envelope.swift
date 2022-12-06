@@ -389,35 +389,17 @@ public extension Envelope {
     }
 }
 
-//extension Envelope: Comparable {
-//    public static func <(lhs: Envelope, rhs: Envelope) -> Bool {
-//        lhs.digest < rhs.digest
-//    }
-//}
-//
-//extension Envelope: Hashable {
-//    public static func ==(lhs: Envelope, rhs: Envelope) -> Bool {
-//        lhs.digest == rhs.digest
-//    }
-//
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(digest)
-//    }
-//}
-
 public extension Envelope {
     /// Produce a value that will necessarily be different if two envelopes differ
     /// structurally, even if they are semantically equivalent.
     ///
-    /// The == operator tests whether two envelopes are *semantically equivalent*. This
-    /// is accomplished by simply comparing the top level digests of the envelopes for
-    /// equality, and has a complexity of `O(1)`.
+    /// Comparing the `digest` field of two envelopes (or calling `isEquivalent(to:)`) tests
+    /// whether two envelopes are *semantically equivalent*. This is accomplished by
+    /// simply comparing the top level digests of the envelopes for equality, and has a
+    /// complexity of `O(1)`.
     ///
-    /// This means that two envelopes will compare equal if they contain identical
-    /// information in their completely unencrypted and unelided form.
-    ///
-    /// However, semantically equivalent envelopes will still compare equal if they
-    /// differ in structure due to encryption or elision.
+    /// This means that two envelopes are considered equivalent if they contain
+    /// identical information in their completely unencrypted and unelided form.
     ///
     /// Some applications need to determine whether two envelopes are not only
     /// semantically equivalent, but also structurally identical. Two envelopes that are
@@ -426,17 +408,11 @@ public extension Envelope {
     ///
     /// The `structuralDigest` attribute is used to produce a value that will
     /// necessarily be different if two envelopes differ structurally, even if they are
-    /// semantically equivalent.
-    ///
-    /// The `===` and `!==` operators compare two envelopes for structural equality and
-    /// have a complexity of `O(1)` if the envelopes are not semantically equivalent
-    /// (that is, their top-level digests are different) and a complexity of `O(m + n)`
-    /// where `m` and `n` are the number of elements in each of the two envelopes when
-    /// they *are* semantically equivalent.
-    ///
-    /// This choice to assign the meaning of semantic equivalence to the `==` operator
-    /// is an architectural design choice of the reference implementation, and is not a
-    /// normative aspect of the envelope specification.
+    /// semantically equivalent. It has a complexity of `O(m + n)` where `m` and `n` are
+    /// the number of elements in each of the two envelopes when they *are* semantically
+    /// equivalent. It is recommended that envelopes be compared for structural equality
+    /// by calling `isIdentical(to:)` as this short-circuits to `false` in cases where
+    /// the compared envelopes are not semantically equivalent.
     var structuralDigest: Digest {
         var image = Data()
         walkStructure { envelope, _, _, _ in
@@ -455,16 +431,29 @@ public extension Envelope {
         return Digest(image)
     }
     
-//    static func === (lhs: Envelope, rhs: Envelope) -> Bool {
-//        guard lhs == rhs else {
-//            return false
-//        }
-//        return lhs.structuralDigest == rhs.structuralDigest
-//    }
-//
-//    static func !== (lhs: Envelope, rhs: Envelope) -> Bool {
-//        return !(lhs === rhs)
-//    }
+    /// Tests two envelopes for semantic equivalence.
+    ///
+    /// Calling `e1.isEquivalent(to: e2)` has a complexity of `O(1)` and simply compares
+    /// the two envelope's digests. The means that two envelopes with certain structural
+    /// differences (e.g., one envelope is partially elided and the other is not) will
+    /// still test as equivalent.
+    func isEquivalent(to other: Envelope) -> Bool {
+        return digest == other.digest
+    }
+
+    /// Tests two envelopes for structural equality.
+    ///
+    /// Calling `e1.isIdentical(to: d2)` has a complexity of `O(1)` if the envelopes are
+    /// not semantically equivalent (that is, their top-level digests are different, and
+    /// thus they *must* have different structures) and a complexity of `O(m + n)` where
+    /// `m` and `n` are the number of elements in each of the two envelopes when they
+    /// *are* semantically equivalent.
+    func isIdentical(to other: Envelope) -> Bool {
+        guard isEquivalent(to: other) else {
+            return false
+        }
+        return structuralDigest == other.structuralDigest
+    }
 }
 
 extension Envelope: ExpressibleByIntegerLiteral {
@@ -1145,38 +1134,6 @@ extension Envelope {
 }
 
 public extension Envelope {
-    /// Perform a depth-first walk of the element tree, replacing each of the visited
-    /// elements with the resulting one.
-    ///
-    /// Replaced elements are not themselves walked.
-//    func mutatingWalk(visit: (Envelope, Int) -> Void) throws {
-//        try mutatingWalk(level: 0, visit: visit)
-//    }
-//
-//    private func mutatingWalk(level: Int, visit: (Envelope, Int) -> Void) throws {
-//        print(self.format)
-//        var result = self
-//        let nextLevel = level + 1
-//        switch self {
-//        case .node(let subject, let assertions, _):
-//            result = try result.replaceSubject(with: subject.mutatingWalk(level: nextLevel, visit: visit))
-//            for assertion in assertions {
-//                result = try result.replaceAssertion(assertion, with: assertion.mutatingWalk(level: nextLevel, visit: visit))
-//            }
-//        case .wrapped(let envelope, _):
-//            result = try envelope.mutatingWalk(level: nextLevel, visit: visit).wrap()
-//        case .assertion(let assertion):
-//            let predicate = try assertion.predicate.mutatingWalk(level: nextLevel, visit: visit)
-//            let object = try assertion.object.mutatingWalk(level: nextLevel, visit: visit)
-//            result = try result.replaceAssertion(self, with: Envelope(predicate, object))
-//        default:
-//            break
-//        }
-//        result = visit(self, level)
-//        return result
-//    }
-//
-
     /// Perform a depth-first walk of the envelope's element tree.
     func mutatingWalk(visit: (Envelope, [Envelope], EnvelopeEdgeType) -> Void) {
         mutatingWalk(path: [], incomingEdge: .none, visit: visit)

@@ -104,7 +104,7 @@ class ScenarioTests: XCTestCase {
             .sign(with: alicePrivateKeys, note: "Made by Alice.")
             .checkEncoding()
 
-        XCTAssertNotEqual(aliceSignedDocument.digest, aliceSignedDocument2.digest)
+        XCTAssertFalse(aliceSignedDocument.isEquivalent(to: aliceSignedDocument2))
 
         // ➡️ ☁️ ➡️
 
@@ -202,7 +202,7 @@ class ScenarioTests: XCTestCase {
         let responseNonce = try aliceChallengeResponse
             .unwrap()
             .unwrap()
-        XCTAssertEqual(aliceChallenge.digest, responseNonce.digest)
+        XCTAssert(aliceChallenge.isEquivalent(to: responseNonce))
 
         // Bob then extracts Alice's registered URI
         let responseURI = try aliceChallengeResponse
@@ -352,7 +352,7 @@ class ScenarioTests: XCTestCase {
         let elidedCredential = try top.elideRevealing(target).checkEncoding()
 
         // Verify that the elided credential compares equal to the original credential.
-        XCTAssertEqual(elidedCredential.digest, johnSmithResidentCard.digest)
+        XCTAssert(elidedCredential.isEquivalent(to: johnSmithResidentCard))
 
         // Verify that the state's signature on the elided card is still valid.
         try elidedCredential.verifySignature(from: statePublicKeys)

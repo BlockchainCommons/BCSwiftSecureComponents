@@ -177,7 +177,7 @@ class NestingTests: XCTestCase {
         XCTAssertEqual(envelope.format, expectedFormat)
 
         let elidedEnvelope = envelope.elide()
-        XCTAssertEqual(elidedEnvelope.digest, envelope.digest)
+        XCTAssert(elidedEnvelope.isEquivalent(to: envelope))
 
         let expectedElidedFormat =
         """
@@ -204,7 +204,7 @@ class NestingTests: XCTestCase {
             .wrap()
             .checkEncoding()
 
-        XCTAssertEqual(elidedEnvelope.digest, envelope.digest)
+        XCTAssert(elidedEnvelope.isEquivalent(to: envelope))
 
         let expectedElidedFormat =
         """
@@ -245,8 +245,8 @@ class NestingTests: XCTestCase {
         }
         """
         XCTAssertEqual(elidedEnvelope.format, expectedElidedFormat)
-        XCTAssertEqual(envelope.digest, elidedEnvelope.digest)
-        XCTAssertEqual(envelope.digest, elidedEnvelope.digest)
+        XCTAssert(envelope.isEquivalent(to: elidedEnvelope))
+        XCTAssert(envelope.isEquivalent(to: elidedEnvelope))
     }
 
     func testNestingSigned() throws {
@@ -292,7 +292,7 @@ class NestingTests: XCTestCase {
 
         let target = try envelope.unwrap().subject
         let elidedEnvelope = try envelope.elideRemoving(target).checkEncoding()
-        XCTAssertEqual(elidedEnvelope.digest, envelope.digest)
+        XCTAssert(elidedEnvelope.isEquivalent(to: envelope))
         try elidedEnvelope.verifySignature(from: alicePublicKeys)
         let expectedElidedFormat =
         """
@@ -308,7 +308,7 @@ class NestingTests: XCTestCase {
         let p2 = envelope.subject
         let p3 = try p1.unwrap()
         let revealedEnvelope = try envelope.elideRevealing([p1, p2, p3]).checkEncoding()
-        XCTAssertEqual(revealedEnvelope.digest, envelope.digest)
+        XCTAssert(revealedEnvelope.isEquivalent(to: envelope))
         let expectedRevealedFormat =
         """
         {

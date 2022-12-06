@@ -145,10 +145,10 @@ class CryptoTests: XCTestCase {
 //        print(plaintextEnvelope.format)
         let encryptedEnvelope = try plaintextEnvelope.encryptSubject(with: key).checkEncoding()
 //        print(encryptedEnvelope.format)
-        XCTAssertEqual(plaintextEnvelope.digest, encryptedEnvelope.digest)
+        XCTAssert(plaintextEnvelope.isEquivalent(to: encryptedEnvelope))
         let plaintextEnvelope2 = try encryptedEnvelope.decryptSubject(with: key).checkEncoding()
 //        print(plaintextEnvelope2.format)
-        XCTAssertEqual(encryptedEnvelope.digest, plaintextEnvelope2.digest)
+        XCTAssert(encryptedEnvelope.isEquivalent(to: plaintextEnvelope2))
     }
 
     func testSignThenEncrypt() throws {
