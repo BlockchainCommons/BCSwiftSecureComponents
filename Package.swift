@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 
 import PackageDescription
 
@@ -6,7 +6,7 @@ let package = Package(
     name: "BCSecureComponents",
     platforms: [
         .iOS(.v15),
-        .macOS(.v12)
+        .macOS(.v13)
     ],
     products: [
         .library(
@@ -19,9 +19,9 @@ let package = Package(
         .package(url: "https://github.com/BlockchainCommons/blake3-swift.git", from: "0.1.2"),
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", from: "1.4.1"),
         .package(url: "https://github.com/BlockchainCommons/secp256k1-zkp.swift.git", from: "0.5.0"),
-        .package(url: "https://github.com/WolfMcNally/Graph.git", from: "0.1.0"),
-        .package(url: "https://github.com/WolfMcNally/GraphMermaid.git", from: "0.1.0"),
-        .package(url: "https://github.com/WolfMcNally/GraphDot.git", from: "0.1.0"),
+        .package(url: "https://github.com/WolfMcNally/Graph.git", branch: "master"),
+        .package(url: "https://github.com/WolfMcNally/GraphMermaid.git", branch: "master"),
+        .package(url: "https://github.com/WolfMcNally/GraphDot.git", branch: "master"),
         .package(url: "https://github.com/WolfMcNally/WolfLorem.git", from: "2.0.0"),
     ],
     targets: [

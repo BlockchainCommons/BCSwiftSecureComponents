@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/Graph.git",
       "state" : {
-        "revision" : "47e62c4ddcb4fc3d5a896a0466394ffdbe066877",
-        "version" : "0.2.1"
+        "branch" : "master",
+        "revision" : "5327fd74673160771e8f5afdbff743108f11c55d"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphDot.git",
       "state" : {
-        "revision" : "c3009b3ccfa5c269b17655510f5b1244d4ef22be",
-        "version" : "0.2.0"
+        "branch" : "master",
+        "revision" : "536c079ba9ea1988050854a7710cbb62c702d75a"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/GraphMermaid.git",
       "state" : {
-        "revision" : "b5bb43f988a12b2b3861b7a97293de282cac676b",
-        "version" : "0.2.0"
+        "branch" : "master",
+        "revision" : "7fb2f93e18a72dc8e7f2d451921f2b83e1dbb291"
       }
     },
     {
@@ -79,6 +79,14 @@
       "state" : {
         "revision" : "b14b7f4c528c942f121c8b860b9410b2bf57825e",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "revision" : "ceab2a560af75361d0f6ca01a15ad58174daf77e"
       }
     },
     {

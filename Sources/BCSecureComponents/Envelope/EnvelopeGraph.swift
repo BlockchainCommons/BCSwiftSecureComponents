@@ -76,4 +76,8 @@ extension Envelope {
     func graph<GraphData>(hideNodes: Bool, data: GraphData) -> Graph<Int, Int, Envelope, EnvelopeEdgeData, GraphData> {
         EnvelopeGraphBuilder(self, hideNodes: hideNodes, data: data).graph
     }
+    
+    func graph(hideNodes: Bool) -> Graph<Int, Int, Envelope, EnvelopeEdgeData, Void> {
+        graph(hideNodes: hideNodes, data: ())
+    }
 }
