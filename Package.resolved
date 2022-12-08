@@ -87,7 +87,7 @@
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
         "branch" : "main",
-        "revision" : "ceab2a560af75361d0f6ca01a15ad58174daf77e"
+        "revision" : "53a8adc54374f620002a3b6401d39e0feb3c57ae"
       }
     },
     {
@@ -105,7 +105,7 @@
       "location" : "https://github.com/WolfMcNally/TreeDistance.git",
       "state" : {
         "branch" : "master",
-        "revision" : "742b3fe8214819f17a6b482228a2ab0dcb252402"
+        "revision" : "70c61c96c4db96ed6ebf7ef16fb0f0ca60d048a9"
       }
     },
     {

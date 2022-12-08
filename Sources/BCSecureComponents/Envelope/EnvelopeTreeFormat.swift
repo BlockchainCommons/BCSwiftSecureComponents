@@ -4,7 +4,7 @@ import Graph
 extension Envelope {
     public func treeFormat(hideNodes: Bool = false, highlighting target: Set<Digest> = []) -> String {
         var elements: [TreeElement] = []
-        walk(hideNodes: hideNodes) { envelope, level, incomingEdge, parent in
+        walk(hideNodes: hideNodes) { (envelope, level, incomingEdge, parent) -> Int? in
             elements.append(TreeElement(level: level, envelope: envelope, incomingEdge: incomingEdge, showID: !hideNodes, isHighlighted: target.contains(envelope.digest)))
             return nil
         }
@@ -12,7 +12,7 @@ extension Envelope {
     }
 }
 
-fileprivate struct TreeElement {
+struct TreeElement {
     let level: Int
     let envelope: Envelope
     let incomingEdge: EnvelopeEdgeType

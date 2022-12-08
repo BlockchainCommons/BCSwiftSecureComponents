@@ -48,12 +48,21 @@ public extension KnownValue {
     static let salt = KnownValue(15, "salt")
     static let date = KnownValue(16, "date")
     
-    static let noChange = KnownValue(50, "noChange")
-    static let add = KnownValue(51, "add")
-    static let delete = KnownValue(52, "delete")
-    static let edit = KnownValue(53, "edit")
-    static let predicate = KnownValue(54, "predicate")
-    static let object = KnownValue(55, "object")
+    static let diffDelete = KnownValue(50, "delete")
+    static let diffRename = KnownValue(51, "rename")
+    static let diffInsert = KnownValue(52, "insert")
+    static let diffParent = KnownValue(53, "parent")
+    static let diffPosition = KnownValue(54, "position")
+    static let diffChildrenCount = KnownValue(55, "childrenCount")
+    static let diffDescendants = KnownValue(56, "descendants")
+    static let diffOperation = KnownValue(57, "operation")
+    static let diffWrapped = KnownValue(58, "wrapped")
+    static let diffAssertion = KnownValue(59, "assertion")
+    static let diffLabel = KnownValue(60, "label")
+    static let diffEdit = KnownValue(61, "edit")
+    static let diffID = KnownValue(62, "id")
+    static let diffSource = KnownValue(63, "source")
+    static let diffTarget = KnownValue(64, "target")
 
     static let body = KnownValue(100, "body")
     static let result = KnownValue(101, "result")
@@ -80,12 +89,21 @@ fileprivate var knownValues: [KnownValue] = [
     .salt,
     .date,
 
-    .noChange,
-    .add,
-    .delete,
-    .edit,
-    .predicate,
-    .object,
+    .diffDelete,
+    .diffRename,
+    .diffInsert,
+    .diffParent,
+    .diffPosition,
+    .diffChildrenCount,
+    .diffDescendants,
+    .diffOperation,
+    .diffWrapped,
+    .diffAssertion,
+    .diffLabel,
+    .diffEdit,
+    .diffID,
+    .diffSource,
+    .diffTarget,
 
     .body,
     .result,
@@ -93,15 +111,6 @@ fileprivate var knownValues: [KnownValue] = [
     .ok,
     .processing,
 ]
-
-public extension Envelope {
-    static let noChange = Envelope(KnownValue.noChange)
-    static let add = Envelope(KnownValue.noChange)
-    static let delete = Envelope(KnownValue.noChange)
-    static let edit = Envelope(KnownValue.noChange)
-    static let predicate = Envelope(KnownValue.noChange)
-    static let object = Envelope(KnownValue.noChange)
-}
 
 fileprivate var knownValuesByRawValue: [UInt64: KnownValue] = {
     var result: [UInt64: KnownValue] = [:]

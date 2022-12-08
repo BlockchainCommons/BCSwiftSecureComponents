@@ -4,36 +4,20 @@ import WolfLorem
 import WolfBase
 
 public class EnvelopeGenerator {
-    var rng: Xoroshiro256StarStar
+    var rng: any RandomNumberGenerator
     
-    var state: Xoroshiro256StarStar.State {
-        rng.state
+    init(rng: any RandomNumberGenerator) {
+        self.rng = rng
     }
     
-    init(state: Xoroshiro256StarStar.State) {
-        self.rng = Xoroshiro256StarStar(state: state)
-    }
-    
-    init() {
-        self.rng = Xoroshiro256StarStar()
+    convenience init() {
+        self.init(rng: SystemRandomNumberGenerator())
     }
     
     func envelope(count: Int = 20) -> Envelope {
         var count = count
         return envelope(level: 0, count: &count)
     }
-    
-//    func mutate(_ envelope: Envelope) -> Envelope {
-//        try! envelope.mutatingWalk { envelope, level in
-//            guard Double.random(in: 0..<1, using: &rng) < 0.1 else {
-//                return envelope
-//            }
-//            var count = 5
-//            var result = envelope
-//            permute(level: level, count: &count, envelope: &result)
-//            return result
-//        }
-//    }
     
     private enum LeafType: CaseIterable {
         case string

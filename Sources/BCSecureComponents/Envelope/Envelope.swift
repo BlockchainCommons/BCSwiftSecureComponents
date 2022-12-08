@@ -208,7 +208,7 @@ public extension Envelope {
     }
 }
 
-private extension Envelope {
+extension Envelope {
     init(subject: Envelope, uncheckedAssertions: [Envelope]) {
         assert(!uncheckedAssertions.isEmpty)
         let sortedAssertions = uncheckedAssertions.sorted() { $0.digest < $1.digest }
@@ -307,7 +307,7 @@ public extension Envelope {
     /// A `levelLimit` of zero will return no digests.
     func digests(levelLimit: Int = .max) -> Set<Digest> {
         var result: Set<Digest> = []
-        walkStructure { envelope, level, incomingEdge, _ in
+        walkStructure { (envelope, level, incomingEdge, _) -> Int? in
             guard level < levelLimit else {
                 return nil
             }
@@ -415,7 +415,7 @@ public extension Envelope {
     /// the compared envelopes are not semantically equivalent.
     var structuralDigest: Digest {
         var image = Data()
-        walkStructure { envelope, _, _, _ in
+        walkStructure { (envelope, _, _, _) -> Int? in
             // Add a discriminator to the image for the encrypted and elided cases.
             switch envelope {
             case .encrypted:
@@ -1159,7 +1159,7 @@ public extension Envelope {
     }
     
     /// Perform a depth-first walk of the envelope's structure.
-    func walk(hideNodes: Bool, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+    func walk<Parent>(hideNodes: Bool, visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
         if hideNodes {
             walkTree { envelope, level, parent in
                 visit(envelope, level, .none, parent)
@@ -1169,11 +1169,11 @@ public extension Envelope {
         }
     }
 
-    private func walkStructure(visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+    private func walkStructure<Parent>(visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
         walkStructure(level: 0, incomingEdge: .none, parent: nil, visit: visit)
     }
     
-    private func walkStructure(level: Int, incomingEdge: EnvelopeEdgeType, parent: Int?, visit: (Envelope, Int, EnvelopeEdgeType, Int?) -> Int?) {
+    private func walkStructure<Parent>(level: Int, incomingEdge: EnvelopeEdgeType, parent: Parent?, visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
         let parent = visit(self, level, incomingEdge, parent)
         let nextLevel = level + 1
         switch self {
@@ -1193,12 +1193,12 @@ public extension Envelope {
     }
 
     /// Perform a depth-first walk of the envelope's tree.
-    private func walkTree(visit: (Envelope, Int, Int?) -> Int?) {
+    private func walkTree<Parent>(visit: (Envelope, Int, Parent?) -> Parent?) {
         walkTree(level: 0, parent: nil, visit: visit)
     }
     
     @discardableResult
-    private func walkTree(level: Int, parent: Int?, visit: (Envelope, Int, Int?) -> Int?) -> Int? {
+    private func walkTree<Parent>(level: Int, parent: Parent?, visit: (Envelope, Int, Parent?) -> Parent?) -> Parent? {
         var parent = parent
         var subjectLevel = level
         if !isNode {
