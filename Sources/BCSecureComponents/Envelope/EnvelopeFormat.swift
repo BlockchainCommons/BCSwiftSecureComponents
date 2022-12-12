@@ -82,9 +82,11 @@ extension CBOR {
                 return Envelope(cbor).format.flanked("request(", ")")
             case CBOR.tagged(CBOR.Tag.response, let cbor):
                 return Envelope(cbor).format.flanked("response(", ")")
-            case CBOR.tagged(let tag, _):
+            case CBOR.tagged(let tag, let innerCBOR):
                 let name = CBOR.Tag.knownTag(for: tag.rawValue)?.name ?? tag.name ?? String(tag.rawValue)
-                return "CBOR(\(name))"
+                return "\(name)(\(innerCBOR.envelopeSummary(maxLength: maxLength)))"
+            case CBOR.array(let elements):
+                return elements.map { $0.envelopeSummary(maxLength: maxLength) }.joined(separator: ", ").flanked("[", "]")
             default:
                 return "CBOR"
             }

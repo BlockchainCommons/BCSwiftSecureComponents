@@ -19,9 +19,10 @@
 * [Noncorrelation](08-NONCORRELATION.md)
 * [Elision and Redaction](09-ELISION-REDACTION.md)
 * [Existence Proofs](10-EXISTENCE-PROOFS.md)
-* [Appendix A: MVA Algorithm Suite](11-A-ALGORITHMS.md)
-* [Appendix B: Envelope Test Vectors](12-B-ENVELOPE-TEST-VECTORS.md)
-* [Appendix C: Envelope SSKR Test Vectors](13-C-ENVELOPE-SSKR-TEST-VECTORS.md)
+* [Diffing Envelopes](11-DIFFING.md)
+* [Appendix A: MVA Algorithm Suite](12-A-ALGORITHMS.md)
+* [Appendix B: Envelope Test Vectors](13-B-ENVELOPE-TEST-VECTORS.md)
+* [Appendix C: Envelope SSKR Test Vectors](14-C-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 
 ---

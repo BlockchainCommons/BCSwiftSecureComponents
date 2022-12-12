@@ -1,8 +1,8 @@
 import Foundation
 import XCTest
 
-let envelopeTestVectorsChapterNumber = 12
-let sskrEnvelopeTestVectorChapterNumer = 13
+let envelopeTestVectorsChapterNumber = 13
+let sskrEnvelopeTestVectorChapterNumer = 14
 
 final class TableOfContents: XCTestCase {
     func testGenerateTableOfContents() {
@@ -24,6 +24,7 @@ let tocItems: [(title: String, filename: String)] = [
     ("Noncorrelation", "NONCORRELATION.md"),
     ("Elision and Redaction", "ELISION-REDACTION.md"),
     ("Existence Proofs", "EXISTENCE-PROOFS.md"),
+    ("Diffing Envelopes", "DIFFING.md"),
     ("Appendix A: MVA Algorithm Suite", "A-ALGORITHMS.md"),
     ("Appendix B: Envelope Test Vectors", "B-ENVELOPE-TEST-VECTORS.md"),
     ("Appendix C: Envelope SSKR Test Vectors", "C-ENVELOPE-SSKR-TEST-VECTORS.md"),

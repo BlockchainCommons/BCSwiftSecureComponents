@@ -48,21 +48,7 @@ public extension KnownValue {
     static let salt = KnownValue(15, "salt")
     static let date = KnownValue(16, "date")
     
-    static let diffDelete = KnownValue(50, "delete")
-    static let diffRename = KnownValue(51, "rename")
-    static let diffInsert = KnownValue(52, "insert")
-    static let diffParent = KnownValue(53, "parent")
-    static let diffPosition = KnownValue(54, "position")
-    static let diffChildrenCount = KnownValue(55, "childrenCount")
-    static let diffDescendants = KnownValue(56, "descendants")
-    static let diffOperation = KnownValue(57, "operation")
-    static let diffWrapped = KnownValue(58, "wrapped")
-    static let diffAssertion = KnownValue(59, "assertion")
-    static let diffLabel = KnownValue(60, "label")
-    static let diffEdit = KnownValue(61, "edit")
-    static let diffID = KnownValue(62, "id")
-    static let diffSource = KnownValue(63, "source")
-    static let diffTarget = KnownValue(64, "target")
+    static let diffEdits = KnownValue(20, "edits")
 
     static let body = KnownValue(100, "body")
     static let result = KnownValue(101, "result")
@@ -89,21 +75,7 @@ fileprivate var knownValues: [KnownValue] = [
     .salt,
     .date,
 
-    .diffDelete,
-    .diffRename,
-    .diffInsert,
-    .diffParent,
-    .diffPosition,
-    .diffChildrenCount,
-    .diffDescendants,
-    .diffOperation,
-    .diffWrapped,
-    .diffAssertion,
-    .diffLabel,
-    .diffEdit,
-    .diffID,
-    .diffSource,
-    .diffTarget,
+    .diffEdits,
 
     .body,
     .result,

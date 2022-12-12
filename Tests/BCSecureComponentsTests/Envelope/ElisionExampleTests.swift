@@ -36,7 +36,7 @@ class ElisionExampleTests: XCTestCase {
                 "photo": "This is James Maxwell's photo."
                 "professionalDevelopmentHours": 15
                 "subject": "RF and Microwave Engineering"
-                "topics": CBOR
+                "topics": ["Subject 1", "Subject 2"]
                 controller: "Example Electrical Engineering Board"
                 isA: "Certificate of Completion"
                 issuer: "Example Electrical Engineering Board"
@@ -198,8 +198,13 @@ class ElisionExampleTests: XCTestCase {
         ]
         """
         )
-
-//        print(target.count) // 28
+        
+        let edits = credential.diff(target: warranty)
+        print(credential.cborEncode.count)
+        print(warranty.cborEncode.count)
+        print(edits.cborEncode.count)
+        print(edits.format)
+        XCTAssert(try credential.transform(edits: edits).isIdentical(to: warranty))
     }
     
     func testRedactionExample() throws {

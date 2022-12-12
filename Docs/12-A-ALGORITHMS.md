@@ -1,4 +1,4 @@
-# Secure Components - Envelope Test Vectors
+# Secure Components - Algorithms
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
 **Revised:** Oct 18, 2022</br>
@@ -17,9 +17,10 @@
 * [Noncorrelation](08-NONCORRELATION.md)
 * [Elision and Redaction](09-ELISION-REDACTION.md)
 * [Existence Proofs](10-EXISTENCE-PROOFS.md)
+* [Diffing Envelopes](11-DIFFING.md)
 * Appendix A: MVA Algorithm Suite: This document
-* [Appendix B: Envelope Test Vectors](12-B-ENVELOPE-TEST-VECTORS.md)
-* [Appendix C: Envelope SSKR Test Vectors](13-C-ENVELOPE-SSKR-TEST-VECTORS.md)
+* [Appendix B: Envelope Test Vectors](13-B-ENVELOPE-TEST-VECTORS.md)
+* [Appendix C: Envelope SSKR Test Vectors](14-C-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 

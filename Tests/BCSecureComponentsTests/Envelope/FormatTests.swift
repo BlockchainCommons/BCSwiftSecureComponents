@@ -1409,7 +1409,7 @@ class FormatTests: XCTestCase {
                 "photo": "This is James Maxwell's photo."
                 "professionalDevelopmentHours": 15
                 "subject": "RF and Microwave Engineering"
-                "topics": CBOR
+                "topics": ["Subject 1", "Subject 2"]
                 controller: "Example Electrical Engineering Board"
                 isA: "Certificate of Completion"
                 issuer: "Example Electrical Engineering Board"
@@ -1439,7 +1439,7 @@ class FormatTests: XCTestCase {
                         4035b4bd obj "Example Electrical Engineering Board"
                     44736993 ASSERTION
                         05651934 pred "topics"
-                        264aec65 obj CBOR
+                        264aec65 obj ["Subject 1", "Subject 2"]
                     46d6cfea ASSERTION
                         8982354d pred isA
                         112e2cdb obj "Certificate of Completion"
@@ -1489,7 +1489,7 @@ class FormatTests: XCTestCase {
                     "Example Electrical Engineering Board"
                 ASSERTION
                     "topics"
-                    CBOR
+                    ["Subject 1", "Subject 2"]
                 ASSERTION
                     isA
                     "Certificate of Completion"
@@ -1543,7 +1543,7 @@ class FormatTests: XCTestCase {
             16["4035b4bd<br/>#quot;Example Electrical Engineering Board#quot;"]
             17(["44736993<br/>ASSERTION"])
             18["05651934<br/>#quot;topics#quot;"]
-            19["264aec65<br/>CBOR"]
+            19["264aec65<br/>[#quot;Subject 1#quot;, #quot;Subject 2#quot;]"]
             20(["46d6cfea<br/>ASSERTION"])
             21[/"8982354d<br/>isA"/]
             22["112e2cdb<br/>#quot;Certificate of Completion#quot;"]
@@ -1739,7 +1739,7 @@ class FormatTests: XCTestCase {
             14["#quot;Example Electrical Engineering Board#quot;"]
             15(["ASSERTION"])
             16["#quot;topics#quot;"]
-            17["CBOR"]
+            17["[#quot;Subject 1#quot;, #quot;Subject 2#quot;]"]
             18(["ASSERTION"])
             19[/"isA"/]
             20["#quot;Certificate of Completion#quot;"]

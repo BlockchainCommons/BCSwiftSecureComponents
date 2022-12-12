@@ -1,7 +1,7 @@
 # Secure Components - Envelope SSKR Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Dec 6, 2022</br>
+**Revised:** Dec 11, 2022</br>
 **Status:** DRAFT
 
 ## Contents
@@ -17,8 +17,9 @@
 * [Noncorrelation](08-NONCORRELATION.md)
 * [Elision and Redaction](09-ELISION-REDACTION.md)
 * [Existence Proofs](10-EXISTENCE-PROOFS.md)
-* [Appendix A: MVA Algorithm Suite](11-A-ALGORITHMS.md)
-* [Appendix B: Envelope Test Vectors](12-B-ENVELOPE-TEST-VECTORS.md)
+* [Diffing Envelopes](11-DIFFING.md)
+* [Appendix A: MVA Algorithm Suite](12-A-ALGORITHMS.md)
+* [Appendix B: Envelope Test Vectors](13-B-ENVELOPE-TEST-VECTORS.md)
 * Appendix C: Envelope SSKR Test Vectors: This document
 
 ---
@@ -69,7 +70,7 @@ These objects are normally random, but they are fixed for these test vectors:
 ### Payload Enclosed in Envelope
 
 ```
-CBOR(crypto-seed)
+crypto-seed(CBOR)
 ```
 
 ### GROUP 1 SHARE 1
@@ -886,7 +887,7 @@ d8 c8                                    # tag(200)   ; envelope
 ### Payload Enclosed in Envelope
 
 ```
-CBOR(crypto-seed)
+crypto-seed(CBOR)
 ```
 
 ### GROUP 1 SHARE 1
