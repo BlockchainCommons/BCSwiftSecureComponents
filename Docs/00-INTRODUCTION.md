@@ -78,7 +78,7 @@ Other goals we are considering include:
 * Correlation resistance leveraging similarities between UUIDs, nonces, hashes, content addressable hashes, signatures, etc.
 * Focus first on peer-based, web-of-trust, self-sovereign key models for roots of trust, where peers may be groups.
 * Support “Progressive Trust” models:
-    * Progressive trust is the ability of an individual to gradually increase the amount of relevant data revealed as trust is built or value generated.
+    * [Progressive trust](https://www.blockchaincommons.com/musings/musings-progressive-trust/) is the ability of an individual to gradually increase the amount of relevant data revealed as trust is built or value generated.
     * [W3C Data Minimization](https://w3c-ccg.github.io/data-minimization/#progressive-trust)
     * [Original concept](http://www.lifewithalacrity.com/2004/08/progressive_tru.html)
 * Default and fundamental support for aggregated group multisig signatures, in particular prime-order curves such as secp256k1, or point-compressed cofactor solutions such as [ristretto255](https://www.ietf.org/archive/id/draft-irtf-cfrg-ristretto255-00.html):
