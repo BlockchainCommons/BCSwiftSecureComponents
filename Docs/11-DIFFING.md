@@ -99,7 +99,7 @@ The envelope is a bare assertion with the known value `edits` as its predicate a
 
 Because edits are themselves conveyed using an envelope, edits can be authenticated by signing, encrypted, or anything else that envelopes can do.
 
-## Example 2
+## Diffing Example 2
 
 This is a somewhat more complex example that shows an initial envelope that already has one of its assertions encrypted and then which has several edits made to it, including deletion of some assertions, then being wrapped and signed, and then elided.
 
