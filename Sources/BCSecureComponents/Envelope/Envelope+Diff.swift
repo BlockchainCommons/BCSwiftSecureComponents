@@ -3,6 +3,10 @@ import WolfBase
 import TreeDistance
 import OrderedCollections
 
+extension EnvelopeError {
+    static let invalidDiff = EnvelopeError("invalidDiff")
+}
+
 typealias EnvelopeTreeNode = TreeNode<EnvelopeTreeLabel>
 typealias EnvelopeEdit = TreeDistance<EnvelopeTreeNode>.Edit
 

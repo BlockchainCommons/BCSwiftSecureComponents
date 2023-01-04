@@ -1,19 +1,18 @@
 import Foundation
 
-public enum EnvelopeError: Error {
-    case invalidKey
-    case missingDigest
-    case invalidDigest
-    case unverifiedSignature
-    case invalidFormat
-    case invalidRecipient
-    case invalidShares
-    case invalidDiff
-    case nonexistentPredicate
-    case nonexistentAssertion
-    case ambiguousPredicate
-    case alreadyEncrypted
-    case notEncrypted
-    case notWrapped
-    case elided
+public struct EnvelopeError: LocalizedError {
+    public let type: String
+    
+    init(_ type: String) {
+        self.type = type
+    }
+    
+    var localizedString: String {
+        type
+    }
+}
+
+extension EnvelopeError {
+    static let invalidDigest = EnvelopeError("invalidDigest")
+    static let invalidFormat = EnvelopeError("invalidFormat")
 }

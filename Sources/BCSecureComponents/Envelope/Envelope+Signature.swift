@@ -1,5 +1,9 @@
 import Foundation
 
+extension EnvelopeError {
+    static let unverifiedSignature = EnvelopeError("unverifiedSignature")
+}
+
 public extension Envelope {
     func sign(with privateKeys: PrivateKeyBase, uncoveredAssertions: [Envelope], tag: Data? = nil, randomGenerator: ((Int) -> Data)? = nil) throws -> Envelope {
         let signature = try Envelope(privateKeys.signingPrivateKey.schnorrSign(subject.digest, tag: tag, randomGenerator: randomGenerator))

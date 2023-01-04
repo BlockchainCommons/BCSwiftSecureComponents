@@ -1,5 +1,13 @@
 import Foundation
 
+extension EnvelopeError {
+    static let invalidKey = EnvelopeError("invalidKey")
+    static let missingDigest = EnvelopeError("missingDigest")
+    static let alreadyEncrypted = EnvelopeError("alreadyEncrypted")
+    static let notEncrypted = EnvelopeError("notEncrypted")
+    static let alreadyElided = EnvelopeError("alreadyElided")
+}
+
 public extension Envelope {
     func encryptSubject(with key: SymmetricKey, testNonce: Nonce? = nil) throws -> Envelope {
         let result: Envelope
@@ -40,7 +48,7 @@ public extension Envelope {
         case .encrypted(_):
             throw EnvelopeError.alreadyEncrypted
         case .elided(_):
-            throw EnvelopeError.elided
+            throw EnvelopeError.alreadyElided
         }
 
         assert(result.digest == originalDigest)

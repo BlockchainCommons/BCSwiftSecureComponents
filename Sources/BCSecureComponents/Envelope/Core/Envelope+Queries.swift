@@ -1,5 +1,11 @@
 import Foundation
 
+extension EnvelopeError {
+    static let nonexistentPredicate = EnvelopeError("nonexistentPredicate")
+    static let nonexistentAssertion = EnvelopeError("nonexistentAssertion")
+    static let ambiguousPredicate = EnvelopeError("ambiguousPredicate")
+}
+
 public extension Envelope {
     /// The envelope's subject.
     var subject: Envelope {

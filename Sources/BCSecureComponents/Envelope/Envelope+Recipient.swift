@@ -1,6 +1,10 @@
 import Foundation
 import WolfBase
 
+extension EnvelopeError {
+    static let invalidRecipient = EnvelopeError("invalidRecipient")
+}
+
 public extension Envelope {
     static func hasRecipient(_ recipient: PublicKeyBase, contentKey: SymmetricKey, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) -> Envelope {
         let sealedMessage = SealedMessage(plaintext: contentKey.taggedCBOR, recipient: recipient, testKeyMaterial: testKeyMaterial, testNonce: testNonce)

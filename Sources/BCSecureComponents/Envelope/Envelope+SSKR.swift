@@ -1,5 +1,9 @@
 import Foundation
 
+extension EnvelopeError {
+    static let invalidShares = EnvelopeError("invalidShares")
+}
+
 public extension Envelope {
     static func sskrShare(_ share: SSKRShare) -> Envelope {
         Envelope(.sskrShare, share)
