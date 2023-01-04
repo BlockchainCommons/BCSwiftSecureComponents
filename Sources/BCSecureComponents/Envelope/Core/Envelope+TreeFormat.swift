@@ -15,11 +15,11 @@ extension Envelope {
 struct TreeElement {
     let level: Int
     let envelope: Envelope
-    let incomingEdge: EnvelopeEdgeType
+    let incomingEdge: Envelope.EdgeType
     let showID: Bool
     let isHighlighted: Bool
 
-    init(level: Int, envelope: Envelope, incomingEdge: EnvelopeEdgeType = .none, showID: Bool = true, isHighlighted: Bool = false) {
+    init(level: Int, envelope: Envelope, incomingEdge: Envelope.EdgeType = .none, showID: Bool = true, isHighlighted: Bool = false) {
         self.level = level
         self.envelope = envelope
         self.incomingEdge = incomingEdge

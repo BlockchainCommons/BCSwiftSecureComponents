@@ -3,7 +3,7 @@ import Graph
 import WolfBase
 
 struct EnvelopeEdgeData {
-    let type: EnvelopeEdgeType
+    let type: Envelope.EdgeType
 }
 
 extension Envelope {

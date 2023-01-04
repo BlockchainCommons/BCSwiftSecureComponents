@@ -5,6 +5,7 @@ import CryptoKit
 import SSKR
 import URKit
 
+/// A flexible container for structured data.
 public indirect enum Envelope: DigestProvider {
     case node(subject: Envelope, assertions: [Envelope], digest: Digest)
     case leaf(CBOR, Digest)

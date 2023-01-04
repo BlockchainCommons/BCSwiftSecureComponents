@@ -1,8 +1,30 @@
 import Foundation
 
 public extension Envelope {
+    enum EdgeType {
+        case none
+        case subject
+        case assertion
+        case predicate
+        case object
+        case wrapped
+        
+        var label: String? {
+            switch self {
+            case .subject, .wrapped:
+                return "subj"
+            case .predicate:
+                return "pred"
+            case .object:
+                return "obj"
+            default:
+                return nil
+            }
+        }
+    }
+
     /// Perform a depth-first walk of the envelope's structure.
-    func walk<Parent>(hideNodes: Bool, visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
+    func walk<Parent>(hideNodes: Bool, visit: (Envelope, Int, EdgeType, Parent?) -> Parent?) {
         if hideNodes {
             walkTree { envelope, level, parent in
                 visit(envelope, level, .none, parent)
@@ -12,11 +34,11 @@ public extension Envelope {
         }
     }
 
-    func walkStructure<Parent>(visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
+    func walkStructure<Parent>(visit: (Envelope, Int, EdgeType, Parent?) -> Parent?) {
         walkStructure(level: 0, incomingEdge: .none, parent: nil, visit: visit)
     }
     
-    private func walkStructure<Parent>(level: Int, incomingEdge: EnvelopeEdgeType, parent: Parent?, visit: (Envelope, Int, EnvelopeEdgeType, Parent?) -> Parent?) {
+    private func walkStructure<Parent>(level: Int, incomingEdge: EdgeType, parent: Parent?, visit: (Envelope, Int, EdgeType, Parent?) -> Parent?) {
         let parent = visit(self, level, incomingEdge, parent)
         let nextLevel = level + 1
         switch self {
