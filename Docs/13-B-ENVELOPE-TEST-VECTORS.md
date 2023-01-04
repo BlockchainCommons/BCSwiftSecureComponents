@@ -1,7 +1,7 @@
 # Secure Components - Envelope Test Vectors
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Dec 11, 2022</br>
+**Revised:** Jan 3, 2023</br>
 **Status:** DRAFT
 
 ## Contents

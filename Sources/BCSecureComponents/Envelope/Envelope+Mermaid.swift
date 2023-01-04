@@ -9,8 +9,6 @@ public extension Envelope {
     }
 }
 
-typealias MermaidEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, MermaidOptions>
-
 public struct MermaidOptions {
     public let layoutDirection: LayoutDirection
     public let theme: Theme
@@ -32,6 +30,8 @@ public struct MermaidOptions {
         case monochrome
     }
 }
+
+typealias MermaidEnvelopeGraph = Graph<Int, Int, Envelope, EnvelopeEdgeData, MermaidOptions>
 
 extension MermaidEnvelopeGraph: MermaidEncodable {
     public var mermaidGraphAttributes: GraphAttributes {

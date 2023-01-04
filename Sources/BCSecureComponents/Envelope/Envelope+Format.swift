@@ -2,6 +2,24 @@ import Foundation
 import WolfBase
 import URKit
 
+public extension Envelope {
+    var format: String {
+        formatItem.format.trim()
+    }
+
+    var diag: String {
+        taggedCBOR.diag
+    }
+
+    var diagAnnotated: String {
+        taggedCBOR.diagAnnotated
+    }
+
+    var dump: String {
+        taggedCBOR.dump
+    }
+}
+
 protocol EnvelopeFormat {
     var formatItem: EnvelopeFormatItem { get }
 }
@@ -112,10 +130,6 @@ extension CBOR: EnvelopeFormat {
 }
 
 extension Envelope: EnvelopeFormat {
-    public var format: String {
-        formatItem.format.trim()
-    }
-
     var formatItem: EnvelopeFormatItem {
         switch self {
         case .leaf(let cbor, _):
@@ -144,7 +158,7 @@ extension Envelope: EnvelopeFormat {
                     assertionsItems.append([$0.formatItem])
                 }
             }
-            assertionsItems.sort()
+            assertionsItems.sort { $0.lexicographicallyPrecedes($1) }
             if elidedCount > 1 {
                 assertionsItems.append([.item("ELIDED (\(elidedCount))")])
             } else if elidedCount > 0 {
@@ -177,7 +191,7 @@ extension Envelope: EnvelopeFormat {
     }
 }
 
-public enum EnvelopeFormatItem {
+enum EnvelopeFormatItem {
     case begin(String)
     case end(String)
     case item(String)
@@ -186,13 +200,13 @@ public enum EnvelopeFormatItem {
 }
 
 extension EnvelopeFormatItem: ExpressibleByStringLiteral {
-    public init(stringLiteral value: StringLiteralType) {
+    init(stringLiteral value: StringLiteralType) {
         self = .item(value)
     }
 }
 
 extension EnvelopeFormatItem: CustomStringConvertible {
-    public var description: String {
+    var description: String {
         switch self {
         case .begin(let string):
             return ".begin(\(string))"
@@ -298,7 +312,7 @@ extension EnvelopeFormatItem {
 }
 
 extension EnvelopeFormatItem: Equatable {
-    public static func ==(lhs: EnvelopeFormatItem, rhs: EnvelopeFormatItem) -> Bool {
+    static func ==(lhs: EnvelopeFormatItem, rhs: EnvelopeFormatItem) -> Bool {
         if case let .begin(l) = lhs, case let .begin(r) = rhs, l == r { return true }
         if case let .end(l) = lhs, case let .end(r) = rhs, l == r { return true }
         if case let .item(l) = lhs, case let .item(r) = rhs, l == r { return true }
@@ -326,7 +340,7 @@ extension EnvelopeFormatItem {
 }
 
 extension EnvelopeFormatItem: Comparable {
-    public static func <(lhs: EnvelopeFormatItem, rhs: EnvelopeFormatItem) -> Bool {
+    static func <(lhs: EnvelopeFormatItem, rhs: EnvelopeFormatItem) -> Bool {
         let lIndex = lhs.index
         let rIndex = rhs.index
         if lIndex < rIndex {
@@ -340,11 +354,5 @@ extension EnvelopeFormatItem: Comparable {
         if case .separator = lhs, case .separator = rhs { return false }
         if case let .list(l) = lhs, case let .list(r) = rhs, l.lexicographicallyPrecedes(r) { return true }
         return false
-    }
-}
-
-extension Array: Comparable where Element == EnvelopeFormatItem {
-    public static func < (lhs: Array<EnvelopeFormatItem>, rhs: Array<EnvelopeFormatItem>) -> Bool {
-        lhs.lexicographicallyPrecedes(rhs)
     }
 }

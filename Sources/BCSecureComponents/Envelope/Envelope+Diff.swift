@@ -325,7 +325,7 @@ extension EnvelopeEdit {
         return EnvelopeEdit(id: Int(id), operation: operation)
     }
     
-    public var cbor: CBOR {
+    var cbor: CBOR {
         let components: [CBOREncodable]
         switch operation {
         case .delete:

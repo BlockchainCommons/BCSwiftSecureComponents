@@ -358,4 +358,18 @@ class NestingTests: XCTestCase {
         """
         XCTAssertEqual(envelope.format, expectedFormat)
     }
+    
+    func testAssertionOnBareAssertion() throws {
+        let envelope = try Envelope("predicate", "object")
+            .addAssertion(Envelope("assertion-predicate", "assertion-object"))
+        let expectedFormat =
+        """
+        {
+            "predicate": "object"
+        } [
+            "assertion-predicate": "assertion-object"
+        ]
+        """
+        XCTAssertEqual(envelope.format, expectedFormat)
+    }
 }
