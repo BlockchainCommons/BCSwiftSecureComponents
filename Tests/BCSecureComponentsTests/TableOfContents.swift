@@ -13,21 +13,9 @@ final class TableOfContents: XCTestCase {
 }
 
 let tocItems: [(title: String, filename: String)] = [
-    ("Envelope Introduction", "INTRODUCTION.md"),
     ("Types", "TYPES.md"),
-    ("Envelope Overview", "ENVELOPE.md"),
-    ("Envelope Notation", "ENVELOPE-NOTATION.md"),
-    ("Output Formats", "OUTPUT-FORMATS.md"),
-    ("Envelope Expressions", "ENVELOPE-EXPRESSIONS.md"),
     ("Definitions", "DEFINITIONS.md"),
-    ("Examples", "EXAMPLES.md"),
-    ("Noncorrelation", "NONCORRELATION.md"),
-    ("Elision and Redaction", "ELISION-REDACTION.md"),
-    ("Existence Proofs", "EXISTENCE-PROOFS.md"),
-    ("Diffing Envelopes", "DIFFING.md"),
     ("Appendix A: MVA Algorithm Suite", "A-ALGORITHMS.md"),
-    ("Appendix B: Envelope Test Vectors", "B-ENVELOPE-TEST-VECTORS.md"),
-    ("Appendix C: Envelope SSKR Test Vectors", "C-ENVELOPE-SSKR-TEST-VECTORS.md"),
 ]
 
 func tocFilename(at index: Int) -> String {

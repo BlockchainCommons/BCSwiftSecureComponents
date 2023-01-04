@@ -2,7 +2,7 @@
 
 A collection of useful primitives for cryptography, semantic graphs, and cryptocurrency in Swift.
 
-Features `Envelope`, which supports everything from enclosing the most basic of plaintext messages, to innumerable recursive permutations of encryption, signing, sharding, and representing semantic graphs.
+NOTE: Gordian Envelope has been moved to [its own package](https://github.com/BlockchainCommons/BCSwiftEnvelope) that depends on this package.
 
 Includes an opinionated Swift wrapper around [LibWally](https://github.com/ElementsProject/libwally-core).
 

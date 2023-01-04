@@ -8,21 +8,9 @@
 
 ## Contents
 
-* [Envelope Introduction](00-INTRODUCTION.md)
-* [Types](01-TYPES.md)
-* [Envelope Overview](02-ENVELOPE.md)
-* [Envelope Notation](03-ENVELOPE-NOTATION.md)
-* [Output Formats](04-OUTPUT-FORMATS.md)
-* [Envelope Expressions](05-ENVELOPE-EXPRESSIONS.md)
+* [Types](00-TYPES.md)
 * Definitions: This document
-* [Examples](07-EXAMPLES.md)
-* [Noncorrelation](08-NONCORRELATION.md)
-* [Elision and Redaction](09-ELISION-REDACTION.md)
-* [Existence Proofs](10-EXISTENCE-PROOFS.md)
-* [Diffing Envelopes](11-DIFFING.md)
-* [Appendix A: MVA Algorithm Suite](12-A-ALGORITHMS.md)
-* [Appendix B: Envelope Test Vectors](13-B-ENVELOPE-TEST-VECTORS.md)
-* [Appendix C: Envelope SSKR Test Vectors](14-C-ENVELOPE-SSKR-TEST-VECTORS.md)
+* [Appendix A: MVA Algorithm Suite](02-A-ALGORITHMS.md)
 
 ---
 
