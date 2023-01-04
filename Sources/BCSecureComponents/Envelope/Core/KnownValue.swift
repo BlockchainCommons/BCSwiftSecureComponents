@@ -86,12 +86,6 @@ extension KnownValue: CBORCodable {
     }
 }
 
-extension KnownValue {
-    var formatItem: EnvelopeFormatItem {
-        .item(name)
-    }
-}
-
 fileprivate var knownValuesByRawValue: [UInt64: KnownValue] = {
     var result: [UInt64: KnownValue] = [:]
     knownValueRegistry.forEach {

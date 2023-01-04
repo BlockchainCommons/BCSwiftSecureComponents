@@ -1,5 +1,5 @@
 import XCTest
-@testable import BCSecureComponents
+import BCSecureComponents
 import WolfBase
 
 class DiffTests: XCTestCase {

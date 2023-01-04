@@ -36,6 +36,18 @@ extension CID: EnvelopeFormat {
     }
 }
 
+extension Assertion: EnvelopeFormat {
+    var formatItem: EnvelopeFormatItem {
+        .list([predicate.formatItem, ": ", object.formatItem])
+    }
+}
+
+extension KnownValue: EnvelopeFormat {
+    var formatItem: EnvelopeFormatItem {
+        .item(name)
+    }
+}
+
 extension CBOR {
     func envelopeSummary(maxLength: Int = .max) -> String {
         do {

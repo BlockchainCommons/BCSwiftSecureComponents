@@ -100,7 +100,9 @@ public extension Envelope {
         }
         return Digest(image)
     }
-    
+}
+
+public extension Envelope {
     /// Tests two envelopes for semantic equivalence.
     ///
     /// Calling `e1.isEquivalent(to: e2)` has a complexity of `O(1)` and simply compares

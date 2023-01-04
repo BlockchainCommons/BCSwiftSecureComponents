@@ -1,6 +1,6 @@
 import XCTest
 import WolfBase
-@testable import BCSecureComponents
+import BCSecureComponents
 
 fileprivate let secureDigest = Digest("Wolf McNally")
 

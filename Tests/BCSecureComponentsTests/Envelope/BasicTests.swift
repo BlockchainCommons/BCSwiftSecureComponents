@@ -133,7 +133,7 @@ class BasicTests: XCTestCase {
         "knows": "Bob"
         """)
 
-        XCTAssertEqual(try e.extractSubject(Assertion.self), Assertion(predicate: "knows", object: "Bob"))
+        XCTAssertEqual(e.subject.digest, Envelope("knows", "Bob").digest)
     }
 
     func testSubjectWithAssertion() throws {

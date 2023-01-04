@@ -1,12 +1,12 @@
 import Foundation
 import URKit
 
-public struct Assertion: DigestProvider {
-    public let predicate: Envelope
-    public let object: Envelope
-    public let digest: Digest
+public struct Assertion {
+    let predicate: Envelope
+    let object: Envelope
+    let digest: Digest
     
-    public init(predicate: Any, object: Any) {
+    init(predicate: Any, object: Any) {
         let p: Envelope
         if let predicate = predicate as? Envelope {
             p = predicate
@@ -50,17 +50,5 @@ extension Assertion {
 extension Assertion: Equatable {
     public static func ==(lhs: Assertion, rhs: Assertion) -> Bool {
         lhs.digest == rhs.digest
-    }
-}
-
-extension Assertion {
-    var hasAssertions: Bool {
-        predicate.hasAssertions || object.hasAssertions
-    }
-}
-
-extension Assertion {
-    var formatItem: EnvelopeFormatItem {
-        .list([predicate.formatItem, ": ", object.formatItem])
     }
 }

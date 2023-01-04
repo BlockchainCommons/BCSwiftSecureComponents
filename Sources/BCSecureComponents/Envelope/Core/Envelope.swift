@@ -29,7 +29,7 @@ extension Envelope: CustomStringConvertible {
         case .assertion(let assertion):
             return ".assertion(\(assertion.predicate), \(assertion.object))"
         case .encrypted(_):
-            return ".encryptedMessage"
+            return ".encrypted"
         case .elided(_):
             return ".elided"
         }
