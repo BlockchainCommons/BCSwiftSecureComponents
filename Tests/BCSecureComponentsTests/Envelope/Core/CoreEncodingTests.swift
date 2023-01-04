@@ -2,7 +2,7 @@ import XCTest
 import BCSecureComponents
 import WolfBase
 
-class EncodingTests: XCTestCase {
+class CoreEncodingTests: XCTestCase {
     func testDigest() throws {
         try Envelope(Digest("Hello.")).checkEncoding()
     }
