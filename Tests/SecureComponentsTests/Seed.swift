@@ -1,5 +1,5 @@
 import Foundation
-import BCSecureComponents
+import SecureComponents
 import WolfBase
 
 /// This is a mostly-duplicate of the `Seed` struct from BCSwiftFoundation, used here for demonstration and testing purposes only.

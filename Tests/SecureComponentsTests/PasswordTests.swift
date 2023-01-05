@@ -1,5 +1,5 @@
 import XCTest
-import BCSecureComponents
+import SecureComponents
 import WolfBase
 
 class PasswordTests: XCTestCase {

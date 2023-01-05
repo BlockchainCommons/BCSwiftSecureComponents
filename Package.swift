@@ -3,15 +3,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "BCSecureComponents",
+    name: "SecureComponents",
     platforms: [
         .iOS(.v15),
         .macOS(.v13)
     ],
     products: [
         .library(
-            name: "BCSecureComponents",
-            targets: ["BCSecureComponents", "BCWally", "SSKR"]),
+            name: "SecureComponents",
+            targets: ["SecureComponents", "BCWally", "SSKR"]),
     ],
     dependencies: [
         .package(url: "https://github.com/WolfMcNally/WolfBase", from: "4.0.0"),
@@ -22,7 +22,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "BCSecureComponents",
+            name: "SecureComponents",
             dependencies: [
                 "WolfBase",
                 "CryptoSwift",
@@ -41,9 +41,9 @@ let package = Package(
             path: "Frameworks/SSKR.xcframework"
         ),
         .testTarget(
-            name: "BCSecureComponentsTests",
+            name: "SecureComponentsTests",
             dependencies: [
-                "BCSecureComponents",
+                "SecureComponents",
                 "WolfBase"
             ]),
     ]

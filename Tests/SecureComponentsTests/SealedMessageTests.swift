@@ -1,5 +1,5 @@
 import XCTest
-import BCSecureComponents
+import SecureComponents
 import WolfBase
 import CryptoKit
 

@@ -1,6 +1,6 @@
 import XCTest
 import WolfBase
-import BCSecureComponents
+import SecureComponents
 
 fileprivate let privateKey = SigningPrivateKey(‡"322b5c1dd5a17c3481c2297990c85c232ed3c17b52ce9905c6ec5193ad132c36")!
 fileprivate let message = "Wolf McNally"

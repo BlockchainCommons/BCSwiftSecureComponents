@@ -1,5 +1,5 @@
 import XCTest
-import BCSecureComponents
+import SecureComponents
 import WolfBase
 
 // Test vector from: https://datatracker.ietf.org/doc/html/rfc8439#section-2.8.2
