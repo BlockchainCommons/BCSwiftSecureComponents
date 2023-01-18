@@ -25,21 +25,21 @@ extension Seed: PrivateKeysDataProvider {
 
 extension Seed {
     public var untaggedCBOR: CBOR {
-        var a: OrderedMap = [1: .data(data)]
+        var a: [CBOR: CBOR] = [1: .data(data)]
 
         if let creationDate {
-            a.append(2, .date(creationDate))
+            a[2] = .date(creationDate)
         }
 
         if !name.isEmpty {
-            a.append(3, .utf8String(name))
+            a[3] = .utf8String(name)
         }
 
         if !note.isEmpty {
-            a.append(4, .utf8String(note))
+            a[4] = .utf8String(note)
         }
 
-        return CBOR.orderedMap(a)
+        return CBOR.map(a)
     }
 
     public var taggedCBOR: CBOR {
@@ -79,13 +79,12 @@ extension Seed {
     }
 
     public init(untaggedCBOR: CBOR) throws {
-        guard case CBOR.orderedMap(let orderedMap) = untaggedCBOR else {
+        guard case CBOR.map(let map) = untaggedCBOR else {
             // CBOR doesn't contain a map.
             throw CBORError.invalidFormat
         }
-        let pairs = try orderedMap.valuesByIntKey()
         guard
-            let dataItem = pairs[1],
+            let dataItem = map[1],
             case let CBOR.data(bytes) = dataItem,
             !bytes.isEmpty
         else {
@@ -95,7 +94,7 @@ extension Seed {
         let data = bytes.data
 
         let creationDate: Date?
-        if let dateItem = pairs[2] {
+        if let dateItem = map[2] {
             guard case let CBOR.date(d) = dateItem else {
                 // CreationDate field doesn't contain a date.
                 throw CBORError.invalidFormat
@@ -106,7 +105,7 @@ extension Seed {
         }
 
         let name: String
-        if let nameItem = pairs[3] {
+        if let nameItem = map[3] {
             guard case let CBOR.utf8String(s) = nameItem else {
                 // Name field doesn't contain string.
                 throw CBORError.invalidFormat
@@ -117,7 +116,7 @@ extension Seed {
         }
 
         let note: String
-        if let noteItem = pairs[4] {
+        if let noteItem = map[4] {
             guard case let CBOR.utf8String(s) = noteItem else {
                 // Note field doesn't contain string.
                 throw CBORError.invalidFormat
