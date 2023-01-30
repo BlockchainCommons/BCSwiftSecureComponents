@@ -34,39 +34,21 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
     }
 }
 
-extension AgreementPrivateKey {
+extension AgreementPrivateKey: URCodable {
+    public static let urType = "agreement-private-key"
+    public static let cborTag: UInt64 = 702
+    
     public var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
+        CBOR(bytes: data)
     }
-    
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.agreementPrivateKey, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
+
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> AgreementPrivateKey {
         guard
-            case let CBOR.data(data) = untaggedCBOR,
+            case let CBOR.bytes(data) = cbor,
             let key = AgreementPrivateKey(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = key
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.agreementPrivateKey, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-extension AgreementPrivateKey: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+        return key
     }
 }

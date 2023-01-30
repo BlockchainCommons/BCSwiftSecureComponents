@@ -41,50 +41,22 @@ extension CID: Comparable {
     }
 }
 
-public extension CID {
-    var untaggedCBOR: CBOR {
-        CBOR.data(data)
+extension CID: URCodable {
+    public static let urType = "crypto-cid"
+    public static let cborTag: UInt64 = 202
+
+    public var untaggedCBOR: CBOR {
+        CBOR(bytes: data)
     }
-    
-    var taggedCBOR: CBOR {
-        CBOR.tagged(.cid, untaggedCBOR)
-    }
-    
-    init(untaggedCBOR: CBOR) throws {
+
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> CID {
         guard
-            case let CBOR.data(data) = untaggedCBOR,
+            case let CBOR.bytes(data) = cbor,
             let value = CID(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = value
-    }
-    
-    init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.cid, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-public extension CID {
-    var ur: UR {
-        return try! UR(type: .cid, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.cid)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
+        return value
     }
 }
 
@@ -94,14 +66,3 @@ public extension CID {
     }
 }
 
-extension CID: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension CID: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> CID {
-        try CID(taggedCBOR: cbor)
-    }
-}

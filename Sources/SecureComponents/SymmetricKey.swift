@@ -33,11 +33,11 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
         let aad = aad ?? Data()
         let nonce = nonce ?? Nonce()
         let (ciphertext, auth) = try! AEADChaCha20Poly1305.encrypt(plaintext.bytes, key: self.bytes, iv: nonce.bytes, authenticationHeader: aad.bytes)
-        return EncryptedMessage(ciphertext: Data(ciphertext), aad: aad, nonce: nonce, auth: EncryptedMessage.Auth(Data(auth))!)!
+        return EncryptedMessage(ciphertext: Data(ciphertext), aad: aad, nonce: nonce, auth: EncryptedMessage.Auth(Data(auth))!)
     }
     
     public func encrypt(plaintext: DataProvider, digest: Digest, nonce: Nonce? = nil) -> EncryptedMessage {
-        encrypt(plaintext: plaintext, aad: digest.taggedCBOR.cborEncode, nonce: nonce)
+        encrypt(plaintext: plaintext, aad: digest.taggedCBOR.encodeCBOR(), nonce: nonce)
     }
     
     public func decrypt(message: EncryptedMessage) -> Data? {
@@ -55,54 +55,20 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     }
 }
 
-extension SymmetricKey {
+extension SymmetricKey: URCodable {
+    public static let urType = "crypto-key"
+    public static let cborTag: UInt64 = 204
+    
     public var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
-    }
-
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.symmetricKey, untaggedCBOR)
+        CBOR(bytes: data)
     }
     
-    public init(untaggedCBOR: CBOR) throws {
-        guard case let CBOR.data(data) = untaggedCBOR,
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SymmetricKey {
+        guard case let CBOR.bytes(data) = cbor,
               let key = SymmetricKey(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = key
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.symmetricKey, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-public extension SymmetricKey {
-    var ur: UR {
-        return try! UR(type: .symmetricKey, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.symmetricKey)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-}
-
-extension SymmetricKey: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+        return key
     }
 }

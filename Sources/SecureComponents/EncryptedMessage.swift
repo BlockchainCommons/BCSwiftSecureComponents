@@ -17,7 +17,7 @@ public struct EncryptedMessage: CustomStringConvertible, Equatable {
     public let nonce: Nonce
     public let auth: Auth
     
-    public init?(ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
+    public init(ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
         self.ciphertext = ciphertext
         self.aad = aad
         self.nonce = nonce
@@ -64,11 +64,14 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var digest: Digest? {
-        try? Digest(taggedCBOR: CBOR(aad))
+        try? Digest.decodeTaggedCBOR(CBOR(bytes: aad))
     }
 }
 
-extension EncryptedMessage {
+extension EncryptedMessage: URCodable {
+    public static let urType = "crypto-msg"
+    public static let cborTag: UInt64 = 201
+
     public var untaggedCBOR: CBOR {
         if self.aad.isEmpty {
             return [ciphertext.cbor, nonce.data.cbor, auth.data.cbor]
@@ -77,24 +80,9 @@ extension EncryptedMessage {
         }
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.message, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
-        let (ciphertext, aad, nonce, auth) = try Self.decode(cbor: untaggedCBOR)
-        self.init(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: auth)!
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.message, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> EncryptedMessage {
+        let (ciphertext, aad, nonce, auth) = try Self.decode(cbor: cbor)
+        return EncryptedMessage(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: auth)
     }
 
     public static func decode(cbor: CBOR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth)
@@ -102,60 +90,25 @@ extension EncryptedMessage {
         guard
             case let CBOR.array(elements) = cbor,
             (3...4).contains(elements.count),
-            case let CBOR.data(ciphertext) = elements[0],
-            case let CBOR.data(nonceData) = elements[1],
+            case let CBOR.bytes(ciphertext) = elements[0],
+            case let CBOR.bytes(nonceData) = elements[1],
             let nonce = Nonce(nonceData),
-            case let CBOR.data(authData) = elements[2],
+            case let CBOR.bytes(authData) = elements[2],
             let auth = Auth(authData)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
 
         if elements.count == 4 {
             guard
-                case let CBOR.data(aad) = elements[3],
+                case let CBOR.bytes(aad) = elements[3],
                 !aad.isEmpty
             else {
-                throw CBORError.invalidFormat
+                throw DecodeError.invalidFormat
             }
             return (ciphertext, aad, nonce, auth)
         } else {
             return (ciphertext, Data(), nonce, auth)
         }
-    }
-    
-    public static func decode(taggedCBOR: CBOR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
-        guard case let CBOR.tagged(.message, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        return try decode(cbor: untaggedCBOR)
-    }
-}
-
-public extension EncryptedMessage {
-    var ur: UR {
-        return try! UR(type: .message, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-
-    static func decode(ur: UR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth) {
-        try ur.checkType(.message)
-        let cbor = try CBOR(ur.cbor)
-        return try Self.decode(cbor: cbor)
-    }
-}
-
-extension EncryptedMessage: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
     }
 }

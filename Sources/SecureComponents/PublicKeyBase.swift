@@ -21,65 +21,25 @@ public struct PublicKeyBase: CustomStringConvertible, Hashable {
     }
 }
 
-extension PublicKeyBase {
+extension PublicKeyBase: URCodable {
+    public static let urType = "crypto-pubkeys"
+    public static let cborTag: UInt64 = 206
+    
     public var untaggedCBOR: CBOR {
-        [signingPublicKey.taggedCBOR, agreementPublicKey.taggedCBOR]
+        [signingPublicKey, agreementPublicKey]
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.publicKeyBase, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> PublicKeyBase {
         guard
-            case let CBOR.array(elements) = untaggedCBOR,
+            case let CBOR.array(elements) = cbor,
             elements.count == 2
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        
-        let signingKey = try SigningPublicKey(taggedCBOR: elements[0])
-        let agreementKey = try AgreementPublicKey(taggedCBOR: elements[1])
 
-        self.init(signingPublicKey: signingKey, agreementPublicKey: agreementKey)
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.publicKeyBase, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
+        let signingKey = try SigningPublicKey.decodeTaggedCBOR(elements[0])
+        let agreementKey = try AgreementPublicKey.decodeTaggedCBOR(elements[1])
 
-public extension PublicKeyBase {
-    var ur: UR {
-        return try! UR(type: .publicKeyBase, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.publicKeyBase)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-}
-
-extension PublicKeyBase: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension PublicKeyBase: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> PublicKeyBase {
-        try PublicKeyBase(taggedCBOR: cbor)
+        return PublicKeyBase(signingPublicKey: signingKey, agreementPublicKey: agreementKey)
     }
 }

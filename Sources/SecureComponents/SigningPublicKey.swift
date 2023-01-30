@@ -74,52 +74,32 @@ extension SigningPublicKey: Hashable {
     }
 }
 
-extension SigningPublicKey {
+extension SigningPublicKey: URCodable {
+    public static let urType = "signing-public-key"
+    public static let cborTag: UInt64 = 705
+
     public var untaggedCBOR: CBOR {
         switch self {
         case .schnorr(let key):
-            return CBOR.data(key.data)
+            return key.data.cbor
         case .ecdsa(let key):
             return [1.cbor, key.data.cbor]
         }
     }
-
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.signingPublicKey, untaggedCBOR)
-    }
     
-    public init(untaggedCBOR: CBOR) throws {
-        if case let CBOR.data(data) = untaggedCBOR,
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SigningPublicKey {
+        if case let CBOR.bytes(data) = cbor,
            let key = ECXOnlyPublicKey(data)
         {
-            self = .schnorr(key)
-            return
-        } else if case let CBOR.array(elements) = untaggedCBOR,
+            return .schnorr(key)
+        } else if case let CBOR.array(elements) = cbor,
                   elements.count == 2,
-                  case CBOR.unsignedInt(1) = elements[0],
-                  case let CBOR.data(data) = elements[1],
+                  case CBOR.unsigned(1) = elements[0],
+                  case let CBOR.bytes(data) = elements[1],
                   let key = ECPublicKey(data)
         {
-            self = .ecdsa(key)
-            return
+            return .ecdsa(key)
         }
-        throw CBORError.invalidFormat
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.signingPublicKey, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-extension SigningPublicKey: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+        throw DecodeError.invalidFormat
     }
 }

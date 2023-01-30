@@ -23,81 +23,44 @@ extension Seed: PrivateKeysDataProvider {
     }
 }
 
-extension Seed {
-    public var untaggedCBOR: CBOR {
-        var a: [CBOR: CBOR] = [1: .data(data)]
-
+extension Seed: URCodable {
+    static var cborTag: UInt64 = 300
+    static var urType: String = "crypto-seed"
+    
+    var untaggedCBOR: CBOR {
+        var map: Map = [1: data]
         if let creationDate {
-            a[2] = .date(creationDate)
+            map[2] = creationDate.cbor
         }
-
         if !name.isEmpty {
-            a[3] = .utf8String(name)
+            map[3] = name.cbor
         }
-
         if !note.isEmpty {
-            a[4] = .utf8String(note)
+            map[4] = note.cbor
         }
-
-        return CBOR.map(a)
+        return map.cbor
     }
-
-    public var taggedCBOR: CBOR {
-        return CBOR.tagged(.seed, untaggedCBOR)
-    }
-
-    public var ur: UR {
-        return try! UR(type: .seed, cbor: untaggedCBOR)
-    }
-}
-
-extension Seed: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension Seed: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> Seed {
-        try Seed(taggedCBOR: cbor)
-    }
-}
-
-extension Seed {
-    public init(ur: UR) throws {
-        try ur.checkType(.seed)
-        try self.init(cborData: ur.cbor)
-    }
-
-    public init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-
-    public init(cborData: Data) throws {
-        let cbor = try CBOR(cborData)
-        try self.init(untaggedCBOR: cbor)
-    }
-
-    public init(untaggedCBOR: CBOR) throws {
-        guard case CBOR.map(let map) = untaggedCBOR else {
+    
+    static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Seed {
+        guard case CBOR.map(let map) = cbor else {
             // CBOR doesn't contain a map.
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
         guard
             let dataItem = map[1],
-            case let CBOR.data(bytes) = dataItem,
+            case let CBOR.bytes(bytes) = dataItem,
             !bytes.isEmpty
         else {
             // CBOR doesn't contain data field.
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
         let data = bytes.data
 
         let creationDate: Date?
         if let dateItem = map[2] {
-            guard case let CBOR.date(d) = dateItem else {
+            guard let d = try? Date.decodeCBOR(dateItem) else {
                 // CreationDate field doesn't contain a date.
-                throw CBORError.invalidFormat
+                throw DecodeError.invalidFormat
             }
             creationDate = d
         } else {
@@ -106,9 +69,9 @@ extension Seed {
 
         let name: String
         if let nameItem = map[3] {
-            guard case let CBOR.utf8String(s) = nameItem else {
+            guard case let CBOR.text(s) = nameItem else {
                 // Name field doesn't contain string.
-                throw CBORError.invalidFormat
+                throw DecodeError.invalidFormat
             }
             name = s
         } else {
@@ -117,25 +80,130 @@ extension Seed {
 
         let note: String
         if let noteItem = map[4] {
-            guard case let CBOR.utf8String(s) = noteItem else {
+            guard case let CBOR.text(s) = noteItem else {
                 // Note field doesn't contain string.
-                throw CBORError.invalidFormat
+                throw DecodeError.invalidFormat
             }
             note = s
         } else {
             note = ""
         }
-        self.init(data: data, name: name, note: note, creationDate: creationDate)!
-    }
-
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(tag, content) = taggedCBOR, tag == .seed else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: content)
-    }
-
-    public init(taggedCBOR: Data) throws {
-        try self.init(taggedCBOR: CBOR(taggedCBOR))
+        return Seed(data: data, name: name, note: note, creationDate: creationDate)!
     }
 }
+//extension Seed {
+//    public var untaggedCBOR: CBOR {
+//        var a: [CBOR: CBOR] = [1: .data(data)]
+//
+//        if let creationDate {
+//            a[2] = .date(creationDate)
+//        }
+//
+//        if !name.isEmpty {
+//            a[3] = .utf8String(name)
+//        }
+//
+//        if !note.isEmpty {
+//            a[4] = .utf8String(note)
+//        }
+//
+//        return CBOR.map(a)
+//    }
+//
+//    public var taggedCBOR: CBOR {
+//        return CBOR.tagged(.seed, untaggedCBOR)
+//    }
+//
+//    public var ur: UR {
+//        return try! UR(type: .seed, cbor: untaggedCBOR)
+//    }
+//}
+//
+//extension Seed: CBOREncodable {
+//    public var cbor: CBOR {
+//        taggedCBOR
+//    }
+//}
+//
+//extension Seed: CBORDecodable {
+//    public static func cborDecode(_ cbor: CBOR) throws -> Seed {
+//        try Seed(taggedCBOR: cbor)
+//    }
+//}
+//
+//extension Seed {
+//    public init(ur: UR) throws {
+//        try ur.checkType(.seed)
+//        try self.init(cborData: ur.cbor)
+//    }
+//
+//    public init(urString: String) throws {
+//        try self.init(ur: UR(urString: urString))
+//    }
+//
+//    public init(cborData: Data) throws {
+//        let cbor = try CBOR(cborData)
+//        try self.init(untaggedCBOR: cbor)
+//    }
+//
+//    public init(untaggedCBOR: CBOR) throws {
+//        guard case CBOR.map(let map) = untaggedCBOR else {
+//            // CBOR doesn't contain a map.
+//            throw DecodeError.invalidFormat
+//        }
+//        guard
+//            let dataItem = map[1],
+//            case let CBOR.data(bytes) = dataItem,
+//            !bytes.isEmpty
+//        else {
+//            // CBOR doesn't contain data field.
+//            throw DecodeError.invalidFormat
+//        }
+//        let data = bytes.data
+//
+//        let creationDate: Date?
+//        if let dateItem = map[2] {
+//            guard case let CBOR.date(d) = dateItem else {
+//                // CreationDate field doesn't contain a date.
+//                throw DecodeError.invalidFormat
+//            }
+//            creationDate = d
+//        } else {
+//            creationDate = nil
+//        }
+//
+//        let name: String
+//        if let nameItem = map[3] {
+//            guard case let CBOR.utf8String(s) = nameItem else {
+//                // Name field doesn't contain string.
+//                throw DecodeError.invalidFormat
+//            }
+//            name = s
+//        } else {
+//            name = ""
+//        }
+//
+//        let note: String
+//        if let noteItem = map[4] {
+//            guard case let CBOR.utf8String(s) = noteItem else {
+//                // Note field doesn't contain string.
+//                throw DecodeError.invalidFormat
+//            }
+//            note = s
+//        } else {
+//            note = ""
+//        }
+//        self.init(data: data, name: name, note: note, creationDate: creationDate)!
+//    }
+//
+//    public init(taggedCBOR: CBOR) throws {
+//        guard case let CBOR.tagged(tag, content) = taggedCBOR, tag == .seed else {
+//            throw CBORError.invalidTag
+//        }
+//        try self.init(untaggedCBOR: content)
+//    }
+//
+//    public init(taggedCBOR: Data) throws {
+//        try self.init(taggedCBOR: CBOR(taggedCBOR))
+//    }
+//}

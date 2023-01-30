@@ -67,77 +67,6 @@ extension Digest: Comparable {
     }
 }
 
-public extension Digest {
-    var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
-    }
-    
-    var taggedCBOR: CBOR {
-        CBOR.tagged(.digest, untaggedCBOR)
-    }
-    
-    static func optionalTaggedCBOR(_ digest: Digest?) -> CBOR {
-        guard let digest else {
-            return CBOR.null
-        }
-        return digest.taggedCBOR
-    }
-    
-    init(untaggedCBOR: CBOR) throws {
-        guard
-            case let CBOR.data(data) = untaggedCBOR,
-            let digest = Digest(rawValue: data)
-        else {
-            throw CBORError.invalidFormat
-        }
-        self = digest
-    }
-    
-    init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.digest, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-    
-    init?(optionalTaggedCBOR cbor: CBOR) throws {
-        guard cbor != .null else {
-            return nil
-        }
-        try self.init(taggedCBOR: cbor)
-    }
-}
-
-public extension Digest {
-    var ur: UR {
-        return try! UR(type: .digest, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.digest)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-}
-
-extension Digest: CBORCodable {
-    public static func cborDecode(_ cbor: URKit.CBOR) throws -> Digest {
-        try Digest(taggedCBOR: cbor)
-    }
-    
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
 extension Digest: DataProvider {
     public var providedData: Data {
         data
@@ -161,5 +90,24 @@ public func +(lhs: Data, rhs: Digest) -> Data {
 public extension Digest {
     var shortDescription: String {
         String(self.data.hex.prefix(count: 8))
+    }
+}
+
+extension Digest: URCodable {
+    public static let urType = "crypto-digest"
+    public static let cborTag: UInt64 = 203
+
+    public var untaggedCBOR: CBOR {
+        CBOR(bytes: data)
+    }
+
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Digest {
+        guard
+            case let CBOR.bytes(data) = cbor,
+            let value = Digest(rawValue: data)
+        else {
+            throw DecodeError.invalidFormat
+        }
+        return value
     }
 }

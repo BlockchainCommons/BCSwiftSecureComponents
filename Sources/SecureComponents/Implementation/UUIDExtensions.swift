@@ -1,41 +1,22 @@
 import Foundation
 import URKit
 
-extension UUID {
+extension UUID: TaggedCBORCodable {
+    public static let cborTag: UInt64 = 37
+
     public var untaggedCBOR: CBOR {
-        CBOR.data(serialized)
+        serialized.cbor
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.uuid, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> UUID {
         guard
-            case let CBOR.data(bytes) = untaggedCBOR,
+            case let CBOR.bytes(bytes) = cbor,
             bytes.count == MemoryLayout<uuid_t>.size
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = bytes.withUnsafeBytes {
+        return bytes.withUnsafeBytes {
             UUID(uuid: $0.bindMemory(to: uuid_t.self).baseAddress!.pointee)
         }
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.uuid, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-}
-
-extension UUID: CBORCodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> UUID {
-        try UUID(taggedCBOR: cbor)
-    }
-    
-    public var cbor: CBOR {
-        taggedCBOR
     }
 }

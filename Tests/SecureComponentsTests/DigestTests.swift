@@ -39,6 +39,6 @@ class DigestTests: XCTestCase {
            h'50f97c3d91dde7faf12a10272c1627be2902581b27051a485f8e7162c4c914d2'
         )
         """
-        XCTAssertEqual(secureDigest.taggedCBOR.diag, expected)
+        XCTAssertEqual(secureDigest.taggedCBOR.diagnostic(), expected)
     }
 }

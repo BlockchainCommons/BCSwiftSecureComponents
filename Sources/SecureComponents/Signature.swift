@@ -45,7 +45,10 @@ extension Signature: Equatable {
     }
 }
 
-extension Signature {
+extension Signature: URCodable {
+    public static let urType = "signature"
+    public static let cborTag: UInt64 = 222
+
     public var untaggedCBOR: CBOR {
         switch self {
         case .schnorr(let data, let tag):
@@ -59,54 +62,27 @@ extension Signature {
         }
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.signature, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Signature {
         if
-            case let CBOR.data(data) = untaggedCBOR
+            case let CBOR.bytes(data) = cbor
         {
-            self = .schnorr(data: data, tag: Data())
+            return .schnorr(data: data, tag: Data())
         } else if
-            case let CBOR.array(elements) = untaggedCBOR,
+            case let CBOR.array(elements) = cbor,
             elements.count == 2,
-            case let CBOR.data(data) = elements[0],
-            case let CBOR.data(tag) = elements[1]
+            case let CBOR.bytes(data) = elements[0],
+            case let CBOR.bytes(tag) = elements[1]
         {
-            self = .schnorr(data: data, tag: tag)
+            return .schnorr(data: data, tag: tag)
         } else if
-            case let CBOR.array(elements) = untaggedCBOR,
+            case let CBOR.array(elements) = cbor,
             elements.count == 2,
-            case CBOR.unsignedInt(1) = elements[0],
-            case let CBOR.data(data) = elements[1]
+            case CBOR.unsigned(1) = elements[0],
+            case let CBOR.bytes(data) = elements[1]
         {
-            self = .ecdsa(data: data)
+            return .ecdsa(data: data)
         } else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.signature, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init(taggedCBOR: Data) throws {
-        try self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-extension Signature: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension Signature: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> Signature {
-        try Signature(taggedCBOR: cbor)
     }
 }

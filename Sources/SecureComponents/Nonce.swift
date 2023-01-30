@@ -31,57 +31,21 @@ public extension Nonce {
     }
 }
 
-public extension Nonce {
-    var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
+extension Nonce: URCodable {
+    public static let urType = "nonce"
+    public static let cborTag: UInt64 = 707
+
+    public var untaggedCBOR: CBOR {
+        CBOR(bytes: data)
     }
-    
-    init(untaggedCBOR: CBOR) throws {
+
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Nonce {
         guard
-            case let CBOR.data(data) = untaggedCBOR,
-            let result = Nonce(data)
+            case let CBOR.bytes(data) = cbor,
+            let value = Nonce(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = result
-    }
-
-    var taggedCBOR: CBOR {
-        CBOR.tagged(.nonce, untaggedCBOR)
-    }
-
-    init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.nonce, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-}
-
-extension Nonce: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension Nonce: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> Nonce {
-        try Nonce(taggedCBOR: cbor)
-    }
-}
-
-public extension Nonce {
-    var ur: UR {
-        return try! UR(type: .nonce, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.nonce)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
+        return value
     }
 }

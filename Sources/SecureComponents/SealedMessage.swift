@@ -38,51 +38,27 @@ public struct SealedMessage {
     }
 }
 
-extension SealedMessage {
+extension SealedMessage: URCodable {
+    public static let urType = "crypto-sealed"
+    public static let cborTag: UInt64 = 207
+
     public var untaggedCBOR: CBOR {
         let message = self.message.taggedCBOR
         let ephemeralPublicKey = self.ephemeralPublicKey.taggedCBOR
-        
+
         return [message, ephemeralPublicKey]
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.sealedMessage, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SealedMessage {
         guard
-            case let CBOR.array(elements) = untaggedCBOR,
+            case let CBOR.array(elements) = cbor,
             elements.count == 2,
-            let message = try? EncryptedMessage(taggedCBOR: elements[0]),
-            let ephemeralPublicKey = try? AgreementPublicKey(taggedCBOR: elements[1])
+            let message = try? EncryptedMessage.decodeTaggedCBOR(elements[0]),
+            let ephemeralPublicKey = try? AgreementPublicKey.decodeTaggedCBOR(elements[1])
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        
-        self.init(message: message, ephemeralPublicKey: ephemeralPublicKey)
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.sealedMessage, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
 
-extension SealedMessage: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension SealedMessage: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> SealedMessage {
-        try SealedMessage(taggedCBOR: cbor)
+        return SealedMessage(message: message, ephemeralPublicKey: ephemeralPublicKey)
     }
 }

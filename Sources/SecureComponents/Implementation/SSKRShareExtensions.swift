@@ -56,62 +56,15 @@ extension SSKRShare: Hashable {
 }
 
 extension SSKRShare {
-    public var untaggedCBOR: CBOR {
-        CBOR.data(Data(data))
-    }
-    
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.sskrShare, untaggedCBOR)
-    }
-    
-    public init(untaggedCBOR: CBOR) throws {
-        guard case let CBOR.data(data) = untaggedCBOR else {
-            throw CBORError.invalidFormat
-        }
-        self = SSKRShare(data: data.bytes)
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.sskrShare, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-}
-
-extension SSKRShare {
     public func bytewords(style: Bytewords.Style) -> String {
-        return Bytewords.encode(taggedCBOR.cborEncode, style: style)
+        return Bytewords.encode(taggedCBOR.encodeCBOR(), style: style)
     }
 
     public init?(bytewords: String) throws {
         guard let share = try? Bytewords.decode(bytewords) else {
             return nil
         }
-        self = try SSKRShare(taggedCBOR: CBOR(share))
-    }
-}
-
-extension SSKRShare {
-    public var ur: UR {
-        return try! UR(type: .sskrShare, cbor: untaggedCBOR)
-    }
-    
-    public init(ur: UR) throws {
-        try ur.checkType(.sskrShare)
-        let cbor = try CBOR(ur.cbor)
-        self = try SSKRShare(untaggedCBOR: cbor)
-    }
-    
-    public var urString: String {
-        return UREncoder.encode(ur)
-    }
-
-    public init?(urString: String) throws {
-        guard let ur = try? URDecoder.decode(urString) else {
-            return nil
-        }
-        try self.init(ur: ur)
+        self = try SSKRShare.decodeTaggedCBOR(share.cbor)
     }
 }
 
@@ -121,14 +74,77 @@ extension SSKRShare: CustomStringConvertible {
     }
 }
 
-extension SSKRShare: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+extension SSKRShare: URCodable {
+    public static let urType = "crypto-sskr"
+    public static let cborTag: UInt64 = 309
+
+    public var untaggedCBOR: CBOR {
+        Data(data).cbor
+    }
+    
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SSKRShare {
+        guard case let CBOR.bytes(data) = cbor else {
+            throw DecodeError.invalidFormat
+        }
+        return SSKRShare(data: data.bytes)
     }
 }
 
-extension SSKRShare: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> SSKRShare {
-        try SSKRShare(taggedCBOR: cbor)
-    }
-}
+//extension SSKRShare {
+//    public var untaggedCBOR: CBOR {
+//        CBOR.data(Data(data))
+//    }
+//
+//    public var taggedCBOR: CBOR {
+//        CBOR.tagged(.sskrShare, untaggedCBOR)
+//    }
+//
+//    public init(untaggedCBOR: CBOR) throws {
+//        guard case let CBOR.data(data) = untaggedCBOR else {
+//            throw DecodeError.invalidFormat
+//        }
+//        self = SSKRShare(data: data.bytes)
+//    }
+//
+//    public init(taggedCBOR: CBOR) throws {
+//        guard case let CBOR.tagged(.sskrShare, untaggedCBOR) = taggedCBOR else {
+//            throw CBORError.invalidTag
+//        }
+//        try self.init(untaggedCBOR: untaggedCBOR)
+//    }
+//}
+//
+//extension SSKRShare {
+//    public var ur: UR {
+//        return try! UR(type: .sskrShare, cbor: untaggedCBOR)
+//    }
+//
+//    public init(ur: UR) throws {
+//        try ur.checkType(.sskrShare)
+//        let cbor = try CBOR(ur.cbor)
+//        self = try SSKRShare(untaggedCBOR: cbor)
+//    }
+//
+//    public var urString: String {
+//        return UREncoder.encode(ur)
+//    }
+//
+//    public init?(urString: String) throws {
+//        guard let ur = try? URDecoder.decode(urString) else {
+//            return nil
+//        }
+//        try self.init(ur: ur)
+//    }
+//}
+//
+//extension SSKRShare: CBOREncodable {
+//    public var cbor: CBOR {
+//        taggedCBOR
+//    }
+//}
+//
+//extension SSKRShare: CBORDecodable {
+//    public static func cborDecode(_ cbor: CBOR) throws -> SSKRShare {
+//        try SSKRShare(taggedCBOR: cbor)
+//    }
+//}

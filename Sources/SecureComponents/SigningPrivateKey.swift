@@ -44,39 +44,21 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
 }
 
-extension SigningPrivateKey {
-    public var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
-    }
+extension SigningPrivateKey: URCodable {
+    public static let urType = "signing-private-key"
+    public static let cborTag: UInt64 = 704
 
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.signingPrivateKey, untaggedCBOR)
+    public var untaggedCBOR: CBOR {
+        data.cbor
     }
     
-    public init(untaggedCBOR: CBOR) throws {
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SigningPrivateKey {
         guard
-            case let CBOR.data(data) = untaggedCBOR,
+            case let CBOR.bytes(data) = cbor,
             let key = SigningPrivateKey(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = key
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.signingPrivateKey, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-extension SigningPrivateKey: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+        return key
     }
 }

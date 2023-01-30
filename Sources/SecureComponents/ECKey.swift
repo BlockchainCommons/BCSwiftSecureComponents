@@ -3,7 +3,7 @@ import BCWally
 import URKit
 import WolfBase
 
-public protocol ECKey {
+public protocol ECKey: UREncodable {
     static var keyLen: Int { get }
 
     var data: Data { get }
@@ -14,8 +14,8 @@ public protocol ECKey {
     
     var `public`: ECPublicKey { get }
     
-    var untaggedCBOR: CBOR { get }
-    var taggedCBOR: CBOR { get }
+//    var untaggedCBOR: CBOR { get }
+//    var taggedCBOR: CBOR { get }
 }
 
 extension ECKey {
@@ -27,9 +27,9 @@ extension ECKey {
         hex
     }
     
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.ecKey, untaggedCBOR)
-    }
+//    public var taggedCBOR: CBOR {
+//        CBOR.tagged(.ecKey, untaggedCBOR)
+//    }
 }
 
 public protocol ECPublicKeyProtocol: ECKey {
@@ -38,6 +38,8 @@ public protocol ECPublicKeyProtocol: ECKey {
 }
 
 public struct ECPrivateKey: ECKey {
+    public static let urType = "crypto-eckey"
+    public static let cborTag: UInt64 = 306
     public static let keyLen = Int(EC_PRIVATE_KEY_LEN)
     public let data: Data
 
@@ -79,10 +81,9 @@ public struct ECPrivateKey: ECKey {
     public var wif: String {
         Wally.encodeWIF(key: data, network: .mainnet, isPublicKeyCompressed: true)
     }
-
+    
     public var untaggedCBOR: CBOR {
-        // https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-008-eckey.md#cddl
-        [2: .boolean(true), 3: .data(data)]
+        ([2: true, 3: data] as Map).cbor
     }
 }
 
@@ -115,6 +116,8 @@ public struct ECXOnlyPublicKey: Hashable {
 }
 
 public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
+    public static let urType = "crypto-eckey"
+    public static let cborTag: UInt64 = 306
     public static var keyLen: Int = Int(EC_PUBLIC_KEY_LEN)
     public let data: Data
 
@@ -157,7 +160,7 @@ public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
 
     public var untaggedCBOR: CBOR {
         // https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-008-eckey.md#cddl
-        [3: .data(data)]
+        ([3: data] as Map).cbor
     }
 }
 
@@ -165,6 +168,8 @@ extension ECPublicKey: CustomStringConvertible {
 }
 
 public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
+    public static let urType = "crypto-eckey"
+    public static let cborTag: UInt64 = 306
     public static var keyLen: Int = Int(EC_PUBLIC_KEY_UNCOMPRESSED_LEN)
     public let data: Data
 
@@ -197,7 +202,7 @@ public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
 
     public var untaggedCBOR: CBOR {
         // https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-008-eckey.md#cddl
-        [3: .data(data)]
+        ([3: data] as Map).cbor
     }
 }
 

@@ -48,52 +48,18 @@ public struct PrivateKeyBase {
     }
 }
 
-extension PrivateKeyBase {
+extension PrivateKeyBase: URCodable {
+    public static let urType = "crypto-prvkeys"
+    public static let cborTag: UInt64 = 205
+
     public var untaggedCBOR: CBOR {
         data.cbor
     }
-
-    public var taggedCBOR: CBOR {
-        CBOR.tagged(.privateKeyBase, untaggedCBOR)
-    }
     
-    public init(untaggedCBOR: CBOR) throws {
-        guard case let CBOR.data(data) = untaggedCBOR else {
-            throw CBORError.invalidFormat
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> PrivateKeyBase {
+        guard case let CBOR.bytes(data) = cbor else {
+            throw DecodeError.invalidFormat
         }
-        self.init(data)
-    }
-    
-    public init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.privateKeyBase, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-    
-    public init?(taggedCBOR: Data) {
-        try? self.init(taggedCBOR: CBOR(taggedCBOR))
-    }
-}
-
-public extension PrivateKeyBase {
-    var ur: UR {
-        return try! UR(type: .privateKeyBase, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.privateKeyBase)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
-    }
-}
-
-extension PrivateKeyBase: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
+        return PrivateKeyBase(data)
     }
 }

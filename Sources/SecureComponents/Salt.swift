@@ -72,57 +72,21 @@ public extension Salt {
     }
 }
 
-public extension Salt {
-    var untaggedCBOR: CBOR {
-        CBOR.data(self.data)
+extension Salt: URCodable {
+    public static let urType = "salt"
+    public static let cborTag: UInt64 = 708
+
+    public var untaggedCBOR: CBOR {
+        CBOR(bytes: data)
     }
-    
-    init(untaggedCBOR: CBOR) throws {
+
+    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Salt {
         guard
-            case let CBOR.data(data) = untaggedCBOR,
-            let result = Salt(data)
+            case let CBOR.bytes(data) = cbor,
+            let value = Salt(data)
         else {
-            throw CBORError.invalidFormat
+            throw DecodeError.invalidFormat
         }
-        self = result
-    }
-
-    var taggedCBOR: CBOR {
-        CBOR.tagged(.salt, untaggedCBOR)
-    }
-
-    init(taggedCBOR: CBOR) throws {
-        guard case let CBOR.tagged(.salt, untaggedCBOR) = taggedCBOR else {
-            throw CBORError.invalidTag
-        }
-        try self.init(untaggedCBOR: untaggedCBOR)
-    }
-}
-
-extension Salt: CBOREncodable {
-    public var cbor: CBOR {
-        taggedCBOR
-    }
-}
-
-extension Salt: CBORDecodable {
-    public static func cborDecode(_ cbor: CBOR) throws -> Salt {
-        try Salt(taggedCBOR: cbor)
-    }
-}
-
-public extension Salt {
-    var ur: UR {
-        return try! UR(type: .salt, cbor: untaggedCBOR)
-    }
-    
-    init(ur: UR) throws {
-        try ur.checkType(.salt)
-        let cbor = try CBOR(ur.cbor)
-        try self.init(untaggedCBOR: cbor)
-    }
-    
-    init(urString: String) throws {
-        try self.init(ur: UR(urString: urString))
+        return value
     }
 }
