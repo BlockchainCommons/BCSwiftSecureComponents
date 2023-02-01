@@ -45,8 +45,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
 }
 
 extension SigningPrivateKey: URCodable {
-    public static let urType = "signing-private-key"
-    public static let cborTag: UInt64 = 704
+    public static let cborTag = Tag(704, "signing-private-key")
 
     public var untaggedCBOR: CBOR {
         data.cbor
@@ -57,7 +56,7 @@ extension SigningPrivateKey: URCodable {
             case let CBOR.bytes(data) = cbor,
             let key = SigningPrivateKey(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return key
     }

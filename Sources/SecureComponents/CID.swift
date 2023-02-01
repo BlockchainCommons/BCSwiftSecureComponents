@@ -42,8 +42,7 @@ extension CID: Comparable {
 }
 
 extension CID: URCodable {
-    public static let urType = "crypto-cid"
-    public static let cborTag: UInt64 = 202
+    public static let cborTag = Tag(202, "crypto-cid")
 
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -54,7 +53,7 @@ extension CID: URCodable {
             case let CBOR.bytes(data) = cbor,
             let value = CID(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return value
     }

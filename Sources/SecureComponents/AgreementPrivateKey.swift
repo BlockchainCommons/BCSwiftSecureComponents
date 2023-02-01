@@ -35,8 +35,7 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
 }
 
 extension AgreementPrivateKey: URCodable {
-    public static let urType = "agreement-private-key"
-    public static let cborTag: UInt64 = 702
+    public static let cborTag = Tag(702, "agreement-private-key")
     
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -47,7 +46,7 @@ extension AgreementPrivateKey: URCodable {
             case let CBOR.bytes(data) = cbor,
             let key = AgreementPrivateKey(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return key
     }

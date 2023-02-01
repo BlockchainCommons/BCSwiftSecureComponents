@@ -38,8 +38,7 @@ public protocol ECPublicKeyProtocol: ECKey {
 }
 
 public struct ECPrivateKey: ECKey {
-    public static let urType = "crypto-eckey"
-    public static let cborTag: UInt64 = 306
+    public static let cborTag = Tag(306, "crypto-eckey")
     public static let keyLen = Int(EC_PRIVATE_KEY_LEN)
     public let data: Data
 
@@ -116,8 +115,7 @@ public struct ECXOnlyPublicKey: Hashable {
 }
 
 public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
-    public static let urType = "crypto-eckey"
-    public static let cborTag: UInt64 = 306
+    public static let cborTag = Tag(306, "crypto-eckey")
     public static var keyLen: Int = Int(EC_PUBLIC_KEY_LEN)
     public let data: Data
 
@@ -168,8 +166,7 @@ extension ECPublicKey: CustomStringConvertible {
 }
 
 public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
-    public static let urType = "crypto-eckey"
-    public static let cborTag: UInt64 = 306
+    public static let cborTag = Tag(306, "crypto-eckey")
     public static var keyLen: Int = Int(EC_PUBLIC_KEY_UNCOMPRESSED_LEN)
     public let data: Data
 

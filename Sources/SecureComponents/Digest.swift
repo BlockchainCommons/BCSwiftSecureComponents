@@ -94,8 +94,7 @@ public extension Digest {
 }
 
 extension Digest: URCodable {
-    public static let urType = "crypto-digest"
-    public static let cborTag: UInt64 = 203
+    public static let cborTag = Tag(203, "crypto-digest")
 
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -106,7 +105,7 @@ extension Digest: URCodable {
             case let CBOR.bytes(data) = cbor,
             let value = Digest(rawValue: data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return value
     }

@@ -46,8 +46,7 @@ extension Signature: Equatable {
 }
 
 extension Signature: URCodable {
-    public static let urType = "signature"
-    public static let cborTag: UInt64 = 222
+    public static let cborTag = Tag(222, "signature")
 
     public var untaggedCBOR: CBOR {
         switch self {
@@ -82,7 +81,7 @@ extension Signature: URCodable {
         {
             return .ecdsa(data: data)
         } else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
     }
 }

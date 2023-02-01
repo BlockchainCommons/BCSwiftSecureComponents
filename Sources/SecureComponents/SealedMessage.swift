@@ -39,8 +39,7 @@ public struct SealedMessage {
 }
 
 extension SealedMessage: URCodable {
-    public static let urType = "crypto-sealed"
-    public static let cborTag: UInt64 = 207
+    public static let cborTag = Tag(207, "crypto-sealed")
 
     public var untaggedCBOR: CBOR {
         let message = self.message.taggedCBOR
@@ -56,7 +55,7 @@ extension SealedMessage: URCodable {
             let message = try? EncryptedMessage.decodeTaggedCBOR(elements[0]),
             let ephemeralPublicKey = try? AgreementPublicKey.decodeTaggedCBOR(elements[1])
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
 
         return SealedMessage(message: message, ephemeralPublicKey: ephemeralPublicKey)

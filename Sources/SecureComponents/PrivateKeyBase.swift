@@ -49,8 +49,7 @@ public struct PrivateKeyBase {
 }
 
 extension PrivateKeyBase: URCodable {
-    public static let urType = "crypto-prvkeys"
-    public static let cborTag: UInt64 = 205
+    public static let cborTag = Tag(205, "crypto-prvkeys")
 
     public var untaggedCBOR: CBOR {
         data.cbor
@@ -58,7 +57,7 @@ extension PrivateKeyBase: URCodable {
     
     public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> PrivateKeyBase {
         guard case let CBOR.bytes(data) = cbor else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return PrivateKeyBase(data)
     }

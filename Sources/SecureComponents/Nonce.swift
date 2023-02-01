@@ -32,8 +32,7 @@ public extension Nonce {
 }
 
 extension Nonce: URCodable {
-    public static let urType = "nonce"
-    public static let cborTag: UInt64 = 707
+    public static let cborTag = Tag(707, "nonce")
 
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -44,7 +43,7 @@ extension Nonce: URCodable {
             case let CBOR.bytes(data) = cbor,
             let value = Nonce(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return value
     }

@@ -73,8 +73,7 @@ public extension Salt {
 }
 
 extension Salt: URCodable {
-    public static let urType = "salt"
-    public static let cborTag: UInt64 = 708
+    public static let cborTag = Tag(708, "salt")
 
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -85,7 +84,7 @@ extension Salt: URCodable {
             case let CBOR.bytes(data) = cbor,
             let value = Salt(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return value
     }

@@ -75,8 +75,7 @@ extension SigningPublicKey: Hashable {
 }
 
 extension SigningPublicKey: URCodable {
-    public static let urType = "signing-public-key"
-    public static let cborTag: UInt64 = 705
+    public static let cborTag = Tag(705, "signing-public-key")
 
     public var untaggedCBOR: CBOR {
         switch self {
@@ -100,6 +99,6 @@ extension SigningPublicKey: URCodable {
         {
             return .ecdsa(key)
         }
-        throw DecodeError.invalidFormat
+        throw CBORDecodingError.invalidFormat
     }
 }

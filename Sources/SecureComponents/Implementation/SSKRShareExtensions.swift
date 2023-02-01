@@ -75,8 +75,7 @@ extension SSKRShare: CustomStringConvertible {
 }
 
 extension SSKRShare: URCodable {
-    public static let urType = "crypto-sskr"
-    public static let cborTag: UInt64 = 309
+    public static let cborTag = Tag(309, "crypto-sskr")
 
     public var untaggedCBOR: CBOR {
         Data(data).cbor
@@ -84,7 +83,7 @@ extension SSKRShare: URCodable {
     
     public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SSKRShare {
         guard case let CBOR.bytes(data) = cbor else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return SSKRShare(data: data.bytes)
     }

@@ -22,8 +22,7 @@ public struct PublicKeyBase: CustomStringConvertible, Hashable {
 }
 
 extension PublicKeyBase: URCodable {
-    public static let urType = "crypto-pubkeys"
-    public static let cborTag: UInt64 = 206
+    public static let cborTag = Tag(206, "crypto-pubkeys")
     
     public var untaggedCBOR: CBOR {
         [signingPublicKey, agreementPublicKey]
@@ -34,7 +33,7 @@ extension PublicKeyBase: URCodable {
             case let CBOR.array(elements) = cbor,
             elements.count == 2
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
 
         let signingKey = try SigningPublicKey.decodeTaggedCBOR(elements[0])

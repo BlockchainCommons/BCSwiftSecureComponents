@@ -29,8 +29,7 @@ public struct AgreementPublicKey: CustomStringConvertible, Hashable {
 }
 
 extension AgreementPublicKey: URCodable {
-    public static let urType = "agreement-public-key"
-    public static let cborTag: UInt64 = 230
+    public static let cborTag = Tag(230, "agreement-public-key")
     
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -41,7 +40,7 @@ extension AgreementPublicKey: URCodable {
             case let CBOR.bytes(data) = cbor,
             let key = AgreementPublicKey(data: data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return key
     }

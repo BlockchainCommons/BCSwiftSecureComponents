@@ -64,13 +64,12 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var digest: Digest? {
-        try? Digest.decodeTaggedCBOR(CBOR(bytes: aad))
+        try? Digest.decodeTaggedCBOR(aad)
     }
 }
 
 extension EncryptedMessage: URCodable {
-    public static let urType = "crypto-msg"
-    public static let cborTag: UInt64 = 201
+    public static let cborTag = Tag(201, "crypto-msg")
 
     public var untaggedCBOR: CBOR {
         if self.aad.isEmpty {
@@ -96,7 +95,7 @@ extension EncryptedMessage: URCodable {
             case let CBOR.bytes(authData) = elements[2],
             let auth = Auth(authData)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
 
         if elements.count == 4 {
@@ -104,7 +103,7 @@ extension EncryptedMessage: URCodable {
                 case let CBOR.bytes(aad) = elements[3],
                 !aad.isEmpty
             else {
-                throw DecodeError.invalidFormat
+                throw CBORDecodingError.invalidFormat
             }
             return (ciphertext, aad, nonce, auth)
         } else {

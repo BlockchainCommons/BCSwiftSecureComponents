@@ -1,8 +1,8 @@
 import Foundation
 import URKit
 
-extension URL: TaggedCBORCodable {
-    public static var cborTag: UInt64 = 32
+extension URL: CBORTaggedCodable {
+    public static var cborTag: Tag = 32
     
     public var untaggedCBOR: CBOR {
         absoluteString.cbor
@@ -13,7 +13,7 @@ extension URL: TaggedCBORCodable {
             case let CBOR.text(string) = cbor,
             let result = URL(string: string)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return result
     }

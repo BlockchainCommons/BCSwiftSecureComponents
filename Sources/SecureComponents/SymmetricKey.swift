@@ -56,8 +56,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
 }
 
 extension SymmetricKey: URCodable {
-    public static let urType = "crypto-key"
-    public static let cborTag: UInt64 = 204
+    public static let cborTag = Tag(204, "crypto-key")
     
     public var untaggedCBOR: CBOR {
         CBOR(bytes: data)
@@ -67,7 +66,7 @@ extension SymmetricKey: URCodable {
         guard case let CBOR.bytes(data) = cbor,
               let key = SymmetricKey(data)
         else {
-            throw DecodeError.invalidFormat
+            throw CBORDecodingError.invalidFormat
         }
         return key
     }
