@@ -61,25 +61,25 @@ extension Signature: URCodable {
         }
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Signature {
+    public init(untaggedCBOR: CBOR) throws {
         if
-            case let CBOR.bytes(data) = cbor
+            case let CBOR.bytes(data) = untaggedCBOR
         {
-            return .schnorr(data: data, tag: Data())
+            self = .schnorr(data: data, tag: Data())
         } else if
-            case let CBOR.array(elements) = cbor,
+            case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2,
             case let CBOR.bytes(data) = elements[0],
             case let CBOR.bytes(tag) = elements[1]
         {
-            return .schnorr(data: data, tag: tag)
+            self = .schnorr(data: data, tag: tag)
         } else if
-            case let CBOR.array(elements) = cbor,
+            case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2,
             case CBOR.unsigned(1) = elements[0],
             case let CBOR.bytes(data) = elements[1]
         {
-            return .ecdsa(data: data)
+            self = .ecdsa(data: data)
         } else {
             throw CBORDecodingError.invalidFormat
         }

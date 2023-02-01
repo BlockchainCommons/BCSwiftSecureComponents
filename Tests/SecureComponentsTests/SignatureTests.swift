@@ -19,9 +19,9 @@ class SchnorrSignatureTests: XCTestCase {
     }
     
     func testCBOR() throws {
-        let taggedCBOR = signature.encodeCBOR()
+        let taggedCBOR = signature.cborData
         print(try CBOR(taggedCBOR).diagnostic())
-        let receivedSignature = try Signature.decodeCBOR(taggedCBOR)
+        let receivedSignature = try Signature(taggedCBORData: taggedCBOR)
         XCTAssertEqual(signature, receivedSignature)
     }
 }
@@ -40,8 +40,8 @@ class ECDSASignatureTests: XCTestCase {
     }
     
     func testCBOR() throws {
-        let taggedCBOR = signature.encodeCBOR()
-        let receivedSignature = try Signature.decodeCBOR(taggedCBOR)
+        let taggedCBOR = signature.cborData
+        let receivedSignature = try Signature(taggedCBORData: taggedCBOR)
         XCTAssertEqual(signature, receivedSignature)
     }
 }

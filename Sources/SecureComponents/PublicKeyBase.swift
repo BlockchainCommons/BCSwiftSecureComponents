@@ -28,17 +28,17 @@ extension PublicKeyBase: URCodable {
         [signingPublicKey, agreementPublicKey]
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> PublicKeyBase {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.array(elements) = cbor,
+            case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2
         else {
             throw CBORDecodingError.invalidFormat
         }
 
-        let signingKey = try SigningPublicKey.decodeTaggedCBOR(elements[0])
-        let agreementKey = try AgreementPublicKey.decodeTaggedCBOR(elements[1])
+        let signingKey = try SigningPublicKey(taggedCBOR: elements[0])
+        let agreementKey = try AgreementPublicKey(taggedCBOR: elements[1])
 
-        return PublicKeyBase(signingPublicKey: signingKey, agreementPublicKey: agreementKey)
+        self = PublicKeyBase(signingPublicKey: signingKey, agreementPublicKey: agreementKey)
     }
 }

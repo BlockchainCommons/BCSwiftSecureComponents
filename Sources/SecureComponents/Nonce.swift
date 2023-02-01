@@ -35,16 +35,16 @@ extension Nonce: URCodable {
     public static let cborTag = Tag(707, "nonce")
 
     public var untaggedCBOR: CBOR {
-        CBOR(bytes: data)
+        CBOR.bytes(data)
     }
 
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Nonce {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(data) = cbor,
+            case let CBOR.bytes(data) = untaggedCBOR,
             let value = Nonce(data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return value
+        self = value
     }
 }

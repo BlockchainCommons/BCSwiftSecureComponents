@@ -38,16 +38,16 @@ extension AgreementPrivateKey: URCodable {
     public static let cborTag = Tag(702, "agreement-private-key")
     
     public var untaggedCBOR: CBOR {
-        CBOR(bytes: data)
+        CBOR.bytes(data)
     }
 
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> AgreementPrivateKey {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(data) = cbor,
+            case let CBOR.bytes(data) = untaggedCBOR,
             let key = AgreementPrivateKey(data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return key
+        self = key
     }
 }

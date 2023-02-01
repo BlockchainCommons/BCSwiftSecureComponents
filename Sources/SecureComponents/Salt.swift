@@ -76,16 +76,16 @@ extension Salt: URCodable {
     public static let cborTag = Tag(708, "salt")
 
     public var untaggedCBOR: CBOR {
-        CBOR(bytes: data)
+        CBOR.bytes(data)
     }
 
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Salt {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(data) = cbor,
+            case let CBOR.bytes(data) = untaggedCBOR,
             let value = Salt(data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return value
+        self = value
     }
 }

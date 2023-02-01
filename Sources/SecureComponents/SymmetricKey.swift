@@ -37,7 +37,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     }
     
     public func encrypt(plaintext: DataProvider, digest: Digest, nonce: Nonce? = nil) -> EncryptedMessage {
-        encrypt(plaintext: plaintext, aad: digest.taggedCBOR.encodeCBOR(), nonce: nonce)
+        encrypt(plaintext: plaintext, aad: digest.taggedCBOR.cborData, nonce: nonce)
     }
     
     public func decrypt(message: EncryptedMessage) -> Data? {
@@ -59,15 +59,15 @@ extension SymmetricKey: URCodable {
     public static let cborTag = Tag(204, "crypto-key")
     
     public var untaggedCBOR: CBOR {
-        CBOR(bytes: data)
+        CBOR.bytes(data)
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SymmetricKey {
-        guard case let CBOR.bytes(data) = cbor,
+    public init(untaggedCBOR: CBOR) throws {
+        guard case let CBOR.bytes(data) = untaggedCBOR,
               let key = SymmetricKey(data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return key
+        self = key
     }
 }

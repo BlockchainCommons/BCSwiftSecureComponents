@@ -8,14 +8,14 @@ extension UUID: CBORTaggedCodable {
         serialized.cbor
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> UUID {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(bytes) = cbor,
+            case let CBOR.bytes(bytes) = untaggedCBOR,
             bytes.count == MemoryLayout<uuid_t>.size
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return bytes.withUnsafeBytes {
+        self = bytes.withUnsafeBytes {
             UUID(uuid: $0.bindMemory(to: uuid_t.self).baseAddress!.pointee)
         }
     }

@@ -8,13 +8,13 @@ extension URL: CBORTaggedCodable {
         absoluteString.cbor
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> URL {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.text(string) = cbor,
+            case let CBOR.text(string) = untaggedCBOR,
             let result = URL(string: string)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return result
+        self = result
     }
 }

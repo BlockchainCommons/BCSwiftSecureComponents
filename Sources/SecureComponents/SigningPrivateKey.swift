@@ -51,13 +51,13 @@ extension SigningPrivateKey: URCodable {
         data.cbor
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SigningPrivateKey {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(data) = cbor,
+            case let CBOR.bytes(data) = untaggedCBOR,
             let key = SigningPrivateKey(data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return key
+        self = key
     }
 }

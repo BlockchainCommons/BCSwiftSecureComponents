@@ -64,7 +64,7 @@ extension EncryptedMessage {
 
 extension EncryptedMessage {
     public var digest: Digest? {
-        try? Digest.decodeTaggedCBOR(aad)
+        try? Digest(taggedCBOR: CBOR(aad))
     }
 }
 
@@ -79,9 +79,9 @@ extension EncryptedMessage: URCodable {
         }
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> EncryptedMessage {
-        let (ciphertext, aad, nonce, auth) = try Self.decode(cbor: cbor)
-        return EncryptedMessage(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: auth)
+    public init(untaggedCBOR: CBOR) throws {
+        let (ciphertext, aad, nonce, auth) = try Self.decode(cbor: untaggedCBOR)
+        self = EncryptedMessage(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: auth)
     }
 
     public static func decode(cbor: CBOR) throws -> (ciphertext: Data, aad: Data, nonce: Nonce, auth: Auth)

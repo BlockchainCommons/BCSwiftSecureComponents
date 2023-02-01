@@ -97,16 +97,16 @@ extension Digest: URCodable {
     public static let cborTag = Tag(203, "crypto-digest")
 
     public var untaggedCBOR: CBOR {
-        CBOR(bytes: data)
+        CBOR.bytes(data)
     }
 
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Digest {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.bytes(data) = cbor,
+            case let CBOR.bytes(data) = untaggedCBOR,
             let value = Digest(rawValue: data)
         else {
             throw CBORDecodingError.invalidFormat
         }
-        return value
+        self = value
     }
 }

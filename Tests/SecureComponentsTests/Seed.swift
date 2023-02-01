@@ -40,8 +40,8 @@ extension Seed: URCodable {
         return map.cbor
     }
     
-    static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> Seed {
-        guard case CBOR.map(let map) = cbor else {
+    init(untaggedCBOR: CBOR) throws {
+        guard case CBOR.map(let map) = untaggedCBOR else {
             // CBOR doesn't contain a map.
             throw CBORDecodingError.invalidFormat
         }
@@ -57,7 +57,7 @@ extension Seed: URCodable {
 
         let creationDate: Date?
         if let dateItem = map[2] {
-            guard let d = try? Date.decodeCBOR(dateItem) else {
+            guard let d = try? Date(cbor: dateItem) else {
                 // CreationDate field doesn't contain a date.
                 throw CBORDecodingError.invalidFormat
             }
@@ -87,6 +87,6 @@ extension Seed: URCodable {
         } else {
             note = ""
         }
-        return Seed(data: data, name: name, note: note, creationDate: creationDate)!
+        self = Seed(data: data, name: name, note: note, creationDate: creationDate)!
     }
 }

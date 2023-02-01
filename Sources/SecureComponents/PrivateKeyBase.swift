@@ -55,10 +55,10 @@ extension PrivateKeyBase: URCodable {
         data.cbor
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> PrivateKeyBase {
-        guard case let CBOR.bytes(data) = cbor else {
+    public init(untaggedCBOR: CBOR) throws {
+        guard case let CBOR.bytes(data) = untaggedCBOR else {
             throw CBORDecodingError.invalidFormat
         }
-        return PrivateKeyBase(data)
+        self = PrivateKeyBase(data)
     }
 }

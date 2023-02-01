@@ -86,18 +86,18 @@ extension SigningPublicKey: URCodable {
         }
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SigningPublicKey {
-        if case let CBOR.bytes(data) = cbor,
+    public init(untaggedCBOR: CBOR) throws {
+        if case let CBOR.bytes(data) = untaggedCBOR,
            let key = ECXOnlyPublicKey(data)
         {
-            return .schnorr(key)
-        } else if case let CBOR.array(elements) = cbor,
+            self = .schnorr(key)
+        } else if case let CBOR.array(elements) = untaggedCBOR,
                   elements.count == 2,
                   case CBOR.unsigned(1) = elements[0],
                   case let CBOR.bytes(data) = elements[1],
                   let key = ECPublicKey(data)
         {
-            return .ecdsa(key)
+            self = .ecdsa(key)
         }
         throw CBORDecodingError.invalidFormat
     }

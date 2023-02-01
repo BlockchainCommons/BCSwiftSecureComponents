@@ -48,16 +48,16 @@ extension SealedMessage: URCodable {
         return [message, ephemeralPublicKey]
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SealedMessage {
+    public init(untaggedCBOR: CBOR) throws {
         guard
-            case let CBOR.array(elements) = cbor,
+            case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2,
-            let message = try? EncryptedMessage.decodeTaggedCBOR(elements[0]),
-            let ephemeralPublicKey = try? AgreementPublicKey.decodeTaggedCBOR(elements[1])
+            let message = try? EncryptedMessage(taggedCBOR: elements[0]),
+            let ephemeralPublicKey = try? AgreementPublicKey(taggedCBOR: elements[1])
         else {
             throw CBORDecodingError.invalidFormat
         }
 
-        return SealedMessage(message: message, ephemeralPublicKey: ephemeralPublicKey)
+        self = SealedMessage(message: message, ephemeralPublicKey: ephemeralPublicKey)
     }
 }

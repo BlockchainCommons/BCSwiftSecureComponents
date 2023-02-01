@@ -57,14 +57,14 @@ extension SSKRShare: Hashable {
 
 extension SSKRShare {
     public func bytewords(style: Bytewords.Style) -> String {
-        return Bytewords.encode(taggedCBOR.encodeCBOR(), style: style)
+        return Bytewords.encode(taggedCBOR.cborData, style: style)
     }
 
     public init?(bytewords: String) throws {
         guard let share = try? Bytewords.decode(bytewords) else {
             return nil
         }
-        self = try SSKRShare.decodeTaggedCBOR(share.cbor)
+        self = try SSKRShare(untaggedCBOR: share.cbor)
     }
 }
 
@@ -81,69 +81,10 @@ extension SSKRShare: URCodable {
         Data(data).cbor
     }
     
-    public static func decodeUntaggedCBOR(_ cbor: CBOR) throws -> SSKRShare {
-        guard case let CBOR.bytes(data) = cbor else {
+    public init(untaggedCBOR: CBOR) throws {
+        guard case let CBOR.bytes(data) = untaggedCBOR else {
             throw CBORDecodingError.invalidFormat
         }
-        return SSKRShare(data: data.bytes)
+        self = SSKRShare(data: data.bytes)
     }
 }
-
-//extension SSKRShare {
-//    public var untaggedCBOR: CBOR {
-//        CBOR.data(Data(data))
-//    }
-//
-//    public var taggedCBOR: CBOR {
-//        CBOR.tagged(.sskrShare, untaggedCBOR)
-//    }
-//
-//    public init(untaggedCBOR: CBOR) throws {
-//        guard case let CBOR.data(data) = untaggedCBOR else {
-//            throw DecodeError.invalidFormat
-//        }
-//        self = SSKRShare(data: data.bytes)
-//    }
-//
-//    public init(taggedCBOR: CBOR) throws {
-//        guard case let CBOR.tagged(.sskrShare, untaggedCBOR) = taggedCBOR else {
-//            throw CBORError.invalidTag
-//        }
-//        try self.init(untaggedCBOR: untaggedCBOR)
-//    }
-//}
-//
-//extension SSKRShare {
-//    public var ur: UR {
-//        return try! UR(type: .sskrShare, cbor: untaggedCBOR)
-//    }
-//
-//    public init(ur: UR) throws {
-//        try ur.checkType(.sskrShare)
-//        let cbor = try CBOR(ur.cbor)
-//        self = try SSKRShare(untaggedCBOR: cbor)
-//    }
-//
-//    public var urString: String {
-//        return UREncoder.encode(ur)
-//    }
-//
-//    public init?(urString: String) throws {
-//        guard let ur = try? URDecoder.decode(urString) else {
-//            return nil
-//        }
-//        try self.init(ur: ur)
-//    }
-//}
-//
-//extension SSKRShare: CBOREncodable {
-//    public var cbor: CBOR {
-//        taggedCBOR
-//    }
-//}
-//
-//extension SSKRShare: CBORDecodable {
-//    public static func cborDecode(_ cbor: CBOR) throws -> SSKRShare {
-//        try SSKRShare(taggedCBOR: cbor)
-//    }
-//}
