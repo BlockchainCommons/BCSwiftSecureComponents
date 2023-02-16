@@ -91,6 +91,7 @@ extension SigningPublicKey: URCodable {
            let key = ECXOnlyPublicKey(data)
         {
             self = .schnorr(key)
+            return
         } else if case let CBOR.array(elements) = untaggedCBOR,
                   elements.count == 2,
                   case CBOR.unsigned(1) = elements[0],
@@ -98,6 +99,7 @@ extension SigningPublicKey: URCodable {
                   let key = ECPublicKey(data)
         {
             self = .ecdsa(key)
+            return
         }
         throw CBORDecodingError.invalidFormat
     }

@@ -110,7 +110,7 @@ public extension Tag {
     static let receipt = Tag(709, "receipt")
 }
 
-public var knownTags: KnownTags = [
+public var knownTags: KnownTagsDict = [
     .envelope,
     .message,
     .cid,
