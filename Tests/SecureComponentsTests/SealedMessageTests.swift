@@ -1,7 +1,6 @@
 import XCTest
 import SecureComponents
 import WolfBase
-import CryptoKit
 
 class SealedMessageTests: XCTestCase {
     func testSealedMessage() {
