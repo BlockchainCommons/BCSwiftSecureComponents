@@ -1,5 +1,5 @@
 import Foundation
-import CryptoKit
+import BCCrypto
 import WolfBase
 import URKit
 
@@ -21,10 +21,6 @@ public struct AgreementPublicKey: CustomStringConvertible, Hashable {
     
     public var description: String {
         "AgreementPublicKey(\(data.hex))"
-    }
-    
-    public var cryptoKitForm: Curve25519.KeyAgreement.PublicKey {
-        try! .init(rawRepresentation: data)
     }
 }
 

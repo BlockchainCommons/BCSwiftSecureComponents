@@ -1,6 +1,7 @@
 import Foundation
 import WolfBase
 import URKit
+import BCCrypto
 
 public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider {
     public let data: Data
@@ -13,7 +14,7 @@ public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider 
     }
     
     public init() {
-        self.init(SecureRandomNumberGenerator.shared.data(count: 12))!
+        self.init(Crypto.randomData(count: 12))!
     }
 }
 

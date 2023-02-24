@@ -1,5 +1,6 @@
 import Foundation
 import URKit
+import BCCrypto
 
 public struct CID: Equatable, Hashable {
     public let data: Data
@@ -12,7 +13,7 @@ public struct CID: Equatable, Hashable {
     }
     
     public init() {
-        self.init(SecureRandomNumberGenerator.shared.data(count: 32))!
+        self.init(Crypto.randomData(count: 32))!
     }
 }
 

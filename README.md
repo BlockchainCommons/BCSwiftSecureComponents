@@ -16,8 +16,16 @@ Depends on:
 * [bc-sskr](https://github.com/BlockchainCommons/bc-sskr), Sharded Secret Key Reconstruction (SSKR) reference library in C.
 * [secp256k1-zkp](https://github.com/BlockchainCommons/secp256k1-zkp.swift), Elliptic Curve public key, ECDSA, and Schnorr for Bitcoin, experimental fork.
 * [CryptoSwift](https://github.com/krzyzanowskim/CryptoSwift), a growing collection of standard and secure cryptographic algorithms implemented in Swift
-* [BLAKE3](https://github.com/BlockchainCommons/blake3-swift), a Swift implementation of the BLAKE3 cryptographic hash function.
 
 # Building
 
 Add to your project like any other Swift Package.
+
+### Credits
+
+The following people directly contributed to this repository. You can add your name here by getting involved. The first step is learning how to contribute from our [CONTRIBUTING.md](./CONTRIBUTING.md) documentation.
+
+| Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
+| ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
+| Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
+| Wolf McNally      | Project Lead        | [@WolfMcNally](https://github.com/wolfmcnally)    | \<Wolf@WolfMcNally.com\>              | 9436 52EE 3844 1760 C3DC  3536 4B6C 2FCF 8947 80AE |

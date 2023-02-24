@@ -12,9 +12,9 @@ class PrivateKeyBaseTests: XCTestCase {
 //         print(privateKeys.agreementPrivateKey.data.hex)
 //         print(privateKeys.agreementPrivateKey.publicKey.data.hex)
         
-        XCTAssertEqual(privateKeys.signingPrivateKey.data, ‡"d7506e77dca4e51187f973a9ae0d607650fbc38e90c8b83b2e9c4219a320b4d1")
-        XCTAssertEqual(privateKeys.signingPrivateKey.schnorrPublicKey.data, ‡"d741926a8b46880d56f1b1bb9a3f280732a0c5b480b988f57782c1ca9d51b70a")
-        XCTAssertEqual(privateKeys.agreementPrivateKey.data, ‡"454cb16fa7508d93c6fdc7eff6359ad91a71ffb763bbe8d99c4e43b7f82806bf")
-        XCTAssertEqual(privateKeys.agreementPrivateKey.publicKey.data, ‡"c16cabdc86ae548d4ca6683c6ae988356a1e15672090a4eab75a74b95fd6a71b")
+        XCTAssertEqual(privateKeys.signingPrivateKey.data, ‡"9505a44aaf385ce633cf0e2bc49e65cc88794213bdfbf8caf04150b9c4905f5a")
+        XCTAssertEqual(privateKeys.signingPrivateKey.schnorrPublicKey.data, ‡"fd4d22f9e8493da52d730aa402ac9e661deca099ef4db5503f519a73c3493e18")
+        XCTAssertEqual(privateKeys.agreementPrivateKey.data, ‡"77ff838285a0403d3618aa8c30491f99f55221be0b944f50bfb371f43b897485")
+        XCTAssertEqual(privateKeys.agreementPrivateKey.publicKey.data, ‡"863cf3facee3ba45dc54e5eedecb21d791d64adfb0a1c63bfb6fea366c1ee62b")
     }
 }

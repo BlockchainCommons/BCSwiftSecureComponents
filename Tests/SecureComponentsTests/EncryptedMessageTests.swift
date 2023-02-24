@@ -16,22 +16,22 @@ class EncryptedMessageTests: XCTestCase {
         XCTAssertEqual(secureMessage.ciphertext, ciphertext)
         XCTAssertEqual(secureMessage.auth, auth)
 
-        let decryptedPlaintext = key.decrypt(message: secureMessage)
+        let decryptedPlaintext = try key.decrypt(message: secureMessage)
         XCTAssertEqual(plaintext, decryptedPlaintext)
     }
     
-    func testRandomKeyAndNonce() {
+    func testRandomKeyAndNonce() throws {
         let key = SymmetricKey()
         let nonce = Nonce()
         let secureMessage = key.encrypt(plaintext: plaintext, aad: aad, nonce: nonce)
-        let decryptedPlaintext = key.decrypt(message: secureMessage)
+        let decryptedPlaintext = try key.decrypt(message: secureMessage)
         XCTAssertEqual(plaintext, decryptedPlaintext)
     }
     
-    func testEmptyData() {
+    func testEmptyData() throws {
         let key = SymmetricKey()
         let secureMessage = key.encrypt(plaintext: Data(), aad: Data())
-        let decryptedPlaintext = key.decrypt(message: secureMessage)
+        let decryptedPlaintext = try key.decrypt(message: secureMessage)
         XCTAssertEqual(Data(), decryptedPlaintext)
     }
     

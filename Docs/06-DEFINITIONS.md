@@ -131,7 +131,7 @@ cid-data = bytes .size 32
 
 ## Digest
 
-A Digest is a cryptographic hash of some source data. Currently Secure Components specifies the use of [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf), but more algorithms may be supported in the future.
+A Digest is a cryptographic hash of some source data. Currently Secure Components specifies the use of [SHA-256](https://www.rfc-editor.org/rfc/rfc6234), but more algorithms may be supported in the future.
 
 |CBOR Tag|Swift Type|
 |---|---|
@@ -140,9 +140,9 @@ A Digest is a cryptographic hash of some source data. Currently Secure Component
 ### Digest: CDDL
 
 ```
-digest = #6.203(blake3-digest)
+digest = #6.203(sha256-digest)
 
-blake3-digest = bytes .size 32
+sha256-digest = bytes .size 32
 ```
 
 ---
@@ -355,8 +355,8 @@ key-material = bytes
 
 ### Derivations
 
-* `SigningPrivateKey`: [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf) with context: `signing`.
-* `AgreementPrivateKey`: [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf) with context: `agreement`.
+* `SigningPrivateKey`: [HKDF](https://www.rfc-editor.org/rfc/rfc6234) with salt: `signing`.
+* `AgreementPrivateKey`: [HKDF](https://www.rfc-editor.org/rfc/rfc6234) with salt: `agreement`.
 * `SigningPublicKey`: [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki) x-only public key or [ECDSA-25519-doublesha256](https://en.bitcoin.it/wiki/BIP_0137) public key.
 * `SigningPrivateKey`: [RFC-7748 X25519](https://datatracker.ietf.org/doc/html/rfc7748).
 

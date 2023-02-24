@@ -1,7 +1,7 @@
 import Foundation
 import WolfBase
-import BLAKE3
 import URKit
+import BCCrypto
 
 /// Types can conform to `PrivateKeysDataProvider` to indicate that they will provide
 /// unique data from which keys for signing and encryption can be derived.
@@ -18,24 +18,20 @@ extension Data: PrivateKeysDataProvider {
 }
 
 /// Holds unique data from which keys for signing and encryption can be derived.
-///
-/// Derivation is performed used BLAKE3.
-///
-/// https://datatracker.ietf.org/doc/html/rfc5869
 public struct PrivateKeyBase {
     public let data: Data
     
     public init(_ provider: PrivateKeysDataProvider? = nil) {
-        let provider = provider ?? SecureRandomNumberGenerator.shared.data(count: 32)
+        let provider = provider ?? Crypto.randomData(count: 32)
         self.data = provider.privateKeysData
     }
     
     public var signingPrivateKey: SigningPrivateKey {
-        .init(BLAKE3.deriveKey(fromContentsOf: data, withContext: "signing").data)!
+        SigningPrivateKey(Crypto.deriveSigningPrivateKeyX25519(keyMaterial: data))!
     }
     
     public var agreementPrivateKey: AgreementPrivateKey {
-        .init(BLAKE3.deriveKey(fromContentsOf: data, withContext: "agreement").data)!
+        AgreementPrivateKey(Crypto.deriveAgreementPrivateKeyX25519(keyMaterial: data))!
     }
     
     public var publicKeys: PublicKeyBase {

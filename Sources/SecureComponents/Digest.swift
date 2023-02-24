@@ -1,19 +1,17 @@
 import Foundation
-import BLAKE3
 import URKit
 import WolfBase
+import CryptoBase
 
 /// A cryptographically secure digest.
 ///
-/// Implemented with BLAKE3 hashing.
-///
-/// https://datatracker.ietf.org/doc/rfc7693
+/// Implemented with SHA-256.
 public struct Digest: CustomStringConvertible, Hashable {
     public let data: Data
     public static let defaultDigestLength = 32
     
     public init(_ data: DataProvider, digestLength: Int = defaultDigestLength) {
-        self.data = BLAKE3.hash(contentsOf: data.providedData, outputByteCount: digestLength).data
+        self.data = CryptoBase.sha256(data: data.providedData)
     }
     
     public init?(_ data: DataProvider, includeDigest: Bool, digestLength: Int = defaultDigestLength) {

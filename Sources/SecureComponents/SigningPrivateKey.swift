@@ -1,6 +1,7 @@
 import Foundation
 import WolfBase
 import URKit
+import BCCrypto
 
 public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     public let data: Data
@@ -14,7 +15,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
 
     public init() {
-        self.data = SecureRandomNumberGenerator.shared.data(count: 32)
+        self.data = Crypto.randomData(count: 32)
     }
     
     public func ecdsaSign(_ message: DataProvider) -> Signature {
@@ -23,7 +24,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
         return Signature(ecdsaData: sig)!
     }
 
-    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil, randomGenerator: ((Int) -> Data)? = nil) -> Signature {
+    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil, randomGenerator: Crypto.RandomGenerator = Crypto.randomData) -> Signature {
         let privateKey = ECPrivateKey(data)!
         let tag = tag ?? Data()
         let sig = privateKey.schnorrSign(message: message.providedData, tag: tag.providedData, randomGenerator: randomGenerator)

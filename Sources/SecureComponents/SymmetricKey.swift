@@ -1,7 +1,7 @@
 import Foundation
 import protocol WolfBase.DataProvider
-import CryptoSwift
 import URKit
+import BCCrypto
 
 /// A symmetric key for encryption and decryption of IETF-ChaCha20-Poly1305 messages.
 ///
@@ -17,7 +17,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     }
     
     public init() {
-        self.init(SecureRandomNumberGenerator.shared.data(count: 32))!
+        self.init(Crypto.randomData(count: 32))!
     }
     
     public var bytes: [UInt8] {
@@ -32,21 +32,16 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
         let plaintext = plaintext.providedData
         let aad = aad ?? Data()
         let nonce = nonce ?? Nonce()
-        let (ciphertext, auth) = try! AEADChaCha20Poly1305.encrypt(plaintext.bytes, key: self.bytes, iv: nonce.bytes, authenticationHeader: aad.bytes)
-        return EncryptedMessage(ciphertext: Data(ciphertext), aad: aad, nonce: nonce, auth: EncryptedMessage.Auth(Data(auth))!)
+        let (ciphertext, auth) = try! Crypto.encryptAEADChaCha20Poly1305(plaintext: plaintext, key: data, nonce: nonce.data, aad: aad)
+        return EncryptedMessage(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: EncryptedMessage.Auth(auth)!)
     }
     
     public func encrypt(plaintext: DataProvider, digest: Digest, nonce: Nonce? = nil) -> EncryptedMessage {
         encrypt(plaintext: plaintext, aad: digest.taggedCBOR.cborData, nonce: nonce)
     }
     
-    public func decrypt(message: EncryptedMessage) -> Data? {
-        guard let (plaintext, success) =
-                try? AEADChaCha20Poly1305.decrypt(message.ciphertext.bytes, key: self.bytes, iv: message.nonce.bytes, authenticationHeader: message.aad.bytes, authenticationTag: message.auth.bytes),
-                success
-        else {
-            return nil
-        }
+    public func decrypt(message: EncryptedMessage) throws -> Data {
+        let plaintext = try Crypto.decryptAEADChaCha20Poly1305(ciphertext: message.ciphertext, key: data, nonce: message.nonce.data, aad: message.aad.data, auth: message.auth.data)
         return Data(plaintext)
     }
     

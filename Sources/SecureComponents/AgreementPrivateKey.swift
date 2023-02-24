@@ -1,5 +1,5 @@
 import Foundation
-import CryptoKit
+import BCCrypto
 import WolfBase
 import URKit
 
@@ -18,19 +18,15 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
     }
     
     public init() {
-        self.data = Curve25519.KeyAgreement.PrivateKey().rawRepresentation
+        self.data = Crypto.newAgreementPrivateKeyX25519()
     }
 
     public var publicKey: AgreementPublicKey {
-        AgreementPublicKey(data: cryptoKitForm.publicKey.rawRepresentation)!
+        AgreementPublicKey(data: Crypto.agreementPublicKeyFromPrivateKeyX25519(agreementPrivateKey: data))!
     }
     
     public var description: String {
         "PrivateAgreementKey\(data)"
-    }
-
-    public var cryptoKitForm: Curve25519.KeyAgreement.PrivateKey {
-        try! .init(rawRepresentation: data)
     }
 }
 

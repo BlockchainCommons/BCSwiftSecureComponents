@@ -23,14 +23,14 @@ public struct SealedMessage {
         self.ephemeralPublicKey = ephemeralPublicKey
     }
     
-    public func plaintext(with privateKeys: PrivateKeyBase) -> Data? {
+    public func plaintext(with privateKeys: PrivateKeyBase) throws -> Data {
         let key = EncryptedMessage.sharedKey(agreementPrivateKey: privateKeys.agreementPrivateKey, agreementPublicKey: ephemeralPublicKey)
-        return key.decrypt(message: message)
+        return try key.decrypt(message: message)
     }
     
     public static func firstPlaintext(in sealedMessages: [SealedMessage], for privateKeys: PrivateKeyBase) -> Data? {
         for sealedMessage in sealedMessages {
-            if let plaintext = sealedMessage.plaintext(with: privateKeys) {
+            if let plaintext = try? sealedMessage.plaintext(with: privateKeys) {
                 return plaintext
             }
         }

@@ -1,6 +1,6 @@
 import Foundation
 import WolfBase
-import class CryptoSwift.Scrypt
+import BCCrypto
 
 /// A secure derivation scheme from a user-provided password to private key data.
 ///
@@ -32,21 +32,21 @@ public class Password {
         self.r = r
         self.p = p
         
-        let salt = salt?.providedData ?? SecureRandomNumberGenerator.shared.data(count: 16)
+        let salt = salt?.providedData ?? Crypto.randomData(count: 16)
         self.salt = salt
         
         let password = password.providedData
         guard !password.isEmpty else {
             return nil
         }
-        self.data = try! Data(Scrypt(password: password.bytes, salt: salt.bytes, dkLen: dkLen, N: n, r: r, p: p).calculate())
+        self.data = Crypto.scrypt(password: password, salt: salt, dkLen: dkLen, n: n, r: r, p: p)
     }
     
     public func isValid(_ password: String) -> Bool {
         guard !password.isEmpty else {
             return false
         }
-        let d = try! Data(Scrypt(password: password.utf8Data.bytes, salt: salt.bytes, dkLen: data.count, N: n, r: r, p: p).calculate())
+        let d = Crypto.scrypt(password: password.utf8Data, salt: salt, dkLen: data.count, n: n, r: r, p: p)
         return data == d
     }
 }

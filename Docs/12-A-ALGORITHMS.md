@@ -40,11 +40,7 @@ These choices are specific to a Minimum Viable Architecture (MVA). Other archite
 
 **Data Size: 256-Bit.** Algorithms were chosen in part so that hashes, public key, and other values were largely indistinguishable from each other and from randomness. In the case of this default suite, algorithms were chosen to produce 256-bit values. This does create limits on security, but they currently match those of Bitcoin, and so are considered sufficient. However, they may require an upgrade in the future. Since all our data structure work is based on CBOR, we expect that future format changes and additions will be relatively painless.
 
-**Hash Function: BLAKE3.** BLAKE3 is the newest iteration of BLAKE, a hash function that has over a decade of maturity, though BLAKE3 is only a few years old. Nonetheless, it's supported by people with good experience in the field, including the Zcash Foundation.
-
-The new BLAKE3 implementation uses a Merkle Tree format that allows for streaming and for incremental updates as well as high levels of parallelism. These should all be considered large advantages, providing streaming can can be reasonably programmed without too high of a barrier of entry.
-
-The primary disadvantage of BLAKE3 is that it's not accelerated by hardware chips as is the case for its main competitor, SHA-256. Nonetheless, in a pure software configuration, BLAKE3 beats SHA-256 on speed. Overall, we think BLAKE3 is worthwhile as an evolution over SHA-256.
+**Hash Function: SHA-256.** Standardized in [RFC-6234](https://www.rfc-editor.org/rfc/rfc6234) and supported by many hardware implementations.
 
 **AEAD Function: IETF ChaChaPoly.** As an AEAD cipher, ChaChaPoly combines the ChaCha20 cipher with the Poly1305 message authentication code (MAC). We find it a more modern and thus robust cipher than the venerable AES256-GCM function, which is also vulnerable to nonce reuse.
 
@@ -60,7 +56,7 @@ Ristretto could be a third option, but is much less used than the others.
 
 A deficit of Secp256 is that it's not IETF.
 
-**Signing: Schnorr.** Our signing algorithm, Schnorr, fits into much the same category as BLAKE3. It's relatively new, but it's built on a strong foundation by trustworthy cryptographers. Combined with that, it allows for considerable expansion in the future, including adapter signatures, distributed key generation, half-key aggregation, and integration with FROST.
+**Signing: Schnorr.** Relatively new, but built on a strong foundation by trustworthy cryptographers. Combined with that, it allows for considerable expansion in the future, including adapter signatures, distributed key generation, half-key aggregation, and integration with FROST.
 
 In addition, public keys aren't embedded in signatures the way they are in ECDSA and other older signaure systems.
 
@@ -74,7 +70,7 @@ The main alternative to Shamir's Secret Sharing is the emerging VSS specificatio
 
 A good next-generation choice may be OPAQUE, which is as strong as public keys, but which doesn't place as much of a load on hardware devices. As a Password-Authenticated Key Exchange (PAKE) protocol, OPAQUE avoids ever giving a password to a server. Once OPAQUE has become sufficiently mature, it will likely supersede scrypt as a password-based key derivation choice.
 
-**Selective Disclosure: Redaction.** Any data in this system can be redacted by supplying a BLAKE3 hash instead of the value. This allows holders to redact arbitrary data elements, even if they're not the issuer or the subject as well as sign blinded documents.
+**Selective Disclosure: Redaction.** Any data in this system can be redacted by supplying a SHA-256 hash instead of the value. This allows holders to redact arbitrary data elements, even if they're not the issuer or the subject as well as sign blinded documents.
 
 The obvious alternative is Zero-Knowledge Proofs, but the advantages in holders being able to create redactions and in less complexity seem cosiderable. However, an architectural review is definitely required, including a look at how nonces are generated for redacted signatures.
 

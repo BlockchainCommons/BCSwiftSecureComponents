@@ -98,7 +98,8 @@ The algorithms that Secure Components currently incorporates are listed below. T
 
 * **Organization:** Suites
 * **Data Size:** 256 Bit
-* **Hashing and Key Derivation:** [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf)
+* **Hashing:** [SHA-256](https://www.rfc-editor.org/rfc/rfc6234)
+* **Key Derivation:** [HKDF-SHA-256](https://www.rfc-editor.org/rfc/rfc6234)
 * **Symmetric Encryption:** [IETF-ChaCha20-Poly1305](https://datatracker.ietf.org/doc/html/rfc8439)
 * **Curve:** [Secp256k1](https://en.bitcoin.it/wiki/Secp256k1)
 * **Signing:** [BIP-340 Schnorr](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki)

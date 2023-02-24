@@ -70,7 +70,7 @@ Because of the use of entropy, two such `Signature`s produced from a single imag
 
 ## Digests are Correlatable
 
-Like `Signature`, a `Digest` in Secure Components is a *lossy* operation (BLAKE3): there is no way that the image or any information about the image can be recovered from the projection. However, unlike `Signature`,  `Digest` *is* correlatable by design: two `Digests` produced from the same image are always equal, and a specific `Digest` could *only* have been produced from a specific image. Therefore if one can determine the image used to produce one of the `Digest`s, then one knows that the same image must have produced the other.
+Like `Signature`, a `Digest` in Secure Components is a *lossy* operation (SHA-256): there is no way that the image or any information about the image can be recovered from the projection. However, unlike `Signature`,  `Digest` *is* correlatable by design: two `Digests` produced from the same image are always equal, and a specific `Digest` could *only* have been produced from a specific image. Therefore if one can determine the image used to produce one of the `Digest`s, then one knows that the same image must have produced the other.
 
 ## Encrypted Messages are Quasicorrelatable
 
