@@ -43,6 +43,10 @@ public struct ECPrivateKey: ECKey {
         self.data = data
     }
     
+    public init() {
+        self.data = Crypto.randomData(count: 32)
+    }
+
     public init?(hex: String) {
         guard let data = Data(hex: hex) else {
             return nil
