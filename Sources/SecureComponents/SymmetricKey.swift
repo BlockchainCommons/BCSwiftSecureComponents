@@ -61,7 +61,7 @@ extension SymmetricKey: URCodable {
         guard case let CBOR.bytes(data) = untaggedCBOR,
               let key = SymmetricKey(data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = key
     }

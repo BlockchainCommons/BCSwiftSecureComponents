@@ -44,7 +44,7 @@ extension Nonce: URCodable {
             case let CBOR.bytes(data) = untaggedCBOR,
             let value = Nonce(data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = value
     }

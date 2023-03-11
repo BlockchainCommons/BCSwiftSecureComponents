@@ -100,6 +100,6 @@ extension SigningPublicKey: URCodable {
             self = .ecdsa(key)
             return
         }
-        throw CBORDecodingError.invalidFormat
+        throw CBORError.invalidFormat
     }
 }

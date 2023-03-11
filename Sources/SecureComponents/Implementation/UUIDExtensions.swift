@@ -13,7 +13,7 @@ extension UUID: CBORTaggedCodable {
             case let CBOR.bytes(bytes) = untaggedCBOR,
             bytes.count == MemoryLayout<uuid_t>.size
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = bytes.withUnsafeBytes {
             UUID(uuid: $0.bindMemory(to: uuid_t.self).baseAddress!.pointee)

@@ -32,7 +32,7 @@ extension PublicKeyBase: URCodable {
             case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
 
         let signingKey = try SigningPublicKey(taggedCBOR: elements[0])

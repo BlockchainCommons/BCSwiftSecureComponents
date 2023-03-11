@@ -55,7 +55,7 @@ extension SealedMessage: URCodable {
             let message = try? EncryptedMessage(taggedCBOR: elements[0]),
             let ephemeralPublicKey = try? AgreementPublicKey(taggedCBOR: elements[1])
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
 
         self = SealedMessage(message: message, ephemeralPublicKey: ephemeralPublicKey)

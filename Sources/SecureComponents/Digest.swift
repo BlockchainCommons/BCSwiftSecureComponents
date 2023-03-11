@@ -103,7 +103,7 @@ extension Digest: URCodable {
             case let CBOR.bytes(data) = untaggedCBOR,
             let value = Digest(rawValue: data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = value
     }

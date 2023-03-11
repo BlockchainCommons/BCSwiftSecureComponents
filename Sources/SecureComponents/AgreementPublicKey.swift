@@ -36,7 +36,7 @@ extension AgreementPublicKey: URCodable {
             case let CBOR.bytes(data) = untaggedCBOR,
             let key = AgreementPublicKey(data: data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = key
     }

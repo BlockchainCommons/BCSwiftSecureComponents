@@ -80,7 +80,7 @@ extension Signature: URCodable {
         {
             self = .ecdsa(data: data)
         } else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
     }
 }

@@ -54,7 +54,7 @@ extension CID: URCodable {
             case let CBOR.bytes(data) = untaggedCBOR,
             let value = CID(data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = value
     }

@@ -56,7 +56,7 @@ extension SigningPrivateKey: URCodable {
             case let CBOR.bytes(data) = untaggedCBOR,
             let key = SigningPrivateKey(data)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = key
     }

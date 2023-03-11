@@ -31,7 +31,7 @@ extension SSKRShare: URCodable {
     
     public init(untaggedCBOR: CBOR) throws {
         guard case let CBOR.bytes(data) = untaggedCBOR else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = SSKRShare(data: data.bytes)
     }

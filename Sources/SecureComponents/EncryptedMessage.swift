@@ -92,7 +92,7 @@ extension EncryptedMessage: URCodable {
             case let CBOR.bytes(authData) = elements[2],
             let auth = Auth(authData)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
 
         if elements.count == 4 {
@@ -100,7 +100,7 @@ extension EncryptedMessage: URCodable {
                 case let CBOR.bytes(aad) = elements[3],
                 !aad.isEmpty
             else {
-                throw CBORDecodingError.invalidFormat
+                throw CBORError.invalidFormat
             }
             return (ciphertext, aad, nonce, auth)
         } else {

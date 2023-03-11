@@ -13,7 +13,7 @@ extension URL: CBORTaggedCodable {
             case let CBOR.text(string) = untaggedCBOR,
             let result = URL(string: string)
         else {
-            throw CBORDecodingError.invalidFormat
+            throw CBORError.invalidFormat
         }
         self = result
     }
