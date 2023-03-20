@@ -23,7 +23,7 @@ extension SSKRShare: CustomStringConvertible {
 }
 
 extension SSKRShare: URCodable {
-    public static let cborTag = Tag(309, "crypto-sskr")
+    public static let cborTag = Tag.sskrShare
 
     public var untaggedCBOR: CBOR {
         Data(data).cbor

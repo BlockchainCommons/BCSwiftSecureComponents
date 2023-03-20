@@ -66,7 +66,7 @@ extension EncryptedMessage {
 }
 
 extension EncryptedMessage: URCodable {
-    public static let cborTag = Tag(201, "crypto-msg")
+    public static let cborTag = Tag.encrypted
 
     public var untaggedCBOR: CBOR {
         if self.aad.isEmpty {

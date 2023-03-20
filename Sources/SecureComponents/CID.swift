@@ -43,7 +43,7 @@ extension CID: Comparable {
 }
 
 extension CID: URCodable {
-    public static let cborTag = Tag(202, "crypto-cid")
+    public static let cborTag = Tag.commonIdentifier
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

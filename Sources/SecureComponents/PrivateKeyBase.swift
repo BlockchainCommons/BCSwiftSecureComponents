@@ -44,7 +44,7 @@ public struct PrivateKeyBase {
 }
 
 extension PrivateKeyBase: URCodable {
-    public static let cborTag = Tag(205, "crypto-prvkeys")
+    public static let cborTag = Tag.privateKeyBase
 
     public var untaggedCBOR: CBOR {
         data.cbor

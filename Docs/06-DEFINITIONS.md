@@ -1,30 +1,10 @@
 # Secure Components - Definitions
 
 **Authors:** Wolf McNally, Christopher Allen, Blockchain Commons</br>
-**Revised:** Aug 26, 2022</br>
+**Revised:** Mar 20, 2023</br>
 **Status:** DRAFT
 
 NOTE: Please go here for the latest version of this documentation related specifically to Gordian Envelope: [Envelope](https://blockchaincommons.github.io/BCSwiftEnvelope/documentation/envelope).
-
----
-
-## Contents
-
-* [Envelope Introduction](00-INTRODUCTION.md)
-* [Types](01-TYPES.md)
-* [Envelope Overview](02-ENVELOPE.md)
-* [Envelope Notation](03-ENVELOPE-NOTATION.md)
-* [Output Formats](04-OUTPUT-FORMATS.md)
-* [Envelope Expressions](05-ENVELOPE-EXPRESSIONS.md)
-* Definitions: This document
-* [Examples](07-EXAMPLES.md)
-* [Noncorrelation](08-NONCORRELATION.md)
-* [Elision and Redaction](09-ELISION-REDACTION.md)
-* [Existence Proofs](10-EXISTENCE-PROOFS.md)
-* [Diffing Envelopes](11-DIFFING.md)
-* [Appendix A: MVA Algorithm Suite](12-A-ALGORITHMS.md)
-* [Appendix B: Envelope Test Vectors](13-B-ENVELOPE-TEST-VECTORS.md)
-* [Appendix C: Envelope SSKR Test Vectors](14-C-ENVELOPE-SSKR-TEST-VECTORS.md)
 
 ---
 
@@ -33,8 +13,8 @@ NOTE: Please go here for the latest version of this documentation related specif
 * [AgreementPrivateKey](#agreementprivatekey)
 * [AgreementPublicKey](#agreementpublickey)
 * [CID](#cid)
+* [Compressed](#compressed)
 * [Digest](#digest)
-* [Envelope](#envelope)
 * [EncryptedMessage](#encryptedmessage)
 * [Nonce](#nonce)
 * [Password](#password)
@@ -71,10 +51,10 @@ struct AgreementPrivateKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|702|`AgreementPrivateKey`|
+|300|`AgreementPrivateKey`|
 
 ```
-agreement-private-key = #6.702(key)
+agreement-private-key = #6.300(key)
 
 key = bytes .size 32
 ```
@@ -97,10 +77,10 @@ struct AgreementPublicKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|230|`AgreementPublicKey`|
+|301|`AgreementPublicKey`|
 
 ```
-agreement-public-key = #6.62(key)
+agreement-public-key = #6.301(key)
 
 key = bytes .size 230
 ```
@@ -122,9 +102,43 @@ struct CID {
 ### CID: CDDL
 
 ```
-cid = #6.202(cid-data)
+cid = #6.302(cid-data)
 
 cid-data = bytes .size 32
+```
+
+---
+
+## Compressed
+
+A compressed binary object. Implemented using the raw DEFLATE format as described in [IETF RFC 1951](https://www.ietf.org/rfc/rfc1951.txt).
+
+The following obtains the equivalent configuration of the encoder:
+
+```
+deflateInit2(zstream,5,Z_DEFLATED,-15,8,Z_DEFAULT_STRATEGY)
+```
+
+If the payload is too small to compress, the uncompressed payload is placed in the `compressedData` field and the size of that field will be the same as the `uncompressedSize` field.
+
+### Compressed: Swift Definition
+
+```swift
+struct Compressed {
+    let uncompressedDigest: Digest
+    let uncompressedSize: Int
+    let compressedData: Data
+}
+```
+
+### Compressed: CDDL
+
+```
+compressed = #6.206([uncompressed-digest, uncompressed-size, compressed-data])
+
+uncompressed-digest = digest
+uncompressed-size = uint
+compressed-data = bytes
 ```
 
 ---
@@ -135,108 +149,14 @@ A Digest is a cryptographic hash of some source data. Currently Secure Component
 
 |CBOR Tag|Swift Type|
 |---|---|
-|203|`Digest`|
+|204|`Digest`|
 
 ### Digest: CDDL
 
 ```
-digest = #6.203(sha256-digest)
+digest = #6.204(sha256-digest)
 
 sha256-digest = bytes .size 32
-```
-
----
-
-## Envelope
-
-Please see [here](02-ENVELOPE.md) for a full description.
-
-### Envelope: Swift Definition
-
-An Envelope consists of a `subject` and a list of zero or more `assertion`s. Here is its notional definition in Swift:
-
-```swift
-struct Envelope {
-    let subject: Subject
-    let assertions: [Assertion]
-}
-
-struct Assertion {
-    let predicate: Envelope
-    let object: Envelope
-}
-```
-
-The *actual* definition of `Envelope` is an enumerated type. Every case stores a precalculated `Digest` as part of its associated data, either directly or within its other objects:
-
-```swift
-public indirect enum Envelope: DigestProvider {
-    case node(subject: Envelope, assertions: [Envelope], digest: Digest)
-    case leaf(CBOR, Digest)
-    case wrapped(Envelope, Digest)
-    case knownValue(KnownValue, Digest)
-    case assertion(Assertion)
-    case encrypted(EncryptedMessage)
-    case elided(Digest)
-}
-
-public struct Assertion: DigestProvider {
-    public let predicate: Envelope
-    public let object: Envelope
-    public let digest: Digest
-}
-```
-
-The cases of `Envelope` are as follows. Except for `.node`, each case represents a "bare subject," i.e., a subject with no assertions. When a subject has at least one assertion, it is wrapped in a `.node` case.
-
-* `.node` A subject with one or more assertions.
-* `.leaf` A terminal CBOR object.
-* `.wrapped` An enclosed `Envelope`.
-* `.knownValue` An integer tagged as a predicate and typically used in the `predicate` position of an assertion.
-* `.assertion` A (predicate, object) pair.
-* `.encrypted` A subject that has been encrypted.
-* `.elided` A subject that has been elided.
-
-### Envelope: CDDL
-
-|Tag|Type|
-|---|---|
-|200|`envelope`|
-|220|`leaf`|
-|221|`assertion`|
-|223|`knownValue`|
-|224|`wrappedEnvelope`|
-
-```
-envelope = #6.200(
-    envelope-content
-)
-
-envelope-content = (
-    node /
-    leaf /
-    wrapped-envelope /
-    known-value /
-    assertion /
-    encrypted /
-    elided
-)
-
-node = [envelope-content, + assertion-element]
-
-assertion-element = ( assertion / encrypted / elided )
-
-leaf = #6.24(bytes) ; See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
-
-wrapped-envelope = #6.224(envelope-content)
-
-known-value = #6.223(uint)
-
-assertion = #6.221([envelope, envelope])
-
-encrypted = crypto-msg
-
-elided = digest
 ```
 
 ---
@@ -262,12 +182,12 @@ struct EncryptedMessage {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|201|`crypto-msg`|`EncryptedMessage`|
+|205|`encrypted`|`EncryptedMessage`|
 
-A `crypto-msg` is an array containing either 3 or 4 elements. If additional authenticated data `aad` is non-empty, it is included as the fourth element, and omitted otherwise. `aad` MUST NOT be present and non-empty.
+An `encrypted` is an array containing either 3 or 4 elements. If additional authenticated data `aad` is non-empty, it is included as the fourth element, and omitted otherwise. `aad` MUST NOT be present and non-empty.
 
 ```
-crypto-msg = #6.201([ ciphertext, nonce, auth, ? aad ])
+encrypted = #6.205([ ciphertext, nonce, auth, ? aad ])
 
 ciphertext = bytes       ; encrypted using ChaCha20
 aad = bytes              ; Additional Authenticated Data
@@ -290,7 +210,7 @@ struct Nonce {
 ## Nonce: CDDL
 
 ```
-nonce = #6.707(bytes .size 12)
+nonce = #6.307(bytes .size 12)
 ```
 
 ---
@@ -315,10 +235,10 @@ struct Password {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|700|`Password`|
+|308|`Password`|
 
 ```
-password = #6.700([n, r, p, salt, hashed-password])
+password = #6.308([n, r, p, salt, hashed-password])
 
 n = uint                             ; iterations
 r = uint                             ; block size
@@ -335,7 +255,7 @@ hashed-password = bytes              ; 32 bytes recommended
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|205|`crypto-prvkeys`|`PrivateKeyBase`|
+|309|`crypto-prvkeys`|`PrivateKeyBase`|
 
 ### PrivateKeyBase: Swift Definition
 
@@ -348,7 +268,7 @@ struct PrivateKeyBase {
 ### PrivateKeyBase: CDDL
 
 ```
-crypto-prvkeys = #6.205([key-material])
+crypto-prvkeys = #6.309([key-material])
 
 key-material = bytes
 ```
@@ -379,12 +299,12 @@ struct PublicKeyBase {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|206|`crypto-pubkeys`|`PublicKeyBase`|
+|310|`crypto-pubkeys`|`PublicKeyBase`|
 
 A `crypto-pubkeys` is a two-element array with the first element being the `signing-public-key` and the second being the `agreement-public-key`.
 
 ```
-crypto-pubkeys = #6.206([signing-public-key, agreement-public-key])
+crypto-pubkeys = #6.310([signing-public-key, agreement-public-key])
 ```
 
 ---
@@ -402,7 +322,7 @@ struct Salt {
 ## Salt: CDDL
 
 ```
-salt = #6.708(bytes)
+salt = #6.311(bytes)
 ```
 
 ---
@@ -424,10 +344,10 @@ struct SealedMessage {
 
 |CBOR Tag|UR Type|Swift Type|
 |---|---|---|
-|207|`crypto-sealed`|`SealedMessage`|
+|312|`crypto-sealed`|`SealedMessage`|
 
 ```
-crypto-sealed = #6.207([crypto-message, ephemeral-public-key])
+crypto-sealed = #6.312([crypto-message, ephemeral-public-key])
 
 ephemeral-public-key = agreement-public-key
 ```
@@ -454,7 +374,7 @@ public enum Signature {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|222|`Signature`|
+|313|`Signature`|
 
 A `signature` has two variants. The Schnorr variant is preferred. Schnorr signatures may include tag data of arbitrary length.
 
@@ -463,7 +383,7 @@ If the `signature-variant-schnorr` is selected and has no tag, it will appear di
 If the `signature-variant-ecdsa` is selected, it will appear as a two-element array where the first element is `1` and the second element is a byte string of length 64.
 
 ```
-signature = #6.222([ signature-variant-schnorr / signature-variant-ecdsa ])
+signature = #6.313([ signature-variant-schnorr / signature-variant-ecdsa ])
 
 signature-variant-schnorr = signature-schnorr / signature-schnorr-tagged
 signature-schnorr = bytes .size 64
@@ -492,10 +412,10 @@ struct SigningPrivateKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|704|`SigningPrivateKey`|
+|314|`SigningPrivateKey`|
 
 ```
-private-signing-key = #6.704(key)
+private-signing-key = #6.314(key)
 
 key = bytes .size 32
 ```
@@ -522,12 +442,12 @@ public enum SigningPublicKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|705|`SigningPublicKey`|
+|315|`SigningPublicKey`|
 
 A signing public key has two variants: Schnorr or ECDSA. The Schnorr variant is preferred, so it appears as a byte string of length 32. If ECDSA is selected, it appears as a 2-element array where the first element is `1` and the second element is the compressed ECDSA key as a byte string of length 33.
 
 ```
-signing-public-key = #6.705(key-variant-schnorr / key-variant-ecdsa)
+signing-public-key = #6.315(key-variant-schnorr / key-variant-ecdsa)
 
 key-variant-schnorr = key-schnorr
 key-schnorr = bytes .size 32
@@ -554,9 +474,9 @@ public struct SymmetricKey {
 
 |CBOR Tag|Swift Type|
 |---|---|
-|204|`SymmetricKey`|
+|316|`SymmetricKey`|
 
 ```
-symmetric-key = #6.204( symmetric-key-data )
+symmetric-key = #6.316( symmetric-key-data )
 symmetric-key-data = bytes .size 32
 ```

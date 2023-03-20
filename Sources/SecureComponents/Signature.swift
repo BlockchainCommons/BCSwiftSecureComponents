@@ -45,7 +45,7 @@ extension Signature: Equatable {
 }
 
 extension Signature: URCodable {
-    public static let cborTag = Tag(222, "signature")
+    public static let cborTag = Tag.signature
 
     public var untaggedCBOR: CBOR {
         switch self {

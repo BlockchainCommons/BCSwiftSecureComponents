@@ -13,150 +13,129 @@ import URKit
 /// Tags in the range 24-32767 require a specification to reserve.
 /// Tags in the range 24-255 only require two bytes to encode.
 /// Higher numbered tags are first-come, first-served.
-///
-/// Currently Secure Components would benefit from having 17 of these tags.
-/// As we expect to file a specification at some point, we are choosing tags from 200 up for our highest-frequency tags.
 
-/// UR types and CBOR tags for objects that can be top-level.
-/// These tags use two-byte encoding.
-
-public extension Tag {
-    static let envelope = Tag(200, "envelope")
-    static let message = Tag(201, "crypto-msg")
-    static let cid = Tag(202, "crypto-cid")
-    static let digest = Tag(203, "crypto-digest")
-    static let symmetricKey = Tag(204, "crypto-key")
-    static let privateKeyBase = Tag(205, "crypto-prvkeys")
-    static let publicKeyBase = Tag(206, "crypto-pubkeys")
-    static let sealedMessage = Tag(207, "crypto-sealed")
-}
-
-/// Tags for subtypes specific to Secure Components.
-/// Except for `.leaf`, these tags use two-byte encoding.
+/// Core Envelope tags.
 public extension Tag {
     /// See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
     static let leaf = Tag(24, "leaf")
-    
-    static let assertion = Tag(221, "assertion")
-    static let signature = Tag(222, "signature")
-    static let knownValue = Tag(223, "known-value")
-    static let wrappedEnvelope = Tag(224, "wrapped-envelope")
-    
-    static let agreementPublicKey = Tag(230, "agreement-public-key")
+
+    static let envelope = Tag(200, "envelope")
+    static let assertion = Tag(201, "assertion")
+    static let knownValue = Tag(202, "known-value")
+    static let wrappedEnvelope = Tag(203, "wrapped-envelope")
+    static let digest = Tag(204, "digest")
+    static let encrypted = Tag(205, "encrypted")
+    static let compressed = Tag(206, "compressed")
 }
 
-/// UR types and CBOR tags for objects that can be top-level.
-/// These tags use three-byte encoding.
+/// Tags for subtypes specific to Distributed Function Calls. These tags use
+/// two-byte encoding.
 public extension Tag {
-    static let seed = Tag(300, "crypto-seed")
-    static let hdKey = Tag(303, "crypto-hdkey")
-    static let derivationPath = Tag(304, "crypto-keypath")
-    static let useInfo = Tag(305, "crypto-coin-info")
-    static let ecKey = Tag(306, "crypto-eckey")
-    static let address = Tag(307, "crypto-address")
-    static let output = Tag(308, "crypto-output")
-    static let sskrShare = Tag(309, "crypto-sskr")
-    static let psbt = Tag(310, "crypto-psbt")
-    static let account = Tag(311, "crypto-account")
+    static let request = Tag(207, "request")
+    static let response = Tag(208, "response")
+    static let function = Tag(209, "function")
+    static let parameter = Tag(210, "parameter")
+    static let placeholder = Tag(211, "placeholder")
+    static let replacement = Tag(212, "replacement")
+}
+
+/// These are the utility structures we've identified and speced related to other
+/// various applications that aren't specifically Bitcoin-related.
+public extension Tag {
+    static let agreementPrivateKey = Tag(300, "agreement-private-key")
+    static let agreementPublicKey = Tag(301, "agreement-public-key")
+    static let commonIdentifier = Tag(302, "cid")
+    static let ecKey = Tag(303, "crypto-eckey")
+    static let seed = Tag(304, "crypto-seed")
+    static let seedDigest = Tag(305, "seed-digest")
+    static let sskrShare = Tag(306, "crypto-sskr")
+    static let nonce = Tag(307, "nonce")
+    static let password = Tag(308, "password")
+    static let privateKeyBase = Tag(309, "crypto-prvkeys")
+    static let publicKeyBase = Tag(310, "crypto-pubkeys")
+    static let salt = Tag(311, "salt")
+    static let sealedMessage = Tag(312, "crypto-sealed")
+    static let signature = Tag(313, "signature")
+    static let signingPrivateKey = Tag(314, "signing-private-key")
+    static let signingPublicKey = Tag(315, "signing-public-key")
+    static let symmetricKey = Tag(316, "crypto-key")
+}
+
+/// Bitcoin-related
+public extension Tag {
+    static let account = Tag(350, "crypto-account")
+    static let address = Tag(351, "crypto-address")
+    static let useInfo = Tag(352, "crypto-coin-info")
+    static let hdKey = Tag(353, "crypto-hdkey")
+    static let derivationPath = Tag(354, "crypto-keypath")
+    static let psbt = Tag(355, "crypto-psbt")
 }
 
 /// Tags for subtypes specific to AccountBundle (crypto-output).
-/// These tags use three-byte encoding.
 public extension Tag {
-    static let outputScriptHash = Tag(400, "output-script-hash")
-    static let outputWitnessScriptHash = Tag(401, "output-witness-script-hash")
-    static let outputPublicKey = Tag(402, "output-public-key")
-    static let outputPublicKeyHash = Tag(403, "output-public-key-hash")
-    static let outputWitnessPublicKeyHash = Tag(404, "output-witness-public-key-hash")
-    static let outputCombo = Tag(405, "output-combo")
-    static let outputMultisig = Tag(406, "output-multisig")
-    static let outputSortedMultisig = Tag(407, "output-sorted-multisig")
-    static let outputRawScript = Tag(408, "output-raw-script")
-    static let outputTaproot = Tag(409, "output-taproot")
-    static let outputCosigner = Tag(410, "output-cosigner")
-}
+    static let output = Tag(370, "crypto-output")
 
-/// Tags for subtypes specific to requests and responses.
-/// These tags use three-byte encoding.
-public extension Tag {
-    static let outputDescriptorResponse = Tag(500, "output-descriptor-response")
-}
-
-/// These tags use three-byte encoding.
-public extension Tag {
-    static let seedDigest = Tag(600, "seed-digest")
-}
-
-/// Tags for subtypes specific to Distributed Function Calls.
-/// These tags use two-byte encoding.
-public extension Tag {
-    static let function = Tag(213, "function")
-    static let parameter = Tag(214, "parameter")
-    static let request = Tag(215, "request")
-    static let response = Tag(216, "response")
-    static let placeholder = Tag(217, "placeholder")
-    static let replacement = Tag(218, "replacement")
-}
-
-/// Tags for subtypes specific to Secure Components.
-/// These tags use three-byte encoding.
-public extension Tag {
-    static let password = Tag(700, "password")
-    static let agreementPrivateKey = Tag(702, "agreement-private-key")
-    static let signingPrivateKey = Tag(704, "signing-private-key")
-    static let signingPublicKey = Tag(705, "signing-public-key")
-    static let nonce = Tag(707, "nonce")
-    static let salt = Tag(708, "salt")
-    static let receipt = Tag(709, "receipt")
+    static let outputCombo = Tag(371, "output-combo")
+    static let outputCosigner = Tag(372, "output-cosigner")
+    static let outputMultisig = Tag(373, "output-multisig")
+    static let outputPublicKey = Tag(374, "output-public-key")
+    static let outputPublicKeyHash = Tag(375, "output-public-key-hash")
+    static let outputRawScript = Tag(376, "output-raw-script")
+    static let outputScriptHash = Tag(377, "output-script-hash")
+    static let outputSortedMultisig = Tag(378, "output-sorted-multisig")
+    static let outputTaproot = Tag(379, "output-taproot")
+    static let outputWitnessPublicKeyHash = Tag(380, "output-witness-public-key-hash")
+    static let outputWitnessScriptHash = Tag(381, "output-witness-script-hash")
+    
+    static let outputDescriptorResponse = Tag(390, "output-descriptor-response")
 }
 
 public var knownTags: KnownTagsDict = [
-    .envelope,
-    .message,
-    .cid,
-    .digest,
-    .symmetricKey,
-    .privateKeyBase,
-    .publicKeyBase,
-    .sealedMessage,
-    .leaf,
-    .assertion,
-    .signature,
-    .knownValue,
-    .wrappedEnvelope,
-    .agreementPublicKey,
-    .seed,
-    .hdKey,
-    .derivationPath,
-    .useInfo,
-    .ecKey,
-    .address,
-    .output,
-    .sskrShare,
-    .psbt,
     .account,
-    .outputScriptHash,
-    .outputWitnessScriptHash,
-    .outputPublicKey,
-    .outputPublicKeyHash,
-    .outputWitnessPublicKeyHash,
+    .address,
+    .agreementPrivateKey,
+    .agreementPublicKey,
+    .assertion,
+    .commonIdentifier,
+    .derivationPath,
+    .digest,
+    .ecKey,
+    .encrypted,
+    .envelope,
+    .function,
+    .hdKey,
+    .knownValue,
+    .leaf,
+    .nonce,
+    .output,
     .outputCombo,
-    .outputMultisig,
-    .outputSortedMultisig,
-    .outputRawScript,
-    .outputTaproot,
     .outputCosigner,
     .outputDescriptorResponse,
-    .seedDigest,
-    .function,
+    .outputMultisig,
+    .outputPublicKey,
+    .outputPublicKeyHash,
+    .outputRawScript,
+    .outputScriptHash,
+    .outputSortedMultisig,
+    .outputTaproot,
+    .outputWitnessPublicKeyHash,
+    .outputWitnessScriptHash,
     .parameter,
+    .password,
+    .privateKeyBase,
+    .psbt,
+    .publicKeyBase,
     .request,
     .response,
-    .password,
-    .agreementPrivateKey,
+    .salt,
+    .sealedMessage,
+    .seed,
+    .seedDigest,
+    .signature,
     .signingPrivateKey,
     .signingPublicKey,
-    .nonce,
-    .salt,
-    .receipt
+    .sskrShare,
+    .symmetricKey,
+    .useInfo,
+    .wrappedEnvelope,
 ]

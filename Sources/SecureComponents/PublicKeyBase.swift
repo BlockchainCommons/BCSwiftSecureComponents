@@ -21,7 +21,7 @@ public struct PublicKeyBase: CustomStringConvertible, Hashable {
 }
 
 extension PublicKeyBase: URCodable {
-    public static let cborTag = Tag(206, "crypto-pubkeys")
+    public static let cborTag = Tag.publicKeyBase
     
     public var untaggedCBOR: CBOR {
         [signingPublicKey, agreementPublicKey]

@@ -31,7 +31,7 @@ public protocol ECPublicKeyProtocol: ECKey {
 }
 
 public struct ECPrivateKey: ECKey {
-    public static let cborTag = Tag(306, "crypto-eckey")
+    public static let cborTag = Tag.ecKey
     public static let keyLen = Crypto.privateKeyLenECDSA
     public let data: Data
 

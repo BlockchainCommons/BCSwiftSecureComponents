@@ -45,7 +45,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
 }
 
 extension SigningPrivateKey: URCodable {
-    public static let cborTag = Tag(704, "signing-private-key")
+    public static let cborTag = Tag.signingPrivateKey
 
     public var untaggedCBOR: CBOR {
         data.cbor

@@ -25,7 +25,7 @@ public struct AgreementPublicKey: CustomStringConvertible, Hashable {
 }
 
 extension AgreementPublicKey: URCodable {
-    public static let cborTag = Tag(230, "agreement-public-key")
+    public static let cborTag = Tag.agreementPublicKey
     
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

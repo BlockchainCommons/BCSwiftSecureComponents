@@ -51,7 +51,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
 }
 
 extension SymmetricKey: URCodable {
-    public static let cborTag = Tag(204, "crypto-key")
+    public static let cborTag = Tag.symmetricKey
     
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

@@ -74,7 +74,7 @@ extension SigningPublicKey: Hashable {
 }
 
 extension SigningPublicKey: URCodable {
-    public static let cborTag = Tag(705, "signing-public-key")
+    public static let cborTag = Tag.signingPublicKey
 
     public var untaggedCBOR: CBOR {
         switch self {
