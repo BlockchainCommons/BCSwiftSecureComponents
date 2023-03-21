@@ -1,6 +1,8 @@
 import Foundation
 import URKit
 
+/// Assignments marked "Fixed" are likely to be in active use by external developers.
+
 /// https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-006-urtypes.md
 
 /// As of August 13 2022, the [IANA registry of CBOR tags](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml)
@@ -42,52 +44,52 @@ public extension Tag {
 /// These are the utility structures we've identified and speced related to other
 /// various applications that aren't specifically Bitcoin-related.
 public extension Tag {
-    static let agreementPrivateKey = Tag(300, "agreement-private-key")
-    static let agreementPublicKey = Tag(301, "agreement-public-key")
-    static let commonIdentifier = Tag(302, "cid")
-    static let ecKey = Tag(303, "crypto-eckey")
-    static let seed = Tag(304, "crypto-seed")
-    static let seedDigest = Tag(305, "seed-digest")
-    static let sskrShare = Tag(306, "crypto-sskr")
-    static let nonce = Tag(307, "nonce")
-    static let password = Tag(308, "password")
-    static let privateKeyBase = Tag(309, "crypto-prvkeys")
-    static let publicKeyBase = Tag(310, "crypto-pubkeys")
-    static let salt = Tag(311, "salt")
-    static let sealedMessage = Tag(312, "crypto-sealed")
-    static let signature = Tag(313, "signature")
-    static let signingPrivateKey = Tag(314, "signing-private-key")
-    static let signingPublicKey = Tag(315, "signing-public-key")
-    static let symmetricKey = Tag(316, "crypto-key")
+    static let seed = Tag(300, "crypto-seed") // Fixed
+    static let agreementPrivateKey = Tag(301, "agreement-private-key")
+    static let agreementPublicKey = Tag(302, "agreement-public-key")
+    static let ecKey = Tag(306, "crypto-eckey") // Fixed
+    static let sskrShare = Tag(309, "crypto-sskr") // Fixed
+    static let commonIdentifier = Tag(312, "cid")
+    static let seedDigest = Tag(313, "seed-digest")
+    static let nonce = Tag(314, "nonce")
+    static let password = Tag(315, "password")
+    static let privateKeyBase = Tag(316, "crypto-prvkeys")
+    static let publicKeyBase = Tag(317, "crypto-pubkeys")
+    static let salt = Tag(318, "salt")
+    static let sealedMessage = Tag(319, "crypto-sealed")
+    static let signature = Tag(320, "signature")
+    static let signingPrivateKey = Tag(321, "signing-private-key")
+    static let signingPublicKey = Tag(322, "signing-public-key")
+    static let symmetricKey = Tag(323, "crypto-key")
 }
 
 /// Bitcoin-related
 public extension Tag {
-    static let account = Tag(350, "crypto-account")
-    static let address = Tag(351, "crypto-address")
-    static let useInfo = Tag(352, "crypto-coin-info")
-    static let hdKey = Tag(353, "crypto-hdkey")
-    static let derivationPath = Tag(354, "crypto-keypath")
-    static let psbt = Tag(355, "crypto-psbt")
+    static let hdKey = Tag(303, "crypto-hdkey") // Fixed
+    static let derivationPath = Tag(304, "crypto-keypath") // Fixed
+    static let useInfo = Tag(305, "crypto-coin-info") // Fixed
+    static let address = Tag(307, "crypto-address") // Fixed
+    static let psbt = Tag(310, "crypto-psbt") // Fixed
+    static let account = Tag(311, "crypto-account") // Fixed
 }
 
 /// Tags for subtypes specific to AccountBundle (crypto-output).
 public extension Tag {
-    static let output = Tag(370, "crypto-output")
+    static let output = Tag(308, "crypto-output") // Fixed
 
-    static let outputCombo = Tag(371, "output-combo")
-    static let outputCosigner = Tag(372, "output-cosigner")
-    static let outputMultisig = Tag(373, "output-multisig")
-    static let outputPublicKey = Tag(374, "output-public-key")
-    static let outputPublicKeyHash = Tag(375, "output-public-key-hash")
-    static let outputRawScript = Tag(376, "output-raw-script")
-    static let outputScriptHash = Tag(377, "output-script-hash")
-    static let outputSortedMultisig = Tag(378, "output-sorted-multisig")
-    static let outputTaproot = Tag(379, "output-taproot")
-    static let outputWitnessPublicKeyHash = Tag(380, "output-witness-public-key-hash")
-    static let outputWitnessScriptHash = Tag(381, "output-witness-script-hash")
-    
-    static let outputDescriptorResponse = Tag(390, "output-descriptor-response")
+    static let outputScriptHash = Tag(400, "output-script-hash") // Fixed
+    static let outputWitnessScriptHash = Tag(401, "output-witness-script-hash") // Fixed
+    static let outputPublicKey = Tag(402, "output-public-key") // Fixed
+    static let outputPublicKeyHash = Tag(403, "output-public-key-hash") // Fixed
+    static let outputWitnessPublicKeyHash = Tag(404, "output-witness-public-key-hash") // Fixed
+    static let outputCombo = Tag(405, "output-combo") // Fixed
+    static let outputMultisig = Tag(406, "output-multisig") // Fixed
+    static let outputSortedMultisig = Tag(407, "output-sorted-multisig") // Fixed
+    static let outputRawScript = Tag(408, "output-raw-script") // Fixed
+    static let outputTaproot = Tag(409, "output-taproot") // Fixed
+    static let outputCosigner = Tag(410, "output-cosigner") // Fixed
+
+    static let outputDescriptorResponse = Tag(500, "output-descriptor-response") // Fixed
 }
 
 public var knownTags: KnownTagsDict = [

@@ -107,7 +107,7 @@ public struct ECXOnlyPublicKey: Hashable {
 }
 
 public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
-    public static let cborTag = Tag(306, "crypto-eckey")
+    public static let cborTag = Tag.ecKey
     public static var keyLen = Crypto.publicKeyLenECDSA
     public let data: Data
 
@@ -157,7 +157,7 @@ extension ECPublicKey: CustomStringConvertible {
 }
 
 public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
-    public static let cborTag = Tag(306, "crypto-eckey")
+    public static let cborTag = Tag.ecKey
     public static var keyLen = Crypto.publicKeyUncompressedLenECDSA
     public let data: Data
 
