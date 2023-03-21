@@ -99,6 +99,7 @@ public var knownTags: KnownTagsDict = [
     .agreementPublicKey,
     .assertion,
     .commonIdentifier,
+    .compressed,
     .derivationPath,
     .digest,
     .ecKey,
