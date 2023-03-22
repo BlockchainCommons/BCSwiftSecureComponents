@@ -125,20 +125,28 @@ If the payload is too small to compress, the uncompressed payload is placed in t
 
 ```swift
 struct Compressed {
-    let uncompressedDigest: Digest
+    let checksum: UInt32
     let uncompressedSize: Int
     let compressedData: Data
+    let digest: Digest?
 }
 ```
 
 ### Compressed: CDDL
 
 ```
-compressed = #6.206([uncompressed-digest, uncompressed-size, compressed-data])
+compressed = #6.206([
+    checksum, 
+    uncompressed-size, 
+    compressed-data, 
+    ? digest              ; Optional user-defined digest
+])
 
-uncompressed-digest = digest
+checksum = crc32          ; CRC-32 checksum of the uncompressed data
 uncompressed-size = uint
 compressed-data = bytes
+
+crc32 = uint
 ```
 
 ---
