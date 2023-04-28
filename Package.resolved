@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftCrypto",
       "state" : {
-        "revision" : "6f7642ec7ee11098d3bcff56992431a7af1c6ce4",
-        "version" : "0.4.0"
+        "revision" : "3236af46adba5a48cbc100c4a181d38b37f2c822",
+        "version" : "0.5.0"
       }
     },
     {
