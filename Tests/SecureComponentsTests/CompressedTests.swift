@@ -4,17 +4,9 @@ import SecureComponents
 
 class CompressedTests: XCTestCase {
     func test1() throws {
-        let source = """
-            Lorem ipsum dolor sit amet consectetur adipiscing elit mi
-            nibh ornare proin blandit diam ridiculus, faucibus mus
-            dui eu vehicula nam donec dictumst sed vivamus bibendum
-            aliquet efficitur. Felis imperdiet sodales dictum morbi
-            vivamus augue dis duis aliquet velit ullamcorper porttitor,
-            lobortis dapibus hac purus aliquam natoque iaculis blandit
-            montes nunc pretium.
-            """.utf8Data
+        let source = "Lorem ipsum dolor sit amet consectetur adipiscing elit mi nibh ornare proin blandit diam ridiculus, faucibus mus dui eu vehicula nam donec dictumst sed vivamus bibendum aliquet efficitur. Felis imperdiet sodales dictum morbi vivamus augue dis duis aliquet velit ullamcorper porttitor, lobortis dapibus hac purus aliquam natoque iaculis blandit montes nunc pretium.".utf8Data
         let compressed = Compressed(uncompressedData: source)
-        XCTAssertEqual(compressed†, "Compressed(checksum: 7141b818, size: 222/364, ratio: 0.61, digest: nil)")
+        XCTAssertEqual(compressed†, "Compressed(checksum: 3eeb10a0, size: 217/364, ratio: 0.6, digest: nil)")
         XCTAssertEqual(try compressed.uncompress(), source)
     }
     
