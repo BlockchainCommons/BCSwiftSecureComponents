@@ -32,7 +32,7 @@ public class Password {
         self.r = r
         self.p = p
         
-        let salt = salt?.providedData ?? Crypto.randomData(count: 16)
+        let salt = salt?.providedData ?? secureRandomData(16)
         self.salt = salt
         
         let password = password.providedData

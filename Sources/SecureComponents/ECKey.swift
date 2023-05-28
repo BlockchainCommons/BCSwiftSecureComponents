@@ -44,7 +44,7 @@ public struct ECPrivateKey: ECKey {
     }
     
     public init() {
-        self.data = Crypto.randomData(count: 32)
+        self.data = secureRandomData(32)
     }
 
     public init?(hex: String) {
@@ -66,8 +66,8 @@ public struct ECPrivateKey: ECKey {
         Crypto.signECDSA(message: message.providedData, privateKeyECDSA: data)
     }
     
-    public func schnorrSign(message: DataProvider, tag: DataProvider, randomGenerator: Crypto.RandomGenerator = Crypto.randomData) -> Data {
-        Crypto.signSchnorr(message: message.providedData, tag: tag.providedData, privateKeyECDSA: self.data, randomGenerator: randomGenerator)
+    public func schnorrSign(message: DataProvider, tag: DataProvider, rng: RandomDataFunc = secureRandomData) -> Data {
+        Crypto.signSchnorr(message: message.providedData, tag: tag.providedData, privateKeyECDSA: self.data, rng: rng)
     }
     
     public var wif: String {

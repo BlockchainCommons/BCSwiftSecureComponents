@@ -14,7 +14,7 @@ public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider 
     }
     
     public init() {
-        self.init(Crypto.randomData(count: 12))!
+        self.init(secureRandomData(12))!
     }
 }
 

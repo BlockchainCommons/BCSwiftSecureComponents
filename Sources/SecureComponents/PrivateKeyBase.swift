@@ -22,7 +22,7 @@ public struct PrivateKeyBase {
     public let data: Data
     
     public init(_ provider: PrivateKeysDataProvider? = nil) {
-        let provider = provider ?? Crypto.randomData(count: 32)
+        let provider = provider ?? secureRandomData(32)
         self.data = provider.privateKeysData
     }
     

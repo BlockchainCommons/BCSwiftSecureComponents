@@ -13,7 +13,7 @@ public struct CID: Equatable, Hashable {
     }
     
     public init() {
-        self.init(Crypto.randomData(count: 32))!
+        self.init(secureRandomData(32))!
     }
 }
 

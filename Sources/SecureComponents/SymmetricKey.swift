@@ -17,7 +17,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     }
     
     public init() {
-        self.init(Crypto.randomData(count: 32))!
+        self.init(secureRandomData(32))!
     }
     
     public var bytes: [UInt8] {
