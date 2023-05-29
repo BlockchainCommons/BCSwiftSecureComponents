@@ -27,12 +27,12 @@ public class Password {
         self.p = p
     }
     
-    public init?(_ password: DataProvider, salt: DataProvider? = nil, dkLen: Int = defaulDKLen, n: Int = defaultN, r: Int = defaultR, p: Int = defaultP) {
+    public init?<T: RandomNumberGenerator>(_ password: DataProvider, salt: DataProvider? = nil, dkLen: Int = defaulDKLen, n: Int = defaultN, r: Int = defaultR, p: Int = defaultP, using rng: inout T) {
         self.n = n
         self.r = r
         self.p = p
         
-        let salt = salt?.providedData ?? secureRandomData(16)
+        let salt = salt?.providedData ?? rng.randomData(16)
         self.salt = salt
         
         let password = password.providedData
@@ -40,6 +40,11 @@ public class Password {
             return nil
         }
         self.data = Crypto.scrypt(password: password, salt: salt, dkLen: dkLen, n: n, r: r, p: p)
+    }
+    
+    public convenience init?(_ password: DataProvider, salt: DataProvider? = nil, dkLen: Int = defaulDKLen, n: Int = defaultN, r: Int = defaultR, p: Int = defaultP) {
+        var rng = SecureRandomNumberGenerator()
+        self.init(password, salt: salt, dkLen: dkLen, n: n, r: r, p: p, using: &rng)
     }
     
     public func isValid(_ password: String) -> Bool {

@@ -21,9 +21,14 @@ extension Data: PrivateKeysDataProvider {
 public struct PrivateKeyBase {
     public let data: Data
     
-    public init(_ provider: PrivateKeysDataProvider? = nil) {
-        let provider = provider ?? secureRandomData(32)
+    public init<T: RandomNumberGenerator>(_ provider: PrivateKeysDataProvider? = nil, using rng: inout T) {
+        let provider = provider ?? rng.randomData(32)
         self.data = provider.privateKeysData
+    }
+    
+    public init(_ provider: PrivateKeysDataProvider? = nil) {
+        var rng = SecureRandomNumberGenerator()
+        self.init(provider, using: &rng)
     }
     
     public var signingPrivateKey: SigningPrivateKey {

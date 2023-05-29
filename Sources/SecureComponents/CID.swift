@@ -12,8 +12,13 @@ public struct CID: Equatable, Hashable {
         self.data = data
     }
     
+    public init<T: RandomNumberGenerator>(using rng: inout T) {
+        self.init(rng.randomData(32))!
+    }
+    
     public init() {
-        self.init(secureRandomData(32))!
+        var rng = SecureRandomNumberGenerator()
+        self.init(using: &rng)
     }
 }
 

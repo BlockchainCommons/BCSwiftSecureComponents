@@ -43,8 +43,13 @@ public struct ECPrivateKey: ECKey {
         self.data = data
     }
     
+    public init<T: RandomNumberGenerator>(using rng: inout T) {
+        self.data = rng.randomData(32)
+    }
+    
     public init() {
-        self.data = secureRandomData(32)
+        var rng = SecureRandomNumberGenerator()
+        self.init(using: &rng)
     }
 
     public init?(hex: String) {
@@ -59,15 +64,22 @@ public struct ECPrivateKey: ECKey {
     }
     
     public var xOnlyPublic: ECXOnlyPublicKey {
-        ECXOnlyPublicKey(Crypto.xOnlyPublicKeyFromPrivateKeyECDSA(data: data))!
+        ECXOnlyPublicKey(Crypto.xOnlyPublicKeyFromPrivateKeyECDSA(privateKey: data))!
     }
     
-    public func ecdsaSign(message: DataProvider) -> Data {
+    public func ecdsaSign(_ message: DataProvider) -> Data {
         Crypto.signECDSA(message: message.providedData, privateKeyECDSA: data)
     }
     
-    public func schnorrSign(message: DataProvider, tag: DataProvider, rng: RandomDataFunc = secureRandomData) -> Data {
-        Crypto.signSchnorr(message: message.providedData, tag: tag.providedData, privateKeyECDSA: self.data, rng: rng)
+    public func schnorrSignUsing<T>(_ message: DataProvider, tag: DataProvider, rng: inout T) -> Data
+        where T: RandomNumberGenerator
+    {
+        Crypto.signSchnorr(message: message.providedData, tag: tag.providedData, privateKeyECDSA: self.data, rng: &rng)
+    }
+    
+    public func schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
+        var rng = SecureRandomNumberGenerator()
+        return schnorrSignUsing(message, tag: tag, rng: &rng)
     }
     
     public var wif: String {
@@ -177,7 +189,7 @@ public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
     }
 
     public var compressed: ECPublicKey {
-        ECPublicKey(Crypto.compressPublicKeyECDSA(decompressedPublicKey: data))!
+        ECPublicKey(Crypto.compressPublicKeyECDSA(uncompressedPublicKey: data))!
     }
     
     public var uncompressed: ECUncompressedPublicKey {

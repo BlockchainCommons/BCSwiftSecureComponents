@@ -14,21 +14,33 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
         self.data = data
     }
 
+    public init<T: RandomNumberGenerator>(using rng: inout T) {
+        self.data = rng.randomData(32)
+    }
+    
     public init() {
-        self.data = secureRandomData(32)
+        var rng = SecureRandomNumberGenerator()
+        self.init(using: &rng)
     }
     
     public func ecdsaSign(_ message: DataProvider) -> Signature {
         let privateKey = ECPrivateKey(data)!
-        let sig = privateKey.ecdsaSign(message: message.providedData)
+        let sig = privateKey.ecdsaSign(message.providedData)
         return Signature(ecdsaData: sig)!
     }
 
-    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil, rng: RandomDataFunc = secureRandomData) -> Signature {
+    public func schnorrSignUsing<T>(_ message: DataProvider, tag: DataProvider? = nil, rng: inout T) -> Signature
+        where T: RandomNumberGenerator
+    {
         let privateKey = ECPrivateKey(data)!
         let tag = tag ?? Data()
-        let sig = privateKey.schnorrSign(message: message.providedData, tag: tag.providedData, rng: rng)
+        let sig = privateKey.schnorrSignUsing(message.providedData, tag: tag.providedData, rng: &rng)
         return Signature(schnorrData: sig, tag: tag)!
+    }
+    
+    public func schnorrSign(_ message: DataProvider, tag: DataProvider? = nil) -> Signature {
+        var rng = SecureRandomNumberGenerator()
+        return schnorrSignUsing(message, tag: tag, rng: &rng)
     }
     
     public var ecdsaPublicKey: SigningPublicKey {
