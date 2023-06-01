@@ -3,10 +3,10 @@ import WolfBase
 import URKit
 
 public enum SigningPublicKey {
-    case schnorr(ECXOnlyPublicKey)
+    case schnorr(SchnorrPublicKey)
     case ecdsa(ECPublicKey)
     
-    public init(_ key: ECXOnlyPublicKey) {
+    public init(_ key: SchnorrPublicKey) {
         self = .schnorr(key)
     }
     
@@ -19,14 +19,14 @@ public enum SigningPublicKey {
         case .schnorr(let key):
             switch signature {
             case .schnorr(let sigData, let tag):
-                return key.schnorrVerify(signature: sigData, tag: tag, message: message)
+                return key.schnorrVerify(signature: sigData, message: message, tag: tag)
             default:
                 return false
             }
         case .ecdsa(let key):
             switch signature {
             case .ecdsa(let sigData):
-                return key.verify(message: message, signature: sigData)
+                return key.verify(signature: sigData, message: message)
             default:
                 return false
             }
@@ -87,7 +87,7 @@ extension SigningPublicKey: URCodable {
     
     public init(untaggedCBOR: CBOR) throws {
         if case let CBOR.bytes(data) = untaggedCBOR,
-           let key = ECXOnlyPublicKey(data)
+           let key = SchnorrPublicKey(data)
         {
             self = .schnorr(key)
             return
@@ -101,5 +101,11 @@ extension SigningPublicKey: URCodable {
             return
         }
         throw CBORError.invalidFormat
+    }
+}
+
+extension SigningPublicKey: CustomStringConvertible {
+    public var description: String {
+        "SigningPublicKey(\(data.hex))"
     }
 }

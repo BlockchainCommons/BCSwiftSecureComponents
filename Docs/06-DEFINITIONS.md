@@ -441,7 +441,7 @@ A public key for verifying signatures. It has two variants:
 
 ```swift
 public enum SigningPublicKey {
-    case schnorr(ECXOnlyPublicKey)
+    case schnorr(SchnorrPublicKey)
     case ecdsa(ECPublicKey)
 }
 ```

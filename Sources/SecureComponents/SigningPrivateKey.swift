@@ -23,6 +23,10 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
         self.init(using: &rng)
     }
     
+    public init(keyMaterial: DataProvider) {
+        self.init(Crypto.x25519DeriveSigningPrivateKey(keyMaterial: keyMaterial.providedData))!
+    }
+
     public func ecdsaSign(_ message: DataProvider) -> Signature {
         let privateKey = ECPrivateKey(data)!
         let sig = privateKey.ecdsaSign(message.providedData)
@@ -44,15 +48,15 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
     
     public var ecdsaPublicKey: SigningPublicKey {
-        SigningPublicKey(ECPrivateKey(data)!.public)
+        SigningPublicKey(ECPrivateKey(data)!.publicKey)
     }
     
     public var schnorrPublicKey: SigningPublicKey {
-        SigningPublicKey(ECPrivateKey(data)!.xOnlyPublic)
+        SigningPublicKey(ECPrivateKey(data)!.schnorrPublicKey)
     }
     
     public var description: String {
-        "PrivateSigningKey(\(data))"
+        "SigningPrivateKey"
     }
 }
 

@@ -54,8 +54,7 @@ public struct EncryptedMessage: CustomStringConvertible, Equatable {
 
 extension EncryptedMessage {
     public static func sharedKey(agreementPrivateKey: AgreementPrivateKey, agreementPublicKey: AgreementPublicKey) -> SymmetricKey {
-        let keyData = Crypto.deriveAgreementSharedKeyX25519(agreementPrivateKey: agreementPrivateKey.data, agreementPublicKey: agreementPublicKey.data)
-        return SymmetricKey(keyData)!
+        agreementPrivateKey.sharedKey(with: agreementPublicKey)
     }
 }
 

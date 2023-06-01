@@ -16,17 +16,31 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
         }
         self.data = data
     }
+
+    public init<T: RandomNumberGenerator>(using rng: inout T) {
+        self.data = rng.randomData(32)
+    }
     
     public init() {
-        self.data = Crypto.newAgreementPrivateKeyX25519()
+        var rng = SecureRandomNumberGenerator()
+        self.init(using: &rng)
+    }
+
+    public init(keyMaterial: DataProvider) {
+        self.init(Crypto.x25519DeriveAgreementPrivateKey(keyMaterial: keyMaterial.providedData))!
     }
 
     public var publicKey: AgreementPublicKey {
-        AgreementPublicKey(data: Crypto.agreementPublicKeyFromPrivateKeyX25519(agreementPrivateKey: data))!
+        AgreementPublicKey(data: Crypto.x25519AgreementPublicKeyFromPrivateKey(agreementPrivateKey: data))!
+    }
+    
+    public func sharedKey(with publicKey: AgreementPublicKey) -> SymmetricKey {
+        let keyData = Crypto.x25519DeriveAgreementSharedKey(agreementPrivateKey: self.data, agreementPublicKey: publicKey.data)
+        return SymmetricKey(keyData)!
     }
     
     public var description: String {
-        "PrivateAgreementKey\(data)"
+        "AgreementPrivateKey"
     }
 }
 
