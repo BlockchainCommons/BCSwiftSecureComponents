@@ -73,7 +73,7 @@ public struct ECPrivateKey: ECKey {
         BCCrypto.ecdsaSign(privateKeyECDSA: data, message: message.providedData)
     }
     
-    public func schnorrSignUsing<T>(_ message: DataProvider, tag: DataProvider, rng: inout T) -> Data
+    public func schnorrSign<T>(_ message: DataProvider, tag: DataProvider, using rng: inout T) -> Data
         where T: RandomNumberGenerator
     {
         BCCrypto.schnorrSign(ecdsaPrivateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
@@ -81,7 +81,7 @@ public struct ECPrivateKey: ECKey {
     
     public func schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
         var rng = SecureRandomNumberGenerator()
-        return schnorrSignUsing(message, tag: tag, rng: &rng)
+        return schnorrSign(message, tag: tag, using: &rng)
     }
     
     public var wif: String {

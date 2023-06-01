@@ -14,7 +14,7 @@ public enum SigningPublicKey {
         self = .ecdsa(key)
     }
     
-    public func isValidSignature(_ signature: Signature, for message: DataProvider) -> Bool {
+    public func verify(signature: Signature, for message: DataProvider) -> Bool {
         switch self {
         case .schnorr(let key):
             switch signature {
