@@ -34,7 +34,7 @@ public protocol ECPublicKeyProtocol: ECKey {
 
 public struct ECPrivateKey: ECKey {
     public static let cborTag = Tag.ecKey
-    public static let keyLen = Crypto.ecdsaPrivateKeySize
+    public static let keyLen = ecdsaPrivateKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -62,21 +62,21 @@ public struct ECPrivateKey: ECKey {
     }
 
     public var publicKey: ECPublicKey {
-        ECPublicKey(Crypto.ecdsaPublicKeyFromPrivateKey(privateKey: data))!
+        ECPublicKey(ecdsaPublicKeyFromPrivateKey(privateKey: data))!
     }
     
     public var schnorrPublicKey: SchnorrPublicKey {
-        SchnorrPublicKey(Crypto.schnorrPublicKeyFromPrivateKey(privateKey: data))!
+        SchnorrPublicKey(schnorrPublicKeyFromPrivateKey(privateKey: data))!
     }
     
     public func ecdsaSign(_ message: DataProvider) -> Data {
-        Crypto.ecdsaSign(privateKeyECDSA: data, message: message.providedData)
+        BCCrypto.ecdsaSign(privateKeyECDSA: data, message: message.providedData)
     }
     
     public func schnorrSignUsing<T>(_ message: DataProvider, tag: DataProvider, rng: inout T) -> Data
         where T: RandomNumberGenerator
     {
-        Crypto.schnorrSign(ecdsaPrivateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
+        BCCrypto.schnorrSign(ecdsaPrivateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
     }
     
     public func schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
@@ -116,13 +116,13 @@ public struct SchnorrPublicKey: ECKeyBase {
     }
     
     public func schnorrVerify(signature: Data, message: DataProvider, tag: DataProvider) -> Bool {
-        Crypto.schnorrVerify(schnorrPublicKey: data, signature: signature, message: message.providedData, tag: tag.providedData)
+        BCCrypto.schnorrVerify(schnorrPublicKey: data, signature: signature, message: message.providedData, tag: tag.providedData)
     }
 }
 
 public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
     public static let cborTag = Tag.ecKey
-    public static var keyLen = Crypto.ecdsaPublicKeySize
+    public static var keyLen = ecdsaPublicKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -145,12 +145,12 @@ public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
     }
     
     public var uncompressedPublicKey: ECUncompressedPublicKey {
-        ECUncompressedPublicKey(Crypto.ecdsaDecompressPublicKey(compressedPublicKey: data))!
+        ECUncompressedPublicKey(ecdsaDecompressPublicKey(compressedPublicKey: data))!
     }
     
     public func verify(signature: Data, message: DataProvider) -> Bool {
         precondition(signature.count == 64)
-        return Crypto.ecdsaVerify(publicKeyECDSA: data, signature: signature, message: message.providedData)
+        return ecdsaVerify(publicKeyECDSA: data, signature: signature, message: message.providedData)
     }
     
     public var hash160: Data {
@@ -168,7 +168,7 @@ extension ECPublicKey: CustomStringConvertible {
 
 public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
     public static let cborTag = Tag.ecKey
-    public static var keyLen = Crypto.ecdsaPublicKeyUncompressedSize
+    public static var keyLen = ecdsaPublicKeyUncompressedSize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -187,7 +187,7 @@ public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
     }
 
     public var publicKey: ECPublicKey {
-        ECPublicKey(Crypto.ecdsaCompressPublicKey(uncompressedPublicKey: data))!
+        ECPublicKey(ecdsaCompressPublicKey(uncompressedPublicKey: data))!
     }
     
     public var uncompressedPublicKey: ECUncompressedPublicKey {

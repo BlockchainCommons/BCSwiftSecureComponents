@@ -24,7 +24,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
     
     public init(keyMaterial: DataProvider) {
-        self.init(Crypto.x25519DeriveSigningPrivateKey(keyMaterial: keyMaterial.providedData))!
+        self.init(x25519DeriveSigningPrivateKey(keyMaterial: keyMaterial.providedData))!
     }
 
     public func ecdsaSign(_ message: DataProvider) -> Signature {

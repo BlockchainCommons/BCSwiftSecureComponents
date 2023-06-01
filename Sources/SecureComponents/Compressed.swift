@@ -59,7 +59,7 @@ public struct Compressed {
             }
         }
         
-        self.checksum = Crypto.crc32(uncompressedData)
+        self.checksum = crc32(uncompressedData)
         self.uncompressedSize = uncompressedData.count
         if compressedSize != 0 && compressedSize < uncompressedData.count {
             compressedData.count = compressedSize
@@ -91,7 +91,7 @@ public struct Compressed {
         guard bytesWritten == uncompressedSize else {
             throw Error.corrupt
         }
-        guard Crypto.crc32(uncompressedData) == checksum else {
+        guard crc32(uncompressedData) == checksum else {
             throw Error.invalidChecksum
         }
         return uncompressedData

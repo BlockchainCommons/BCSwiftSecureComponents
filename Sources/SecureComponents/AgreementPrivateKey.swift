@@ -27,15 +27,15 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
     }
 
     public init(keyMaterial: DataProvider) {
-        self.init(Crypto.x25519DeriveAgreementPrivateKey(keyMaterial: keyMaterial.providedData))!
+        self.init(x25519DeriveAgreementPrivateKey(keyMaterial: keyMaterial.providedData))!
     }
 
     public var publicKey: AgreementPublicKey {
-        AgreementPublicKey(data: Crypto.x25519AgreementPublicKeyFromPrivateKey(agreementPrivateKey: data))!
+        AgreementPublicKey(data: x25519AgreementPublicKeyFromPrivateKey(agreementPrivateKey: data))!
     }
     
     public func sharedKey(with publicKey: AgreementPublicKey) -> SymmetricKey {
-        let keyData = Crypto.x25519DeriveAgreementSharedKey(agreementPrivateKey: self.data, agreementPublicKey: publicKey.data)
+        let keyData = x25519DeriveAgreementSharedKey(agreementPrivateKey: self.data, agreementPublicKey: publicKey.data)
         return SymmetricKey(keyData)!
     }
     

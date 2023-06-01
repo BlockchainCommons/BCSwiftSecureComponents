@@ -32,11 +32,11 @@ public struct PrivateKeyBase {
     }
     
     public var signingPrivateKey: SigningPrivateKey {
-        SigningPrivateKey(Crypto.x25519DeriveSigningPrivateKey(keyMaterial: data))!
+        SigningPrivateKey(x25519DeriveSigningPrivateKey(keyMaterial: data))!
     }
     
     public var agreementPrivateKey: AgreementPrivateKey {
-        AgreementPrivateKey(Crypto.x25519DeriveAgreementPrivateKey(keyMaterial: data))!
+        AgreementPrivateKey(x25519DeriveAgreementPrivateKey(keyMaterial: data))!
     }
     
     public var publicKeys: PublicKeyBase {

@@ -39,7 +39,7 @@ public class Password {
         guard !password.isEmpty else {
             return nil
         }
-        self.data = Crypto.scrypt(password: password, salt: salt, dkLen: dkLen, n: n, r: r, p: p)
+        self.data = scrypt(password: password, salt: salt, dkLen: dkLen, n: n, r: r, p: p)
     }
     
     public convenience init?(_ password: DataProvider, salt: DataProvider? = nil, dkLen: Int = defaulDKLen, n: Int = defaultN, r: Int = defaultR, p: Int = defaultP) {
@@ -51,7 +51,7 @@ public class Password {
         guard !password.isEmpty else {
             return false
         }
-        let d = Crypto.scrypt(password: password.utf8Data, salt: salt, dkLen: data.count, n: n, r: r, p: p)
+        let d = scrypt(password: password.utf8Data, salt: salt, dkLen: data.count, n: n, r: r, p: p)
         return data == d
     }
 }
