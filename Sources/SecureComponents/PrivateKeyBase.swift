@@ -18,7 +18,7 @@ extension Data: PrivateKeysDataProvider {
 }
 
 /// Holds unique data from which keys for signing and encryption can be derived.
-public struct PrivateKeyBase {
+public struct PrivateKeyBase: Equatable, Hashable {
     public let data: Data
     
     public init<T: RandomNumberGenerator>(_ provider: PrivateKeysDataProvider? = nil, using rng: inout T) {

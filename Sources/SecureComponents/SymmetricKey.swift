@@ -44,7 +44,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     public func encrypt(plaintext: DataProvider, digest: Digest, nonce: Nonce? = nil) -> EncryptedMessage {
         encrypt(plaintext: plaintext, aad: digest.taggedCBOR.cborData, nonce: nonce)
     }
-    
+
     public func decrypt(message: EncryptedMessage) throws -> Data {
         let plaintext = try aeadChaCha20Poly1305Decrypt(ciphertext: message.ciphertext, key: data, nonce: message.nonce.data, aad: message.aad.data, auth: message.auth.data)
         return Data(plaintext)

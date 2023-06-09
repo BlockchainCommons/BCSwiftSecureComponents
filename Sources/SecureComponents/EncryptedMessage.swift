@@ -53,12 +53,6 @@ public struct EncryptedMessage: CustomStringConvertible, Equatable {
 }
 
 extension EncryptedMessage {
-    public static func sharedKey(agreementPrivateKey: AgreementPrivateKey, agreementPublicKey: AgreementPublicKey) -> SymmetricKey {
-        agreementPrivateKey.sharedKey(with: agreementPublicKey)
-    }
-}
-
-extension EncryptedMessage {
     public var digest: Digest? {
         try? Digest(taggedCBOR: CBOR(aad))
     }

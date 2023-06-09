@@ -13,8 +13,8 @@ public struct SealedMessage {
     public init(plaintext: DataProvider, recipient: PublicKeyBase, aad: Data? = nil, testKeyMaterial: DataProvider? = nil, testNonce: Nonce? = nil) {
         let ephemeralSender = PrivateKeyBase(testKeyMaterial?.providedData)
         let recipientPublicKey = recipient.agreementPublicKey
-        let key = EncryptedMessage.sharedKey(agreementPrivateKey: ephemeralSender.agreementPrivateKey, agreementPublicKey: recipientPublicKey)
-        self.message = key.encrypt(plaintext: plaintext, aad: aad, nonce: testNonce)
+        let sharedKey = ephemeralSender.agreementPrivateKey.sharedKey(with: recipientPublicKey)
+        self.message = sharedKey.encrypt(plaintext: plaintext, aad: aad, nonce: testNonce)
         self.ephemeralPublicKey = ephemeralSender.agreementPrivateKey.publicKey
     }
     
@@ -23,18 +23,9 @@ public struct SealedMessage {
         self.ephemeralPublicKey = ephemeralPublicKey
     }
     
-    public func plaintext(with privateKeys: PrivateKeyBase) throws -> Data {
-        let key = EncryptedMessage.sharedKey(agreementPrivateKey: privateKeys.agreementPrivateKey, agreementPublicKey: ephemeralPublicKey)
-        return try key.decrypt(message: message)
-    }
-    
-    public static func firstPlaintext(in sealedMessages: [SealedMessage], for privateKeys: PrivateKeyBase) -> Data? {
-        for sealedMessage in sealedMessages {
-            if let plaintext = try? sealedMessage.plaintext(with: privateKeys) {
-                return plaintext
-            }
-        }
-        return nil
+    public func decrypt(with privateKeys: PrivateKeyBase) throws -> Data {
+        let sharedKey = privateKeys.agreementPrivateKey.sharedKey(with: ephemeralPublicKey)
+        return try sharedKey.decrypt(message: message)
     }
 }
 

@@ -4,7 +4,7 @@ import WolfBase
 
 class PrivateKeyBaseTests: XCTestCase {
     func testPrivateKeyBase() {
-        let seed = Seed(data: ‡"59f2293a5bce7d4de59e71b4207ac5d2")!
+        let seed = ‡"59f2293a5bce7d4de59e71b4207ac5d2"
         let privateKeys = PrivateKeyBase(seed)
         
 //         print(privateKeys.signingPrivateKey.data.hex)
@@ -16,5 +16,9 @@ class PrivateKeyBaseTests: XCTestCase {
         XCTAssertEqual(privateKeys.signingPrivateKey.schnorrPublicKey.data, ‡"fd4d22f9e8493da52d730aa402ac9e661deca099ef4db5503f519a73c3493e18")
         XCTAssertEqual(privateKeys.agreementPrivateKey.data, ‡"77ff838285a0403d3618aa8c30491f99f55221be0b944f50bfb371f43b897485")
         XCTAssertEqual(privateKeys.agreementPrivateKey.publicKey.data, ‡"863cf3facee3ba45dc54e5eedecb21d791d64adfb0a1c63bfb6fea366c1ee62b")
+        
+        let ur = privateKeys.urString
+        XCTAssertEqual(ur, "ur:crypto-prvkeys/gdhkwzdtfthptokigtvwnnjsqzcxknsktdsfecsbbk")
+        XCTAssertEqual(try! PrivateKeyBase(urString: ur), privateKeys)
     }
 }
