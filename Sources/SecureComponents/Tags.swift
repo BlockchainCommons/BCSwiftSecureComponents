@@ -92,7 +92,7 @@ public extension Tag {
     static let outputDescriptorResponse = Tag(500, "output-descriptor-response") // Fixed
 }
 
-public var knownTags: KnownTagsDict = [
+public var globalTags: TagsStore = [
     .account,
     .address,
     .agreementPrivateKey,
