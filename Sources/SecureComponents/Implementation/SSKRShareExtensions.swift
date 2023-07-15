@@ -12,7 +12,7 @@ extension SSKRShare {
         guard let share = try? Bytewords.decode(bytewords) else {
             return nil
         }
-        self = try SSKRShare(untaggedCBOR: share.cbor)
+        self = try SSKRShare(taggedCBORData: share)
     }
 }
 
