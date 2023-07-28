@@ -24,7 +24,6 @@ public extension Tag {
     static let envelope = Tag(200, "envelope")
     static let assertion = Tag(201, "assertion")
     static let knownValue = Tag(202, "known-value")
-    static let wrappedEnvelope = Tag(203, "wrapped-envelope")
     static let digest = Tag(204, "digest")
     static let encrypted = Tag(205, "encrypted")
     static let compressed = Tag(206, "compressed")
@@ -140,5 +139,4 @@ public var globalTags: TagsStore = [
     .sskrShare,
     .symmetricKey,
     .useInfo,
-    .wrappedEnvelope,
 ]
