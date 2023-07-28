@@ -22,7 +22,6 @@ public extension Tag {
     static let leaf = Tag(24, "leaf")
 
     static let envelope = Tag(200, "envelope")
-    static let assertion = Tag(201, "assertion")
     static let knownValue = Tag(202, "known-value")
     static let digest = Tag(204, "digest")
     static let encrypted = Tag(205, "encrypted")
@@ -96,7 +95,6 @@ public var globalTags: TagsStore = [
     .address,
     .agreementPrivateKey,
     .agreementPublicKey,
-    .assertion,
     .commonIdentifier,
     .compressed,
     .derivationPath,
