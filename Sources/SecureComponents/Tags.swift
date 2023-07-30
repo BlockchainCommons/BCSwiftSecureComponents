@@ -20,45 +20,51 @@ import URKit
 public extension Tag {
     /// See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
     static let leaf = Tag(24, "leaf")
-
+    
     static let envelope = Tag(200, "envelope")
-    static let knownValue = Tag(202, "known-value")
-    static let digest = Tag(204, "digest")
-    static let encrypted = Tag(205, "encrypted")
-    static let compressed = Tag(206, "compressed")
 }
 
-/// Tags for subtypes specific to Distributed Function Calls. These tags use
-/// two-byte encoding.
+/// Envelope extension tags
 public extension Tag {
-    static let request = Tag(207, "request")
-    static let response = Tag(208, "response")
-    static let function = Tag(209, "function")
-    static let parameter = Tag(210, "parameter")
-    static let placeholder = Tag(211, "placeholder")
-    static let replacement = Tag(212, "replacement")
+    static let knownValue = Tag(40000, "known-value")
+    static let digest = Tag(40001, "digest")
+    static let encrypted = Tag(40002, "encrypted")
+    static let compressed = Tag(40003, "compressed")
+}
+
+/// Tags for subtypes specific to Distributed Function Calls.
+public extension Tag {
+    static let request = Tag(40004, "request")
+    static let response = Tag(40005, "response")
+    static let function = Tag(40006, "function")
+    static let parameter = Tag(40007, "parameter")
+    static let placeholder = Tag(40008, "placeholder")
+    static let replacement = Tag(40009, "replacement")
 }
 
 /// These are the utility structures we've identified and speced related to other
 /// various applications that aren't specifically Bitcoin-related.
 public extension Tag {
     static let seed = Tag(300, "crypto-seed") // Fixed
-    static let agreementPrivateKey = Tag(301, "agreement-private-key")
-    static let agreementPublicKey = Tag(302, "agreement-public-key")
     static let ecKey = Tag(306, "crypto-eckey") // Fixed
     static let sskrShare = Tag(309, "crypto-sskr") // Fixed
-    static let commonIdentifier = Tag(312, "cid")
-    static let seedDigest = Tag(313, "seed-digest")
-    static let nonce = Tag(314, "nonce")
-    static let password = Tag(315, "password")
-    static let privateKeyBase = Tag(316, "crypto-prvkeys")
-    static let publicKeyBase = Tag(317, "crypto-pubkeys")
-    static let salt = Tag(318, "salt")
-    static let sealedMessage = Tag(319, "crypto-sealed")
-    static let signature = Tag(320, "signature")
-    static let signingPrivateKey = Tag(321, "signing-private-key")
-    static let signingPublicKey = Tag(322, "signing-public-key")
-    static let symmetricKey = Tag(323, "crypto-key")
+}
+
+public extension Tag {
+    static let agreementPrivateKey = Tag(40010, "agreement-private-key")
+    static let agreementPublicKey = Tag(40011, "agreement-public-key")
+    static let commonIdentifier = Tag(40012, "cid")
+    static let seedDigest = Tag(40013, "seed-digest")
+    static let nonce = Tag(40014, "nonce")
+    static let password = Tag(40015, "password")
+    static let privateKeyBase = Tag(40016, "crypto-prvkeys")
+    static let publicKeyBase = Tag(40017, "crypto-pubkeys")
+    static let salt = Tag(40018, "salt")
+    static let sealedMessage = Tag(40019, "crypto-sealed")
+    static let signature = Tag(40020, "signature")
+    static let signingPrivateKey = Tag(40021, "signing-private-key")
+    static let signingPublicKey = Tag(40022, "signing-public-key")
+    static let symmetricKey = Tag(40023, "crypto-key")
 }
 
 /// Bitcoin-related
