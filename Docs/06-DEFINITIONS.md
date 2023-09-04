@@ -12,7 +12,7 @@ NOTE: Please go here for the latest version of this documentation related specif
 
 * [AgreementPrivateKey](#agreementprivatekey)
 * [AgreementPublicKey](#agreementpublickey)
-* [CID](#cid)
+* [ARID](#arid)
 * [Compressed](#compressed)
 * [Digest](#digest)
 * [EncryptedMessage](#encryptedmessage)
@@ -87,24 +87,24 @@ key = bytes .size 230
 
 ---
 
-## CID
+## ARID
 
-A Common Identifier (CID) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `CID` or when it is resolved. In other words, the referent of a `CID` may be considered mutable.
+An [Apparently Random Identifier (ARID)](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2022-002-arid.md) is a unique 32-byte identifier that, unlike a `Digest` refers to an object or set of objects that may change depending on who resolves the `ARID` or when it is resolved. In other words, the referent of an `ARID` may be considered mutable.
 
-### CID: Swift Defintion
+### ARID: Swift Defintion
 
 ```swift
-struct CID {
+struct ARID {
     let data: Data
 }
 ```
 
-### CID: CDDL
+### ARID: CDDL
 
 ```
-cid = #6.302(cid-data)
+arid = #6.302(arid-data)
 
-cid-data = bytes .size 32
+arid-data = bytes .size 32
 ```
 
 ---

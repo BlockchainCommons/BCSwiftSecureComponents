@@ -53,7 +53,7 @@ public extension Tag {
 public extension Tag {
     static let agreementPrivateKey = Tag(40010, "agreement-private-key")
     static let agreementPublicKey  = Tag(40011, "agreement-public-key")
-    static let commonIdentifier    = Tag(40012, "cid")
+    static let arid                = Tag(40012, "arid")
     static let seedDigest          = Tag(40013, "seed-digest")
     static let nonce               = Tag(40014, "nonce")
     static let password            = Tag(40015, "password")
@@ -101,7 +101,7 @@ public var globalTags: TagsStore = [
     .address,
     .agreementPrivateKey,
     .agreementPublicKey,
-    .commonIdentifier,
+    .arid,
     .compressed,
     .derivationPath,
     .digest,

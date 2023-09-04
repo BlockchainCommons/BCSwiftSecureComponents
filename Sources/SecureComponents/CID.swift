@@ -2,7 +2,7 @@ import Foundation
 import URKit
 import BCCrypto
 
-public struct CID: Equatable, Hashable {
+public struct ARID: Equatable, Hashable {
     public let data: Data
     
     public init?(_ data: Data) {
@@ -22,13 +22,13 @@ public struct CID: Equatable, Hashable {
     }
 }
 
-extension CID: CustomStringConvertible {
+extension ARID: CustomStringConvertible {
     public var description: String {
-        data.hex.flanked("CID(", ")")
+        data.hex.flanked("ARID(", ")")
     }
 }
 
-public extension CID {
+public extension ARID {
     init?(hex: String) {
         guard let data = Data(hex: hex) else {
             return nil
@@ -41,14 +41,14 @@ public extension CID {
     }
 }
 
-extension CID: Comparable {
-    public static func < (lhs: CID, rhs: CID) -> Bool {
+extension ARID: Comparable {
+    public static func < (lhs: ARID, rhs: ARID) -> Bool {
         lhs.data.lexicographicallyPrecedes(rhs.data)
     }
 }
 
-extension CID: URCodable {
-    public static let cborTag = Tag.commonIdentifier
+extension ARID: URCodable {
+    public static let cborTag = Tag.arid
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)
@@ -57,7 +57,7 @@ extension CID: URCodable {
     public init(untaggedCBOR: CBOR) throws {
         guard
             case let CBOR.bytes(data) = untaggedCBOR,
-            let value = CID(data)
+            let value = ARID(data)
         else {
             throw CBORError.invalidFormat
         }
@@ -65,7 +65,7 @@ extension CID: URCodable {
     }
 }
 
-public extension CID {
+public extension ARID {
     var shortDescription: String {
         String(self.data.hex.prefix(count: 8))
     }
