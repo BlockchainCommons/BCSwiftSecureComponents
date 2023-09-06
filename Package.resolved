@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
       "state" : {
-        "revision" : "6f73d8278ee99d9455debe2265ad8bc1d3551226",
-        "version" : "0.9.4"
+        "revision" : "9affa75e38b60932c6273b03629d6873e8e7598d",
+        "version" : "0.10.0"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/URKit.git",
       "state" : {
-        "revision" : "f1fd22eac3d75ab1eecbb9955b6bdc8d9a65ba5a",
-        "version" : "11.3.1"
+        "revision" : "e113f3b6bc248128535a7e28527067d8d0f4d63c",
+        "version" : "11.3.2"
       }
     },
     {
