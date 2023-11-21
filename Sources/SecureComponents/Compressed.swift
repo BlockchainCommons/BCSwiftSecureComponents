@@ -113,7 +113,7 @@ extension Compressed: CustomStringConvertible {
 }
 
 extension Compressed: URCodable {
-    public static var cborTag = Tag.compressed
+    public static var cborTags = [Tag.compressed]
     
     public var untaggedCBOR: CBOR {
         if let digest {

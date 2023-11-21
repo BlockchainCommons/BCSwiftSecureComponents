@@ -92,7 +92,7 @@ public extension Digest {
 }
 
 extension Digest: URCodable {
-    public static let cborTag = Tag.digest
+    public static let cborTags = [Tag.digest]
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

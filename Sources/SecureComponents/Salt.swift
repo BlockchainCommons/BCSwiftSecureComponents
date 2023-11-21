@@ -73,7 +73,7 @@ public extension Salt {
 }
 
 extension Salt: URCodable {
-    public static let cborTag = Tag.salt
+    public static let cborTags = [Tag.salt]
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

@@ -48,7 +48,7 @@ extension ARID: Comparable {
 }
 
 extension ARID: URCodable {
-    public static let cborTag = Tag.arid
+    public static let cborTags = [Tag.arid]
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

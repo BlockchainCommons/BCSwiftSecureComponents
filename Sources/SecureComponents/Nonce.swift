@@ -38,7 +38,7 @@ public extension Nonce {
 }
 
 extension Nonce: URCodable {
-    public static let cborTag = Tag.nonce
+    public static let cborTags = [Tag.nonce]
 
     public var untaggedCBOR: CBOR {
         CBOR.bytes(data)

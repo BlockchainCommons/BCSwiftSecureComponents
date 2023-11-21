@@ -2,7 +2,7 @@ import Foundation
 import URKit
 
 extension UUID: CBORTaggedCodable {
-    public static let cborTag: Tag = 37
+    public static let cborTags: [Tag] = [37]
 
     public var untaggedCBOR: CBOR {
         serialized.cbor

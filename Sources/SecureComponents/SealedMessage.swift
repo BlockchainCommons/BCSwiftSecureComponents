@@ -30,7 +30,7 @@ public struct SealedMessage {
 }
 
 extension SealedMessage: URCodable {
-    public static let cborTag = Tag.sealedMessage
+    public static let cborTags = [Tag.sealedMessage]
 
     public var untaggedCBOR: CBOR {
         let message = self.message.taggedCBOR

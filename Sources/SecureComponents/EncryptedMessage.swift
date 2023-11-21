@@ -59,7 +59,7 @@ extension EncryptedMessage {
 }
 
 extension EncryptedMessage: URCodable {
-    public static let cborTag = Tag.encrypted
+    public static let cborTags = [Tag.encrypted]
 
     public var untaggedCBOR: CBOR {
         if self.aad.isEmpty {

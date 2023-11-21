@@ -55,7 +55,7 @@ extension PrivateKeyBase: CustomStringConvertible {
 }
 
 extension PrivateKeyBase: URCodable {
-    public static let cborTag = Tag.privateKeyBase
+    public static let cborTags = [Tag.privateKeyBase]
 
     public var untaggedCBOR: CBOR {
         data.cbor

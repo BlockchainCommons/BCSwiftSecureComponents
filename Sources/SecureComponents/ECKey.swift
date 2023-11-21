@@ -33,7 +33,7 @@ public protocol ECPublicKeyProtocol: ECKey {
 }
 
 public struct ECPrivateKey: ECKey {
-    public static let cborTag = Tag.ecKey
+    public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
     public static let keyLen = ecdsaPrivateKeySize
     public let data: Data
 
@@ -121,7 +121,7 @@ public struct SchnorrPublicKey: ECKeyBase {
 }
 
 public struct ECPublicKey: ECPublicKeyProtocol, Hashable {
-    public static let cborTag = Tag.ecKey
+    public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
     public static var keyLen = ecdsaPublicKeySize
     public let data: Data
 
@@ -167,7 +167,7 @@ extension ECPublicKey: CustomStringConvertible {
 }
 
 public struct ECUncompressedPublicKey: ECPublicKeyProtocol {
-    public static let cborTag = Tag.ecKey
+    public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
     public static var keyLen = ecdsaPublicKeyUncompressedSize
     public let data: Data
 

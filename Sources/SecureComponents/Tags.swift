@@ -20,7 +20,8 @@ import URKit
 public extension Tag {
     /// See https://www.rfc-editor.org/rfc/rfc8949.html#name-encoded-cbor-data-item
     static let leaf = Tag(24, "leaf")
-    
+
+    /// Registered in https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
     static let envelope = Tag(200, "envelope")
 }
 
@@ -45,9 +46,13 @@ public extension Tag {
 /// These are the utility structures we've identified and speced related to other
 /// various applications that aren't specifically Bitcoin-related.
 public extension Tag {
-    static let seed      = Tag(300, "crypto-seed") // Fixed
-    static let ecKey     = Tag(306, "crypto-eckey") // Fixed
-    static let sskrShare = Tag(309, "crypto-sskr") // Fixed
+    static let seedV1      = Tag(300, "crypto-seed") // Fixed
+    static let ecKeyV1     = Tag(306, "crypto-eckey") // Fixed
+    static let sskrShareV1 = Tag(309, "crypto-sskr") // Fixed
+
+    static let seed      = Tag(40300, "seed")
+    static let ecKey     = Tag(40306, "eckey")
+    static let sskrShare = Tag(40309, "sskr")
 }
 
 public extension Tag {
@@ -69,17 +74,25 @@ public extension Tag {
 
 /// Bitcoin-related
 public extension Tag {
-    static let hdKey            = Tag(303, "crypto-hdkey") // Fixed
-    static let derivationPath   = Tag(304, "crypto-keypath") // Fixed
-    static let useInfo          = Tag(305, "crypto-coin-info") // Fixed
-    static let address          = Tag(307, "crypto-address") // Fixed
-    static let psbt             = Tag(310, "crypto-psbt") // Fixed
-    static let account          = Tag(311, "crypto-account") // Fixed
+    static let hdKeyV1            = Tag(303, "crypto-hdkey") // Fixed
+    static let derivationPathV1   = Tag(304, "crypto-keypath") // Fixed
+    static let useInfoV1          = Tag(305, "crypto-coin-info") // Fixed
+    static let addressV1          = Tag(307, "crypto-address") // Fixed
+    static let psbtV1             = Tag(310, "crypto-psbt") // Fixed
+    static let accountV1          = Tag(311, "crypto-account") // Fixed
+
+    static let hdKey            = Tag(40303, "hdkey")
+    static let derivationPath   = Tag(40304, "keypath")
+    static let useInfo          = Tag(40305, "coin-info")
+    static let address          = Tag(40307, "address")
+    static let psbt             = Tag(40310, "psbt")
+    static let account          = Tag(40311, "account")
+    static let outputDescriptor = Tag(40308, "output-descriptor")
 }
 
 /// Tags for subtypes specific to AccountBundle (crypto-output).
 public extension Tag {
-    static let output = Tag(308, "crypto-output") // Fixed
+    static let outputDescriptorV1 = Tag(308, "crypto-output") // Fixed
 
     static let outputScriptHash             = Tag(400, "output-script-hash") // Fixed
     static let outputWitnessScriptHash      = Tag(401, "output-witness-script-hash") // Fixed
@@ -98,25 +111,31 @@ public extension Tag {
 
 public var globalTags: TagsStore = [
     .account,
+    .accountV1,
     .address,
+    .addressV1,
     .agreementPrivateKey,
     .agreementPublicKey,
     .arid,
     .compressed,
     .derivationPath,
+    .derivationPathV1,
     .digest,
     .ecKey,
+    .ecKeyV1,
     .encrypted,
     .envelope,
     .function,
     .hdKey,
+    .hdKeyV1,
     .knownValue,
     .leaf,
     .nonce,
-    .output,
     .outputCombo,
     .outputCosigner,
+    .outputDescriptor,
     .outputDescriptorResponse,
+    .outputDescriptorV1,
     .outputMultisig,
     .outputPublicKey,
     .outputPublicKeyHash,
@@ -130,6 +149,7 @@ public var globalTags: TagsStore = [
     .password,
     .privateKeyBase,
     .psbt,
+    .psbtV1,
     .publicKeyBase,
     .request,
     .response,
@@ -137,10 +157,13 @@ public var globalTags: TagsStore = [
     .sealedMessage,
     .seed,
     .seedDigest,
+    .seedV1,
     .signature,
     .signingPrivateKey,
     .signingPublicKey,
     .sskrShare,
+    .sskrShareV1,
     .symmetricKey,
     .useInfo,
+    .useInfoV1,
 ]

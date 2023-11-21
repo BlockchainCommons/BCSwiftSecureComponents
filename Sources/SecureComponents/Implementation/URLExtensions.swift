@@ -2,7 +2,7 @@ import Foundation
 import URKit
 
 extension URL: CBORTaggedCodable {
-    public static var cborTag: Tag = 32
+    public static var cborTags: [Tag] = [32]
     
     public var untaggedCBOR: CBOR {
         absoluteString.cbor
