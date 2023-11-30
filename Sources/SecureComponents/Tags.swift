@@ -78,6 +78,7 @@ public extension Tag {
     static let derivationPathV1   = Tag(304, "crypto-keypath") // Fixed
     static let useInfoV1          = Tag(305, "crypto-coin-info") // Fixed
     static let addressV1          = Tag(307, "crypto-address") // Fixed
+    static let outputDescriptorV1 = Tag(308, "crypto-output") // Fixed
     static let psbtV1             = Tag(310, "crypto-psbt") // Fixed
     static let accountV1          = Tag(311, "crypto-account") // Fixed
 
@@ -85,15 +86,13 @@ public extension Tag {
     static let derivationPath   = Tag(40304, "keypath")
     static let useInfo          = Tag(40305, "coin-info")
     static let address          = Tag(40307, "address")
+    static let outputDescriptor = Tag(40308, "output-descriptor")
     static let psbt             = Tag(40310, "psbt")
     static let account          = Tag(40311, "account")
-    static let outputDescriptor = Tag(40308, "output-descriptor")
 }
 
-/// Tags for subtypes specific to AccountBundle (crypto-output).
+/// Tags for subtypes internal to (crypto-output).
 public extension Tag {
-    static let outputDescriptorV1 = Tag(308, "crypto-output") // Fixed
-
     static let outputScriptHash             = Tag(400, "output-script-hash") // Fixed
     static let outputWitnessScriptHash      = Tag(401, "output-witness-script-hash") // Fixed
     static let outputPublicKey              = Tag(402, "output-public-key") // Fixed
@@ -105,11 +104,15 @@ public extension Tag {
     static let outputRawScript              = Tag(408, "output-raw-script") // Fixed
     static let outputTaproot                = Tag(409, "output-taproot") // Fixed
     static let outputCosigner               = Tag(410, "output-cosigner") // Fixed
-
-    static let outputDescriptorResponse = Tag(500, "output-descriptor-response") // Fixed
 }
 
-public var globalTags: TagsStore = [
+public func addKnownTags() {
+    knownTags.forEach {
+        globalTags.insert($0)
+    }
+}
+
+public var knownTags: [Tag] = [
     .account,
     .accountV1,
     .address,
@@ -134,7 +137,6 @@ public var globalTags: TagsStore = [
     .outputCombo,
     .outputCosigner,
     .outputDescriptor,
-    .outputDescriptorResponse,
     .outputDescriptorV1,
     .outputMultisig,
     .outputPublicKey,

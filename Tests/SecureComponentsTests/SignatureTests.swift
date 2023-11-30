@@ -24,7 +24,7 @@ class SchnorrSignatureTests: XCTestCase {
         let taggedCBOR = signature.cborData
         XCTAssertEqual(try CBOR(taggedCBOR).diagnostic(),
         """
-        40020(
+        40020(   / signature /
            h'c67bb76d5d85327a771819bb6d417ffc319737a4be8248b2814ba4fd1474494200a522fd9d2a7beccc3a05cdd527a84a8c731a43669b618d831a08104f77d82f'
         )
         """)

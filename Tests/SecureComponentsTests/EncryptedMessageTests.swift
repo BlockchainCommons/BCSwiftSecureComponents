@@ -12,6 +12,11 @@ fileprivate let ciphertext = ‡"d31a8d34648e60db7b86afbc53ef7ec2a4aded51296e08f
 fileprivate let auth = EncryptedMessage.Auth(‡"1ae10b594f09e26a7e902ecbd0600691")!
 
 class EncryptedMessageTests: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        addKnownTags()
+    }
+    
     func testRFCTestVector() throws {
         XCTAssertEqual(encryptedMessage.ciphertext, ciphertext)
         XCTAssertEqual(encryptedMessage.auth, auth)
