@@ -48,7 +48,7 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
     
     public var ecdsaPublicKey: SigningPublicKey {
-        SigningPublicKey(ECPrivateKey(data)!.publicKey)
+        SigningPublicKey(ECPrivateKey(data)!.ecdsaPublicKey)
     }
     
     public var schnorrPublicKey: SigningPublicKey {

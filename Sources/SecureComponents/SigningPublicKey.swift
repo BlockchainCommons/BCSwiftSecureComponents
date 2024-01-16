@@ -4,13 +4,13 @@ import URKit
 
 public enum SigningPublicKey {
     case schnorr(SchnorrPublicKey)
-    case ecdsa(ECPublicKey)
+    case ecdsa(ECDSAPublicKey)
     
     public init(_ key: SchnorrPublicKey) {
         self = .schnorr(key)
     }
     
-    public init(_ key: ECPublicKey) {
+    public init(_ key: ECDSAPublicKey) {
         self = .ecdsa(key)
     }
     
@@ -95,7 +95,7 @@ extension SigningPublicKey: URCodable {
                   elements.count == 2,
                   case CBOR.unsigned(1) = elements[0],
                   case let CBOR.bytes(data) = elements[1],
-                  let key = ECPublicKey(data)
+                  let key = ECDSAPublicKey(data)
         {
             self = .ecdsa(key)
             return
