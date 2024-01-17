@@ -82,13 +82,13 @@ public extension Tag {
     static let psbtV1             = Tag(310, "crypto-psbt") // Fixed
     static let accountV1          = Tag(311, "crypto-account") // Fixed
 
-    static let hdKey            = Tag(40303, "hdkey")
-    static let derivationPath   = Tag(40304, "keypath")
-    static let useInfo          = Tag(40305, "coin-info")
-    static let address          = Tag(40307, "address")
-    static let outputDescriptor = Tag(40308, "output-descriptor")
-    static let psbt             = Tag(40310, "psbt")
-    static let account          = Tag(40311, "account")
+    static let hdKey             = Tag(40303, "hdkey")
+    static let derivationPath    = Tag(40304, "keypath")
+    static let useInfo           = Tag(40305, "coin-info")
+    static let address           = Tag(40307, "address")
+    static let outputDescriptor  = Tag(40308, "output-descriptor")
+    static let psbt              = Tag(40310, "psbt")
+    static let accountDescriptor = Tag(40311, "account-descriptor")
 }
 
 /// Tags for subtypes internal to (crypto-output).
@@ -113,7 +113,7 @@ public func addKnownTags() {
 }
 
 public var knownTags: [Tag] = [
-    .account,
+    .accountDescriptor,
     .accountV1,
     .address,
     .addressV1,
