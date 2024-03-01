@@ -17,7 +17,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/WolfMcNally/WolfBase", from: "6.0.0"),
         .package(url: "https://github.com/BlockchainCommons/URKit.git", from: "14.0.0"),
-        .package(url: "https://github.com/BlockchainCommons/BCSwiftCrypto", from: "2.0.0"),
+        .package(url: "https://github.com/BlockchainCommons/BCSwiftCrypto", from: "4.0.0"),
+        .package(url: "https://github.com/BlockchainCommons/BCSwiftRandom", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -26,6 +27,7 @@ let package = Package(
                 "WolfBase",
                 "URKit",
                 .product(name: "BCCrypto", package: "BCSwiftCrypto"),
+                .product(name: "BCRandom", package: "BCSwiftRandom"),
             ]),
         .testTarget(
             name: "SecureComponentsTests",

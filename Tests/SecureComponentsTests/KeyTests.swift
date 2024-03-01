@@ -1,6 +1,7 @@
 import XCTest
 import WolfBase
 import SecureComponents
+import BCRandom
 
 class KeyTests: XCTestCase {
     func testAgreementKeys() {
@@ -38,12 +39,12 @@ class KeyTests: XCTestCase {
         XCTAssertEqual(privateKeyUR, "ur:signing-private-key/hdcxkbrehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlweynwkrtct")
         XCTAssertEqual(try! SigningPrivateKey(urString: privateKeyUR), privateKey)
         
-        let ecdsaPublicKey = privateKey.ecdsaPublicKey
+        let ecdsaPublicKey = privateKey.secp256k1ECDSAPublicKey
         let ecdsaPublicKeyUR = ecdsaPublicKey.urString
         XCTAssertEqual(ecdsaPublicKeyUR, "ur:signing-public-key/lfadhdclaojsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjedkwftboe")
         XCTAssertEqual(try! SigningPublicKey(urString: ecdsaPublicKeyUR), ecdsaPublicKey)
         
-        let schnorrPublicKey = privateKey.schnorrPublicKey
+        let schnorrPublicKey = privateKey.secp256k1SchnorrPublicKey
         let schnorrPublicKeyUR = schnorrPublicKey.urString
         XCTAssertEqual(schnorrPublicKeyUR, "ur:signing-public-key/hdcxjsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjewyjymhcp")
         XCTAssertEqual(try! SigningPublicKey(urString: schnorrPublicKeyUR), schnorrPublicKey)

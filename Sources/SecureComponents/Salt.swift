@@ -1,6 +1,7 @@
 import Foundation
 import WolfBase
 import URKit
+import BCRandom
 
 public struct Salt: CustomStringConvertible, Equatable, Hashable, DataProvider {
     public let data: Data

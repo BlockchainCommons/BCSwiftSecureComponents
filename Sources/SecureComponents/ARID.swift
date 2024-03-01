@@ -1,6 +1,7 @@
 import Foundation
 import URKit
 import BCCrypto
+import BCRandom
 
 public struct ARID: Equatable, Hashable {
     public let data: Data

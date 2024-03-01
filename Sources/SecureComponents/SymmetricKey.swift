@@ -2,6 +2,7 @@ import Foundation
 import protocol WolfBase.DataProvider
 import URKit
 import BCCrypto
+import BCRandom
 
 /// A symmetric key for encryption and decryption of IETF-ChaCha20-Poly1305 messages.
 ///
@@ -37,7 +38,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
         let plaintext = plaintext.providedData
         let aad = aad ?? Data()
         let nonce = nonce ?? Nonce()
-        let (ciphertext, auth) = try! aeadChaCha20Poly1305Encrypt(plaintext: plaintext, key: data, nonce: nonce.data, aad: aad)
+        let (ciphertext, auth) = try! AEADChaCha20Poly1305.encrypt(plaintext: plaintext, key: data, nonce: nonce.data, aad: aad)
         return EncryptedMessage(ciphertext: ciphertext, aad: aad, nonce: nonce, auth: EncryptedMessage.Auth(auth)!)
     }
     
@@ -46,7 +47,7 @@ public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataPr
     }
 
     public func decrypt(message: EncryptedMessage) throws -> Data {
-        let plaintext = try aeadChaCha20Poly1305Decrypt(ciphertext: message.ciphertext, key: data, nonce: message.nonce.data, aad: message.aad.data, auth: message.auth.data)
+        let plaintext = try AEADChaCha20Poly1305.decrypt(ciphertext: message.ciphertext, key: data, nonce: message.nonce.data, aad: message.aad.data, auth: message.auth.data)
         return Data(plaintext)
     }
     

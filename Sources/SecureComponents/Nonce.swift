@@ -2,6 +2,7 @@ import Foundation
 import WolfBase
 import URKit
 import BCCrypto
+import BCRandom
 
 public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider {
     public let data: Data

@@ -2,6 +2,7 @@ import Foundation
 import WolfBase
 import URKit
 import BCCrypto
+import BCRandom
 
 /// Types can conform to `PrivateKeysDataProvider` to indicate that they will provide
 /// unique data from which keys for signing and encryption can be derived.
@@ -32,19 +33,19 @@ public struct PrivateKeyBase: Equatable, Hashable {
     }
     
     public var signingPrivateKey: SigningPrivateKey {
-        SigningPrivateKey(x25519DeriveSigningPrivateKey(keyMaterial: data))!
+        SigningPrivateKey(Secp256k1.derivePrivateKey(keyMaterial: data))!
     }
     
-    public var agreementPrivateKey: AgreementPrivateKey {
-        AgreementPrivateKey(x25519DeriveAgreementPrivateKey(keyMaterial: data))!
+    public var x25519AgreementPrivateKey: AgreementPrivateKey {
+        AgreementPrivateKey(X25519.deriveAgreementPrivateKey(keyMaterial: data))!
     }
     
     public var publicKeys: PublicKeyBase {
-        PublicKeyBase(signingPublicKey: signingPrivateKey.schnorrPublicKey, agreementPublicKey: agreementPrivateKey.publicKey)
+        PublicKeyBase(signingPublicKey: signingPrivateKey.secp256k1SchnorrPublicKey, agreementPublicKey: x25519AgreementPrivateKey.publicKey)
     }
     
     public var ecdsaPublicKeys: PublicKeyBase {
-        PublicKeyBase(signingPublicKey: signingPrivateKey.ecdsaPublicKey, agreementPublicKey: agreementPrivateKey.publicKey)
+        PublicKeyBase(signingPublicKey: signingPrivateKey.secp256k1ECDSAPublicKey, agreementPublicKey: x25519AgreementPrivateKey.publicKey)
     }
 }
 

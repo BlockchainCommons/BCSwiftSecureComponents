@@ -1,26 +1,27 @@
 import XCTest
 import WolfBase
 import SecureComponents
+import BCRandom
 
 fileprivate let privateKey = SigningPrivateKey(‡"322b5c1dd5a17c3481c2297990c85c232ed3c17b52ce9905c6ec5193ad132c36")!
 fileprivate let message = "Wolf McNally"
 
 class SchnorrSignatureTests: XCTestCase {
-    let publicKey = privateKey.schnorrPublicKey
-    let signature = privateKey.schnorrSign(message, tag: nil)
+    let publicKey = privateKey.secp256k1SchnorrPublicKey
+    let signature = privateKey.secp256k1SchnorrSign(message, tag: nil)
 
     func testSigning() {
         XCTAssertTrue(publicKey.verify(signature: signature, for: message))
         XCTAssertFalse(publicKey.verify(signature: signature, for: "Wolf Mcnally"))
         
-        let anotherSignature = privateKey.schnorrSign(message, tag: nil)
+        let anotherSignature = privateKey.secp256k1SchnorrSign(message, tag: nil)
         XCTAssertNotEqual(signature, anotherSignature)
         XCTAssertTrue(publicKey.verify(signature: anotherSignature, for: message))
     }
     
     func testCBOR() throws {
         var rng = makeFakeRandomNumberGenerator()
-        let signature = privateKey.schnorrSign(message, tag: nil, using: &rng)
+        let signature = privateKey.secp256k1SchnorrSign(message, tag: nil, using: &rng)
         let taggedCBOR = signature.cborData
         XCTAssertEqual(try CBOR(taggedCBOR).diagnostic(),
         """
@@ -34,14 +35,14 @@ class SchnorrSignatureTests: XCTestCase {
 }
 
 class ECDSASignatureTests: XCTestCase {
-    let publicKey = privateKey.ecdsaPublicKey
-    let signature = privateKey.ecdsaSign(message)
+    let publicKey = privateKey.secp256k1ECDSAPublicKey
+    let signature = privateKey.secp256k1ECDSASign(message)
 
     func testSigning() {
         XCTAssertTrue(publicKey.verify(signature: signature, for: message))
         XCTAssertFalse(publicKey.verify(signature: signature, for: "Wolf Mcnally"))
         
-        let anotherSignature = privateKey.ecdsaSign(message)
+        let anotherSignature = privateKey.secp256k1ECDSASign(message)
         XCTAssertEqual(signature, anotherSignature)
         XCTAssertTrue(publicKey.verify(signature: anotherSignature, for: message))
     }

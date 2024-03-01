@@ -2,6 +2,7 @@ import Foundation
 import WolfBase
 import URKit
 import BCCrypto
+import BCRandom
 
 public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     public let data: Data
@@ -24,35 +25,35 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
     }
     
     public init(keyMaterial: DataProvider) {
-        self.init(x25519DeriveSigningPrivateKey(keyMaterial: keyMaterial.providedData))!
+        self.init(Secp256k1.derivePrivateKey(keyMaterial: keyMaterial.providedData))!
     }
 
-    public func ecdsaSign(_ message: DataProvider) -> Signature {
-        let privateKey = ECPrivateKey(data)!
+    public func secp256k1ECDSASign(_ message: DataProvider) -> Signature {
+        let privateKey = SecP256K1PrivateKey(data)!
         let sig = privateKey.secp256k1ecdsaSign(message.providedData)
         return Signature(ecdsaData: sig)!
     }
 
-    public func schnorrSign<T>(_ message: DataProvider, tag: DataProvider?, using rng: inout T) -> Signature
+    public func secp256k1SchnorrSign<T>(_ message: DataProvider, tag: DataProvider?, using rng: inout T) -> Signature
         where T: RandomNumberGenerator
     {
-        let privateKey = ECPrivateKey(data)!
+        let privateKey = SecP256K1PrivateKey(data)!
         let tag = tag ?? Data()
         let sig = privateKey.secp256k1schnorrSign(message, tag: tag, using: &rng)
         return Signature(schnorrData: sig, tag: tag)!
     }
     
-    public func schnorrSign(_ message: DataProvider, tag: DataProvider?) -> Signature {
+    public func secp256k1SchnorrSign(_ message: DataProvider, tag: DataProvider?) -> Signature {
         var rng = SecureRandomNumberGenerator()
-        return schnorrSign(message, tag: tag, using: &rng)
+        return secp256k1SchnorrSign(message, tag: tag, using: &rng)
     }
     
-    public var ecdsaPublicKey: SigningPublicKey {
-        SigningPublicKey(ECPrivateKey(data)!.secp256k1PublicKey)
+    public var secp256k1ECDSAPublicKey: SigningPublicKey {
+        SigningPublicKey(SecP256K1PrivateKey(data)!.secp256k1PublicKey)
     }
     
-    public var schnorrPublicKey: SigningPublicKey {
-        SigningPublicKey(ECPrivateKey(data)!.schnorrPublicKey)
+    public var secp256k1SchnorrPublicKey: SigningPublicKey {
+        SigningPublicKey(SecP256K1PrivateKey(data)!.secp256k1SchnorrPublicKey)
     }
     
     public var description: String {

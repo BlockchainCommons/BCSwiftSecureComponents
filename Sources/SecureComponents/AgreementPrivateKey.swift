@@ -2,6 +2,7 @@ import Foundation
 import BCCrypto
 import WolfBase
 import URKit
+import BCRandom
 
 /// A Curve25519 private key used for X25519 key agreement.
 ///
@@ -27,15 +28,15 @@ public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
     }
 
     public init(keyMaterial: DataProvider) {
-        self.init(x25519DeriveAgreementPrivateKey(keyMaterial: keyMaterial.providedData))!
+        self.init(X25519.deriveAgreementPrivateKey(keyMaterial: keyMaterial.providedData))!
     }
 
     public var publicKey: AgreementPublicKey {
-        AgreementPublicKey(data: x25519AgreementPublicKeyFromPrivateKey(agreementPrivateKey: data))!
+        AgreementPublicKey(data: X25519.deriveAgreementPublicKey(agreementPrivateKey: data))!
     }
     
     public func sharedKey(with publicKey: AgreementPublicKey) -> SymmetricKey {
-        let keyData = x25519DeriveAgreementSharedKey(agreementPrivateKey: self.data, agreementPublicKey: publicKey.data)
+        let keyData = X25519.deriveAgreementSharedKey(agreementPrivateKey: self.data, agreementPublicKey: publicKey.data)
         return SymmetricKey(keyData)!
     }
     
