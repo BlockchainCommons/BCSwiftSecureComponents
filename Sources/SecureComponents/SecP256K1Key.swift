@@ -37,7 +37,7 @@ public protocol SecP256K1PublicKeyProtocol: SecP256K1Key {
     var uncompressedPublicKey: SecP256K1UncompressedPublicKey { get }
 }
 
-public struct SecP256K1PrivateKey: SecP256K1Key, Ed25519Key {
+public struct ECPrivateKey: SecP256K1Key, Ed25519Key {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
     public static let keyLen = Secp256k1.privateKeySize
     public let data: Data
@@ -102,7 +102,7 @@ public struct SecP256K1PrivateKey: SecP256K1Key, Ed25519Key {
     }
 }
 
-extension SecP256K1PrivateKey: CustomStringConvertible {
+extension ECPrivateKey: CustomStringConvertible {
 }
 
 public struct SecP256K1SchnorrPublicKey: KeyProtocol {
