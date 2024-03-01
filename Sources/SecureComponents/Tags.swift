@@ -59,7 +59,7 @@ public extension Tag {
     static let agreementPrivateKey = Tag(40010, "agreement-private-key")
     static let agreementPublicKey  = Tag(40011, "agreement-public-key")
     static let arid                = Tag(40012, "arid")
-    static let seedDigest          = Tag(40013, "seed-digest")
+//    static let seedDigest          = Tag(40013, "seed-digest")
     static let nonce               = Tag(40014, "nonce")
     static let password            = Tag(40015, "password")
     static let privateKeyBase      = Tag(40016, "crypto-prvkeys")
@@ -158,7 +158,7 @@ public var knownTags: [Tag] = [
     .salt,
     .sealedMessage,
     .seed,
-    .seedDigest,
+//    .seedDigest,
     .seedV1,
     .signature,
     .signingPrivateKey,

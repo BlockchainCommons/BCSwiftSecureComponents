@@ -3,14 +3,14 @@ import WolfBase
 import URKit
 
 public enum SigningPublicKey {
-    case schnorr(SchnorrPublicKey)
-    case ecdsa(ECDSAPublicKey)
+    case schnorr(SecP256K1SchnorrPublicKey)
+    case ecdsa(SecP256K1PublicKey)
     
-    public init(_ key: SchnorrPublicKey) {
+    public init(_ key: SecP256K1SchnorrPublicKey) {
         self = .schnorr(key)
     }
     
-    public init(_ key: ECDSAPublicKey) {
+    public init(_ key: SecP256K1PublicKey) {
         self = .ecdsa(key)
     }
     
@@ -87,7 +87,7 @@ extension SigningPublicKey: URCodable {
     
     public init(untaggedCBOR: CBOR) throws {
         if case let CBOR.bytes(data) = untaggedCBOR,
-           let key = SchnorrPublicKey(data)
+           let key = SecP256K1SchnorrPublicKey(data)
         {
             self = .schnorr(key)
             return
@@ -95,7 +95,7 @@ extension SigningPublicKey: URCodable {
                   elements.count == 2,
                   case CBOR.unsigned(1) = elements[0],
                   case let CBOR.bytes(data) = elements[1],
-                  let key = ECDSAPublicKey(data)
+                  let key = SecP256K1PublicKey(data)
         {
             self = .ecdsa(key)
             return

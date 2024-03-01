@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftCrypto",
       "state" : {
-        "revision" : "b471e177fc106d33ee8126aec5d03422402795f1",
-        "version" : "1.0.0"
+        "revision" : "0eacc7d4129555633c05dfb7985f8d3a6c91fc99",
+        "version" : "1.2.2"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
       "state" : {
-        "revision" : "af83405b6238e5ff6973976553067666227b4a48",
-        "version" : "1.0.0"
+        "revision" : "7ba88c017f0fb0641b3efa3e75bd779be6dfa1b1",
+        "version" : "1.0.3"
       }
     },
     {
@@ -28,12 +28,21 @@
       }
     },
     {
+      "identity" : "blake2.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tesseract-one/Blake2.swift.git",
+      "state" : {
+        "revision" : "29c55c8fe42d6661e5a32cc5bbbad1fff64fd01e",
+        "version" : "0.2.0"
+      }
+    },
+    {
       "identity" : "cryptoswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
-        "revision" : "db51c407d3be4a051484a141bf0bff36c43d3b1e",
-        "version" : "1.8.0"
+        "revision" : "7892a123f7e8d0fe62f9f03728b17bbd4f94df5c",
+        "version" : "1.8.1"
       }
     },
     {
@@ -77,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/URKit.git",
       "state" : {
-        "revision" : "527d97f3d62ea7d6ecfa3bb0f28a22ce879fdf38",
-        "version" : "12.0.0"
+        "revision" : "6acdd4f845434d63e4c0dd5c6f879fae85f5c7d8",
+        "version" : "13.0.0"
       }
     },
     {

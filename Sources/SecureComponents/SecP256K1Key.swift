@@ -3,7 +3,7 @@ import URKit
 import WolfBase
 import BCCrypto
 
-public protocol ECKeyBase: Hashable {
+public protocol KeyProtocol: Hashable {
     static var keyLen: Int { get }
 
     var data: Data { get }
@@ -14,7 +14,7 @@ public protocol ECKeyBase: Hashable {
     init?(hex: String)
 }
 
-extension ECKeyBase {
+extension KeyProtocol {
     public var hex: String {
         data.hex
     }
@@ -24,21 +24,21 @@ extension ECKeyBase {
     }
 }
 
-public protocol ECDSAKey: ECKeyBase, UREncodable {
-    var ecdsaPublicKey: ECDSAPublicKey { get }
+public protocol SecP256K1Key: KeyProtocol, UREncodable {
+    var secp256k1PublicKey: SecP256K1PublicKey { get }
 }
 
-public protocol Ed25519Key: ECKeyBase {
+public protocol Ed25519Key: KeyProtocol {
     var ed25519PublicKey: Ed25519PublicKey { get }
 }
 
-public protocol ECDSAPublicKeyProtocol: ECDSAKey {
-    var uncompressedPublicKey: ECUncompressedPublicKey { get }
+public protocol SecP256K1PublicKeyProtocol: SecP256K1Key {
+    var uncompressedPublicKey: SecP256K1UncompressedPublicKey { get }
 }
 
-public struct ECPrivateKey: ECDSAKey, Ed25519Key {
+public struct ECPrivateKey: SecP256K1Key, Ed25519Key {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
-    public static let keyLen = ecdsaPrivateKeySize
+    public static let keyLen = secp256k1PrivateKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -65,31 +65,31 @@ public struct ECPrivateKey: ECDSAKey, Ed25519Key {
         self.init(data)
     }
 
-    public var ecdsaPublicKey: ECDSAPublicKey {
-        ECDSAPublicKey(ecdsaPublicKeyFromPrivateKey(privateKey: data))!
+    public var secp256k1PublicKey: SecP256K1PublicKey {
+        SecP256K1PublicKey(secp256k1PublicKeyFromPrivateKey(privateKey: data))!
     }
     
-    public var schnorrPublicKey: SchnorrPublicKey {
-        SchnorrPublicKey(schnorrPublicKeyFromPrivateKey(privateKey: data))!
+    public var schnorrPublicKey: SecP256K1SchnorrPublicKey {
+        SecP256K1SchnorrPublicKey(secp256k1SchnorrPublicKeyFromPrivateKey(privateKey: data))!
     }
     
     public var ed25519PublicKey: Ed25519PublicKey {
         Ed25519PublicKey(ed25519PublicKeyFromPrivateKey(privateKey: data))!
     }
     
-    public func ecdsaSign(_ message: DataProvider) -> Data {
-        BCCrypto.ecdsaSign(privateKeyECDSA: data, message: message.providedData)
+    public func secp256k1ecdsaSign(_ message: DataProvider) -> Data {
+        BCCrypto.secp256k1ecdsaSign(privateKeySecP256K1: data, message: message.providedData)
     }
     
-    public func schnorrSign<T>(_ message: DataProvider, tag: DataProvider, using rng: inout T) -> Data
+    public func secp256k1schnorrSign<T>(_ message: DataProvider, tag: DataProvider, using rng: inout T) -> Data
         where T: RandomNumberGenerator
     {
-        BCCrypto.schnorrSign(ecdsaPrivateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
+        BCCrypto.secp256k1schnorrSign(secp256k1PrivateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
     }
     
-    public func schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
+    public func secp256k1schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
         var rng = SecureRandomNumberGenerator()
-        return schnorrSign(message, tag: tag, using: &rng)
+        return secp256k1schnorrSign(message, tag: tag, using: &rng)
     }
     
     public var wif: String {
@@ -104,7 +104,7 @@ public struct ECPrivateKey: ECDSAKey, Ed25519Key {
 extension ECPrivateKey: CustomStringConvertible {
 }
 
-public struct SchnorrPublicKey: ECKeyBase {
+public struct SecP256K1SchnorrPublicKey: KeyProtocol {
     public static let keyLen = 32
     public let data: Data
 
@@ -124,11 +124,11 @@ public struct SchnorrPublicKey: ECKeyBase {
     }
     
     public func schnorrVerify(signature: Data, message: DataProvider, tag: DataProvider) -> Bool {
-        BCCrypto.schnorrVerify(schnorrPublicKey: data, signature: signature, message: message.providedData, tag: tag.providedData)
+        BCCrypto.secp256k1schnorrVerify(schnorrPublicKey: data, signature: signature, message: message.providedData, tag: tag.providedData)
     }
 }
 
-public struct Ed25519PublicKey: ECKeyBase, Ed25519Key {
+public struct Ed25519PublicKey: KeyProtocol, Ed25519Key {
     public static let keyLen = 32
     public let data: Data
 
@@ -154,9 +154,9 @@ public struct Ed25519PublicKey: ECKeyBase, Ed25519Key {
     }
 }
 
-public struct ECDSAPublicKey: ECDSAPublicKeyProtocol, Hashable {
+public struct SecP256K1PublicKey: SecP256K1PublicKeyProtocol, Hashable {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
-    public static var keyLen = ecdsaPublicKeySize
+    public static var keyLen = secp256k1PublicKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -174,17 +174,17 @@ public struct ECDSAPublicKey: ECDSAPublicKeyProtocol, Hashable {
         self.init(data)
     }
 
-    public var ecdsaPublicKey: ECDSAPublicKey {
+    public var secp256k1PublicKey: SecP256K1PublicKey {
         self
     }
     
-    public var uncompressedPublicKey: ECUncompressedPublicKey {
-        ECUncompressedPublicKey(ecdsaDecompressPublicKey(compressedPublicKey: data))!
+    public var uncompressedPublicKey: SecP256K1UncompressedPublicKey {
+        SecP256K1UncompressedPublicKey(secp256k1DecompressPublicKey(compressedPublicKey: data))!
     }
     
     public func verify(signature: Data, message: DataProvider) -> Bool {
         precondition(signature.count == 64)
-        return ecdsaVerify(publicKeyECDSA: data, signature: signature, message: message.providedData)
+        return secp256k1Verify(publicKeySecP256K1: data, signature: signature, message: message.providedData)
     }
     
     public var hash160: Data {
@@ -197,12 +197,12 @@ public struct ECDSAPublicKey: ECDSAPublicKeyProtocol, Hashable {
     }
 }
 
-extension ECDSAPublicKey: CustomStringConvertible {
+extension SecP256K1PublicKey: CustomStringConvertible {
 }
 
-public struct ECUncompressedPublicKey: ECDSAPublicKeyProtocol {
+public struct SecP256K1UncompressedPublicKey: SecP256K1PublicKeyProtocol {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
-    public static var keyLen = ecdsaPublicKeyUncompressedSize
+    public static var keyLen = secp256k1PublicKeyUncompressedSize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -220,11 +220,11 @@ public struct ECUncompressedPublicKey: ECDSAPublicKeyProtocol {
         self.init(data)
     }
 
-    public var ecdsaPublicKey: ECDSAPublicKey {
-        ECDSAPublicKey(ecdsaCompressPublicKey(uncompressedPublicKey: data))!
+    public var secp256k1PublicKey: SecP256K1PublicKey {
+        SecP256K1PublicKey(secp256k1CompressPublicKey(uncompressedPublicKey: data))!
     }
     
-    public var uncompressedPublicKey: ECUncompressedPublicKey {
+    public var uncompressedPublicKey: SecP256K1UncompressedPublicKey {
         self
     }
 
@@ -234,5 +234,5 @@ public struct ECUncompressedPublicKey: ECDSAPublicKeyProtocol {
     }
 }
 
-extension ECUncompressedPublicKey: CustomStringConvertible {
+extension SecP256K1UncompressedPublicKey: CustomStringConvertible {
 }
