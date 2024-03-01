@@ -2,3 +2,4 @@
 
 @_exported import URKit
 @_exported import BCCrypto
+@_exported import BCRandom
