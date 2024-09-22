@@ -6,7 +6,7 @@ import URKit
 /// A Curve25519 public key used for X25519 key agreement.
 ///
 /// https://datatracker.ietf.org/doc/html/rfc7748
-public struct AgreementPublicKey: CustomStringConvertible, Hashable {
+public struct AgreementPublicKey: CustomStringConvertible, Hashable, Sendable {
     public let data: Data
     
     public init?(data: DataProvider) {

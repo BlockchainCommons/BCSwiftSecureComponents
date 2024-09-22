@@ -1,25 +1,25 @@
-import XCTest
+import Testing
 import WolfBase
 import SecureComponents
 import BCRandom
 
-class KeyTests: XCTestCase {
-    func testAgreementKeys() {
+struct KeyTests {
+    @Test func testAgreementKeys() {
         var rng = makeFakeRandomNumberGenerator()
         let privateKey = AgreementPrivateKey(using: &rng)
         let privateKeyUR = privateKey.urString
-        XCTAssertEqual(privateKeyUR, "ur:agreement-private-key/hdcxkbrehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlweynwkrtct")
-        XCTAssertEqual(try! AgreementPrivateKey(urString: privateKeyUR), privateKey)
+        #expect(privateKeyUR == "ur:agreement-private-key/hdcxkbrehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlweynwkrtct")
+        #expect(try! AgreementPrivateKey(urString: privateKeyUR) == privateKey)
         let publicKey = privateKey.publicKey
         let publicKeyUR = publicKey.urString
-        XCTAssertEqual(publicKeyUR, "ur:agreement-public-key/hdcxwnryknkbbymnoxhswmptgydsotwswsghfmrkksfxntbzjyrnuornkildchgswtdahehpwkrl")
-        XCTAssertEqual(try! AgreementPublicKey(urString: publicKeyUR), publicKey)
+        #expect(publicKeyUR == "ur:agreement-public-key/hdcxwnryknkbbymnoxhswmptgydsotwswsghfmrkksfxntbzjyrnuornkildchgswtdahehpwkrl")
+        #expect(try! AgreementPublicKey(urString: publicKeyUR) == publicKey)
         
         let derivedPrivateKey = AgreementPrivateKey(keyMaterial: "password")
-        XCTAssertEqual(derivedPrivateKey.urString, "ur:agreement-private-key/hdcxkgcfkomeeyiemywkftvabnrdolmttlrnfhjnguvaiehlrldmdpemgyjlatdthsnecytdoxat")
+        #expect(derivedPrivateKey.urString == "ur:agreement-private-key/hdcxkgcfkomeeyiemywkftvabnrdolmttlrnfhjnguvaiehlrldmdpemgyjlatdthsnecytdoxat")
     }
     
-    func testAgreement() {
+    @Test func testAgreement() {
         var rng = makeFakeRandomNumberGenerator()
         let alicePrivateKey = AgreementPrivateKey(using: &rng)
         let alicePublicKey = alicePrivateKey.publicKey
@@ -29,27 +29,27 @@ class KeyTests: XCTestCase {
         
         let aliceSharedKey = alicePrivateKey.sharedKey(with: bobPublicKey)
         let bobSharedKey = bobPrivateKey.sharedKey(with: alicePublicKey)
-        XCTAssertEqual(aliceSharedKey, bobSharedKey)
+        #expect(aliceSharedKey == bobSharedKey)
     }
     
-    func testSigningKeys() {
+    @Test func testSigningKeys() {
         var rng = makeFakeRandomNumberGenerator()
         let privateKey = SigningPrivateKey(using: &rng)
         let privateKeyUR = privateKey.urString
-        XCTAssertEqual(privateKeyUR, "ur:signing-private-key/hdcxkbrehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlweynwkrtct")
-        XCTAssertEqual(try! SigningPrivateKey(urString: privateKeyUR), privateKey)
+        #expect(privateKeyUR == "ur:signing-private-key/hdcxkbrehkrkrsjztodseytknecfgewmgdmwfsvdvysbpmghuozsprknfwkpnehydlweynwkrtct")
+        #expect(try! SigningPrivateKey(urString: privateKeyUR) == privateKey)
         
         let ecdsaPublicKey = privateKey.secp256k1ECDSAPublicKey
         let ecdsaPublicKeyUR = ecdsaPublicKey.urString
-        XCTAssertEqual(ecdsaPublicKeyUR, "ur:signing-public-key/lfadhdclaojsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjedkwftboe")
-        XCTAssertEqual(try! SigningPublicKey(urString: ecdsaPublicKeyUR), ecdsaPublicKey)
+        #expect(ecdsaPublicKeyUR == "ur:signing-public-key/lfadhdclaojsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjedkwftboe")
+        #expect(try! SigningPublicKey(urString: ecdsaPublicKeyUR) == ecdsaPublicKey)
         
         let schnorrPublicKey = privateKey.secp256k1SchnorrPublicKey
         let schnorrPublicKeyUR = schnorrPublicKey.urString
-        XCTAssertEqual(schnorrPublicKeyUR, "ur:signing-public-key/hdcxjsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjewyjymhcp")
-        XCTAssertEqual(try! SigningPublicKey(urString: schnorrPublicKeyUR), schnorrPublicKey)
+        #expect(schnorrPublicKeyUR == "ur:signing-public-key/hdcxjsrhdnidbgosndmobzwntdglzonnidmwoyrnuomdrpsptkcskerhfljssgaoidjewyjymhcp")
+        #expect(try! SigningPublicKey(urString: schnorrPublicKeyUR) == schnorrPublicKey)
         
         let derivedPrivateKey = SigningPrivateKey(keyMaterial: "password")
-        XCTAssertEqual(derivedPrivateKey.urString, "ur:signing-private-key/hdcxahsfgobtpkkpahmnhsfmhnjnmkmkzeuraonneshkbysseyjkoeayrlvtvsmndicwkkvattfs")
+        #expect(derivedPrivateKey.urString == "ur:signing-private-key/hdcxahsfgobtpkkpahmnhsfmhnjnmkmkzeuraonneshkbysseyjkoeayrlvtvsmndicwkkvattfs")
     }
 }

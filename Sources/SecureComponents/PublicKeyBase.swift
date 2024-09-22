@@ -6,7 +6,7 @@ import URKit
 ///
 /// Includes the entity's public signing key for verifying signatures, and
 /// the entity's public agreement key used for X25519 key agreement.
-public struct PublicKeyBase: CustomStringConvertible, Hashable {
+public struct PublicKeyBase: CustomStringConvertible, Hashable, Sendable {
     public let signingPublicKey: SigningPublicKey
     public let agreementPublicKey: AgreementPublicKey
     

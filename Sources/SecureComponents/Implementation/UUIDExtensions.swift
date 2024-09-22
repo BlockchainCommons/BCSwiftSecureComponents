@@ -1,7 +1,12 @@
 import Foundation
 import URKit
 
-extension UUID: CBORTaggedCodable {
+extension UUID: @retroactive CBORTaggedDecodable {}
+extension UUID: @retroactive CBORDecodable {}
+extension UUID: @retroactive CBORTaggedEncodable {}
+extension UUID: @retroactive CBOREncodable {}
+extension UUID: @retroactive CBORCodable {}
+extension UUID: @retroactive CBORTaggedCodable {
     public static let cborTags: [Tag] = [37]
 
     public var untaggedCBOR: CBOR {

@@ -7,7 +7,7 @@ import BCRandom
 /// A symmetric key for encryption and decryption of IETF-ChaCha20-Poly1305 messages.
 ///
 /// https://datatracker.ietf.org/doc/html/rfc8439
-public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, DataProvider {
+public struct SymmetricKey: CustomStringConvertible, Equatable, Hashable, Sendable, DataProvider {
     public let data: Data
     
     public init?(_ data: Data) {

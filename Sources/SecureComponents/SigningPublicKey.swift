@@ -2,7 +2,7 @@ import Foundation
 import WolfBase
 import URKit
 
-public enum SigningPublicKey {
+public enum SigningPublicKey: Sendable {
     case schnorr(SecP256K1SchnorrPublicKey)
     case ecdsa(SecP256K1PublicKey)
     
@@ -18,8 +18,8 @@ public enum SigningPublicKey {
         switch self {
         case .schnorr(let key):
             switch signature {
-            case .schnorr(let sigData, let tag):
-                return key.schnorrVerify(signature: sigData, message: message, tag: tag)
+            case .schnorr(let sigData):
+                return key.schnorrVerify(signature: sigData, message: message)
             default:
                 return false
             }

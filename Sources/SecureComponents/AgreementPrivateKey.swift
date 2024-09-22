@@ -7,7 +7,7 @@ import BCRandom
 /// A Curve25519 private key used for X25519 key agreement.
 ///
 /// https://datatracker.ietf.org/doc/html/rfc7748
-public struct AgreementPrivateKey: CustomStringConvertible, Hashable {
+public struct AgreementPrivateKey: CustomStringConvertible, Hashable, Sendable {
     public let data: Data
     
     public init?(_ data: DataProvider) {

@@ -16,13 +16,20 @@ extension SSKRShare {
     }
 }
 
-extension SSKRShare: CustomStringConvertible {
+extension SSKRShare: @retroactive CustomStringConvertible {
     public var description: String {
         "SSKRShare(\(identifierHex) \(groupIndex + 1)-\(memberIndex + 1))"
     }
 }
 
-extension SSKRShare: URCodable {
+extension SSKRShare: @retroactive CBORCodable {}
+extension SSKRShare: @retroactive CBORDecodable {}
+extension SSKRShare: @retroactive CBOREncodable {}
+extension SSKRShare: @retroactive URDecodable {}
+extension SSKRShare: @retroactive CBORTaggedDecodable {}
+extension SSKRShare: @retroactive UREncodable {}
+extension SSKRShare: @retroactive CBORTaggedEncodable {}
+extension SSKRShare: @retroactive URCodable {
     public static let cborTags = [Tag.sskrShare, Tag.sskrShareV1]
 
     public var untaggedCBOR: CBOR {

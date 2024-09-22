@@ -6,7 +6,7 @@ import URKit
 ///
 /// It is encrypted using an ephemeral private key that is thrown away, and encapsulates
 /// the ephemeral public key and the receiver's public key needed for decryption.
-public struct SealedMessage {
+public struct SealedMessage: Sendable {
     public let message: EncryptedMessage
     public let ephemeralPublicKey: AgreementPublicKey
     

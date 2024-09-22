@@ -16,7 +16,7 @@ import WolfBase
 /// If the payload is too small to compress, the uncompressed payload is placed in
 /// the `compressedData` field and the size of that field will be the same as the
 /// `uncompressedSize` field.
-public struct Compressed {
+public struct Compressed: Sendable {
     public let checksum: UInt32
     public let uncompressedSize: Int
     public let compressedData: Data
@@ -113,7 +113,7 @@ extension Compressed: CustomStringConvertible {
 }
 
 extension Compressed: URCodable {
-    public static var cborTags = [Tag.compressed]
+    public static let cborTags = [Tag.compressed]
     
     public var untaggedCBOR: CBOR {
         if let digest {

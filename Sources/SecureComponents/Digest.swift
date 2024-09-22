@@ -6,7 +6,7 @@ import CryptoBase
 /// A cryptographically secure digest.
 ///
 /// Implemented with SHA-256.
-public struct Digest: CustomStringConvertible, Hashable {
+public struct Digest: CustomStringConvertible, Hashable, Sendable {
     public let data: Data
     public static let defaultDigestLength = 32
     

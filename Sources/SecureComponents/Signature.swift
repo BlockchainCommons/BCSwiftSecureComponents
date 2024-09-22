@@ -2,16 +2,16 @@ import Foundation
 import URKit
 import WolfBase
 
-public enum Signature {
-    case schnorr(data: Data, tag: Data)
+public enum Signature: Sendable {
+    case schnorr(data: Data)
     case ecdsa(data: Data)
     
-    public init?(schnorrData data: DataProvider, tag: DataProvider) {
+    public init?(schnorrData data: DataProvider) {
         let data = data.providedData
         guard data.count == 64 else {
             return nil
         }
-        self = .schnorr(data: data, tag: tag.providedData)
+        self = .schnorr(data: data)
     }
     
     public init?(ecdsaData data: DataProvider) {
@@ -26,10 +26,10 @@ public enum Signature {
 extension Signature: Equatable {
     public static func ==(lhs: Signature, rhs: Signature) -> Bool {
         switch lhs {
-        case .schnorr(let lhsData, let lhsTag):
+        case .schnorr(let lhsData):
             switch rhs {
-            case .schnorr(let rhsData, let rhsTag):
-                return lhsData == rhsData && lhsTag == rhsTag
+            case .schnorr(let rhsData):
+                return lhsData == rhsData
             default:
                 return false
             }
@@ -49,12 +49,8 @@ extension Signature: URCodable {
 
     public var untaggedCBOR: CBOR {
         switch self {
-        case .schnorr(let data, let tag):
-            if tag.isEmpty {
-                return data.cbor
-            } else {
-                return [data.cbor, tag.cbor]
-            }
+        case .schnorr(let data):
+            return data.cbor
         case .ecdsa(let data):
             return [1.cbor, data.cbor]
         }
@@ -64,14 +60,7 @@ extension Signature: URCodable {
         if
             case let CBOR.bytes(data) = untaggedCBOR
         {
-            self = .schnorr(data: data, tag: Data())
-        } else if
-            case let CBOR.array(elements) = untaggedCBOR,
-            elements.count == 2,
-            case let CBOR.bytes(data) = elements[0],
-            case let CBOR.bytes(tag) = elements[1]
-        {
-            self = .schnorr(data: data, tag: tag)
+            self = .schnorr(data: data)
         } else if
             case let CBOR.array(elements) = untaggedCBOR,
             elements.count == 2,

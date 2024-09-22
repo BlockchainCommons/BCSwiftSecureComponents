@@ -4,7 +4,7 @@ import WolfBase
 import BCCrypto
 import BCRandom
 
-public protocol KeyProtocol: Hashable {
+public protocol KeyProtocol: Hashable, Sendable {
     static var keyLen: Int { get }
 
     var data: Data { get }
@@ -71,7 +71,7 @@ public struct ECPrivateKey: SecP256K1Key, Ed25519Key {
     }
     
     public var secp256k1SchnorrPublicKey: SecP256K1SchnorrPublicKey {
-        SecP256K1SchnorrPublicKey(Secp256k1.Schnorr.derivePublicKey(privateKey: data))!
+        SecP256K1SchnorrPublicKey(try! Secp256k1.Schnorr.derivePublicKey(privateKey: data))!
     }
     
     public var ed25519PublicKey: Ed25519PublicKey {
@@ -82,15 +82,15 @@ public struct ECPrivateKey: SecP256K1Key, Ed25519Key {
         Secp256k1.ECDSA.sign(privateKey: data, message: message.providedData)
     }
     
-    public func secp256k1schnorrSign<T>(_ message: DataProvider, tag: DataProvider, using rng: inout T) -> Data
+    public func secp256k1schnorrSign<T>(_ message: DataProvider, using rng: inout T) -> Data
         where T: RandomNumberGenerator
     {
-        Secp256k1.Schnorr.sign(privateKey: self.data, message: message.providedData, tag: tag.providedData, rng: &rng)
+        try! Secp256k1.Schnorr.signUsing(privateKey: self.data, message: message.providedData, rng: &rng)
     }
     
-    public func secp256k1schnorrSign(_ message: DataProvider, tag: DataProvider) -> Data {
+    public func secp256k1schnorrSign(_ message: DataProvider) -> Data {
         var rng = SecureRandomNumberGenerator()
-        return secp256k1schnorrSign(message, tag: tag, using: &rng)
+        return secp256k1schnorrSign(message, using: &rng)
     }
     
     public var wif: String {
@@ -124,8 +124,8 @@ public struct SecP256K1SchnorrPublicKey: KeyProtocol {
         self.init(data)
     }
     
-    public func schnorrVerify(signature: Data, message: DataProvider, tag: DataProvider) -> Bool {
-        Secp256k1.Schnorr.verify(schnorrPublicKey: data, signature: signature, message: message.providedData, tag: tag.providedData)
+    public func schnorrVerify(signature: Data, message: DataProvider) -> Bool {
+        try! Secp256k1.Schnorr.verify(schnorrPublicKey: data, signature: signature, message: message.providedData)
     }
 }
 
@@ -157,7 +157,7 @@ public struct Ed25519PublicKey: KeyProtocol, Ed25519Key {
 
 public struct SecP256K1PublicKey: SecP256K1PublicKeyProtocol, Hashable {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
-    public static var keyLen = Secp256k1.publicKeySize
+    public static let keyLen = Secp256k1.publicKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -185,7 +185,7 @@ public struct SecP256K1PublicKey: SecP256K1PublicKeyProtocol, Hashable {
     
     public func verify(signature: Data, message: DataProvider) -> Bool {
         precondition(signature.count == 64)
-        return Secp256k1.ECDSA.verify(publicKey: data, signature: signature, message: message.providedData)
+        return try! Secp256k1.ECDSA.verify(publicKey: data, signature: signature, message: message.providedData)
     }
     
     public var hash160: Data {
@@ -203,7 +203,7 @@ extension SecP256K1PublicKey: CustomStringConvertible {
 
 public struct SecP256K1UncompressedPublicKey: SecP256K1PublicKeyProtocol {
     public static let cborTags = [Tag.ecKey, Tag.ecKeyV1]
-    public static var keyLen = Secp256k1.uncompressedPublicKeySize
+    public static let keyLen = Secp256k1.uncompressedPublicKeySize
     public let data: Data
 
     public init?(_ data: DataProvider) {

@@ -3,7 +3,7 @@ import URKit
 import BCCrypto
 import BCRandom
 
-public struct ARID: Equatable, Hashable {
+public struct ARID: Equatable, Hashable, Sendable {
     public let data: Data
     
     public init?(_ data: Data) {

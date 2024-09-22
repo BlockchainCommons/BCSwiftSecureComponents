@@ -24,7 +24,7 @@ extension Seed: PrivateKeysDataProvider {
 }
 
 extension Seed: URCodable {
-    static var cborTags = [Tag.seed, Tag.seedV1]
+    static let cborTags = [Tag.seed, Tag.seedV1]
     
     var untaggedCBOR: CBOR {
         var map: Map = [1: data]

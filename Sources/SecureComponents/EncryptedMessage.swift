@@ -11,7 +11,7 @@ import BCCrypto
 ///
 /// To facilitate decoding, it is recommended that the plaintext of an `EncryptedMessage` be
 /// tagged CBOR.
-public struct EncryptedMessage: CustomStringConvertible, Equatable {
+public struct EncryptedMessage: CustomStringConvertible, Equatable, Sendable {
     public let ciphertext: Data
     public let aad: Data // Additional authenticated data (AAD) per RFC8439
     public let nonce: Nonce
@@ -28,7 +28,7 @@ public struct EncryptedMessage: CustomStringConvertible, Equatable {
         "Message(ciphertext: \(ciphertext.hex), aad: \(aad.hex), nonce: \(nonce), auth: \(auth))"
     }
     
-    public struct Auth: CustomStringConvertible, Equatable, Hashable {
+    public struct Auth: CustomStringConvertible, Equatable, Hashable, Sendable {
         public let data: Data
         
         public init?(_ data: Data) {

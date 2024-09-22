@@ -4,7 +4,7 @@ import URKit
 import BCCrypto
 import BCRandom
 
-public struct SigningPrivateKey: CustomStringConvertible, Hashable {
+public struct SigningPrivateKey: CustomStringConvertible, Hashable, Sendable {
     public let data: Data
 
     public init?(_ data: DataProvider) {
@@ -34,18 +34,17 @@ public struct SigningPrivateKey: CustomStringConvertible, Hashable {
         return Signature(ecdsaData: sig)!
     }
 
-    public func secp256k1SchnorrSign<T>(_ message: DataProvider, tag: DataProvider?, using rng: inout T) -> Signature
+    public func secp256k1SchnorrSign<T>(_ message: DataProvider, using rng: inout T) -> Signature
         where T: RandomNumberGenerator
     {
         let privateKey = ECPrivateKey(data)!
-        let tag = tag ?? Data()
-        let sig = privateKey.secp256k1schnorrSign(message, tag: tag, using: &rng)
-        return Signature(schnorrData: sig, tag: tag)!
+        let sig = privateKey.secp256k1schnorrSign(message, using: &rng)
+        return Signature(schnorrData: sig)!
     }
     
-    public func secp256k1SchnorrSign(_ message: DataProvider, tag: DataProvider?) -> Signature {
+    public func secp256k1SchnorrSign(_ message: DataProvider) -> Signature {
         var rng = SecureRandomNumberGenerator()
-        return secp256k1SchnorrSign(message, tag: tag, using: &rng)
+        return secp256k1SchnorrSign(message, using: &rng)
     }
     
     public var secp256k1ECDSAPublicKey: SigningPublicKey {

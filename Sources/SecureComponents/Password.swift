@@ -8,7 +8,7 @@ import BCRandom
 /// Implemented using Scrypt.
 ///
 /// https://datatracker.ietf.org/doc/html/rfc7914
-public class Password {
+public final class Password: Sendable {
     public let salt: Data
     public let data: Data
     public let n: Int

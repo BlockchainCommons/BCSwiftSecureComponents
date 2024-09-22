@@ -1,12 +1,13 @@
 {
+  "originHash" : "0ea0a18586c5c160d756ba54d663d3a74a831ec296b9467236ead1a4f8aef35c",
   "pins" : [
     {
       "identity" : "bcswiftcrypto",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftCrypto",
       "state" : {
-        "revision" : "c018451ad9479d3474578f02d4e40662af6ee40c",
-        "version" : "4.0.1"
+        "revision" : "758e1fb13ccff79778acfaec885b680bb966ec3d",
+        "version" : "6.0.0"
       }
     },
     {
@@ -14,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftDCBOR",
       "state" : {
-        "revision" : "922746297fe733019b42b9083275eb2837296a7d",
-        "version" : "1.0.5"
+        "revision" : "f659fabfece969c639d0e974c091b9b85e98b3c8",
+        "version" : "2.0.1"
       }
     },
     {
@@ -23,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/blockchaincommons/BCSwiftFloat16.git",
       "state" : {
-        "revision" : "71f380285d88a876f9cdf4e34e2e9e77d7ca4aef",
-        "version" : "1.0.0"
+        "revision" : "a27f3935a7b1db715713eda67369b02feade2ded",
+        "version" : "2.0.0"
       }
     },
     {
@@ -32,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftKeys",
       "state" : {
-        "revision" : "f0e3901749d18d067f707737463f9e50a742c165",
-        "version" : "0.1.1"
+        "revision" : "a345d0d5243b6940fe43aa7ab326816ffe0394ce",
+        "version" : "0.2.0"
       }
     },
     {
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftRandom",
       "state" : {
-        "revision" : "51ead8f55f8bbe5906d1e83279abc5944864873f",
-        "version" : "1.0.0"
+        "revision" : "f24bcb01e79ce82b6d10fc2f70f12bb8b3e6d23f",
+        "version" : "2.0.0"
       }
     },
     {
@@ -50,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/BCSwiftTags",
       "state" : {
-        "revision" : "a2f3e5c8e8ed1770fb3cb28b35aef252da7a0fc2",
-        "version" : "0.1.1"
+        "revision" : "c7a1d820e7710ba2c874961c5dc7731017650661",
+        "version" : "0.2.1"
       }
     },
     {
@@ -91,21 +92,12 @@
       }
     },
     {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/wolfmcnally/swift-collections",
-      "state" : {
-        "revision" : "53a8adc54374f620002a3b6401d39e0feb3c57ae",
-        "version" : "1.1.0"
-      }
-    },
-    {
       "identity" : "swift-numberkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/wolfmcnally/swift-numberkit.git",
+      "location" : "https://github.com/objecthub/swift-numberkit.git",
       "state" : {
-        "revision" : "34a26297c200489779929b7fd7d4d30b63e87e69",
-        "version" : "2.4.3"
+        "revision" : "33af3f9011e45dcd8ee696492d30dbcd5a8a67f3",
+        "version" : "2.6.0"
       }
     },
     {
@@ -118,12 +110,21 @@
       }
     },
     {
+      "identity" : "swiftsortedcollections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wolfmcnally/SwiftSortedCollections",
+      "state" : {
+        "revision" : "dd6c8e0eaef987e55a35c056d185144a7c71fc19",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "urkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BlockchainCommons/URKit.git",
       "state" : {
-        "revision" : "c98261c7b2db42ccfbbba0853379826b86aaffc4",
-        "version" : "14.0.2"
+        "revision" : "c7cf16b03ce061c2d461fb4c635cc27c9e1d00e3",
+        "version" : "15.0.0"
       }
     },
     {
@@ -131,10 +132,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/WolfMcNally/WolfBase",
       "state" : {
-        "revision" : "64953cfea10c57d01077ae77e76b8a72b472cb9c",
-        "version" : "6.1.0"
+        "revision" : "b2515098bb6f46a8c0386b383b0ed9282828d1c4",
+        "version" : "7.0.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -3,7 +3,7 @@ import WolfBase
 import URKit
 import BCRandom
 
-public struct Salt: CustomStringConvertible, Equatable, Hashable, DataProvider {
+public struct Salt: CustomStringConvertible, Equatable, Hashable, Sendable, DataProvider {
     public let data: Data
     
     public init?(_ data: Data) {

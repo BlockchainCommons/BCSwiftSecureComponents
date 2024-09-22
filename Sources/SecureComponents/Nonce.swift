@@ -4,7 +4,7 @@ import URKit
 import BCCrypto
 import BCRandom
 
-public struct Nonce: CustomStringConvertible, Equatable, Hashable, DataProvider {
+public struct Nonce: CustomStringConvertible, Equatable, Hashable, Sendable, DataProvider {
     public let data: Data
     
     public init?(_ data: Data) {
